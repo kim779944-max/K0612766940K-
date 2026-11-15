@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>KTS 만능 뷰어 — 한글·엑셀·워드·PDF·사진 무설치 열람</title>
+<title>더뷰 — KTS 만능 뷰어 (한글·엑셀·워드·PDF·사진)</title>
 <meta name="theme-color" content="#0A1128">
 <link rel="manifest" href="manifest.webmanifest">
 <style>
@@ -32,11 +32,17 @@ header a{font-size:12px;font-weight:800;color:#9DAEC5}
 .fitbtn.on{background:rgba(255,107,0,.18);border-color:rgba(255,107,0,.55);color:var(--amber2)}
 .xlwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;background:#0A1224}
 table.xl{border-collapse:collapse;width:max-content;min-width:100%;font-size:12.5px;background:#0A1224}
-table.xl td,table.xl th{border:1px solid rgba(255,255,255,.13);padding:6px 9px;vertical-align:middle;white-space:pre-wrap;min-width:52px;color:#E8EDF5}
+table.xl td,table.xl th{border:1px solid rgba(255,255,255,.13);padding:6px 9px;vertical-align:middle;
+  white-space:nowrap;min-width:52px;color:#E8EDF5}
 table.xl th{background:#14213D;font-weight:900;text-align:center;color:#fff}
 table.xl td.num{text-align:right;font-variant-numeric:tabular-nums}
-.xlwrap.fit table.xl{width:100%;min-width:0}
-.xlwrap.fit table.xl td,.xlwrap.fit table.xl th{white-space:normal;word-break:break-all;min-width:0;font-size:11px;padding:4px 5px}
+.xlwrap{position:relative}
+.xlscale{transform-origin:0 0;display:inline-block}
+.xlwrap.fit{overflow-x:hidden}
+.zoombox{display:flex;gap:5px;align-items:center}
+.zoombox button{border:1px solid var(--line2);background:#12203C;border-radius:8px;padding:6px 9px;white-space:nowrap;
+  font-size:11.5px;font-weight:900;color:#D9E3F0;font-family:inherit;cursor:pointer}
+.zoombox .pct{font-size:10.5px;color:var(--gray);font-variant-numeric:tabular-nums;min-width:34px;text-align:center}
 .hint-swipe{font-size:10.5px;color:#7C8DA6;margin-top:6px}
 .hw p{margin:0 0 8px;font-size:13.5px;line-height:1.85;color:#E8EDF5}
 .hw h4{margin:14px 0 6px;font-size:14px;color:#fff}
@@ -99,7 +105,7 @@ table.xl.fixed td,table.xl.fixed th{min-width:0}
 table.xl td.b{font-weight:900}
 </style></head><body>
 <div id="app">
-<header><span class="brand">KTS <i>만능 뷰어</i></span><span class="sp"></span><a href="index.html">← 쇼룸</a></header>
+<header><span class="brand">KTS <i>더뷰</i></span><span class="sp"></span><a href="index.html">← 원클릭</a></header>
 
 <div class="drop" id="drop">
   <div class="mini">
@@ -463,11 +469,9 @@ async function openDocx(buf){
   return {kind:'html', html, note:'워드(docx) · 문단 ' + nPar + '개' + (nTab ? ' · 표 ' + nTab + '개' : '')};
 }
 
-/* ---------- 표 래핑 + [전체 열 맞춤] ---------- */
-let fitOn = false;
-function wrapTables(){
-  const tables = [...out.querySelectorAll('table.xl')];
-  if (!tables.length) return null;
+/* ---------- 표 래핑 + 확대/축소 + 전체 폭 맞춤 (줄바꿈 없이 글자만 축소) ---------- */
+let fitOn = false, userZoom = 1;
+function maxCols(tables){
   let cols = 0;
   tables.forEach(t => {
     for (const tr of t.rows){
@@ -476,39 +480,77 @@ function wrapTables(){
       cols = Math.max(cols, n);
     }
   });
-  const bar = document.createElement('div');
-  bar.className = 'xltop';
-  bar.innerHTML = '<span>표 ' + tables.length + '개' + (cols ? ' · ' + cols + '열' : '') + '</span><span class="sp2"></span>'
-    + '<button class="fitbtn' + (fitOn ? ' on' : '') + '" id="fitBtn">전체 열 맞춤</button>';
+  return cols;
+}
+function applyTableZoom(){
+  document.querySelectorAll('.xlwrap').forEach(w => {
+    const sc = w.querySelector('.xlscale'); if (!sc) return;
+    const tbl = sc.querySelector('table'); if (!tbl) return;
+    tbl.style.transform = 'none';
+    const nat = tbl.scrollWidth || tbl.offsetWidth || 1;
+    const box = w.clientWidth || nat;
+    let k = fitOn ? Math.min(1.6, box / nat) : userZoom;
+    if (!isFinite(k) || k <= 0) k = 1;
+    sc.style.transform = 'scale(' + k.toFixed(3) + ')';
+    sc.style.width = nat + 'px';
+    /* 스케일 후 실제 차지 높이를 잡아 빈 공간·겹침을 없앤다 */
+    const h = tbl.offsetHeight * k;
+    w.style.height = (fitOn ? Math.max(h, 0) : Math.max(tbl.offsetHeight, 0)) + 'px';
+    w.style.overflowX = fitOn ? 'hidden' : 'auto';
+    const pct = w.parentNode.querySelector('.zoombox .pct');
+    if (pct) pct.textContent = Math.round(k * 100) + '%';
+  });
+}
+function wrapTables(){
+  const tables = [...out.querySelectorAll('table.xl')];
+  if (!tables.length) return null;
+  const cols = maxCols(tables);
   const wraps = [];
   tables.forEach(t => {
-    const w = document.createElement('div');
-    w.className = 'xlwrap' + (fitOn ? ' fit' : '');
-    if (t.parentNode && t.parentNode.classList && t.parentNode.classList.contains('xlwrap')){
-      wraps.push(t.parentNode); return;
+    if (t.parentNode && t.parentNode.classList && t.parentNode.classList.contains('xlscale')){
+      wraps.push(t.parentNode.parentNode); return;
     }
+    const sc = document.createElement('div');
+    sc.className = 'xlscale';
+    const w = document.createElement('div');
+    w.className = 'xlwrap';
     t.parentNode.insertBefore(w, t);
-    w.appendChild(t);
+    w.appendChild(sc); sc.appendChild(t);
     wraps.push(w);
   });
   if (!document.getElementById('fitBtn')){
+    const bar = document.createElement('div');
+    bar.className = 'xltop';
+    bar.innerHTML = '<span>표 ' + tables.length + '개' + (cols ? ' · ' + cols + '열' : '') + '</span>'
+      + '<span class="sp2"></span>'
+      + '<div class="zoombox"><button type="button" id="zOut">축소</button><span class="pct">100%</span>'
+      + '<button type="button" id="zIn">확대</button>'
+      + '<button class="fitbtn" id="fitBtn">전체 폭 맞춤</button></div>';
     const host = out.querySelector('.hw') || out;
     host.insertBefore(bar, host.firstChild);
     const swipe = document.createElement('div');
     swipe.className = 'hint-swipe';
-    swipe.textContent = fitOn ? '전체 열을 한 화면에 맞췄습니다 · 다시 누르면 원래 크기' : '← 옆으로 밀면 오른쪽 열까지 보입니다';
+    swipe.textContent = '← 옆으로 밀면 오른쪽 열까지 보입니다 · 칸이 좁으면 글자가 자동으로 줄어듭니다';
     host.insertBefore(swipe, host.children[1] || null);
+    document.getElementById('zOut').onclick = () => {
+      userZoom = Math.max(0.5, +(userZoom - 0.1).toFixed(2)); fitOn = false;
+      document.getElementById('fitBtn').classList.remove('on'); applyTableZoom();
+    };
+    document.getElementById('zIn').onclick = () => {
+      userZoom = Math.min(2, +(userZoom + 0.1).toFixed(2));
+      applyTableZoom();
+    };
     document.getElementById('fitBtn').onclick = () => {
       fitOn = !fitOn;
-      document.querySelectorAll('.xlwrap').forEach(w => w.classList.toggle('fit', fitOn));
-      const b = document.getElementById('fitBtn');
-      b.classList.toggle('on', fitOn);
-      document.querySelectorAll('.hint-swipe').forEach(h => h.textContent = fitOn ? '전체 열을 한 화면에 맞췄습니다 · 다시 누르면 원래 크기' : '← 옆으로 밀면 오른쪽 열까지 보입니다');
-      showToast(fitOn ? '전체 열 맞춤 · 한 화면에 표시' : '원래 크기 · 옆으로 밀어 보기');
+      document.getElementById('fitBtn').classList.toggle('on', fitOn);
+      applyTableZoom();
+      showToast(fitOn ? '전체 폭 맞춤 · 글자만 줄여 한 화면에' : '원래 크기 · 옆으로 밀어 보기');
     };
   }
+  setTimeout(applyTableZoom, 30);
   return cols;
 }
+window.addEventListener('resize', () => applyTableZoom());
 let toastT;
 function showToast(m){
   let t = document.querySelector('.toast');
@@ -626,7 +668,7 @@ async function showFile(file){
     } else if (/\.(csv|txt)$/.test(name)){
       r = openText(await file.text(), name);
     } else if (/\.hwp$/.test(name)){
-      r = {kind: 'html', html: '<div class="hw"><p>구형 .hwp(바이너리) 형식은 브라우저에서 직접 해석할 수 없습니다.</p><p>한글에서 <b>.hwpx</b>로 저장하거나 PDF로 내보내면 바로 열립니다. 변환이 필요하시면 쇼룸에서 신청해 주세요.</p></div>', note: '구형 한글'}
+      r = {kind: 'html', html: '<div class="hw"><p>구형 .hwp(바이너리) 형식은 브라우저에서 직접 해석할 수 없습니다.</p><p>한글에서 <b>.hwpx</b>로 저장하거나 PDF로 내보내면 바로 열립니다. 변환이 필요하시면 원클릭에서 문의해 주세요.</p></div>', note: '구형 한글'}
     } else {
       r = {kind: 'html', html: '<div class="hw"><p>지원하지 않는 형식입니다. 한글(.hwp/.hwpx)·엑셀(.xlsx)·워드(.docx)·PDF·사진·텍스트를 지원합니다.</p></div>', note: ''}
     }

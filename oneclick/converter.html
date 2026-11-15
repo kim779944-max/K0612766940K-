@@ -89,6 +89,28 @@ body.has-badge .dock{bottom:78px}
 table.pv td{border:1px solid #333;padding:2px 3px;vertical-align:middle;overflow-wrap:anywhere;line-height:1.25}
 table.pv td.b{font-weight:900}
 .pvnote{font-size:10px;color:#7C8DA6;text-align:center;margin:7px 0 0}
+.sharebar{position:fixed;left:12px;right:12px;bottom:96px;display:flex;align-items:center;gap:8px;z-index:60;
+  background:rgba(10,17,40,.97);border:1px solid rgba(255,107,0,.5);border-radius:14px;padding:10px 12px;
+  box-shadow:0 10px 24px rgba(0,0,0,.4)}
+.sharebar span{flex:1;font-size:11px;color:#C9D5E6;line-height:1.4}
+.sharebar button{font-family:inherit;font-size:11.5px;font-weight:900;border-radius:9px;padding:8px 10px;cursor:pointer;
+  border:1px solid rgba(255,107,0,.55);background:rgba(255,107,0,.16);color:#FFC08A}
+.sharebar button.x{border-color:var(--line2);background:#12203C;color:#9DAEC5;padding:6px 9px}
+.pvtools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.ptool{font-family:inherit;font-size:11px;font-weight:800;color:#C7D3E3;background:#12203C;
+  border:1px solid var(--line2);border-radius:9px;padding:7px 10px;cursor:pointer}
+.ptool.on{color:#0A1224;background:linear-gradient(180deg,#FF8A2B,#FF6B00);border-color:#FF6B00}
+.ptip{font-size:10px;color:#7C8DA6;line-height:1.4;flex:1;min-width:110px}
+.paperin{position:relative;padding:6.7% 14.3%;background:#fff;border-radius:6px}
+.paperin .a4tag{position:absolute;top:4px;left:8px;font-size:8px;color:#9aa7b8;letter-spacing:.04em}
+table.pv td.selcell{outline:2px solid #FF6B00;outline-offset:-2px}
+.src img.eyedrop{cursor:crosshair}
+.fontrow{display:flex;gap:8px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.02);flex-wrap:wrap}
+.fontrow label{font-size:11px;font-weight:800;color:#9DAEC5;white-space:nowrap}
+.fontrow select{font-family:inherit;font-size:12px;font-weight:700;color:#EAF0FA;background:#0B1730;
+  border:1px solid var(--line2);border-radius:9px;padding:7px 9px}
+.ftip{font-size:9.5px;color:#6F819B;line-height:1.4;flex:1;min-width:120px}
 /* 하단 고정 바 */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:35;display:flex;justify-content:center;pointer-events:none}
 .dockin{pointer-events:auto;width:100%;max-width:460px;background:rgba(10,17,40,.97);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
@@ -126,7 +148,7 @@ table.pv td.b{font-weight:900}
 <header class="top"><div class="hd">
   <span class="brand"><span class="mark"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.9L21 9.3l-5.2 4.4L17.6 21 12 17.2 6.4 21l1.8-7.3L3 9.3l6.6-.4z"/></svg></span>KTS <small>원클릭 변환기</small></span>
   <span class="sp"></span>
-  <a class="tel" href="index.html">← 쇼룸</a>
+  <a class="tel" href="index.html">← 원클릭</a>
 </div></header>
 
 <main id="home">
@@ -196,7 +218,30 @@ table.pv td.b{font-weight:900}
       <div class="chips" id="srcChips"></div>
     </div>
   </div>
-  <div id="pvWrap"><div class="pvbox"><div class="ptitle" id="pvTitle"></div><div id="pvTable"></div></div>
+  <div class="fontrow">
+    <label for="fontSel">원본 글꼴</label>
+    <select id="fontSel">
+      <option value="">함초롬바탕 (기본)</option>
+      <option value="맑은 고딕">맑은 고딕</option>
+      <option value="돋움">돋움</option>
+      <option value="바탕">바탕</option>
+      <option value="굴림">굴림</option>
+      <option value="함초롬돋움">함초롬돋움</option>
+      <option value="HY견고딕">HY견고딕 (제목용)</option>
+      <option value="HY신명조">HY신명조 → 바탕 대체</option>
+    </select>
+    <span class="ftip" id="fontTip">사진과 같은 글꼴이 없으면 가장 비슷한 글꼴로 대체합니다</span>
+  </div>
+  <div id="pvWrap">
+    <div class="pvtools">
+      <button type="button" class="ptool" id="btnEye">스포이드 · 칸 배경</button>
+      <button type="button" class="ptool" id="btnEyeOff">배경 지우기</button>
+      <span class="ptip" id="pickTip">칸을 먼저 누르고, 사진에서 색을 눌러 주세요</span>
+    </div>
+    <div class="pvbox"><div class="paperin">
+      <div class="a4tag">A4 210×297mm · 원본 여백 유지</div>
+      <div class="ptitle" id="pvTitle"></div><div id="pvTable"></div>
+    </div></div>
     <div class="pvnote">위 화면은 저장될 파일 내용 그대로입니다 · 글자를 누르면 고칠 수 있습니다</div>
   </div>
   <div class="dock"><div class="dockin">
@@ -431,7 +476,8 @@ function renderPreview(host, st, editable){
       const al = cell.align === 'L' ? 'left' : (cell.align === 'R' ? 'right' : 'center');
       const sp = (cell.rs > 1 ? ` rowspan="${cell.rs}"` : '') + (cell.cs > 1 ? ` colspan="${cell.cs}"` : '');
       const txt = String(cell.text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\n/g, '<br>');
-      if (editable) html += `<td${sp} class="${cell.bold ? 'b' : ''}" style="${stl};text-align:${al}" contenteditable="true" data-k="${r},${c}">${txt}</td>`;
+      const selCls = (SEL && SEL.r === r && SEL.c === c) ? ' selcell' : '';
+      if (editable) html += `<td${sp} class="${cell.bold ? 'b' : ''}${selCls}" style="${stl};text-align:${al}" contenteditable="true" data-k="${r},${c}">${txt}</td>`;
       else html += `<td${sp} class="${cell.bold ? 'b' : ''}" style="${stl};text-align:${al}">${txt}</td>`;
     }
     html += '</tr>';
@@ -439,6 +485,14 @@ function renderPreview(host, st, editable){
   host.innerHTML = html + '</table>';
   if (editable){
     host.querySelectorAll('td[contenteditable]').forEach(td => {
+      td.addEventListener('focus', () => {
+        const k = td.dataset.k.split(',');
+        SEL = {r:+k[0], c:+k[1]};
+        document.querySelectorAll('table.pv td.selcell').forEach(e=>e.classList.remove('selcell'));
+        td.classList.add('selcell');
+        const tip = document.getElementById('pickTip');
+        if (tip) tip.textContent = `선택: ${+k[0]+1}행 ${+k[1]+1}열 · 사진에서 색을 누르면 배경이 바뀝니다`;
+      });
       td.addEventListener('input', () => {
         const k = td.dataset.k.split(','), cell = byKey[+k[0] + ',' + +k[1]];
         if (cell) cell.text = td.innerText.replace(/\u00a0/g, ' ');
@@ -449,6 +503,88 @@ function renderPreview(host, st, editable){
       });
     });
   }
+}
+
+/* ================= 스포이드(칸 배경색 추출) ================= */
+let SEL = null, PICK_ON = false, PICK_CANVAS = null;
+function hex2(n){ return n.toString(16).padStart(2, '0'); }
+function sampleImage(x, y){
+  const img = $('#srcImg');
+  if (!img || !img.naturalWidth) return null;
+  if (!PICK_CANVAS){
+    PICK_CANVAS = document.createElement('canvas');
+    PICK_CANVAS.width = img.naturalWidth;
+    PICK_CANVAS.height = img.naturalHeight;
+    PICK_CANVAS.getContext('2d').drawImage(img, 0, 0);
+  }
+  const g = PICK_CANVAS.getContext('2d');
+  const r = img.getBoundingClientRect();
+  const px = Math.round((x - r.left) / r.width * img.naturalWidth);
+  const py = Math.round((y - r.top) / r.height * img.naturalHeight);
+  const R = 4;
+  let rr = 0, gg = 0, bb = 0, n = 0;
+  try{
+    const d = g.getImageData(Math.max(0, px - R), Math.max(0, py - R), R * 2, R * 2).data;
+    for (let i = 0; i < d.length; i += 4){ rr += d[i]; gg += d[i+1]; bb += d[i+2]; n++; }
+  }catch(e){ return null; }
+  if (!n) return null;
+  return '#' + hex2(Math.round(rr/n)) + hex2(Math.round(gg/n)) + hex2(Math.round(bb/n));
+}
+function applyPick(hex){
+  if (!CUR || !SEL) { toast('먼저 표에서 칸을 하나 눌러 주세요'); return; }
+  const cell = CUR.cells.find(c => c.r === SEL.r && c.c === SEL.c);
+  if (!cell){ toast('이 칸은 병합된 칸입니다 — 병합의 첫 칸을 눌러 주세요'); return; }
+  cell.bg = hex;
+  renderPreview($('#pvTable'), CUR, true);
+  toast('칸 배경을 ' + hex.toUpperCase() + ' 로 맞췄습니다');
+}
+$('#btnEye').onclick = () => {
+  if (!CUR) return;
+  PICK_ON = !PICK_ON;
+  $('#btnEye').classList.toggle('on', PICK_ON);
+  $('#srcImg').classList.toggle('eyedrop', PICK_ON);
+  $('#pickTip').textContent = PICK_ON
+    ? '사진에서 칸의 배경색을 눌러 주세요 (칸을 먼저 고르면 그 칸에 적용됩니다)'
+    : '칸을 먼저 누르고, 사진에서 색을 눌러 주세요';
+};
+$('#btnEyeOff').onclick = () => {
+  if (!CUR || !SEL){ toast('먼저 표에서 칸을 눌러 주세요'); return; }
+  const cell = CUR.cells.find(c => c.r === SEL.r && c.c === SEL.c);
+  if (!cell) return;
+  cell.bg = '';
+  renderPreview($('#pvTable'), CUR, true);
+  toast('배경색을 지웠습니다');
+};
+(function bindPick(){
+  const img = document.getElementById('srcImg');
+  if (!img) return;
+  img.addEventListener('click', e => {
+    if (!PICK_ON) return;
+    const hex = sampleImage(e.clientX, e.clientY);
+    if (!hex){ toast('이 사진에서는 색을 읽지 못했습니다'); return; }
+    applyPick(hex);
+  });
+})();
+
+/* ================= 글꼴 (원본과 같게, 없으면 유사 폰트) ================= */
+const FONT_ALIAS = {'HY신명조':'바탕', 'HY중고딕':'돋움', '한컴바탕':'바탕', '새바탕':'바탕',
+  '한컴돋움':'돋움', '새돋움':'돋움', '맑은고딕':'맑은 고딕', 'Malgun Gothic':'맑은 고딕'};
+let CUR_FONT = '';
+$('#fontSel').onchange = e => {
+  CUR_FONT = e.target.value || '';
+  const mapped = FONT_ALIAS[CUR_FONT];
+  $('#fontTip').textContent = mapped
+    ? `원본 글꼴이 없으면 "${mapped}"(으)로 대체해 저장합니다`
+    : (CUR_FONT ? `저장 파일에 "${CUR_FONT}" 글꼴을 지정합니다` : '사진과 같은 글꼴이 없으면 가장 비슷한 글꼴로 대체합니다');
+  if (CUR) renderPreview($('#pvTable'), CUR, true);
+};
+function hwFont(xml, face){
+  if (!face) return xml;
+  xml = xml.replace(/<hh:fontface lang="([A-Z]+)" fontCnt="1">(<hh:font id="0"[^>]*\/>)<\/hh:fontface>/g,
+    (m, lang, f0) => `<hh:fontface lang="${lang}" fontCnt="2">${f0}<hh:font id="1" face="${face}" type="TTF" isEmbedded="0"/></hh:fontface>`);
+  xml = xml.replace(/<hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"\/>/,
+    '<hh:fontRef hangul="1" latin="1" hanja="1" japanese="1" other="1" symbol="0" user="0"/>');
+  return xml;
 }
 
 /* ================= ZIP (store/deflate-raw) ================= */
@@ -727,7 +863,8 @@ async function buildHwpx(st){
   const chars = charKeys.map(k => { const [b, color] = k.split('|'); return {b:b === '1', color, h:900}; });
   chars.push({b:true, color:'#111111', h:1100});
   const aligns = [...new Set(st.cells.map(c => c.align || 'C'))];
-  const H = hwHeader(t.text['Contents__header.xml'], {bgs, chars, aligns});
+  const face = FONT_ALIAS[CUR_FONT] || CUR_FONT || '';
+  const H = hwHeader(hwFont(t.text['Contents__header.xml'], face), {bgs, chars, aligns});
   const chGet = (b, color) => H.chId[(b ? 1 : 0) + '|' + (color || '')] || 0;
   const titleChar = H.chId['1|#111111'];
   const rowH = (r) => { const n = rowLines(st, r, widths, totalW); return n <= 1 ? 1150 : (n * 1100 + 300); };
@@ -912,12 +1049,52 @@ async function saveOne(kind){
   if (!LAST[kind]){ await buildAndShow(); }
   const blob = LAST[kind];
   if (!blob) return;
+  const name = outName(kind);
+  const mime = mimeOf(kind);
+  /* 1) 기본 다운로드 — MIME을 문서 형식으로 지정해 '.hwpx.zip' 이 붙는 문제를 막는다 */
+  const url = URL.createObjectURL(new Blob([blob], {type: mime}));
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'KTS_' + CUR_NAME.replace(/[\\/:*?"<>|]/g, '_').slice(0, 24) + '_' + stamp() + '.' + kind;
+  a.href = url; a.download = name; a.rel = 'noopener';
   document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 8000);
-  toast((kind === 'hwpx' ? '한글(.hwpx)' : '엑셀(.xlsx)') + ' 파일을 저장했습니다');
+  setTimeout(() => URL.revokeObjectURL(url), 15000);
+  toast((kind === 'hwpx' ? '한글(.hwpx)' : '엑셀(.xlsx)') + ' 저장 · ' + name);
+  setTimeout(() => showShareBar(kind), 400);
+}
+function outName(kind){
+  const base = (String(CUR_NAME || '표')
+    .replace(/\.[A-Za-z0-9]{2,5}$/, '')
+    .replace(/[\\/:*?"<>|]/g, '_')
+    .replace(/_?\d{8}_\d{4}$/, '')
+    .slice(0, 24) || '표');
+  return 'KTS_' + base + '_' + stamp() + (kind === 'hwpx' ? '.hwpx' : '.xlsx');
+}
+function mimeOf(kind){
+  return kind === 'hwpx'
+    ? 'application/hwp+zip'
+    : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+}
+/* 공유 시트(안드로이드) — 저장이 막히는 브라우저용 두 번째 길 */
+function showShareBar(kind){
+  let bar = document.querySelector('.sharebar');
+  if (bar) bar.remove();
+  const blob = LAST[kind]; if (!blob) return;
+  bar = document.createElement('div');
+  bar.className = 'sharebar';
+  bar.innerHTML = '<span>파일이 안 보이면 여기로 저장하세요</span>'
+    + '<button type="button" data-k="' + kind + '">공유로 저장</button>'
+    + '<button type="button" class="x">✕</button>';
+  document.body.appendChild(bar);
+  bar.querySelector('button[data-k]').onclick = async () => {
+    const f = new File([blob], outName(kind), {type: mimeOf(kind)});
+    try{
+      if (navigator.canShare && navigator.canShare({files: [f]})){
+        await navigator.share({files: [f], title: outName(kind)});
+      } else { toast('이 브라우저는 공유 저장을 지원하지 않습니다'); }
+    }catch(e){}
+    bar.remove();
+  };
+  bar.querySelector('.x').onclick = () => bar.remove();
+  setTimeout(() => bar.remove(), 20000);
 }
 $('#btnResBack').onclick = () => {
   $('#res').style.display = 'none';

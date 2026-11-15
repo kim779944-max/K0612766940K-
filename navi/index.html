@@ -710,11 +710,15 @@ function renderRx(r){
       고른 답과 결과는 서버로 전송·저장되지 않고 이 기기에서만 처리됩니다. 결과는 상대와 상황에 따라 다르며
       성과를 보장하지 않고, 부동산 거래상 중요사항의 설명 근거로 쓸 수 없습니다.
       ${lic && lic.key ? '이용권 ' + lic.key.slice(0,10) + '** · 1기기 사용권' : '무료 구간 결과'}</div>
-    ${wm ? `<div class="wm">${wm}</div>` : ''}`;
+    ${wm ? `<div class="wm">${wm}</div>` : '<div class="wm">미리보기 · 이용권 전</div>'}`;
 }
-$('#btnPrint').onclick = () => window.print();
+$('#btnPrint').onclick = () => {
+  if (!SN.licOn()){ toast('인쇄·PDF 저장은 이용권이 필요합니다 — 지금은 화면 미리보기입니다'); renderLic(); route('lic'); return; }
+  window.print();
+};
 $('#btnRxCopy').onclick = () => {
   if (!R) return;
+  if (!SN.licOn()){ toast('처방전 복사는 이용권이 필요합니다'); renderLic(); route('lic'); return; }
   const t = [`속내 ${R.code} · ${R.modeNm}`, R.person, '첫 마디: ' + R.first,
     '순서: ' + R.order.join(' / '), '금기어: ' + R.forbid.map(f=>f[0]).join(' / '),
     '다음: ' + R.next.join(' / ')].join('\n');

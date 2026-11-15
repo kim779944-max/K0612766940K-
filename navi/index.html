@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>속마음을 읽는 내비게이션 — 4문항 · 갈림길 화법</title>
+<meta name="theme-color" content="#0A1224">
+<meta name="description" content="그림 4문항으로 손님 성향을 읽고, 갈림길 2지선다로 다음 말을 정하는 영업·상담 내비게이션.">
+<style>
+:root{
+  --bg:#0A1224; --bg2:#0C1730; --card:#0F1B33; --card2:#12203C;
+  --line:#26375F; --line2:#2E4370;
+  --ink:#F3F6FA; --ink2:#AFBDD0; --gray:#8FA0B8;
+  --or:#FF6B00; --or2:#FFA24D; --on-or:#0A1224;
+  --green:#22C55E; --blue:#38BDF8; --pink:#F472B6;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:radial-gradient(120% 60% at 50% -10%,#132A4E 0%,transparent 60%),var(--bg);
+  color:var(--ink);
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,"Noto Sans KR",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+#app{max-width:520px;margin:0 auto;padding:0 16px 40px;min-height:100vh;display:flex;flex-direction:column}
+.hd{display:flex;align-items:center;gap:9px;padding:16px 2px 12px;position:sticky;top:0;background:linear-gradient(180deg,var(--bg) 70%,rgba(10,18,36,0));z-index:20}
+.logo{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(145deg,#FF8A2B,var(--or));color:#0A1224;font-weight:900;font-size:15px;flex:0 0 auto;box-shadow:0 4px 14px rgba(255,107,0,.32)}
+.brand{font-size:14.5px;font-weight:900;letter-spacing:-.4px}
+.brand small{display:block;font-size:10.5px;font-weight:600;color:var(--gray);letter-spacing:-.2px;margin-top:1px}
+.hd .sp{flex:1}
+.pill{font-size:10.5px;font-weight:800;color:var(--or2);border:1px solid var(--line2);background:rgba(255,107,0,.08);border-radius:999px;padding:5px 9px;white-space:nowrap}
+
+/* 화면 전환 */
+.scr{display:none;flex:1;flex-direction:column;animation:fade .26s ease}
+.scr.on{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* 표지 */
+.hero{padding:22px 0 0}
+.kicker{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.2px;color:var(--on-or);background:linear-gradient(90deg,var(--or),var(--or2));border-radius:999px;padding:6px 11px}
+h1{font-size:27px;line-height:1.26;letter-spacing:-1.1px;margin:14px 0 0;font-weight:900}
+h1 em{font-style:normal;color:var(--or)}
+.sub{font-size:13px;line-height:1.7;color:var(--ink2);margin:12px 0 0;letter-spacing:-.3px}
+.flow{margin:20px 0 0;display:grid;gap:9px}
+.fstep{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 13px}
+.fnum{width:22px;height:22px;border-radius:7px;background:rgba(255,107,0,.14);border:1px solid rgba(255,107,0,.4);color:var(--or2);font-size:11.5px;font-weight:900;display:grid;place-items:center;flex:0 0 auto;margin-top:1px}
+.fstep b{display:block;font-size:13px;letter-spacing:-.3px}
+.fstep span{display:block;font-size:11.5px;color:var(--gray);margin-top:2px;line-height:1.5}
+.prev{margin-top:14px;border:1px dashed #2C3F66;border-radius:14px;padding:12px 13px;background:rgba(255,255,255,.02)}
+.prevh{font-size:10.5px;font-weight:900;color:var(--gray);letter-spacing:.3px;margin-bottom:9px}
+.prevcode{display:flex;gap:5px;align-items:center;margin-bottom:9px}
+.prevcode i{width:19px;height:19px;border-radius:6px;background:rgba(255,107,0,.14);border:1px solid rgba(255,107,0,.42);color:var(--or2);font-style:normal;font-size:10.5px;font-weight:900;display:grid;place-items:center}
+.prevcode em{margin-left:auto;font-style:normal;font-size:11px;font-weight:900;color:var(--or2);letter-spacing:.6px}
+.prevline{font-size:11.5px;color:var(--ink2);line-height:1.62;letter-spacing:-.2px;word-break:keep-all}
+.prevsig{font-size:11px;color:#8FA0B8;line-height:1.6;margin-top:7px;padding-top:7px;border-top:1px solid #1C2B49;word-break:keep-all}
+.prevsig b{color:var(--or2)}
+.btn{display:block;width:100%;border:0;border-radius:15px;padding:17px 16px;font-size:15.5px;font-weight:900;letter-spacing:-.5px;cursor:pointer;font-family:inherit}
+.btn.main{background:linear-gradient(180deg,#FF8A2B,var(--or));color:var(--on-or);box-shadow:0 10px 26px rgba(255,107,0,.3)}
+.btn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line2)}
+.btn:active{transform:translateY(1px)}
+.foot-note{font-size:11px;color:#6F819B;line-height:1.6;text-align:center;margin-top:14px;letter-spacing:-.2px}
+
+/* 진행바 */
+.prog{display:flex;align-items:center;gap:8px;margin:6px 0 14px}
+.bar{flex:1;height:5px;border-radius:99px;background:#1A2A4A;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--or),var(--or2));transition:width .3s ease}
+.pnum{font-size:11px;font-weight:800;color:var(--gray);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* 질문 */
+.qbox{margin-bottom:14px}
+.qtag{font-size:11px;font-weight:900;color:var(--or2);letter-spacing:.4px}
+h2{font-size:20px;line-height:1.36;letter-spacing:-.8px;margin:7px 0 0;font-weight:900}
+.qhint{font-size:12px;color:var(--gray);margin:7px 0 0;letter-spacing:-.2px;line-height:1.55}
+
+/* 그림 4지선다 */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.pic{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:0;overflow:hidden;cursor:pointer;text-align:left;font-family:inherit;transition:border-color .16s,transform .16s,box-shadow .16s;position:relative}
+.pic:active{transform:scale(.985)}
+.pic.sel{border-color:var(--or);box-shadow:0 0 0 2px rgba(255,107,0,.35),0 8px 22px rgba(255,107,0,.18)}
+.pic .art{display:block;width:100%;height:auto;object-fit:cover;aspect-ratio:1/.78;background:linear-gradient(160deg,#152643,#0D1830)}
+.pic .lb{display:block;padding:10px 11px 13px}
+.pic .lb b{display:block;font-size:12.5px;font-weight:800;letter-spacing:-.4px;color:#fff;line-height:1.46;word-break:keep-all}
+.pic .lb span{display:block;font-size:10.5px;color:var(--gray);margin-top:2px;letter-spacing:-.2px}
+.pic .no{position:absolute;top:8px;left:8px;width:19px;height:19px;border-radius:6px;background:rgba(10,18,36,.72);border:1px solid var(--line2);color:var(--ink2);font-size:10.5px;font-weight:900;display:grid;place-items:center}
+.pic.sel .no{background:var(--or);color:var(--on-or);border-color:var(--or)}
+
+/* 결과 */
+.code{display:flex;gap:7px;align-items:center;margin:2px 0 14px}
+.code .c{flex:1;background:var(--card2);border:1px solid var(--line2);border-radius:11px;padding:9px 0;text-align:center}
+.code .c b{display:block;font-size:19px;font-weight:900;color:var(--or2);font-variant-numeric:tabular-nums;line-height:1}
+.code .c span{display:block;font-size:9.5px;color:var(--gray);margin-top:4px;letter-spacing:-.2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 15px 16px;margin-bottom:11px}
+.card.amber{border-color:rgba(255,107,0,.45);background:linear-gradient(180deg,rgba(255,107,0,.09),rgba(15,27,51,.9))}
+.ctit{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:900;color:var(--or2);letter-spacing:.2px;margin-bottom:9px}
+.ctit:before{content:"";width:5px;height:5px;border-radius:99px;background:var(--or);box-shadow:0 0 8px var(--or)}
+.big{font-size:16px;line-height:1.62;letter-spacing:-.6px;font-weight:800;color:#fff;word-break:keep-all}
+.big em{font-style:normal;color:var(--or2)}
+.txt{font-size:13px;line-height:1.72;color:var(--ink2);letter-spacing:-.3px;margin:0;word-break:keep-all}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.chip{font-size:11px;font-weight:800;border-radius:999px;padding:5px 9px;background:rgba(255,255,255,.06);border:1px solid var(--line2);color:var(--ink)}
+.chip.o{background:rgba(255,107,0,.14);border-color:rgba(255,107,0,.5);color:var(--or2)}
+
+/* 상태 신호 */
+.sig{display:grid;gap:8px}
+.srow{display:flex;gap:9px;align-items:flex-start;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:12px;padding:10px 11px}
+.snum{width:20px;height:20px;border-radius:6px;font-size:10.5px;font-weight:900;display:grid;place-items:center;flex:0 0 auto;margin-top:1px;background:rgba(56,189,248,.16);border:1px solid rgba(56,189,248,.45);color:var(--blue)}
+.snum.w{background:rgba(255,107,0,.16);border-color:rgba(255,107,0,.5);color:var(--or2)}
+.snum.p{background:rgba(244,114,182,.14);border-color:rgba(244,114,182,.45);color:var(--pink)}
+.srow .st{font-size:12.5px;line-height:1.6;letter-spacing:-.3px;word-break:keep-all}
+.srow .st b{color:#fff}
+
+/* 갈림길 */
+.fork{display:grid;gap:9px;margin-top:2px}
+.fk{border:1px solid var(--line2);border-radius:14px;padding:13px;background:rgba(255,255,255,.03)}
+.fk .fh{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.fk .fb{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-size:11px;font-weight:900;background:var(--or);color:var(--on-or)}
+.fk .fb.bb{background:#2E4370;color:#fff}
+.fk .ft{font-size:11px;font-weight:900;color:var(--gray);letter-spacing:.3px}
+.fk .fq{font-size:14.5px;font-weight:900;line-height:1.5;letter-spacing:-.5px;color:#fff;word-break:keep-all}
+.fk .fm{font-size:13px;line-height:1.75;color:var(--ink2);margin:8px 0 0;letter-spacing:-.3px;word-break:keep-all;border-left:2px solid rgba(255,107,0,.5);padding-left:10px}
+.fk .fn{font-size:11px;color:#7E90AB;margin-top:8px;letter-spacing:-.2px}
+.say{font-size:12px;color:var(--or2);font-weight:800;margin-top:9px}
+.actions{display:grid;gap:9px;margin-top:6px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+/* 하단 고정 */
+.dock{position:sticky;bottom:0;padding:10px 0 calc(10px + env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg) 62%,rgba(10,18,36,0));margin-top:auto}
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);bottom:92px;background:#1B2A48;border:1px solid var(--line2);color:#fff;font-size:12.5px;font-weight:800;padding:11px 15px;border-radius:12px;opacity:0;transition:.22s;z-index:60;pointer-events:none;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.hidden{display:none!important}
+@media (min-width:600px){
+  body{background:var(--bg)}
+  #app{max-width:560px;border-left:1px solid #16233F;border-right:1px solid #16233F;background:var(--bg2);min-height:100vh}
+  h1{font-size:30px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="hd">
+    <div class="logo">◈</div>
+    <div class="brand">속마음을 읽는 내비게이션<small>4문항 · 갈림길 화법</small></div>
+    <div class="sp"></div>
+    <div class="pill" id="modePill">고객 화면</div>
+  </div>
+
+  <!-- 표지 -->
+  <section class="scr on" id="sIntro">
+    <div class="hero">
+      <span class="kicker">영업·상담 1호기</span>
+      <h1>묻지 마시고,<br>그림을 <em>고르시게</em> 하세요.</h1>
+      <p class="sub">네 장의 그림을 고르시면 성향이 나옵니다.<br>그다음은 갈림길 두 개 — 어느 쪽으로 가도 <b style="color:#fff">예스</b>가 나오게 짜여 있습니다.</p>
+      <div class="flow">
+        <div class="fstep"><div class="fnum">1</div><div><b>그림 4문항</b><span>휴가 · 식사 · 실수 대처 · 뿌듯한 순간</span></div></div>
+        <div class="fstep"><div class="fnum">2</div><div><b>성향 즉시 판독</b><span>네 자리 코드로 그 사람의 결을 읽습니다</span></div></div>
+        <div class="fstep"><div class="fnum">3</div><div><b>갈림길 A / B</b><span>다음 질문과 멘트가 자동으로 나옵니다</span></div></div>
+      </div>
+      <div class="prev">
+        <div class="prevh">상담자 화면 미리보기</div>
+        <div class="prevcode"><i>3</i><i>2</i><i>1</i><i>4</i><em>3214</em></div>
+        <div class="prevline">"같이 갈 사람 일정부터 맞추시는 분이시죠? 그 마음이면 쓰실 때 남는 게 다르실 겁니다…"</div>
+        <div class="prevsig">3번 신호 · 사람 일정 먼저 → "같이 가실 분과 함께"를 기준으로 말하세요. 분위기는 <b>2번 신호</b>로 따로 읽습니다.</div>
+      </div>
+    </div>
+    <div class="dock">
+      <button class="btn main" id="btnStart">시작하기 — 그림 4문항</button>
+      <div class="foot-note">고객에게는 그림만 보입니다. 결과는 상담자만 보세요.</div>
+    </div>
+  </section>
+
+  <!-- 질문 -->
+  <section class="scr" id="sQuiz">
+    <div class="prog"><div class="pnum" id="pnum">1 / 4</div><div class="bar"><i id="pbar" style="width:25%"></i></div></div>
+    <div class="qbox">
+      <div class="qtag" id="qtag">Q1 · 휴가</div>
+      <h2 id="qtxt"></h2>
+      <p class="qhint" id="qhint"></p>
+    </div>
+    <div class="grid" id="ogrid"></div>
+    <div class="dock">
+      <button class="btn ghost" id="btnBack">← 이전</button>
+    </div>
+  </section>
+
+  <!-- 결과 -->
+  <section class="scr" id="sResult">
+    <div style="display:flex;align-items:center;gap:8px;margin:2px 0 10px">
+      <div class="qtag">판독 결과</div>
+      <div style="flex:1"></div>
+      <button class="pill" id="btnCopy" style="cursor:pointer;font-family:inherit">코드 복사</button>
+    </div>
+    <div class="code" id="codeBox"></div>
+
+    <div class="card amber">
+      <div class="ctit">이 사람은</div>
+      <div class="big" id="personaBig"></div>
+      <div class="chips" id="personaChips"></div>
+    </div>
+
+    <div class="card">
+      <div class="ctit">상담자용 · 상태 신호 (2 · 3 · 4번)</div>
+      <div class="sig" id="signalBox"></div>
+    </div>
+
+    <div class="card">
+      <div class="ctit">첫 마디 — 이 순서로만</div>
+      <p class="txt" id="firstLine"></p>
+    </div>
+
+    <div class="card">
+      <div class="ctit">갈림길 2지선다 — 어느 쪽을 골라도 예스</div>
+      <div class="fork" id="forkBox"></div>
+    </div>
+
+    <div class="card">
+      <div class="ctit">예상 반론과 미리 깔 대답</div>
+      <p class="txt" id="objection"></p>
+    </div>
+
+    <div class="dock">
+      <div class="row2">
+        <button class="btn ghost" id="btnAgain">다시 하기</button>
+        <button class="btn main" id="btnHandOff">고객에게 건네기</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ 그림(실사 사진) ============ */
+const PHOTO = {
+  ticket:"photos/nav_photo_01_ticket_train.jpg",
+  route:"photos/nav_photo_02_route_map.jpg",
+  together:"photos/nav_photo_03_calendar_two.jpg",
+  home:"photos/nav_photo_04_home_organize.jpg",
+  price:"photos/nav_photo_05_price.jpg",
+  mood:"photos/nav_photo_06_mood.jpg",
+  favmenu:"photos/nav_photo_07_favmenu.jpg",
+  nearby:"photos/nav_photo_08_nearby.jpg",
+  self:"photos/nav_photo_09_self.jpg",
+  who:"photos/nav_photo_10_who.jpg",
+  fix:"photos/nav_photo_11_fix.jpg",
+  cut:"photos/nav_photo_12_cut.jpg",
+  win:"photos/nav_photo_13_win.jpg",
+  famjoy:"photos/nav_photo_14_famjoy.jpg",
+  praised:"photos/nav_photo_15_praised.jpg",
+  free:"photos/nav_photo_16_free.jpg"
+};
+function art(kind){
+  const src = PHOTO[kind] || '';
+  return `<img class="art" src="${src}" alt="" loading="eager" decoding="async">`;
+}
+
+/* ============ 질문 정의 (대표님 확정 문구 · 한 글자도 수정 금지) ============ */
+const Q = [
+  {
+    tag:'Q1 · 휴가', key:'depart',
+    q:'갑자기 일주일 휴가가 생기면 어떻게 보내고 싶어요?',
+    hint:'부담 없는 질문입니다. 여기서 결정 속도와 사람 쪽이 드러납니다.',
+    opts:[
+      {n:1,k:'ticket',  lb:'그날 바로 표 끊고 떠난다',      s:'즉흥 출발',  v:'그날 바로 떠나는', axis:'즉흥형'},
+      {n:2,k:'route',   lb:'갈 곳·동선부터 다 짜고 간다',    s:'동선 설계',  v:'동선을 다 짜는',   axis:'설계형'},
+      {n:3,k:'together',lb:'같이 갈 사람 일정부터 맞춘다',   s:'사람 일정',  v:'사람 일정부터 맞추는', axis:'관계형'},
+      {n:4,k:'home',    lb:'집에서 쉬며 밀린 일 정리한다',   s:'집에서 정리',v:'집에서 정리하는', axis:'여유형'}
+    ]
+  },
+  {
+    tag:'Q2 · 식사', key:'judge',
+    q:'오랜만에 만난 지인에게 밥을 살 때, 제일 신경 쓰는 건요?',
+    hint:'돈이 먼저인지, 사람이 먼저인지 — 판단의 기준이 드러납니다.',
+    opts:[
+      {n:1,k:'price',  lb:'가격 대비 맛 확실히 검증된 곳',   s:'가격 검증', bj:'가격', axis:'실리형'},
+      {n:2,k:'mood',   lb:'분위기 좋고 대접받는 느낌 나는 곳',s:'분위기·대접',bj:'분위기',axis:'감각형'},
+      {n:3,k:'favmenu',lb:'상대가 평소 제일 좋아하는 메뉴',  s:'상대 취향', bj:'상대 취향',axis:'배려형'},
+      {n:4,k:'nearby', lb:'거리 가깝고 빨리 먹고 나올 곳',   s:'거리·속도', bj:'거리',  axis:'효율형'}
+    ]
+  },
+  {
+    tag:'Q3 · 실수', key:'press',
+    q:'믿고 맡긴 일이 엉켰을 때, 속으로 제일 먼저 드는 생각은요?',
+    hint:'압박이 왔을 때 어디로 가는지 — 여기서 반론 대응이 갈립니다.',
+    opts:[
+      {n:1,k:'self',lb:'"내가 직접 할걸, 답답하다"',        s:'직접 처리', v:'내가 직접 나서는', axis:'직접형'},
+      {n:2,k:'who', lb:'"내가 사람 잘못 봤나…"',            s:'사람 판단', v:'사람을 먼저 의심하는', axis:'분석형'},
+      {n:3,k:'fix', lb:'"지금 당장 수습부터 어떻게 하지?"',  s:'즉시 수습', v:'수습부터 하는', axis:'수습형'},
+      {n:4,k:'cut', lb:'"다시는 저 사람 안 믿는다"',        s:'선 긋기',   v:'선을 긋는', axis:'단호형'}
+    ]
+  },
+  {
+    tag:'Q4 · 뿌듯', key:'reward',
+    q:'살면서 제일 크게 웃고 뿌듯했던 순간은 언제였어요?',
+    hint:'칭찬할 때 어디를 눌러야 하는지가 여기서 정해집니다.',
+    opts:[
+      {n:1,k:'win',    lb:'내 실력으로 큰 판을 이겼을 때',           s:'성취',      axis:'성취 보상'},
+      {n:2,k:'famjoy', lb:'가족·내 사람이 나 때문에 편해질 때',      s:'가족·내 사람',axis:'관계 보상'},
+      {n:3,k:'praised',lb:'남들이 인정해 주고 대우해 줄 때',         s:'인정·대우', axis:'인정 보상'},
+      {n:4,k:'free',   lb:'돈·시간 걱정 없이 내 마음대로 쉴 때',     s:'여유·자유', axis:'여유 보상'}
+    ]
+  }
+];
+
+/* ============ 축 판독 ============ */
+const AXIS_READ = {
+  /* Q1 — 1 속도 / 2 설계 / 3 내 사람 / 4 여유 */
+  '즉흥형':'결정이 빠른 사람입니다. 망설이게 두면 흥이 식습니다 — "지금 하면 됩니다" 한마디에 움직입니다.',
+  '설계형':'미리 다 짜야 안심하는 사람입니다. 순서·가격·일정을 표로 보여주면 신뢰가 먼저 생깁니다.',
+  '관계형':'사람이 기준입니다. "같이 가실 분과"를 붙여 말하면 결정이 빨라집니다.',
+  '여유형':'쉴 틈이 곧 충전입니다. 재촉하면 닫히고, "원하실 때 하세요"가 오히려 빨리 옵니다.',
+  /* Q2 — 1 실속 / 2 감각 / 3 내 사람 / 4 속도 */
+  '실리형':'숫자로 납득하는 사람입니다. 이득이 보이면 망설임이 짧습니다.',
+  '감각형':'분위기로 판단하는 사람입니다. 대접받는 느낌이 결정의 절반입니다.',
+  '배려형':'함께 온 사람 눈치를 먼저 봅니다. 그 사람이 끄덕이면 같이 넘어옵니다.',
+  '효율형':'시간·이동이 아깝습니다. 멀고 복잡한 제안은 "나중에"가 됩니다.',
+  /* Q3 — 1 직접 / 2 분석 / 3 수습(체면) / 4 선 긋기 */
+  '직접형':'남에게 맡기다 엉키면 직접 나서는 사람입니다. "사장님이 직접"이 가장 좋은 말입니다.',
+  '분석형':'이유를 알아야 넘어갑니다. 원리 한 줄을 먼저 주면 의심이 사라집니다.',
+  '수습형':'일단 손부터 대는 사람입니다. 크게 티 내지 않으려는 마음이 함께 있어, 조용히 뒤에서 돕는 게 맞습니다.',
+  '단호형':'한 번 어긋나면 선을 긋습니다. 재약속을 늘리면 닫히고, 오늘 한 번에 끝내면 열립니다.',
+  /* Q4 — 1 성취 / 2 내 사람 / 3 인정 / 4 여유 */
+  '성취 보상':'자기 힘으로 해낸 것으로 보상을 받습니다. "사장님이 직접"이라는 말을 쓰세요.',
+  '관계 보상':'내 사람이 편해지는 얼굴에서 보상을 받습니다. 마지막은 가족 이야기로 닫습니다.',
+  '인정 보상':'남이 알아주는 것으로 보상을 받습니다. 잘한 것을 소리 내어 짚어 주세요.',
+  '여유 보상':'돈·시간에서 자유로워지는 것으로 보상을 받습니다. "이걸로 시간 아끼십니다"를 숫자로 보여주세요.'
+};
+
+function build(picks){
+  // picks: [1..4] per question
+  const rows = picks.map((n,i)=>({...Q[i].opts[n-1], qi:i}));
+  const axes = rows.map(r=>r.axis);
+  const code = picks.join('');
+  const depart = rows[0], judge = rows[1], press = rows[2], reward = rows[3];
+
+  /* 성향 한 줄 — 각 문항에서 고른 자리의 뜻을 그대로 이어 붙인다 */
+  const bigLine = (`휴가는 <em>${depart.v}</em> 쪽, 결정은 <em>${judge.s}</em>에서 갈립니다.<br>`+
+                 `일이 엉키면 <em>${press.v}</em> 쪽, 뿌듯함은 <em>${reward.s}</em>에서 옵니다.`).replace(/·/g,'\u2060·\u2060');
+  const chips = axes.map(a=>`<span class="chip">${a}</span>`).join('') +
+               `<span class="chip o">${code}</span>`;
+
+  /* 상태 신호 — 2·3·4번이 실제로 나왔을 때의 의미 */
+  const sigMap = {
+    2:{cls:'',   key:'2번 신호'},
+    3:{cls:'w',  key:'3번 신호'},
+    4:{cls:'p',  key:'4번 신호'}
+  };
+  const sigText = {
+    depart:{
+      2:'미리 다 짜야 안심하는 쪽입니다. 말로 설명하기 전에 <b>순서·가격·일정</b>을 표로 보여주세요. 허점이 보이면 신뢰가 먼저 깎입니다.',
+      3:'사람이 기준입니다. <b>"같이 가실 분과"</b>를 붙여 말하면 결정이 빨라집니다. 질문을 늘리지 말고 같이 편해지는 그림을 그려 주세요.',
+      4:'쉴 틈을 찾는 상태입니다. <b>"원하실 때, 무리 없이"</b>를 먼저 깔고 시간·비용 부담을 줄여 말하세요. 재촉하면 미룹니다.'
+    },
+    judge:{
+      2:'<b>분위기</b>로 판단합니다 — 대접받는 느낌이 결정의 절반입니다. 화면·실물을 먼저 보여주고 말은 그다음에.',
+      3:'<b>동석한 사람</b>이 열쇠입니다. 그 사람에게 한 번 더 확인하는 말을 던지고, 두 분이 같이 끄덕이게 만드세요.',
+      4:'이동·대기가 아깝습니다. 멀리 가지 말고 가까운 데서 짧게 — <b>"여기서 5분이면 끝납니다"</b>가 제일 센 말입니다.'
+    },
+    press:{
+      2:'이유를 알아야 넘어갑니다. <b>원리 한 줄</b>을 먼저 깔면 반론이 줄어듭니다. 설명이 길면 의심이 커집니다.',
+      3:'지금은 <b>"어떻게 보일까"</b>가 먼저입니다. 질문하지 말고 듣기만 하세요 — 지적은 절대 금지, 조용히 수습하게 두세요.',
+      4:'한 번 선을 그은 상태입니다. <b>재약속·재방문·추가 서류</b>를 늘리면 닫힙니다. 오늘 한 번에 끝나는 것만 제안하세요.'
+    },
+    reward:{
+      2:'내 사람이 편해지는 것으로 보답을 느낍니다. 마지막에 <b>"가족분들이 편해지십니다"</b> 한마디를 붙이세요.',
+      3:'<b>체면·인정</b>이 결정을 누릅니다. 잘한 것을 소리 내어 짚고, 남에게 보여줄 결과물을 쥐여주세요.',
+      4:'바쁘고 지친 상태입니다. 돈보다 <b>시간이 남는 쪽</b>으로 말하고, 약속한 시간은 꼭 지키세요.'
+    }
+  };
+  let sigHtml = '';
+  rows.forEach((r,i)=>{
+    if(r.n>=2){
+      const s=sigMap[r.n];
+      sigHtml += `<div class="srow"><div class="snum ${s.cls}">${r.n}</div><div class="st">${s.key} · <b>${r.s}</b> — ${sigText[Q[i].key][r.n]}</div></div>`;
+    }
+  });
+  if(!sigHtml){
+    sigHtml = `<div class="srow"><div class="snum w">1</div><div class="st">1번 신호 · 네 문항 모두 앞자리입니다 — <b>실속·속도 우선형</b>. 말은 짧게, 숫자와 "지금 바로"로만 가세요.</div></div>`;
+  }
+
+  /* 첫 마디 — 어순 고정 */
+  const OPEN = {1:'갑자기 휴가가 생기면 그날 바로 떠나시는 분이시죠?',
+                2:'갈 곳부터 다 짜 놓으시는 분이시죠?',
+                3:'같이 갈 사람 일정부터 맞추시는 분이시죠?',
+                4:'쉴 때는 확실히 쉬셔야 하는 분이시죠?'};
+  const JLEAD = {
+    price:'가격부터 보시는 분이니 숫자부터 말씀드리죠 — 세 장까지는 무료입니다.',
+    mood:'말로 하기 전에 하나 보여드리죠 — 쓰시는 화면이 바로 뜹니다.',
+    favmenu:'같이 보실 분이 좋아하실지를 기준으로 고르시면 됩니다 — 그게 제일 확실합니다.',
+    nearby:'멀리 안 가셔도 됩니다. 가까운 데서 짧게 받으시면 되고, 오늘 여기서 끝납니다.'
+  };
+  const openLine = `"${OPEN[depart.n]} 그 마음이면 ${reward.n===3||reward.n===2?'받으실 때 표정이 다르실 겁니다':'쓰실 때 남는 게 다르실 겁니다'}. ` +
+                   `${JLEAD[judge.k]} ` +
+                   `${press.n===3?'부담 갖지 마시고 ':'어렵지 않습니다. '}오늘 것은 오늘 안에 끝납니다."`;
+
+  /* 갈림길 A/B — 둘 다 예스로 */
+  const OBJ = {1:'그날 바로 쓰실 것부터', 2:'일정 짜실 것부터', 3:'같이 가실 분과 한 장', 4:'혼자 쉬실 것부터'};
+  const BRIEF = {price:'가격표는 깔끔합니다.', mood:'쓰시는 화면은 바로 뜹니다.',
+                 favmenu:'같이 보실 분 것까지 세 장에 담기십니다.', nearby:'가까운 데서, 짧게 끝납니다.'};
+  const SHOW = {price:'가격표는 이렇게 됩니다.', mood:'화면은 이렇게 나옵니다.',
+                favmenu:'두 분이 같이 보시면 됩니다.', nearby:'지금 쓰시는 방식과 나란히 놓고 보시죠.'};
+  const A = {
+    q:`그럼 지금, ${OBJ[depart.n]} 받아보시겠어요?`,
+    m:`"지금 여기서 바로 드릴 수 있습니다. ${BRIEF[judge.k]} 받으시고 마음에 안 드시면 그날로 끝내시면 됩니다 — 돈은 하나도 안 나갑니다."`,
+    n:'A는 "받아보기"입니다. 손에 쥐게 하는 쪽이 훨씬 빨리 예스가 나옵니다.'
+  };
+  const B = {
+    q:`아니면 ${judge.bj} 기준으로 하나만 먼저 보여드릴까요?`,
+    m:`"고르기 전에 하나만 보시죠. ${SHOW[judge.k]} 이것만 보시고 정하셔도 됩니다."`,
+    n:'B는 "보여주기"입니다. 아직 손이 안 나가는 손님은 여기서 한 번 더 멈춥니다.'
+  };
+  const forkHtml = `
+    <div class="fk"><div class="fh"><div class="fb">A</div><div class="ft">받아보기 · 바로 닫기</div></div>
+      <div class="fq">${A.q}</div>
+      <div class="fm">${A.m}</div>
+      <div class="fn">${A.n}</div></div>
+    <div class="fk"><div class="fh"><div class="fb bb">B</div><div class="ft">보여주기 · 한 번 더</div></div>
+      <div class="fq">${B.q}</div>
+      <div class="fm">${B.m}</div>
+      <div class="fn">${B.n}</div></div>
+    <div class="say">→ 어느 쪽을 고르셔도 다음 말은 "그럼 여기다 쓰시면 됩니다" 하나뿐입니다.</div>`;
+
+  /* 반론 */
+  const obj = press.n===1
+    ? `"내가 하면 되는데"가 나옵니다 → "직접 하시는 분이라 더 잘 아실 겁니다. 이건 직접 하실 일을 줄이는 쪽입니다 — 세 장 받으시면 준비는 저희가 합니다."`
+    : press.n===2
+      ? `"왜 그런 거죠?"가 나옵니다 → 원리 한 줄, 그다음 결과물. 설명을 길게 하면 오히려 의심이 커집니다.`
+      : press.n===3
+        ? `"지금 정신이 없어서요"가 나옵니다 → "수습부터 하시는 분이라 잘 아실 겁니다. 이건 오히려 시간을 아끼는 쪽입니다."`
+        : `"전에 한 번 데인 적이 있어서요"가 나옵니다 → 약속을 늘어놓지 말고 오늘 눈앞의 것만. "약속 말고, 지금 받으시는 세 장만 보시죠."`;
+
+  return {code, bigLine, chips, sigHtml, openLine, forkHtml, obj};
+}
+/* ============ 화면 제어 ============ */
+const $ = s=>document.querySelector(s);
+let step = 0, picks = [], mode = 'cust';
+
+function show(id){
+  document.querySelectorAll('.scr').forEach(e=>e.classList.remove('on'));
+  $('#'+id).classList.add('on');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function renderQ(){
+  const q = Q[step];
+  $('#pnum').textContent = `${step+1} / 4`;
+  $('#pbar').style.width = `${(step+1)*25}%`;
+  $('#qtag').textContent = q.tag;
+  $('#qtxt').innerHTML = q.q;
+  $('#qhint').textContent = q.hint;
+  $('#ogrid').innerHTML = q.opts.map(o=>`
+    <button class="pic" data-n="${o.n}" type="button">
+      <span class="no">${o.n}</span>
+      ${art(o.k)}
+      <span class="lb"><b>${o.lb}</b></span>
+    </button>`).join('');
+  $('#ogrid').querySelectorAll('.pic').forEach(b=>{
+    b.onclick = ()=>{
+      b.classList.add('sel');
+      picks[step] = +b.dataset.n;
+      setTimeout(()=>{
+        if(step < 3){ step++; renderQ(); }
+        else finish();
+      }, 190);
+    };
+  });
+  $('#btnBack').style.visibility = step===0 ? 'hidden' : 'visible';
+}
+function finish(){
+  const r = build(picks);
+  $('#codeBox').innerHTML = picks.map((n,i)=>`<div class="c"><b>${n}</b><span>${Q[i].tag.split('· ')[1]}</span></div>`).join('');
+  $('#personaBig').innerHTML = r.bigLine;
+  $('#personaChips').innerHTML = r.chips;
+  $('#signalBox').innerHTML = r.sigHtml;
+  $('#firstLine').textContent = r.openLine;
+  $('#forkBox').innerHTML = r.forkHtml;
+  $('#objection').textContent = r.obj;
+  show('sResult');
+}
+function toast(t){
+  const el=$('#toast'); el.textContent=t; el.classList.add('on');
+  clearTimeout(window._tt); window._tt=setTimeout(()=>el.classList.remove('on'),1600);
+}
+
+$('#btnStart').onclick = ()=>{ step=0; picks=[]; renderQ(); show('sQuiz'); };
+$('#btnBack').onclick = ()=>{ if(step>0){ step--; renderQ(); } };
+$('#btnAgain').onclick = ()=>{ step=0; picks=[]; renderQ(); show('sQuiz'); };
+$('#btnCopy').onclick = async ()=>{
+  const t = `속마음 코드 ${picks.join('')} · ${Q.map((q,i)=>q.tag.split('· ')[1]+' '+picks[i]).join(' / ')}`;
+  try{ await navigator.clipboard.writeText(t); toast('코드를 복사했습니다'); }
+  catch(e){ toast('복사가 막혔습니다 — 길게 눌러 복사하세요'); }
+};
+$('#btnHandOff').onclick = ()=>{
+  mode = mode==='cust' ? 'sales' : 'cust';
+  $('#modePill').textContent = mode==='cust' ? '고객 화면' : '상담자 화면';
+  if(mode==='cust'){ step=0; picks=[]; renderQ(); show('sQuiz'); toast('고객에게 건넬 화면입니다'); }
+  else { toast('결과 화면입니다'); }
+};
+/* 최초 상태 */
+renderQ();
+</script>
+</body>
+</html>

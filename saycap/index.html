@@ -1384,8 +1384,13 @@ function hintOnce(){
 }
 /* 톡 한 번 = 화면 위 모든 UI 100% 숨김 (사진만) · 다시 톡 = 일괄 복귀 */
 $('#editor').addEventListener('click', e => {
-  if(e.target.closest('button, a, input, textarea, .draw-wrap')) return;
+  if(e.target.closest('button, a, input, textarea, .draw-wrap, .voice')) return;
   if(drawOn) return;
+  toggleClean();
+});
+/* 뷰어의 자막·위치 영역도 톡 대상 (사진 영역은 확대와 겹치지 않게 따로 처리) */
+$('#viewer').addEventListener('click', e => {
+  if(e.target.closest('button, a, .view-stage')) return;
   toggleClean();
 });
 $('#editClose').onclick = async () => {

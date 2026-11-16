@@ -204,7 +204,7 @@ h2{font-size:20px;line-height:1.4;letter-spacing:-.8px;margin:8px 0 0;font-weigh
     <span class="kicker" id="startKicker">나를 볼 때</span>
     <h2 id="startTitle">네 문항이면 충분합니다.</h2>
     <p class="sub" id="startDesc">답하는 동안 다음 질문이 달라집니다.</p>
-    <div class="fld">
+    <div class="fld" id="birthWrap">
       <label for="birth">생년월일 8자리 (선택 · 나이대 문장에만 씀)</label>
       <input id="birth" inputmode="numeric" autocomplete="bday" placeholder="19690815" maxlength="8">
     </div>
@@ -350,6 +350,9 @@ h2{font-size:20px;line-height:1.4;letter-spacing:-.8px;margin:8px 0 0;font-weigh
     $('#startDesc').textContent = ST.mode === 'self'
       ? '아침에 손이 가는 곳부터 묻습니다. 앞 답에 따라 다음 질문이 달라집니다.'
       : '눈으로 확인되는 행동만 묻습니다. 앞 답에 따라 다음 질문이 달라집니다.';
+    /* 생년월일은 '나를 볼 때'에만 받는다 — 남의 나이로 오해되지 않게 */
+    $('#birthWrap').classList.toggle('hidden', ST.mode !== 'self');
+    $('#birthNote').classList.toggle('hidden', ST.mode !== 'self');
     show('sStart');
   }
 
@@ -498,7 +501,7 @@ h2{font-size:20px;line-height:1.4;letter-spacing:-.8px;margin:8px 0 0;font-weigh
     var chips = $('#resChips'); chips.innerHTML = '';
     chips.appendChild(el('span', 'tag o', res.cardName));
     chips.appendChild(el('span', 'tag', c.dateKo + ' ' + c.timeNoun));
-    chips.appendChild(el('span', 'tag', c.age == null ? '나이 미입력' : '만 ' + c.age + '세'));
+    if (res.mode === 'self') chips.appendChild(el('span', 'tag', c.age == null ? '나이 미입력' : '만 ' + c.age + '세'));
     if (res.useSub) chips.appendChild(el('span', 'tag', '보조 결 ' + window.CARDS[res.secondary].name));
     if (res.conflict) chips.appendChild(el('span', 'tag', '겉과 속이 반대 결'));
 

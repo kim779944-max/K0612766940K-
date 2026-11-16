@@ -137,7 +137,7 @@ body.has-badge .caption.lifted{transform:translateY(-128px)}   /* 배지 기간 
 .caption .voice{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:12px;color:#e6dcea;border:1px solid rgba(255,255,255,.32);border-radius:12px;padding:4px 10px;background:rgba(0,0,0,.45)}
 /* ship.page 무료 호스팅 배지가 화면 아래를 가리므로, 배지가 보이면 자막을 그 위로 올립니다 */
 body.has-badge .caption{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
-body.has-badge .toast{bottom:auto;top:calc(58px + env(safe-area-inset-top,0px))}
+body.has-badge .toast{bottom:auto;top:calc(92px + env(safe-area-inset-top,0px))}
 body.has-badge .g-feed{padding-bottom:80px}
 body.has-badge .g-fab{bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 body.has-badge .sheet{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
@@ -235,7 +235,7 @@ body.has-badge .edit-hint{top:calc(70px + env(safe-area-inset-top,0px))}
 .stt-live{background:#0C1526;border:1px solid rgba(255,107,0,.28);border-radius:10px;padding:12px;min-height:52px;font-size:14px;color:#E2E8F0;line-height:1.5;margin-bottom:10px}
 .stt-live .interim{color:#94A3B8}
 .rec-time{font-variant-numeric:tabular-nums;font-size:15px;color:#FFA24D;margin:2px 0 12px}
-.toast{position:fixed;left:50%;top:calc(58px + env(safe-area-inset-top,0px));bottom:auto;transform:translateX(-50%) translateY(-6px);
+.toast{position:fixed;left:50%;top:calc(96px + env(safe-area-inset-top,0px));bottom:auto;transform:translateX(-50%) translateY(-6px);
   background:rgba(10,17,40,.96);border:1px solid rgba(255,107,0,.35);color:#fff;font-size:13px;padding:11px 16px;border-radius:12px;z-index:90;opacity:0;transition:.25s;pointer-events:none;max-width:86vw;text-align:center;line-height:1.5}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .usage{font-size:13px;color:#c6bfca;line-height:1.85}
@@ -303,6 +303,45 @@ body.has-badge .edit-hint{top:calc(70px + env(safe-area-inset-top,0px))}
 .flow-steps b{color:#F1F5F9;font-weight:700}
 .flow-tip{display:block;margin:9px 0 0;font-size:11px;color:#8FA0B6;line-height:1.6}
 
+/* ---------- v1.3 홈 간소화 — 안내 박스·촬영 버튼 없이 하단 아이콘 2개만 ---------- */
+.home-dock{position:absolute;left:0;right:0;bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;gap:30px;z-index:3}
+.home-dock .hd{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;width:104px;padding:10px 0;border-radius:16px}
+.home-dock .hd .ico{width:25px;height:25px;stroke:#CBD5E1}
+.home-dock .hd span{font-size:11.5px;color:#A9B4C4;letter-spacing:.01em;white-space:nowrap}
+.home-dock .hd:active .ico{stroke:#FFA24D}
+.home-dock .hd:active span{color:#FFA24D}
+.home-tip{position:absolute;left:0;right:0;bottom:calc(100px + env(safe-area-inset-bottom,0px));text-align:center;
+  font-size:10.5px;color:#6a656c;line-height:1.7;z-index:3}
+
+/* ---------- v1.3 하단 미니 독 (다른 사진 · 일기 보기) ---------- */
+.edit-dock{position:absolute;left:16px;bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:9px;z-index:8}
+.edit-dock .dk{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:50px;height:44px;border-radius:13px;
+  background:rgba(10,17,40,.62);border:1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:opacity .26s ease}
+.edit-dock .dk .ico{width:19px;height:19px;stroke:#E8EDF5}
+.edit-dock .dk span{font-size:9px;color:#CBD5E1;letter-spacing:-.03em;line-height:1}
+.edit-dock .dk:active{transform:scale(.94)}
+body.has-dock .caption{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+body.has-badge.has-dock .caption{padding-bottom:calc(140px + env(safe-area-inset-bottom,0px))}
+
+/* ---------- v1.3 100% 클린 뷰 — 톡 한 번에 날짜·위치·자막·X·상단·하단 전부 사라짐 ---------- */
+#editor .top-chip,#editor .edit-actions,#editor .edit-rail,#editor .pencil-mini,#editor .dict-chip,
+#editor .edit-hint,#editor .caption,#editor .edit-dock,
+#viewer .view-top,#viewer .view-bottom,#viewer .caption,#viewer .loc-chip,#viewer .zoom-badge,
+#viewer .view-count{transition:opacity .24s ease}
+body.clean #editor .top-chip,body.clean #editor .edit-actions,body.clean #editor .edit-rail,
+body.clean #editor .pencil-mini,body.clean #editor .dict-chip,body.clean #editor .edit-hint,
+body.clean #editor .caption,body.clean #editor .edit-dock,
+body.clean #viewer .view-top,body.clean #viewer .view-bottom,body.clean #viewer .caption,
+body.clean #viewer .loc-chip,body.clean #viewer .zoom-badge,body.clean #viewer .view-count{
+  opacity:0 !important;pointer-events:none !important}
+
+/* ---------- 최신 사진 여는 중 스플래시 ---------- */
+.np-splash{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  background:#0A1128;color:#8FA0B6;font-size:12.5px;letter-spacing:.01em}
+.np-splash.on{display:flex}
+.np-splash .mark{width:64px;height:64px;opacity:.5}
+
 /* ---------- 공유 확인 시트 ---------- */
 .share-note{font-size:12px;color:#9FB0C4;line-height:1.65;margin:0 0 12px}
 
@@ -328,7 +367,17 @@ body.has-badge .edit-hint{top:calc(70px + env(safe-area-inset-top,0px))}
 </head>
 <body>
 
-<!-- ============ 1. 홈 (SC 로고 · 촬영하기 / 갤러리보기) ============ -->
+<!-- 최신 사진을 여는 동안 (APK 시작 화면) -->
+<div class="np-splash" id="npSplash">
+  <svg class="mark" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+    <circle cx="60" cy="60" r="41" stroke="#E2E8F0" stroke-width="2"/>
+    <path d="M84 44a26 26 0 1 0 1 31" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="90" cy="36" r="3" fill="#FF6B00"/>
+  </svg>
+  <span id="npSplashTxt">최신 사진을 여는 중…</span>
+</div>
+
+<!-- ============ 1. 홈 (SC 로고 · 하단 아이콘 2개: 다른 사진 / 저장한 일기) ============ -->
 <section id="home" class="screen active">
   <div class="home-top">
     <button class="btn" id="homeShare" aria-label="세이캡 알려주기"><svg class="ico" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M5 13v6h14v-6"/></svg></button>
@@ -342,32 +391,16 @@ body.has-badge .edit-hint{top:calc(70px + env(safe-area-inset-top,0px))}
   </svg>
   <p class="home-brand">SayCap</p>
   <p class="home-sub">말로 남기는 사진일기 · 2016 특허 · 2026 리부트</p>
-  <div class="flow-card" id="flowCard">
-    <button class="flow-head" id="flowHead" aria-expanded="false">
-      <b>사진은 폰 카메라로 찍으세요</b>
-      <span>카메라 촬영 → 왼쪽 아래 썸네일 → 공유 → 세이캡</span>
-      <i class="flow-caret">▾</i>
+  <p class="home-tip">사진 원본은 100% 그대로 · 한 번 톡 = 화면 정리</p>
+  <div class="home-dock">
+    <button class="hd" id="goPick" aria-label="다른 사진 고르기">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M3.5 7.5h8.2l1.3-2.6H20.5v14.6h-17z"/><circle cx="12" cy="14.2" r="3.7"/></svg>
+      <span>다른 사진 고르기</span>
     </button>
-    <ol class="flow-steps" id="flowSteps">
-      <li><em>1</em><span>평소 쓰는 <b>폰 기본 카메라</b>로 찍습니다 — 야간·HDR·화질은 카메라가 제일 잘합니다.</span></li>
-      <li><em>2</em><span>찍은 사진 <b>왼쪽 아래 썸네일</b>을 누르고 <b>공유</b>를 고릅니다.</span></li>
-      <li><em>3</em><span>공유 목록에서 <b>세이캡</b>을 누르면 마이크가 바로 떠요. 말하면 자막이 사진에 새겨집니다.</span></li>
-    </ol>
-    <span class="flow-tip" id="flowTip" style="padding:0 14px 12px">한 번 공유하면 공유 목록 위쪽 ‘자주 쓰는 앱’에 세이캡이 자리를 잡습니다.</span>
-  </div>
-  <div class="home-btns">
-    <button class="home-btn" id="goCamera">
-      <span class="ring"><svg class="ico" viewBox="0 0 48 48"><path d="M6 16h6l4-6h16l4 6h6v24H6z"/><circle cx="24" cy="27" r="9"/></svg></span>
-      <span>촬영하기</span>
+    <button class="hd" id="goGallery" aria-label="저장한 일기 보기">
+      <svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="7" height="7"/><rect x="13.5" y="4.5" width="7" height="7"/><rect x="3.5" y="13.5" width="7" height="7"/><rect x="13.5" y="13.5" width="7" height="7"/></svg>
+      <span>저장한 일기 보기</span>
     </button>
-    <button class="home-btn" id="goGallery">
-      <span class="ring"><svg class="ico" viewBox="0 0 48 48"><rect x="8" y="12" width="28" height="24" rx="1.5"/><path d="M13 9h27v24"/><circle cx="18" cy="20" r="2.4"/><path d="M11 32l9-9 6 6 3-3 6 6"/></svg></span>
-      <span>갤러리보기</span>
-    </button>
-  </div>
-  <div class="home-foot">
-    사진 원본은 <b>100% 그대로</b> · 한 번 톡 = 자막 꺼짐 · 말하면 자막<br>
-    <span style="opacity:.8">촬영 · 갤러리 · 검색 · 확대 · 내보내기</span>
   </div>
 </section>
 
@@ -430,7 +463,17 @@ body.has-badge .edit-hint{top:calc(70px + env(safe-area-inset-top,0px))}
     <div class="memo empty" id="editMemo"><span class="txt">연필로 설명을 더해 보세요</span><button class="cap-more" onclick="openCaptionFull()">…더보기</button></div>
     <span class="voice" id="editVoice" style="display:none">▶ 목소리 메모</span>
   </div>
-  <div class="edit-hint" id="editHint">톡 = 자막 끄기 / 다시 톡 = 자막 켜기</div>
+  <div class="edit-dock" id="editDock">
+    <button class="dk" id="dkPick" aria-label="다른 사진 고르기">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M3.5 7.5h8.2l1.3-2.6H20.5v14.6h-17z"/><circle cx="12" cy="14.2" r="3.7"/></svg>
+      <span>다른 사진</span>
+    </button>
+    <button class="dk" id="dkAlbum" aria-label="저장한 일기 보기">
+      <svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="7" height="7"/><rect x="13.5" y="4.5" width="7" height="7"/><rect x="3.5" y="13.5" width="7" height="7"/><rect x="13.5" y="13.5" width="7" height="7"/></svg>
+      <span>일기 보기</span>
+    </button>
+  </div>
+  <div class="edit-hint" id="editHint">톡 = 화면 정리 / 다시 톡 = 되돌리기</div>
 </section>
 
 <!-- ============ 4. 갤러리 ============ -->
@@ -652,6 +695,8 @@ function show(name){
   if(name === 'gallery') renderGallery();
   if(name !== 'editor' && name !== 'viewer') stopLetterScroll();
   document.body.style.background = name==='gallery' ? '#0A1128' : '#000';
+  document.body.classList.toggle('has-dock', name === 'editor');
+  setClean(false);
 }
 let toastTimer;
 function toast(msg, ms=2200){
@@ -685,7 +730,11 @@ async function idbTx(mode, fn){
     const st = t.objectStore(STORE);
     let out;
     try{ out = fn(st); }catch(e){ rej(e); return; }
-    t.oncomplete = () => res(out && out.result !== undefined ? out.result : out);
+    /* 저장된 기록이 없으면 undefined — IDBRequest 객체를 기록으로 착각하지 않도록 */
+    t.oncomplete = () => {
+      if(out && typeof out === 'object' && 'result' in out) res(out.result);
+      else res(out);
+    };
     t.onerror = () => rej(t.error);
     t.onabort = () => rej(t.error);
   });
@@ -880,9 +929,12 @@ async function geocodeAt(lat, lng){
 /* =========================================================
    홈
    ========================================================= */
-$('#goCamera').onclick = () => openCamera();
+$('#goPick').onclick = () => nativePick();
 $('#goGallery').onclick = () => show('gallery');
 $('#homeHelp').onclick = () => openSheet('sheetUsage');
+/* 편집 화면 하단 미니 독 — 다른 사진 / 저장한 일기 */
+$('#dkPick').onclick = async () => { try{ await saveEdit(false); }catch(e){} nativePick(); };
+$('#dkAlbum').onclick = () => $('#btnGrid').click();
 
 /* =========================================================
    카메라
@@ -1027,46 +1079,58 @@ $('#shutter').onclick = async () => {
 };
 
 /* 파일에서 불러오기 */
-$('#fbPick').onclick = () => $('#filePick').click();
+$('#fbPick').onclick = () => nativePick();
 $('#fbGallery').onclick = () => { stopCamera(); show('gallery'); };
 $('#filePick').onchange = e => handleFiles(e.target.files);
 $('#fileCam').onchange = e => handleFiles(e.target.files);
 async function handleFiles(files){
-  const arr = [...files].filter(f=>f.type.startsWith('image/'));
-  if(!arr.length) return;
-  let first = null, named = 0;
-  for(const f of arr){
-    const dim = await imageSize(f);
-    const rec = newRec(f, dim.w, dim.h, f.name);
-    /* 1) EXIF 촬영시각 — 파일 수정시각보다 원본 촬영 시각이 정확 */
-    const ex = await readExif(f);
-    if(ex.taken && !isNaN(ex.taken)){
-      rec.takenAt = ex.taken.getTime();
-      rec.caption.date = `${ex.taken.getFullYear()}.${pad(ex.taken.getMonth()+1)}.${pad(ex.taken.getDate())}`;
-    } else if(f.lastModified){
-      const d = new Date(f.lastModified);
-      rec.takenAt = f.lastModified;
-      if(f.lastModified < Date.now() - 86400000){
-        rec.caption.date = `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())}`;
-      }
+  const all = [...(files || [])];
+  const isImg = f => /^image\//.test(f.type || '') || /\.(jpe?g|png|webp|heic|heif|gif|bmp)$/i.test(f.name || '');
+  const arr = all.filter(isImg);
+  if(!arr.length){ toast('사진 파일을 열지 못했습니다 — 다른 사진으로 다시 골라 주세요', 3400); return; }
+  hideSplash();
+  try{
+    let first = null, named = 0;
+    for(const f of arr){
+      const rec = await importPhoto(f);
+      if(rec.geo) named++;
+      if(!first) first = rec;
     }
-    /* 2) EXIF GPS — 지번 주소와 주변 명소까지 (추측 금지: 확인된 것만) */
-    if(ex.lat && ex.lng){
-      rec.exifGeo = { lat: ex.lat, lng: ex.lng };
-      rec.geo = { lat: ex.lat, lng: ex.lng };
-      named++;
-      enrichGeo(rec);        /* 비동기 — 먼저 저장하고 주소는 도착하는 대로 채웁니다 */
+    await loadIndex();
+    stopCamera();
+    if(arr.length === 1){ await startEditExisting(first.id, {autoMic:true}); }
+    else {
+      show('gallery');
+      toast(`${arr.length}장을 원본 그대로 저장했습니다` + (named ? ` · ${named}장은 찍은 장소까지 불러옵니다` : ''), 2800);
     }
-    await putPhoto(rec);
-    if(!first) first = {rec, url:URL.createObjectURL(f)};
+  }catch(e){
+    console.warn(e);
+    hideSplash();
+    toast('사진을 여는 중 문제가 생겼습니다 — 한 번 더 시도해 주세요', 3200);
   }
-  await loadIndex();
-  stopCamera();
-  if(arr.length === 1){ await startEditExisting(first.rec.id); }
-  else {
-    show('gallery');
-    toast(`${arr.length}장을 원본 그대로 저장했습니다` + (named ? ` · ${named}장은 찴은 장소까지 불러옵니다` : ''), 2800);
+}
+/* 사진 1장 저장 — EXIF 촬영시각·GPS까지 (추측 금지: 확인된 것만) */
+async function importPhoto(f, forcedId){
+  const dim = await imageSize(f);
+  const rec = newRec(f, dim.w, dim.h, f.name, forcedId);
+  const ex = await readExif(f);
+  if(ex.taken && !isNaN(ex.taken)){
+    rec.takenAt = ex.taken.getTime();
+    rec.caption.date = `${ex.taken.getFullYear()}.${pad(ex.taken.getMonth()+1)}.${pad(ex.taken.getDate())}`;
+  } else if(f.lastModified){
+    const d = new Date(f.lastModified);
+    rec.takenAt = f.lastModified;
+    if(f.lastModified < Date.now() - 86400000){
+      rec.caption.date = `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())}`;
+    }
   }
+  if(ex.lat && ex.lng){
+    rec.exifGeo = { lat: ex.lat, lng: ex.lng };
+    rec.geo = { lat: ex.lat, lng: ex.lng };
+    enrichGeo(rec);        /* 비동기 — 먼저 저장하고 주소는 도착하는 대로 채웁니다 */
+  }
+  await putPhoto(rec);
+  return rec;
 }
 /* 좌표 → 지번 주소·주변 명소를 사진에 부착 */
 async function enrichGeo(rec){
@@ -1102,10 +1166,10 @@ function imageSize(blob){
 /* =========================================================
    사진 레코드
    ========================================================= */
-function newRec(blob, w, h, name){
+function newRec(blob, w, h, name, forcedId){
   const now = Date.now();
   return {
-    id: 'sc_' + now + '_' + Math.random().toString(36).slice(2,7),
+    id: forcedId || ('sc_' + now + '_' + Math.random().toString(36).slice(2,7)),
     blob, w, h, name: name || 'SayCap.jpg', type: blob.type || 'image/jpeg',
     caption: { date: todayDot(), place:'', who:'', memo:'' },
     filter: 'none', audio: null, geo: null,
@@ -1154,12 +1218,14 @@ function startMicForCaption(){
   startSTT();
   const c = $('#dictChip'); if(c) c.style.display = sttRunning ? 'block' : 'none';
 }
-async function startEditExisting(id){
+async function startEditExisting(id, opts){
+  opts = opts || {};
   const rec = await getPhoto(id);
   if(!rec) return;
   editing = {mode:'existing', rec, url:urlFor(rec)};
   paintEditor();
   show('editor');
+  if(opts.autoMic) autoMicSoon();
 }
 function paintEditor(){
   const {rec, url} = editing;
@@ -1316,7 +1382,12 @@ function hintOnce(){
   h.style.opacity = '1';
   setTimeout(()=>{ h.style.opacity = '0'; }, 3600);
 }
-$('#editImg').onclick = () => $('#editCaption').classList.toggle('off');
+/* 톡 한 번 = 화면 위 모든 UI 100% 숨김 (사진만) · 다시 톡 = 일괄 복귀 */
+$('#editor').addEventListener('click', e => {
+  if(e.target.closest('button, a, input, textarea, .draw-wrap')) return;
+  if(drawOn) return;
+  toggleClean();
+});
 $('#editClose').onclick = async () => {
   if(editing && editing.mode==='new'){ URL.revokeObjectURL(editing.url); editing = null; show('gallery'); }
   else { editing = null; show('gallery'); }
@@ -1441,12 +1512,17 @@ function renderSTT(){
   el.innerHTML = fin + (itr ? (fin ? ' ' : '') + `<span class="interim">${itr}</span>` : (fin ? '' : '듣고 있습니다…'));
 }
 function startSTT(){
-  if(!SR){ toast('이 브라우저는 음성인식을 지원하지 않습니다. 크롬·웨일에서 열어 주세요'); return; }
+  if(!SR && !NATIVE){ toast('이 브라우저는 음성인식을 지원하지 않습니다. 세이캡 앱이나 크롬에서 열어 주세요'); return; }
   if(sttRunning) return;
   sttRunning = true;
   sttFinal = ''; sttInterim = ''; sttSessionText = '';
   sttLastCommit = ''; sttLastCommitAt = 0; sttNoSpeech = 0;
   $('#sttToggle').textContent = '■ 받아쓰기 멈추기';
+  if(NATIVE){                       /* 앱: 안드로이드 음성인식기가 바로 듣습니다 */
+    try{ SayCapApp.startSTT(); }catch(e){}
+    renderSTT();
+    return;
+  }
   beginSession();
 }
 function beginSession(){
@@ -1501,6 +1577,7 @@ function commitSpeech(){
 }
 function stopSTT(){
   sttRunning = false;
+  if(NATIVE){ try{ SayCapApp.stopSTT(); }catch(e){} }
   clearTimeout(sttRestartTimer); sttRestartTimer = null;
   const chip = document.getElementById('dictChip');
   if(chip) chip.style.display = 'none';
@@ -1700,7 +1777,7 @@ function renderGallery(){
         </div>
       </div>`;
     $('#emptyCam').onclick = () => openCamera();
-    $('#emptyPick').onclick = () => $('#filePick').click();
+    $('#emptyPick').onclick = () => nativePick();
     $('#emptySample').onclick = () => loadSamples();
     return;
   }
@@ -1776,7 +1853,7 @@ $('#galMenu').onclick = () => openSheet('sheetMenu');
 $('#galHome').onclick = () => show('home');
 $('#galFab').onclick = () => openCamera();
 $('#mnSample').onclick = async () => { closeSheet('sheetMenu'); await loadSamples(); };
-$('#mnUpload').onclick = () => { closeSheet('sheetMenu'); $('#filePick').click(); };
+$('#mnUpload').onclick = () => { closeSheet('sheetMenu'); nativePick(); };
 $('#mnUsage').onclick = () => { closeSheet('sheetMenu'); openSheet('sheetUsage'); };
 $('#mnAbout').onclick = () => toast('SayCap 2026 · 2016 오리지널 UI 계승 · 원본 비파괴 · v2.6', 3200);
 
@@ -1906,14 +1983,22 @@ function hideViewDock(){
   const c = $('#viewCaption'); if(c) c.classList.remove('lifted');
   const n = $('#viewCount'); if(n) n.style.opacity = '0';
 }
-$('#viewImg').onclick = () => {
-  showViewDock(true);
-  const cap = $('#viewCaption');
-  const hide = !cap.classList.contains('off');
-  cap.classList.toggle('off', hide);
-  setViewUI(!hide);
-  if(hide) toast('톡 = 자막 끄기 · 다시 톡 = 자막 켜기', 1400);
-};
+/* 뷰어: 한 번 톡 = 화면 위 모든 UI 100% 숨김, 두 번 톡 = 확대/원복 */
+let viewTapTimer = null;
+$('#viewStage').addEventListener('click', e => {
+  if(e.target.closest('button')) return;
+  const now = Date.now();
+  if(now - lastTap < 300){
+    clearTimeout(viewTapTimer); viewTapTimer = null;
+    if(scale > 1.1){ scale = 1; tx = 0; ty = 0; } else { scale = 2.6; }
+    applyTransform();
+    lastTap = 0;
+    return;
+  }
+  lastTap = now;
+  clearTimeout(viewTapTimer);
+  viewTapTimer = setTimeout(() => { viewTapTimer = null; toggleClean(); }, 240);
+});
 $('#viewVoice').onclick = () => {
   const p = viewerList[viewIndex];
   if(p && p.audio){
@@ -2018,16 +2103,6 @@ function clampPan(){
   if(scale <= 1.02){ tx = 0; ty = 0; scale = 1; }
 }
 let lastTap = 0;
-stage.addEventListener('click', e=>{
-  if(e.target.closest('button')) return;
-  const now = Date.now();
-  if(now - lastTap < 300){
-    if(scale > 1.1){ scale = 1; tx = 0; ty = 0; }
-    else { scale = 2.6; }
-    applyTransform();
-    lastTap = 0;
-  } else lastTap = now;
-});
 
 /* =========================================================
    내보내기
@@ -2237,6 +2312,120 @@ async function deletePhoto(id){
 }
 
 /* =========================================================
+   v1.3 APK 브리지 (SayCapApp)
+   · 갤러리 선택·최신 사진·받아쓰기를 앱(네이티브)이 직접 처리합니다.
+   · 사진 바이트는 __npBegin/__npChunk/__npEnd 로 나뉘어 들어옵니다.
+     (content:// 를 웹뷰에 그대로 넘기면 기기·갤러리 앱에 따라 안 열리던 문제를 없앱니다)
+   ========================================================= */
+const NATIVE = !!(window.SayCapApp && typeof SayCapApp.version === 'function');
+let npCur = null;
+const npFiles = {};
+function b64ToBytes(b64){
+  const bin = atob(b64), n = bin.length, out = new Uint8Array(n);
+  for(let i=0;i<n;i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+function showSplash(txt){
+  const t = $('#npSplashTxt'); if(t) t.textContent = txt || '최신 사진을 여는 중…';
+  const sp = $('#npSplash'); if(sp) sp.classList.add('on');
+}
+function hideSplash(){ const sp = $('#npSplash'); if(sp) sp.classList.remove('on'); }
+window.__npBegin = (key, name, type, total) => {
+  npCur = {key, name: name || 'SayCap.jpg', type: type || 'image/jpeg', parts: []};
+};
+window.__npChunk = (idx, b64) => {
+  if(!npCur) return;
+  try{ npCur.parts[idx] = b64ToBytes(b64); }catch(e){}
+};
+window.__npEnd = (key) => {
+  const c = npCur; npCur = null;
+  if(!c) return;
+  const k = key || c.key;
+  const blob = new Blob(c.parts.filter(Boolean), {type: c.type});
+  let file = null;
+  try{ file = new File([blob], c.name, {type: c.type, lastModified: Date.now()}); }
+  catch(e){ file = blob; file.name = c.name; }
+  if(k.indexOf('latest:') === 0){ onNativeLatest(file, k.slice(7)); return; }
+  npFiles[k] = file;
+};
+window.__npAllDone = (count) => {
+  const out = [];
+  for(let i=0;i<count;i++){ const f = npFiles['pick:'+i]; if(f) out.push(f); }
+  Object.keys(npFiles).forEach(k => { delete npFiles[k]; });
+  hideSplash();
+  if(out.length) handleFiles(out);
+  else toast('사진을 받지 못했습니다 — 다시 골라 주세요', 2800);
+};
+window.__npFail = (why) => {
+  hideSplash();
+  if(why === 'perm') toast('사진 접근을 허용하면 최신 사진이 바로 열립니다', 3400);
+};
+/* 앱 음성인식 결과 → 자막 */
+window.__saycapSTT = (text, isFinal) => {
+  if(!sttRunning) return;
+  const t = normSp(text || '');
+  if(!t) return;
+  if(isFinal){ sttSessionText = t; commitSpeech(); }
+  else { sttInterim = t; renderSTT(); }
+};
+window.__saycapSTTError = (code) => {
+  if(code === 'perm'){ sttRunning = false; toast('마이크 권한을 허용해 주세요', 3000); return; }
+  if(code === 'unavailable'){ sttRunning = false; toast('이 휴대폰의 음성인식을 쓸 수 없습니다 — 목소리 녹음을 이용해 주세요', 3800); return; }
+  if(code === 'nospeech'){
+    sttRunning = false;
+    const c = $('#dictChip'); if(c) c.style.display = 'none';
+    toast('소리가 들리지 않아 받아쓰기를 멈췄습니다', 2800);
+    return;
+  }
+  if(code === 'start' || code === 'error'){ sttRunning = false; toast('음성인식을 시작하지 못했습니다', 2800); }
+};
+/* 앱을 열면 방금 찍은 최신 사진 1장 + 마이크 자동 */
+async function onNativeLatest(file, msId){
+  hideSplash();
+  try{
+    const rid = 'ms_' + msId;
+    const had = await getPhoto(rid);
+    if(had){
+      editing = {mode:'existing', rec: had, url: urlFor(had)};
+      paintEditor(); show('editor'); autoMicSoon();
+      return;
+    }
+    const rec = await importPhoto(file, rid);
+    await loadIndex();
+    editing = {mode:'existing', rec, url: urlFor(rec)};
+    paintEditor(); show('editor');
+    toast('방금 찍은 사진이에요 — 마이크에 말하면 자막이 새겨집니다', 3400);
+    autoMicSoon();
+  }catch(e){
+    hideSplash(); console.warn(e);
+    toast('최신 사진을 열지 못했습니다 — 아래에서 사진을 골라 주세요', 3200);
+  }
+}
+function autoMicSoon(){
+  setTimeout(() => { try{ startMicForCaption(); }catch(e){} }, 520);
+}
+/* 사진 고르기 — 앱이면 시스템 사진 선택기, 웹이면 파일 선택창 */
+function nativePick(){
+  if(NATIVE && SayCapApp.pick){
+    showSplash('사진을 고르는 중…');
+    try{ SayCapApp.pick(); return; }catch(e){ hideSplash(); }
+  }
+  const el = $('#filePick'); if(el) el.click();
+}
+
+/* =========================================================
+   v1.3 클린 뷰 — 톡 한 번에 날짜·위치·자막·X·상단·하단 UI 100% 숨김
+   ========================================================= */
+let cleanOn = false;
+function setClean(on){
+  cleanOn = !!on;
+  document.body.classList.toggle('clean', cleanOn);
+  if(cleanOn){ const h = $('#editHint'); if(h) h.style.opacity = '0'; }
+  else if(currentScreen === 'viewer'){ try{ showViewDock(true); }catch(e){} }
+}
+function toggleClean(){ setClean(!cleanOn); }
+
+/* =========================================================
    시작
    ========================================================= */
 /* =========================================================
@@ -2274,13 +2463,6 @@ async function handleIncomingShare(){
   clearShareParams();
   return true;
 }
-/* 첫 화면 3단계 카드 — 폄다·펼침 */
-$('#flowHead').onclick = () => {
-  const card = $('#flowCard');
-  const open = card.classList.toggle('open');
-  $('#flowHead').setAttribute('aria-expanded', open ? 'true' : 'false');
-  $('#flowTip').style.display = open ? 'none' : 'block';
-};
 /* 주소창의 ?share=1 은 사진을 받은 뒤 지웁니다 — 새로고침해도 다시 열리지 않도록 */
 function clearShareParams(){
   try{
@@ -2299,7 +2481,14 @@ function clearShareParams(){
   const h = location.hash.replace('#','');
   if(screens.includes(h)) show(h);
   /* 공유로 들어왔으면 사진을 받아 바로 편집·마이크로 */
-  handleIncomingShare();
+  const isShare = sharedParam('share') !== null || sharedParam('img') !== null;
+  if(isShare){ handleIncomingShare(); return; }
+  /* 앱(APK): 열자마자 방금 찍은 최신 사진 1장 + 오른쪽 마이크 자동 */
+  if(NATIVE && !screens.includes(h)){
+    showSplash('최신 사진을 여는 중…');
+    try{ SayCapApp.wantLatest(); }catch(e){ hideSplash(); }
+    setTimeout(hideSplash, 9000);
+  }
 })();
 function syncHostBadge(){
   const badge = document.querySelector('ship-page-badge');

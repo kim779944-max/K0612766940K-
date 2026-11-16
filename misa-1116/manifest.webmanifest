@@ -1,0 +1,17 @@
+{
+  "name": "KTS 미사 문자발송판",
+  "short_name": "문자발송",
+  "description": "미사 010 정예 42곳 원터치 문자 발송판 (PIN 잠금)",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0A1128",
+  "theme_color": "#0A1128",
+  "lang": "ko",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

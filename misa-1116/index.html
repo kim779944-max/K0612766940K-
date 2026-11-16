@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="googlebot" content="noindex,nofollow,noarchive">
+<title>미사 010 발송판</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+  :root{
+    --navy:#0A1128; --navy2:#111B36; --card:rgba(255,255,255,.045);
+    --line:rgba(255,255,255,.09); --ink:#EAF0FA; --dim:#93A2BE;
+    --orange:#FF7A1A; --green:#2ED47A; --red:#FF5C5C;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;width:100%;max-width:100%;overflow-x:hidden}
+  body{
+    background:radial-gradient(120% 80% at 50% 0%,#16234a 0%,var(--navy) 55%);
+    color:var(--ink);min-height:100vh;min-height:100dvh;
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:460px;margin:0 auto;padding:18px 14px 40px}
+  /* ── 잠금 화면 ── */
+  #lock{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:24px 18px;text-align:center}
+  .led{width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 12px 3px rgba(255,122,26,.7);display:inline-block}
+  .brand{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+  #lock h1{font-size:21px;margin:14px 0 6px;font-weight:800;letter-spacing:-.02em}
+  #lock p.sub{font-size:12.5px;color:var(--dim);margin:0 0 22px;line-height:1.6}
+  .dots{display:flex;gap:14px;margin-bottom:8px}
+  .dot{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(255,255,255,.28);transition:.15s}
+  .dot.on{border-color:transparent;background:var(--orange);box-shadow:0 0 10px 1px rgba(255,122,26,.6)}
+  .err{height:18px;font-size:12px;color:var(--red);margin:6px 0 10px}
+  .shake{animation:sh .3s}
+  @keyframes sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:280px}
+  .pad button{
+    height:56px;border-radius:14px;border:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+    color:var(--ink);font-size:21px;font-weight:600;font-family:inherit;
+  }
+  .pad button:active{background:rgba(255,122,26,.22);border-color:rgba(255,122,26,.5)}
+  .pad button.ghost{font-size:14px;color:var(--dim)}
+  /* ── 헤더 ── */
+  #app{display:none}
+  .head{position:sticky;top:0;z-index:20;background:rgba(10,17,40,.94);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);margin:0 -14px;padding:12px 14px 10px}
+  .hrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .hrow .t{font-size:15px;font-weight:800;letter-spacing:-.01em}
+  .hrow .t small{display:block;font-size:10.5px;font-weight:500;color:var(--dim);letter-spacing:.02em;margin-top:2px}
+  .count{font-size:13px;font-weight:800;color:var(--orange);white-space:nowrap}
+  .bar{height:5px;border-radius:99px;background:rgba(255,255,255,.09);margin:9px 0 9px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#FF7A1A,#FFB020);transition:width .25s}
+  .tabs{display:flex;gap:7px}
+  .tab{flex:1;height:34px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);
+    color:var(--dim);font-size:12px;font-weight:700;font-family:inherit}
+  .tab.on{background:rgba(255,122,26,.16);border-color:rgba(255,122,26,.55);color:#FFD8B8}
+  .search{margin-top:9px;width:100%;height:38px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);color:var(--ink);padding:0 12px;font-size:13px;font-family:inherit}
+  .search::placeholder{color:#6B7B99}
+  .note{margin:12px 0 0;font-size:11px;line-height:1.6;color:var(--dim)}
+  /* ── 카드 ── */
+  .list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+    border:1px solid var(--line);border-radius:16px;padding:13px 13px 12px}
+  .card.done{border-color:rgba(46,212,122,.4);background:linear-gradient(180deg,rgba(46,212,122,.09),rgba(255,255,255,.015))}
+  .crow{display:flex;align-items:flex-start;gap:9px}
+  .no{flex:none;min-width:26px;height:22px;border-radius:7px;background:rgba(255,122,26,.16);
+    color:#FFCB9E;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .card.done .no{background:rgba(46,212,122,.18);color:#8FF0BC}
+  .nm{font-size:15px;font-weight:800;letter-spacing:-.01em;line-height:1.3;word-break:break-all}
+  .meta{font-size:11px;color:var(--dim);line-height:1.55;margin-top:3px;word-break:break-all}
+  .ph{font-size:14px;font-weight:700;letter-spacing:.02em;margin-top:6px;color:#CFE0F7}
+  .acts{display:flex;gap:7px;margin-top:10px}
+  .btn{height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);
+    color:var(--ink);font-size:13px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;text-decoration:none}
+  .btn:active{transform:scale(.98)}
+  .btn.sms{flex:1;background:linear-gradient(180deg,#FF8A33,#F26312);border-color:#FF9A4D;color:#fff;font-size:14.5px;font-weight:800}
+  .btn.sq{width:46px;flex:none;font-size:16px}
+  .btn.tel{width:46px;flex:none}
+  .btn.ok{height:40px;margin-top:8px;font-size:12.5px;color:#B9C7DE}
+  .btn.ok.on{background:rgba(46,212,122,.16);border-color:rgba(46,212,122,.5);color:#8FF0BC}
+  .prev{margin-top:8px;font-size:11px;color:var(--dim);border-top:1px dashed var(--line);padding-top:8px;white-space:pre-wrap;line-height:1.6;display:none}
+  .prev.open{display:block}
+  .pwrap{margin-top:8px}
+  .ptog{background:none;border:0;color:#7F90AE;font-size:11px;font-family:inherit;padding:2px 0;text-decoration:underline;text-underline-offset:2px}
+  .empty{text-align:center;color:var(--dim);font-size:13px;padding:34px 0}
+  .foot{margin-top:22px;font-size:11px;color:#6B7B99;line-height:1.7;text-align:center}
+  .foot a{color:#8FA6C9}
+  details.rst{margin-top:16px;font-size:11.5px;color:var(--dim)}
+  details.rst summary{cursor:pointer;color:#7F90AE}
+  details.rst button{margin-top:9px;height:36px;padding:0 14px;border-radius:9px;border:1px solid rgba(255,92,92,.45);
+    background:rgba(255,92,92,.12);color:#FFB4B4;font-size:12px;font-family:inherit;font-weight:700}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;
+    background:rgba(20,30,56,.97);border:1px solid rgba(255,122,26,.5);color:#FFE0C4;font-size:12.5px;font-weight:700;
+    padding:11px 18px;border-radius:99px;transition:.2s;z-index:99;white-space:nowrap;max-width:92vw}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ══ 잠금 화면 ══ -->
+<div id="lock">
+  <span class="brand"><i class="led"></i> MISA 010 SENDER</span>
+  <h1>미사 010 발송판</h1>
+  <p class="sub">업소 연락처 보호를 위해<br>4자리 PIN을 입력해 주세요.</p>
+  <div class="dots" id="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>
+  <div class="err" id="err"></div>
+  <div class="pad" id="pad">
+    <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+    <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+    <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+    <button class="ghost" data-k="reset">초기화</button><button data-k="0">0</button><button class="ghost" data-k="del">⌫</button>
+  </div>
+</div>
+
+<!-- ══ 발송판 ══ -->
+<div id="app" class="wrap">
+  <div class="head">
+    <div class="hrow">
+      <div class="t">미사 010 발송판<small>2026-11-16 · 원터치 순차 발송</small></div>
+      <div class="count" id="cnt">완료 0 / 42</div>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="tabs">
+      <button class="tab on" data-f="all" id="tAll">전체 42</button>
+      <button class="tab" data-f="todo" id="tTodo">미발송 42</button>
+      <button class="tab" data-f="done" id="tDone">보냈음 0</button>
+    </div>
+    <input class="search" id="q" type="search" placeholder="가게 이름·업종으로 찾기" autocomplete="off">
+  </div>
+
+  <p class="note">문자 열기 → 안드로이드 문자앱에 수신번호와 가게 맞춤 문구가 자동으로 채워집니다. 보내기만 누르시면 됩니다.</p>
+
+  <div class="list" id="list"></div>
+
+  <div class="foot">
+    번개알바 · <a href="https://kim779944-max.github.io/bungaealba/" target="_blank" rel="noopener">bungaealba</a><br>
+    발송 가능 시간 08:00~21:00 · 21시 이후 광고성 문자 발송 금지
+  </div>
+
+  <details class="rst">
+    <summary>체크 기록 관리</summary>
+    <div>‘보냈음’ 체크는 이 휴대폰에만 저장됩니다(서버 전송 없음).</div>
+    <button id="resetAll">체크 전체 초기화</button>
+  </details>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* 진단용 오류 수집 (화면에는 영향 없음) */
+window.__errs = [];
+window.addEventListener("error", e => window.__errs.push(String((e && e.message) || e)));
+window.addEventListener("unhandledrejection", e => window.__errs.push("rej:" + String(e && e.reason)));
+
+/* ───── 암호문(010 번호는 PIN으로만 풀림) ───── */
+const PAYLOAD = "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";
+const TPL = "(광고) [번개알바] {상호} 사장님, 안녕하세요.\n하남 미사에서 가게 단독 홈페이지를 평생 무료로 만들어 드리고 있습니다.\n알바 급구 때도 이 페이지로 안내됩니다.\n필요하실 때 010-2002-2899로 답장 한 번 주세요.\nhttps://kim779944-max.github.io/bungaealba/\n수신거부: 이 번호로 '거부' 회신";
+
+function fnvSeed(text){
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++){
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h >>> 0;
+}
+function keystream(seed, n){
+  let x = seed || 0x811C9DC5;
+  const out = new Uint8Array(n);
+  for (let i = 0; i < n; i++){
+    x ^= (x << 13) >>> 0; x >>>= 0;
+    x ^= (x >>> 17);      x >>>= 0;
+    x ^= (x << 5) >>> 0;  x >>>= 0;
+    out[i] = x & 0xFF;
+  }
+  return out;
+}
+function decrypt(b64, pin){
+  const raw = atob(b64);
+  const bytes = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+  const ks = keystream(fnvSeed("MISA1116:" + pin), bytes.length);
+  const plain = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) plain[i] = bytes[i] ^ ks[i];
+  return new TextDecoder("utf-8", {fatal: true}).decode(plain);
+}
+
+/* ───── 상태 ───── */
+const KEY = "misa1116_sent_v1";
+let STORES = [];
+let sent = new Set();
+let filter = "all";
+
+function loadSent(){
+  try{ sent = new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); }catch(e){ sent = new Set(); }
+}
+function saveSent(){
+  try{ localStorage.setItem(KEY, JSON.stringify([...sent])); }catch(e){}
+}
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 1600);
+}
+function bodyFor(s){ return TPL.replace(/\{상호\}/g, s.name); }
+function smsHref(s){ return "sms:" + s.tel + "?body=" + encodeURIComponent(bodyFor(s)); }
+
+/* ───── 잠금 ───── */
+let buf = "";
+const dots = [...document.querySelectorAll("#dots .dot")];
+function drawDots(){ dots.forEach((d, i) => d.classList.toggle("on", i < buf.length)); }
+document.getElementById("pad").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  const k = b.dataset.k;
+  const err = document.getElementById("err");
+  if (k === "del"){ buf = buf.slice(0, -1); drawDots(); return; }
+  if (k === "reset"){ buf = ""; drawDots(); err.textContent = ""; return; }
+  if (buf.length >= 4) return;
+  buf += k; drawDots(); err.textContent = "";
+  if (buf.length === 4) setTimeout(() => submitPin(), 90);
+});
+function submitPin(){
+  let data;
+  try { data = JSON.parse(decrypt(PAYLOAD, buf)); }
+  catch (e) { data = null; }
+  if (!data || !data.length){
+    const err = document.getElementById("err");
+    err.textContent = "PIN이 맞지 않습니다";
+    const w = document.getElementById("lock");
+    w.classList.add("shake"); setTimeout(() => w.classList.remove("shake"), 320);
+    buf = ""; drawDots();
+    return;
+  }
+  STORES = data;
+  document.getElementById("lock").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  window.scrollTo(0, 0);
+  loadSent(); render();
+}
+
+/* ───── 렌더 ───── */
+function render(){
+  const q = (document.getElementById("q").value || "").trim().toLowerCase();
+  const total = STORES.length;
+  const doneN = STORES.filter(s => sent.has(s.n)).length;
+  document.getElementById("cnt").textContent = "완료 " + doneN + " / " + total;
+  document.getElementById("bar").style.width = (total ? (doneN / total * 100) : 0) + "%";
+  document.getElementById("tAll").textContent = "전체 " + total;
+  document.getElementById("tTodo").textContent = "미발송 " + (total - doneN);
+  document.getElementById("tDone").textContent = "보냈음 " + doneN;
+
+  const rows = STORES.filter(s => {
+    if (filter === "todo" && sent.has(s.n)) return false;
+    if (filter === "done" && !sent.has(s.n)) return false;
+    if (q && !(s.name.toLowerCase().includes(q) || (s.cat || "").toLowerCase().includes(q))) return false;
+    return true;
+  });
+
+  const list = document.getElementById("list");
+  if (!rows.length){ list.innerHTML = '<div class="empty">해당하는 업소가 없습니다</div>'; return; }
+  list.innerHTML = rows.map(s => {
+    const isDone = sent.has(s.n);
+    return '<div class="card' + (isDone ? ' done' : '') + '" data-n="' + s.n + '">'
+      + '<div class="crow"><div class="no">' + String(s.n).padStart(2, "0") + '</div><div style="flex:1;min-width:0">'
+      + '<div class="nm">' + esc(s.name) + '</div>'
+      + '<div class="meta">' + esc(s.cat || "") + ' · ' + esc(s.addr || "") + '</div>'
+      + '<div class="ph">' + esc(s.telDisp) + '</div></div></div>'
+      + '<div class="acts">'
+      + '<a class="btn sms" href="' + smsHref(s) + '">📩 문자 열기</a>'
+      + '<button class="btn sq" data-copy="' + s.n + '" aria-label="문구 복사">⧉</button>'
+      + '<a class="btn tel" href="tel:' + s.tel + '" aria-label="전화걸기">☎</a>'
+      + '</div>'
+      + '<button class="btn ok' + (isDone ? ' on' : '') + '" data-ok="' + s.n + '">'
+      + (isDone ? '✓ 보냈음' : '보냈음 체크') + '</button>'
+      + '<div class="pwrap"><button class="ptog" data-prev="' + s.n + '">문구 미리보기</button></div>'
+      + '<div class="prev" id="prev-' + s.n + '">' + esc(bodyFor(s)) + '</div>'
+      + '</div>';
+  }).join("");
+}
+function esc(t){
+  return String(t == null ? "" : t).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* ───── 동작 ───── */
+document.addEventListener("click", e => {
+  const tab = e.target.closest(".tab");
+  if (tab){
+    filter = tab.dataset.f;
+    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t === tab));
+    render(); return;
+  }
+  const ok = e.target.closest("[data-ok]");
+  if (ok){
+    const n = Number(ok.dataset.ok);
+    if (sent.has(n)){ sent.delete(n); toast("체크 해제"); } else { sent.add(n); toast("발송 완료로 기록"); }
+    saveSent(); render(); return;
+  }
+  const cp = e.target.closest("[data-copy]");
+  if (cp){
+    const s = STORES.find(x => x.n === Number(cp.dataset.copy));
+    copyText(bodyFor(s)); return;
+  }
+  const pv = e.target.closest("[data-prev]");
+  if (pv){
+    const n = pv.dataset.prev;
+    document.getElementById("prev-" + n).classList.toggle("open");
+    return;
+  }
+});
+document.getElementById("q").addEventListener("input", render);
+document.getElementById("resetAll").addEventListener("click", () => {
+  if (!confirm("보냈음 체크를 모두 지웁니다. 계속할까요?")) return;
+  sent.clear(); saveSent(); render(); toast("전체 초기화 완료");
+});
+function copyText(text){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(() => toast("문구를 복사했습니다")).catch(() => fallbackCopy(text));
+  } else fallbackCopy(text);
+}
+function fallbackCopy(text){
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); toast("문구를 복사했습니다"); }
+  catch(e){ toast("복사 실패 — 문구 미리보기에서 길게 눌러 복사하세요"); }
+  document.body.removeChild(ta);
+}
+</script>
+</body>
+</html>

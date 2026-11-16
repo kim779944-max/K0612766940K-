@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<title>QA 390</title>
+<style>
+ body{margin:0;background:#222;font:12px/1.5 -apple-system,sans-serif;color:#fff;display:flex;gap:12px;padding:12px}
+ iframe{width:390px;height:844px;border:1px solid #0f0;flex:none;background:#000}
+ pre{margin:0;white-space:pre-wrap;max-width:420px}
+ b{color:#6f6}
+</style></head>
+<body>
+<iframe id="f" src="index.html"></iframe>
+<pre id="out">waiting…</pre>
+<script>
+const out = [];
+function log(s){ out.push(s); document.getElementById("out").textContent = out.join("\n"); }
+const f = document.getElementById("f");
+
+function measure(tag){
+  const d = f.contentDocument, w = f.contentWindow;
+  const vw = w.innerWidth;
+  const de = d.documentElement;
+  const over = [];
+  d.querySelectorAll("body *").forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.width && (r.right > vw + 1 || r.left < -1)) {
+      over.push(el.tagName + "." + (el.className || "") + " right=" + Math.round(r.right));
+    }
+  });
+  log("[" + tag + "] viewport=" + vw + " scrollW=" + de.scrollWidth + " bodyScrollW=" + d.body.scrollWidth + " overflowEls=" + over.length);
+  if (over.length) log("  " + over.slice(0, 6).join(" | "));
+  return {vw, scrollW: de.scrollWidth};
+}
+
+f.addEventListener("load", () => {
+  const d = f.contentDocument, w = f.contentWindow;
+  measure("lock");
+  log("lock visible=" + (w.getComputedStyle(d.getElementById("lock")).display !== "none"));
+  log("app display=" + w.getComputedStyle(d.getElementById("app")).display);
+
+  // 잘못된 PIN
+  ["1","2","3","4"].forEach(k => d.querySelector('#pad button[data-k="' + k + '"]').click());
+  setTimeout(() => {
+    log("wrongPIN err='" + d.getElementById("err").textContent + "' appDisplay=" + w.getComputedStyle(d.getElementById("app")).display);
+
+    // 올바른 PIN
+    ["2","8","9","9"].forEach(k => d.querySelector('#pad button[data-k="' + k + '"]').click());
+    setTimeout(() => {
+      log("afterPIN appDisplay=" + w.getComputedStyle(d.getElementById("app")).display);
+      const cards = d.querySelectorAll("#list .card");
+      log("cards=" + cards.length + " cnt='" + d.getElementById("cnt").textContent + "'");
+      log("tabs=" + [...d.querySelectorAll(".tab")].map(t => t.textContent).join(" / "));
+      const first = cards[0];
+      log("first=" + first.querySelector(".nm").textContent + " | " + first.querySelector(".ph").textContent);
+      const smsA = first.querySelector("a.sms");
+      log("smsHref=" + smsA.getAttribute("href").slice(0, 120));
+      log("smsIsSmsScheme=" + /^sms:01\d{9}\?body=/.test(smsA.getAttribute("href")));
+      log("bodyEncodedOk=" + decodeURIComponent(smsA.getAttribute("href").split("body=")[1]).includes("아빵"));
+      log("telHref=" + first.querySelector("a.tel").getAttribute("href"));
+      measure("app");
+
+      // 체크 & 필터
+      first.querySelector("[data-ok]").click();
+      log("afterCheck cnt='" + d.getElementById("cnt").textContent + "' tabs='" + [...d.querySelectorAll(".tab")].map(t=>t.textContent).join(" / ") + "'");
+      d.querySelector('.tab[data-f="todo"]').click();
+      log("todoFilter cards=" + d.querySelectorAll("#list .card").length);
+      d.querySelector('.tab[data-f="done"]').click();
+      log("doneFilter cards=" + d.querySelectorAll("#list .card").length);
+      d.querySelector('.tab[data-f="all"]').click();
+      log("localStorage=" + (w.localStorage.getItem("misa1116_sent_v1") || "null"));
+      // 검색
+      const q = d.getElementById("q"); q.value = "세탁"; q.dispatchEvent(new w.Event("input"));
+      log("search '세탁' cards=" + d.querySelectorAll("#list .card").length);
+      q.value = ""; q.dispatchEvent(new w.Event("input"));
+      // 미리보기 토글
+      d.querySelector("[data-prev]").click();
+      log("prevOpen=" + d.querySelector("#prev-1").classList.contains("open"));
+      log("errs=" + JSON.stringify(w.__errs || []));
+      log("DONE");
+    }, 400);
+  }, 400);
+});
+</script>
+</body></html>

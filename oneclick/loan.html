@@ -36,10 +36,33 @@ h1 em{font-style:normal;color:var(--amber)}
 .ctit{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:900;color:var(--amber2);margin-bottom:9px}
 .ctit:before{content:"";width:5px;height:5px;border-radius:99px;background:var(--amber);box-shadow:0 0 8px var(--amber)}
 .ctit .r{margin-left:auto;font-size:10.5px;color:var(--gray);font-weight:700}
-.drop{border:1.5px dashed rgba(255,122,26,.5);border-radius:14px;background:rgba(255,122,26,.05);padding:18px 14px;text-align:center}
+.drop{display:block;border:1.5px dashed rgba(255,122,26,.5);border-radius:14px;background:rgba(255,122,26,.05);padding:16px 14px;text-align:center}
 .drop h3{margin:0 0 4px;font-size:14px;font-weight:900}
 .drop p{margin:0;font-size:11.5px;color:var(--ink2);line-height:1.6}
 .drop input{display:none}
+.drop.drag{border-color:var(--amber);background:rgba(255,122,26,.12)}
+.flist{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.fitem{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:11px;background:#0C1730;padding:8px 9px}
+.fitem .thumb{width:38px;height:38px;border-radius:8px;background:#16264A;flex:0 0 auto;overflow:hidden;display:grid;place-items:center;font-size:9px;font-weight:900;color:var(--amber2);border:1px solid var(--line2)}
+.fitem .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.fitem .fm{flex:1;min-width:0}
+.fitem .fm b{display:block;font-size:12px;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fitem .fm span{display:block;font-size:10.5px;color:var(--gray);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fitem .tag{font-size:9.5px;font-weight:900;color:#0B2C1B;background:#86EFAC;border-radius:999px;padding:2px 7px;white-space:nowrap}
+.fitem .tag.q{color:#3A2200;background:#FCD34D}
+.fitem .del{background:none;border:0;color:#8FA0B8;font-size:15px;padding:4px 2px;cursor:pointer}
+.fitem.on{border-color:rgba(255,122,26,.55);background:#101F3C}
+.fsum{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:11.5px;color:var(--ink2)}
+.fsum b{color:var(--amber2);font-weight:900}
+.req{border:1px solid rgba(255,122,26,.34);background:rgba(255,122,26,.07);border-radius:14px;padding:13px 14px;margin-top:12px}
+.req .rh{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:900;letter-spacing:.04em;color:var(--amber2);margin-bottom:10px}
+.req .rh .d{width:6px;height:6px;border-radius:99px;background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.req .rl{display:flex;gap:9px;padding:8px 0;border-top:1px solid rgba(255,255,255,.07)}
+.req .rl:first-of-type{border-top:0;padding-top:0}
+.req .rl .no{flex:0 0 auto;width:19px;height:19px;border-radius:6px;background:linear-gradient(180deg,var(--amber),#E05F00);color:var(--on);font-size:11px;font-weight:900;display:grid;place-items:center;margin-top:1px}
+.req .rl .c{font-size:13px;line-height:1.55;font-weight:800;color:#fff;word-break:keep-all}
+.req .rl .c small{display:block;font-size:10.5px;font-weight:700;color:var(--ink2);margin-top:3px;line-height:1.5}
+.req .rf{margin-top:9px;font-size:10.5px;color:#8FA0B8;line-height:1.55}
 .btn{display:block;width:100%;border:0;border-radius:13px;padding:15px;font-size:15px;font-weight:900;
   font-family:inherit;cursor:pointer;text-align:center;letter-spacing:-.4px}
 .btn.main{background:linear-gradient(180deg,#FF8A2B,var(--amber));color:var(--on);box-shadow:0 10px 24px rgba(255,122,26,.26)}
@@ -49,7 +72,7 @@ h1 em{font-style:normal;color:var(--amber)}
 .btn2{display:inline-block;border:1px solid var(--line2);background:var(--card2);color:var(--ink);font-family:inherit;
   font-size:12px;font-weight:800;border-radius:10px;padding:9px 12px;cursor:pointer;text-decoration:none}
 .preview{margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0B1730}
-.preview img{display:block;width:100%;height:auto}
+.preview img{display:block;width:100%;height:auto;max-height:52vh;object-fit:contain;background:#0B1730}
 .preview iframe{display:block;width:100%;height:300px;border:0;background:#fff}
 .filemeta{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:11.5px;color:var(--ink2)}
 .filemeta b{color:#fff;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:62%}
@@ -113,6 +136,12 @@ h1 em{font-style:normal;color:var(--amber)}
   .card{border:1px solid #ccc;box-shadow:none;background:#fff;color:#000;page-break-inside:avoid}
   .ctit,.n,.p{color:#000}
   #app{padding:0}
+  .req{background:#fff;border:2px solid #111;page-break-inside:avoid}
+  .req .rh{color:#111}
+  .req .rl .c{color:#000}
+  .req .rl .c small,.req .rf{color:#333}
+  .req .rl .no{background:#111;color:#fff}
+  .req .rh .d{display:none}
 }
 </style>
 </head>
@@ -126,8 +155,8 @@ h1 em{font-style:normal;color:var(--amber)}
   </div>
 
   <h1>재무제표를 올리면,<br><em>가능한 기관부터</em> 나옵니다.</h1>
-  <p class="sub">대차대조표·손익계산서 사진이나 PDF를 올리고, 심사에서 걸리는 <b>네 가지만</b> 확인해 주세요.
-    비율 계산 → 기관 매칭 → <b>부족한 항목의 원인과 준비 순서</b>까지 한 장으로 나옵니다.</p>
+  <p class="sub">대차대조표·손익계산서 사진이나 PDF를 <b>여러 장 한꺼번에</b> 올리고, 심사에서 걸리는 <b>네 가지만</b> 확인해 주세요.
+    비율 계산 → 기관 매칭 → <b>부족한 숫자와 오늘 할 일</b>까지 3줄 지시서로 나옵니다.</p>
 
   <div class="tabs no-print" id="tabs">
     <button class="on" data-s="s1">1 · 재무제표</button>
@@ -138,17 +167,18 @@ h1 em{font-style:normal;color:var(--amber)}
   <!-- ============ 1. 재무제표 ============ -->
   <section class="sec on" id="s1">
     <div class="card">
-      <div class="ctit">재무제표 올리기 <span class="r">사진 · PDF</span></div>
-      <label class="drop" for="file">
-        <h3>대차대조표 · 손익계산서</h3>
-        <p>사진을 찍거나 PDF를 고르세요. 파일은 <b>이 기기 안에서만</b> 열립니다.</p>
-        <div style="margin-top:11px"><span class="btn2">파일 고르기</span></div>
-        <input id="file" type="file" accept="image/*,application/pdf">
+      <div class="ctit">재무제표 올리기 <span class="r">사진 · PDF · 여러 장</span></div>
+      <label class="drop" for="file" id="drop">
+        <h3>대차대조표 · 손익계산서 · 현금흐름표</h3>
+        <p>사진을 찍거나 PDF를 고르세요. <b>한꺼번에 여러 장</b> 올릴 수 있습니다.<br>파일은 <b>이 기기 안에서만</b> 열립니다.</p>
+        <div style="margin-top:11px"><span class="btn2">파일 고르기 (여러 장)</span></div>
+        <input id="file" type="file" accept="image/*,application/pdf" multiple>
       </label>
-      <div class="filemeta" id="fileMeta" style="display:none"><b id="fileName">-</b><span id="fileSize"></span></div>
+      <div class="fsum" id="fSum" style="display:none"></div>
+      <div class="flist" id="fList"></div>
       <div class="preview" id="preview" style="display:none"></div>
-      <div class="note">사진 글자를 자동으로 읽어 숫자를 채우는 기능은 <b>AI 키를 넣었을 때만</b> 동작합니다.
-        지금은 화면에 띄워 놓고 아래 칸에 옮겨 적으시면 됩니다 — 8칸이면 끝납니다.</div>
+      <div class="note">올린 서류는 <b>종류(재무상태표·손익계산서)를 자동으로 알아봐</b> 한 장에 모아 봅니다.
+        사진 글자를 자동으로 읽어 숫자를 채우는 기능은 <b>AI 키를 넣었을 때만</b> 동작합니다 — 지금은 옆에 띄워 놓고 아래 칸에 옮겨 적으시면 됩니다.</div>
     </div>
 
     <div class="card">
@@ -208,6 +238,7 @@ h1 em{font-style:normal;color:var(--amber)}
 
   <!-- ============ 3. 결과 ============ -->
   <section class="sec" id="s3">
+    <div class="req" id="dossier"></div>
     <div class="card">
       <div class="ctit">한눈 요약 <span class="r" id="rDate"></span></div>
       <div id="rBadges" style="margin-bottom:8px"></div>
@@ -255,27 +286,83 @@ function go(id){ document.querySelectorAll('.sec').forEach(s=>s.classList.remove
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on', b.dataset.s===id)); window.scrollTo({top:0,behavior:'smooth'}); }
 document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => go(b.dataset.s));
 
-/* ---------- 파일 미리보기 ---------- */
-let FILE = null;
-$('#file').onchange = e => {
-  const f = e.target.files[0]; if (!f) return;
-  FILE = f;
-  $('#fileMeta').style.display = 'flex';
-  $('#fileName').textContent = f.name;
-  $('#fileSize').textContent = Math.round(f.size/1024) + 'KB';
-  const box = $('#preview'); box.style.display = 'block'; box.innerHTML = '';
-  if (/^image\//.test(f.type)){
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(f); img.alt = '재무제표 미리보기';
+/* ---------- 파일 여러 장 ---------- */
+const DOCRULES = [
+  [/재무상태표|대차대조표|\bbs\b|balance/i, '재무상태표'],
+  [/손익|포괄손익|\bis\b|income|profit/i, '손익계산서'],
+  [/현금흐름|\bcf\b|cash ?flow/i, '현금흐름표'],
+  [/부가세|과세표준|매출증명/i, '부가세 자료'],
+  [/납세|체납|국세|지방세/i, '납세 자료'],
+  [/등기|법인|사업자/i, '증빙 서류']
+];
+let FILES = [], SEL = -1;
+const kindOf = f => {
+  const nm = (f.name || '') + ' ' + (f.type || '');
+  for (const [re, t] of DOCRULES) if (re.test(nm)) return t;
+  return /pdf/i.test(f.type || f.name || '') ? 'PDF 서류' : '사진 서류';
+};
+const fmtSize = b => b < 1024 * 1024 ? Math.round(b / 1024) + 'KB' : (b / 1024 / 1024).toFixed(1) + 'MB';
+
+function renderFiles(){
+  const list = $('#fList');
+  list.innerHTML = '';
+  FILES.forEach((f, i) => {
+    const d = document.createElement('div');
+    d.className = 'fitem' + (i === SEL ? ' on' : '');
+    const isImg = /^image\//.test(f.type || '');
+    d.innerHTML = `<div class="thumb">${isImg ? `<img src="${f.url}" alt="">` : 'PDF'}</div>
+      <div class="fm"><b>${f.name}</b><span>${fmtSize(f.size)} · ${f.kind}</span></div>
+      <span class="tag${/사진|PDF 서류/.test(f.kind) ? ' q' : ''}">${f.kind}</span>
+      <button class="del" title="빼기">✕</button>`;
+    d.onclick = e => { if (e.target.classList.contains('del')) return; SEL = i; showPreview(); renderFiles(); };
+    d.querySelector('.del').onclick = e => {
+      e.stopPropagation();
+      try { URL.revokeObjectURL(f.url); } catch (_) {}
+      FILES.splice(i, 1);
+      if (SEL >= FILES.length) SEL = FILES.length - 1;
+      renderFiles(); showPreview();
+    };
+    list.appendChild(d);
+  });
+  const sum = $('#fSum');
+  if (FILES.length) {
+    const kinds = [...new Set(FILES.map(f => f.kind))];
+    sum.style.display = 'flex';
+    sum.innerHTML = `<b>${FILES.length}장 올림</b> · ${kinds.join(' · ')}`;
+  } else { sum.style.display = 'none'; sum.innerHTML = ''; }
+}
+
+function showPreview(){
+  const box = $('#preview');
+  if (SEL < 0 || !FILES[SEL]) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  const f = FILES[SEL];
+  box.style.display = 'block';
+  box.innerHTML = '';
+  if (/^image\//.test(f.type || '')) {
+    const img = document.createElement('img'); img.src = f.url; img.alt = f.kind + ' 미리보기';
     box.appendChild(img);
-  } else if (/pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)){
-    const fr = document.createElement('iframe');
-    fr.src = URL.createObjectURL(f); fr.title = '재무제표 PDF';
+  } else if (/pdf/i.test(f.type || f.name)) {
+    const fr = document.createElement('iframe'); fr.src = f.url; fr.title = 'PDF 미리보기';
     box.appendChild(fr);
   } else {
     box.innerHTML = '<div style="padding:14px;font-size:12px;color:#AFBDD0">미리보기를 지원하지 않는 형식입니다. 숫자는 아래에 직접 넣어 주세요.</div>';
   }
-};
+}
+
+function addFiles(fileList){
+  const incoming = [...fileList].filter(f => /^image\//.test(f.type || '') || /pdf/i.test(f.type || f.name || ''));
+  if (!incoming.length) { toast('사진이나 PDF만 올릴 수 있습니다'); return; }
+  incoming.forEach(f => FILES.push({ name: f.name, size: f.size, type: f.type, url: URL.createObjectURL(f), kind: kindOf(f), file: f }));
+  if (SEL < 0) SEL = 0;
+  renderFiles(); showPreview();
+  toast(incoming.length > 1 ? `${incoming.length}장을 한꺼번에 올렸습니다` : '1장을 올렸습니다');
+}
+
+$('#file').onchange = e => { addFiles(e.target.files); e.target.value = ''; };
+const drop = $('#drop');
+['dragover', 'dragenter'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('drag'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('drag'); }));
+drop.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files); });
 /* 예시 값: 미사 상권 식당 (연매출 3.6억, 부채 1.9억) */
 $('#btnDemo').onclick = () => {
   const v = {f_asset:'320000000', f_liab:'190000000', f_equity:'', f_sales:'360000000',
@@ -289,7 +376,6 @@ $('#btnNext1').onclick = () => {
   }
   go('s2');
 };
-
 /* ---------- 계산 ---------- */
 function readInput(){
   const asset = num('#f_asset') || 0, liab = num('#f_liab') || 0;
@@ -308,7 +394,8 @@ function readInput(){
     sector: $('#f_sector').value,
     delay: $('#c_delay').checked, badCredit: $('#c_bad').checked,
     drop: $('#c_drop').checked, guar: $('#c_guar').checked,
-    fileName: FILE ? FILE.name : ''
+    fileName: FILES.length ? FILES[0].name : '',
+    docs: FILES.map(f => ({ n: f.name, k: f.kind }))
   };
 }
 function ratios(d){
@@ -398,9 +485,9 @@ function fixes(d, r){
   if (r.debtRatio != null && r.debtRatio > 300) out.push({t:'부채비율 ' + Math.round(r.debtRatio) + '%', c:'자본이 부족하거나 가지급금·가수금이 자산에 섞여 있을 때 자주 발생합니다.',
     s:['가지급금을 회수하거나 가수금을 자본(출자전환)으로 정리하세요.','대표자 개인 차입금을 회사 차입금에서 분리하세요.','정리 후 재무제표를 다시 만들어 비율을 확인하세요.']});
   if (r.icr != null && r.icr < 1.5) out.push({t:'이자보상배율 ' + r.icr.toFixed(2) + '배', c:'영업이익으로 이자를 감당하기 어렵다는 뜻입니다. 은행이 가장 먼저 보는 지표입니다.',
-    s:['고금리 대출부터 저금리 정책자금으로 대환하세요.','이자비용이 큰 단기차입금을 장기로 돌리세요.','영업이익 개선 자료(원가 절감·매출 회복)를 3개월 치 준비하세요.']});
+    s:['고금리 대출부터 저금리 정책자금으로 대환하세요.','이자비용이 큰 단기차입금을 장기로 돌리세요.','영업이익 개선 자료(비용 절감·매출 회복)를 3개월 치 준비하세요.']});
   if (r.opMargin != null && r.opMargin < 3) out.push({t:'영업이익률 ' + (r.opMargin).toFixed(1) + '%', c:'매출은 있어도 남는 것이 적으면 상환 능력을 낮게 봅니다.',
-    s:['원가 항목(재료비·인건비·임대료)을 3줄로 쪼개 개선 폭을 숫자로 만드세요.','정부 지원사업(스마트상점 등)으로 설비·인건비를 줄이는 경로를 함께 검토하세요.']});
+    s:['비용 항목(재료비·인건비·임대료)을 3줄로 쪼개 개선 폭을 숫자로 만드세요.','정부 지원사업(스마트상점 등)으로 설비·인건비를 줄이는 경로를 함께 검토하세요.']});
   if (r.growth != null && r.growth < -30) out.push({t:'매출 급감 ' + Math.round(r.growth) + '%', c:'급감 자체보다 급감의 원인과 회복 계획이 심사 포인트입니다.',
     s:['급감 원인(공사·계절·상권)을 한 장으로 정리하세요.','회복 계획과 최근 3개월 매출 추이를 함께 제출하세요.']});
   if (d.guar && d.gbal > 50000000) out.push({t:'기존 보증 잔액 ' + fmt(d.gbal) + '원', c:'보증 한도는 총액 기준이라 새 보증이 막힐 수 있습니다.',
@@ -424,6 +511,68 @@ function plan(d, insts){
   return out;
 }
 
+/* ---------- 사장님 3줄 실행 지시서 ---------- */
+function dossier(d, r, insts){
+  const ok = insts.filter(i => i.st === 'ok');
+  const cond = insts.filter(i => i.st === 'cond');
+  const first = ok[0] || cond[0] || null;
+  const second = (ok.slice(1).concat(cond.filter(i => i !== first)))[0] || null;
+
+  // ① 어디서
+  let where;
+  if (first && first.st === 'ok') {
+    where = `${first.nm}${second ? ' → 2순위 ' + second.nm : ''}`;
+  } else if (first) {
+    where = `${first.nm} (조건부)${second ? ' → ' + second.nm : ''}`;
+  } else {
+    where = '지금은 접수 가능한 기관이 없습니다 — 아래 결격 항목을 먼저 풀어야 합니다';
+  }
+
+  // ② 부족한 숫자 — 계산으로 나온 금액만 적는다(추정 금액을 만들지 않는다)
+  const gaps = [];
+  if (r.debtRatio != null && r.debtRatio > 300) {
+    const needEq = d.liab / 3;
+    gaps.push({ w: (r.debtRatio - 300) / 300, t: `부채비율 ${Math.round(r.debtRatio)}% → 300% 이하 : 자본 ${fmt(Math.max(0, Math.round(needEq - d.equity)))}원 부족` });
+  }
+  if (r.icr != null && r.icr < 1.5) {
+    gaps.push({ w: (1.5 - r.icr) / 1.5, t: `이자보상배율 ${r.icr.toFixed(2)}배 → 1.5배 : 연 영업이익 ${fmt(Math.max(0, Math.round(1.5 * d.interest - d.op)))}원 부족` });
+  }
+  if (r.opMargin != null && r.opMargin < 3) {
+    gaps.push({ w: (3 - r.opMargin) / 3, t: `영업이익률 ${r.opMargin.toFixed(1)}% → 3% : 연 영업이익 ${fmt(Math.max(0, Math.round(d.sales * 0.03 - d.op)))}원 부족` });
+  }
+  if (r.equityRatio != null && r.equityRatio < 20) {
+    gaps.push({ w: (20 - r.equityRatio) / 20, t: `자기자본비율 ${Math.round(r.equityRatio)}% → 20% : 자본 ${fmt(Math.max(0, Math.round(d.asset * 0.2 - d.equity)))}원 부족` });
+  }
+  if (d.need > 0 && d.guar && d.gbal > 0) {
+    gaps.push({ w: 0.4, t: `필요자금 ${fmt(d.need)}원 − 기존 보증 ${fmt(d.gbal)}원 = 보증 여력 확인 필요` });
+  }
+  if (d.drop) gaps.push({ w: 0.3, t: '최근 3개월 매출 급감 — 급감 원인과 회복 계획 1장 필요(숫자 아님)' });
+  if (d.badCredit) gaps.push({ w: 0.25, t: '막는 숫자는 없고, 대표자 신용 700점 미만 하나가 남았습니다' });
+  gaps.sort((a, b) => b.w - a.w);
+  let numbers;
+  if (d.delay) numbers = '국세·지방세 체납 — 금액 확인 후 완납 또는 분납 약정 (다른 숫자보다 이것이 먼저)';
+  else if (gaps.length) numbers = gaps[0].t;
+  else numbers = '막는 숫자가 없습니다 — 재무비율·체납·신용 모두 기준선 안';
+
+  // ③ 오늘 당장 할 1가지
+  let today;
+  if (d.delay) today = '홈택스에서 <b>납세증명서 + 체납내역</b>을 발급해 사진으로 남기기 (10분) — 체납이 있으면 어떤 기관도 접수되지 않습니다.';
+  else if (d.badCredit) today = '카드론·캐피탈 잔액을 <b>3곳만 조회해 종이에 총액 적기</b> — 보증 심사는 회사가 아니라 대표자 신용을 먼저 봅니다.';
+  else if (r.debtRatio != null && r.debtRatio > 300) today = '재무상태표에서 <b>가지급금·가수금 잔액</b>을 찾아 정리 금액을 적기 — 자본을 늘리는 가장 빠른 길입니다.';
+  else if (r.icr != null && r.icr < 1.5) today = '이자비용을 <b>은행·보증·카드 3줄로 쪼개 적기</b> — 고금리부터 대환 순서가 보입니다.';
+  else today = '사업자등록증 · 재무제표 · 부가세 과세표준증명 <b>3종을 한 폴더에 모으기</b> — 보증 상담 때 바로 내밀 서류입니다.';
+
+  const docs = (d.docs || []).length
+    ? `올린 서류 ${d.docs.length}장 : ${[...new Set(d.docs.map(x => x.k))].join(' · ')}`
+    : '올린 서류 없음 — 숫자만으로 진단했습니다';
+
+  return `<div class="rh"><span class="d"></span>사장님 3줄 실행 지시서<span style="margin-left:auto;font-weight:800;color:#8FA0B8">${new Date().toLocaleDateString('ko-KR')}</span></div>
+    <div class="rl"><div class="no">1</div><div class="c">어디서 — ${where}</div></div>
+    <div class="rl"><div class="no">2</div><div class="c">부족한 숫자 — ${numbers}</div></div>
+    <div class="rl"><div class="no">3</div><div class="c">오늘 당장 — ${today}</div></div>
+    <div class="rf">${docs}<br>검사 기준은 통상 심사선입니다. 기관별 실제 심사는 개별 확인이 필요합니다.</div>`;
+}
+
 /* ---------- 실행 ---------- */
 function run(){
   const d = readInput();
@@ -433,6 +582,7 @@ function run(){
   const pl = plan(d, insts);
 
   $('#rDate').textContent = new Date().toLocaleDateString('ko-KR');
+  $('#dossier').innerHTML = dossier(d, r, insts);
   const goCnt = insts.filter(i => i.st === 'ok').length, cond = insts.filter(i => i.st === 'cond').length;
   $('#rBadges').innerHTML =
     `<span class="badge ${goCnt ? 'b-ok' : 'b-warn'}">바로 가능 ${goCnt}곳</span>`
@@ -443,7 +593,7 @@ function run(){
     ? `지금 접수 가능한 기관이 ${goCnt}곳 있습니다. 먼저 ${insts.find(i=>i.st==='ok').nm}부터 상담하세요.`
     : `지금은 바로 접수되는 곳이 없습니다. 첫 단추는 "${worst.t}"입니다.`;
   $('#rSub').textContent = `자산 ${fmt(d.asset)}원 · 부채 ${fmt(d.liab)}원 · 자본 ${fmt(d.equity)}원 · 연매출 ${fmt(d.sales)}원`
-    + (d.need ? ` · 필요자금 ${fmt(d.need)}원` : '');
+    + (d.need ? ` · 필요자금 ${fmt(d.need)}원` : '') + (d.docs.length ? ` · 서류 ${d.docs.length}장` : '');
 
   const rr = [
     ['부채비율', r.debtRatio, '%', '부채 ÷ 자본 · 은행 통상 300% 이내', 300, 500, false],
@@ -478,8 +628,7 @@ function run(){
   $('#rWeeks').textContent = pl.length + '단계';
   LAST = {d, r, insts, fx, pl, at:new Date().toISOString()};
   go('s3');
-  toast('진단을 마쳤습니다');
-}
+  toast('진단을 마쳤습니다');}
 let LAST = null;
 $('#btnRun').onclick = run;
 $('#btnAgain').onclick = () => go('s1');

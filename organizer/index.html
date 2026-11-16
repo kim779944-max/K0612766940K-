@@ -3,73 +3,134 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>KTS 폰 앱 정리기</title>
+<title>KTS 폰 앱 정리기 v2.0</title>
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <style>
 :root{--bg:#0A1224;--card:#0F1B33;--card2:#12203C;--line:#26375F;--line2:#2E4370;
- --ink:#F3F6FA;--ink2:#AFBDD0;--gray:#8FA0B8;--or:#FF6B00;--or2:#FFA24D;--on-or:#0A1224}
+ --ink:#F3F6FA;--ink2:#AFBDD0;--gray:#8FA0B8;--or:#FF6B00;--or2:#FFA24D;--on-or:#0A1224;
+ --go:#22C55E;--chk:#F59E0B;--keep:#EF4444}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;letter-spacing:-.3px}
-body{padding-bottom:26px}
-.hd{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,var(--bg) 80%,rgba(10,18,36,0));padding:14px 16px 8px;display:flex;align-items:center;gap:10px}
-.logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(145deg,#FF8A2B,var(--or));color:var(--on-or);display:grid;place-items:center;font-weight:900;font-size:15px}
+body{padding-bottom:30px}
+.hd{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,var(--bg) 82%,rgba(10,18,36,0));padding:13px 16px 8px;display:flex;align-items:center;gap:10px}
+.logo{width:33px;height:33px;border-radius:9px;background:linear-gradient(145deg,#FF8A2B,var(--or));color:var(--on-or);display:grid;place-items:center;font-weight:900;font-size:15px}
 .hd b{font-size:15.5px;font-weight:900;letter-spacing:-.6px}
-.hd span{display:block;font-size:10.5px;color:var(--gray);margin-top:1px}
+.hd b i{font-style:normal;font-size:10.5px;font-weight:900;color:var(--on-or);background:var(--or2);border-radius:6px;padding:2px 5px;margin-left:5px;vertical-align:2px}
+.hd span{display:block;font-size:10.5px;color:var(--gray);margin-top:2px}
 .hd .sp{flex:1}
 .cnt{font-size:10.5px;font-weight:800;color:var(--or2);border:1px solid var(--line2);background:rgba(255,107,0,.08);border-radius:999px;padding:5px 9px}
-.wrap{padding:0 16px}
-.sbox{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:0 12px;margin:2px 0 14px}
+.wrap{padding:0 16px;min-width:0}
+#listHost{min-width:0}
+.sbox{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:0 12px;margin:2px 0 12px}
 .sbox svg{opacity:.6}
-#q{flex:1;background:none;border:0;outline:0;color:#fff;font-size:14px;padding:13px 0;font-family:inherit}
+#q{flex:1;background:none;border:0;outline:0;color:#fff;font-size:14px;padding:13px 0;font-family:inherit;min-width:0}
 #q::placeholder{color:#66799A}
 .clr{width:28px;height:28px;border-radius:50%;background:#1B2A48;border:0;color:var(--ink2);font-size:13px}
 
-.sect{display:flex;align-items:center;gap:8px;margin:0 2px 9px}
+.gsum{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:12px}
+.gc{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:10px 8px;text-align:center;font-family:inherit;color:var(--ink)}
+.gc .v{font-size:19px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.1}
+.gc .k{font-size:10px;font-weight:800;color:var(--ink2);margin-top:3px;display:block}
+.gc.on{border-color:currentColor;box-shadow:0 0 0 1px currentColor inset}
+.gc.go{color:var(--go)}.gc.chk{color:var(--chk)}.gc.keep{color:var(--keep)}
+.gc .k{color:var(--ink2)}
+
+.rule{display:flex;gap:8px;align-items:flex-start;background:rgba(255,107,0,.06);border:1px solid rgba(255,107,0,.28);
+ border-radius:12px;padding:9px 11px;font-size:11px;line-height:1.6;color:#C9D6E8;margin-bottom:12px}
+.rule b{color:#fff}
+
+.tgl{display:flex;gap:5px;margin-bottom:11px}
+.tgl button{flex:1;font-family:inherit;font-size:11.5px;font-weight:800;color:var(--gray);background:#0E1B33;
+ border:1px solid var(--line);border-radius:9px;padding:8px;cursor:pointer}
+.tgl button.on{color:var(--on-or);background:linear-gradient(180deg,#FF8A2B,var(--or));border-color:var(--or)}
+
+.pinrow{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:0 0 14px}
+.slot{aspect-ratio:1/1;border-radius:14px;background:var(--card);border:1px dashed #2C3F66;display:grid;place-items:center;position:relative;overflow:hidden}
+.slot.full{border-style:solid;border-color:var(--line2)}
+.slot img{width:64%;height:64%;object-fit:contain;border-radius:9px}
+.slot .ph{width:64%;height:64%;border-radius:9px;background:#16264A;display:grid;place-items:center;font-size:15px;font-weight:900;color:#9FB2CC}
+.slot .plus{font-size:19px;color:#4A5F87}
+.slot .x{position:absolute;top:1px;right:2px;font-size:11px;color:#7E90AB;background:rgba(10,18,36,.7);border-radius:50%;width:16px;height:16px;line-height:16px;text-align:center}
+.slot .lb{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:8px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+
+.sect{display:flex;align-items:center;gap:8px;margin:14px 2px 8px}
 .sect h2{font-size:12px;font-weight:900;color:var(--or2);letter-spacing:.2px;margin:0}
 .sect .ln{flex:1;height:1px;background:#1C2B49}
 .sect .tip{font-size:10.5px;color:#6F819B}
+.sect.g h2{color:var(--go)}.sect.c h2{color:var(--chk)}.sect.k h2{color:var(--keep)}
 
-.pinrow{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-bottom:16px}
-.slot{aspect-ratio:1/1;border-radius:14px;background:var(--card);border:1px dashed #2C3F66;display:grid;place-items:center;position:relative;overflow:hidden}
-.slot.full{border-style:solid;border-color:var(--line2)}
-.slot img{width:66%;height:66%;object-fit:contain;border-radius:9px}
-.slot .plus{font-size:19px;color:#4A5F87}
-.slot .x{position:absolute;top:1px;right:2px;font-size:11px;color:#7E90AB;background:rgba(10,18,36,.7);border-radius:50%;width:15px;height:15px;line-height:15px;text-align:center}
-.slot .lb{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:8px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.rows{display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+.row{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-family:inherit;color:var(--ink);text-align:left;width:100%}
+.row:active{border-color:var(--line2);background:var(--card2)}
+.row img,.row .ph{width:38px;height:38px;border-radius:10px;object-fit:contain;background:#16264A;flex:0 0 auto}
+.row .ph{display:grid;place-items:center;font-size:15px;font-weight:900;color:#9FB2CC}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-size:12.5px;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .t span{display:block;font-size:10px;color:var(--gray);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bdg{font-size:9.5px;font-weight:900;border-radius:999px;padding:3px 8px;white-space:nowrap;flex:0 0 auto}
+.bdg.g{color:#05240F;background:#4ADE80}
+.bdg.c{color:#3A2200;background:#FCD34D}
+.bdg.k{color:#3B0000;background:#FCA5A5}
 
-.cats{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.cat{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:10px 10px 11px}
-.cat h3{margin:0 0 8px;font-size:11.5px;font-weight:900;display:flex;align-items:center;gap:5px}
-.dot{width:6px;height:6px;border-radius:99px}
-.cat .n{margin-left:auto;font-size:9.5px;color:var(--gray);font-weight:800}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 4px}
-.ap{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0;font-family:inherit}
-.ap img,.ap .ph{width:40px;height:40px;border-radius:11px;object-fit:contain;background:#16264A;display:grid;place-items:center;font-size:15px;font-weight:900;color:#9FB2CC}
-.ap span{font-size:9px;color:var(--ink2);max-width:56px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ap:active img{transform:scale(.92)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 4px}
+.ap{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0;font-family:inherit;position:relative}
+.ap img,.ap .ph{width:44px;height:44px;border-radius:12px;object-fit:contain;background:#16264A;display:grid;place-items:center;font-size:16px;font-weight:900;color:#9FB2CC}
+.ap span{font-size:9px;color:var(--ink2);max-width:60px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ap .gb{position:absolute;top:-2px;right:calc(50% - 30px);width:14px;height:14px;border-radius:50%;font-size:8.5px;font-weight:900;line-height:14px;text-align:center;color:#0A1224}
+.gb.g{background:#4ADE80}.gb.c{background:#FCD34D}.gb.k{background:#FCA5A5}
 .more{grid-column:1/-1;background:none;border:1px dashed #2C3F66;border-radius:10px;color:#8FA0B8;font-size:10.5px;padding:7px;font-family:inherit;margin-top:2px}
 
-.web{margin-top:16px}
+.web{margin-top:18px}
+.ktsapps{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px}
+.ka{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 10px;font-family:inherit;color:var(--ink);text-align:left}
+.ka img{width:30px;height:30px;border-radius:8px;flex:0 0 auto;background:#16264A}
+.ka .t b{display:block;font-size:11.5px;font-weight:900}
+.ka .t span{display:block;font-size:9.5px;color:var(--gray);margin-top:1px}
 .wform{display:flex;gap:6px;margin-bottom:9px}
 .wform input{flex:1;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px;color:#fff;font-size:12.5px;font-family:inherit;outline:0;min-width:0}
 .wform input::placeholder{color:#66799A}
 .wform button{background:linear-gradient(180deg,#FF8A2B,var(--or));color:var(--on-or);border:0;border-radius:11px;padding:0 14px;font-size:12.5px;font-weight:900;font-family:inherit}
-.wlist{display:grid;gap:7px}
+.wlist{display:grid;grid-template-columns:minmax(0,1fr);gap:7px}
 .wcard{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:10px 12px}
 .wico{width:34px;height:34px;border-radius:10px;background:rgba(255,107,0,.14);border:1px solid rgba(255,107,0,.4);color:var(--or2);display:grid;place-items:center;font-size:13px;font-weight:900;flex:0 0 auto}
 .wcard .t{flex:1;min-width:0}
 .wcard .t b{display:block;font-size:12.5px;font-weight:900;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .wcard .t span{display:block;font-size:10px;color:var(--gray);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
 .wcard .del{background:none;border:0;color:#7E90AB;font-size:15px;padding:4px}
-.empty{font-size:11.5px;color:#66799A;text-align:center;padding:12px 0}
-.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);background:#1B2A48;border:1px solid var(--line2);color:#fff;font-size:12px;font-weight:800;padding:10px 14px;border-radius:11px;opacity:0;transition:.2s;z-index:80;pointer-events:none}
+.empty{font-size:11.5px;color:#66799A;text-align:center;padding:14px 0}
+.apkf{margin:20px 0 4px;font-size:11px;line-height:1.7;color:#6F819B;text-align:center}
+.apkf a{color:#8FA2C6;text-decoration:none;border-bottom:1px solid rgba(143,162,198,.4)}
+
+.sheet{position:fixed;inset:0;background:rgba(4,9,20,.72);display:none;align-items:flex-end;z-index:60;backdrop-filter:blur(2px)}
+.sheet.on{display:flex}
+.sh{width:100%;background:#101D38;border-top:1px solid var(--line2);border-radius:18px 18px 0 0;padding:16px 16px 22px;max-height:82vh;overflow:auto}
+.sh .top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sh .top img,.sh .top .ph{width:46px;height:46px;border-radius:12px;object-fit:contain;background:#16264A}
+.sh .top .ph{display:grid;place-items:center;font-size:18px;font-weight:900;color:#9FB2CC}
+.sh .top .t{flex:1;min-width:0}
+.sh .top .t b{display:block;font-size:14px;font-weight:900;color:#fff}
+.sh .top .t span{display:block;font-size:10.5px;color:var(--gray);margin-top:2px;word-break:break-all}
+.sh .close{width:30px;height:30px;border-radius:50%;background:#1B2A48;border:0;color:var(--ink2);font-size:14px;flex:0 0 auto}
+.sh .grade{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:900;border-radius:11px;padding:11px 12px;margin-bottom:10px}
+.sh .grade.g{background:rgba(34,197,94,.16);color:#86EFAC;border:1px solid rgba(34,197,94,.45)}
+.sh .grade.c{background:rgba(245,158,11,.16);color:#FCD34D;border:1px solid rgba(245,158,11,.45)}
+.sh .grade.k{background:rgba(239,68,68,.16);color:#FCA5A5;border:1px solid rgba(239,68,68,.45)}
+.sh .why{font-size:12px;line-height:1.68;color:#C9D6E8;margin-bottom:6px}
+.sh .why b{color:#fff}
+.sh .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.sh .acts button{border:1px solid var(--line2);background:var(--card2);color:var(--ink);font-family:inherit;font-size:12px;font-weight:800;border-radius:11px;padding:12px}
+.sh .acts button.pri{background:linear-gradient(180deg,#FF8A2B,var(--or));color:var(--on-or);border-color:var(--or)}
+.sh .note{font-size:10.5px;color:#7C8DA6;line-height:1.6;margin-top:10px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);background:#1B2A48;border:1px solid var(--line2);color:#fff;font-size:12px;font-weight:800;padding:10px 14px;border-radius:11px;opacity:0;transition:.2s;z-index:80;pointer-events:none;max-width:92vw;text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
 <div class="hd">
   <div class="logo">⊞</div>
-  <div><b>폰 앱 정리기</b><span>4칸 자동 분류 · 1초 검색</span></div>
+  <div><b>폰 앱 정리기<i>v2.0</i></b><span>안전 등급 3칸 · 1초 검색</span></div>
   <div class="sp"></div>
   <div class="cnt" id="cnt">불러오는 중</div>
 </div>
@@ -81,150 +142,382 @@ body{padding-bottom:26px}
     <button class="clr" id="clr">✕</button>
   </div>
 
-  <div class="sect"><h2>자주 쓰는 6개</h2><div class="ln"></div><div class="tip" id="pinTip">길게 눌러 고정</div></div>
+  <div class="gsum" id="gsum">
+    <button class="gc go" data-g="ok"><span class="v" id="v_ok">–</span><span class="k">지워도 됨</span></button>
+    <button class="gc chk" data-g="check"><span class="v" id="v_check">–</span><span class="k">확인 필요</span></button>
+    <button class="gc keep" data-g="keep"><span class="v" id="v_keep">–</span><span class="k">손대지 마</span></button>
+  </div>
+
+  <div class="rule" id="rule"><div>🔎</div><div><b>등급은 앱을 지우라는 명령이 아닙니다.</b> 은행·인증서·메신저·계정 앱은 '손대지 마'로 잠갔습니다. 실제 삭제는 각 앱의 <b>앱 정보</b> 화면에서 직접 하세요.</div></div>
+
+  <div class="tgl" id="tgl">
+    <button class="on" data-v="grade">등급으로 보기</button>
+    <button data-v="cat">종류로 보기</button>
+  </div>
+
+  <div class="sect"><h2>자주 쓰는 6개</h2><div class="ln"></div><div class="tip">길게 눌러 고정</div></div>
   <div class="pinrow" id="pins"></div>
 
-  <div class="sect"><h2>자동 분류 4칸</h2><div class="ln"></div><div class="tip" id="allTip"></div></div>
-  <div class="cats" id="cats"></div>
+  <div id="listHost"></div>
 
   <div class="web">
-    <div class="sect"><h2>웹앱 바로가기</h2><div class="ln"></div></div>
+    <div class="sect"><h2>KTS 웹앱 바로가기</h2><div class="ln"></div><div class="tip">기본 탑재</div></div>
+    <div class="ktsapps" id="ktsapps"></div>
+
+    <div class="sect" style="margin-top:16px"><h2>내 바로가기</h2><div class="ln"></div></div>
     <div class="wform">
-      <input id="wname" placeholder="이름 (예: 원클릭)">
-      <input id="wurl" placeholder="주소 autooneclick.com">
+      <input id="wname" placeholder="이름 (예: 홈택스)">
+      <input id="wurl" placeholder="주소 hometax.go.kr">
       <button id="wadd">추가</button>
     </div>
     <div class="wlist" id="wlist"></div>
   </div>
+
+  <p class="apkf">설치형 앱(APK)으로 쓰면 앱 목록·아이콘을 실제 폰에서 읽습니다.<br>
+    <a href="KTS_폰앱정리기_v2.0.apk" download>KTS_폰앱정리기_v2.0.apk 내려받기</a></p>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="sh" id="shBody"></div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-const CATS = [
-  {k:'talk', name:'소통', color:'#38BDF8',
-   kw:['kakao','talk','line','instagram','facebook','twitter','telegram','whatsapp','band','discord','dm','snap','wechat','naver','tiktok']},
-  {k:'money', name:'금융·결제', color:'#22C55E',
-   kw:['bank','kb','shinhan','woori','hana','nh','ibk','toss','pay','card','securities','증권','은행','카드','캐피탈','보험','fin','kbpay','samsungcard','hyundai']},
-  {k:'shop', name:'쇼핑·생활', color:'#FF6B00',
-   kw:['coupang','gmarket','11st','auction','baemin','yogiyo','emart','lotte','ssg','kurly','olive','musinsa','zigzag','tmoney','taxi','delivery','market','mart','shop','배달','마트','컬리','쿠팡']},
-  {k:'work', name:'도구·업무', color:'#A78BFA',
-   kw:[]}
+/* =========================================================================
+   분류 엔진 v2.0
+   ① 게임을 가장 먼저 잡아낸다(금융 칸에 게임이 절대 섞이지 않는 이유)
+   ② 영문 키워드는 '낱말 단위'로만 맞춘다 — pay 가 play·player 에 걸리던 v1 버그 제거
+   ③ 안전 등급 3단(지워도 됨 / 확인 필요 / 손대지 마) — 은행·인증·메신저는 잠금
+   ========================================================================= */
+
+const GAME_SIGN = [
+  /(^|\.)game(s)?(\.|$)/i, /(^|\.)play\.games/i, /(^|\.)gameloft/i, /supercell|king\.com|rovio|playrix|miniclip|outfit7|devsisters|netmarble|nexon|ncsoft|kakaogames|cjegm|com2us|gamevil|haegin|pearlabyss|linegames|wemade|neowiz|kakao\.game/i
 ];
-const catOf = (pkg,label)=>{
-  const s=(pkg+' '+label).toLowerCase();
-  for(const c of CATS){ if(c.kw.some(k=>s.includes(k))) return c.k; }
-  return 'work';
-};
-const $=s=>document.querySelector(s);
-let APPS=[], q='';
-const LS_PIN='kts_pin_v1', LS_WEB='kts_web_v1';
-const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
-const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-let PIN=load(LS_PIN,[]), WEB=load(LS_WEB,[]);
-let expanded={};
+const GAME_WORDS = ['게임','모바일게임','쿠키런','카카오게임','퍼즐','배틀','메이플','던전','테트리스','바둑','장기','체스','카드게임','보드게임'];
 
-function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(window._t);window._t=setTimeout(()=>e.classList.remove('on'),1500)}
-
-function iconHtml(a,size){
-  if(a.i) return `<img src="${a.i}" alt="">`;
-  return `<div class="ph">${(a.n||'?').slice(0,1)}</div>`;
+function toks(s){ return s.toLowerCase().split(/[^a-z0-9가-힣]+/).filter(Boolean); }
+function isGame(a){
+  const s = a.p + ' ' + a.n;
+  if (a.c === 0) return true;                       // 네이티브 appCategory = game
+  if (GAME_SIGN.some(re => re.test(a.p))) return true;
+  const tk = toks(a.p);
+  if (tk.includes('game') || tk.includes('games') || tk.includes('gam')) return true;
+  const low = a.n.toLowerCase();
+  return GAME_WORDS.some(w => low === w || low.includes(w) && low.length <= w.length + 6);
 }
-function renderPins(){
-  const el=$('#pins'); el.innerHTML='';
-  for(let i=0;i<6;i++){
-    const p=PIN[i]; const d=document.createElement('div');
-    d.className='slot'+(p?' full':'');
-    if(p){
-      const a=APPS.find(x=>x.p===p)||{n:'?',p:p};
-      d.innerHTML=iconHtml(a)+`<div class="lb">${a.n||''}</div><div class="x">✕</div>`;
-      d.onclick=(e)=>{ if(e.target.className==='x'){ PIN.splice(i,1); save(LS_PIN,PIN); renderPins(); return;} launch(a.p); };
-    } else {
-      d.innerHTML='<div class="plus">+</div>';
-      d.onclick=()=>{ toast('아래 앱을 길게 누르면 여기에 고정됩니다'); };
-    }
-    el.appendChild(d);
+
+/* 낱말 단위 매칭 — 짧은 영문(3자 이하)은 '앞에서 시작'만 인정한다 */
+function hit(tk, kw){
+  return tk.some(t => {
+    if (t === kw) return true;
+    if (kw.length <= 3) return t.startsWith(kw);     // pay → payco ○ / play ✗
+    return t.startsWith(kw) || t.endsWith(kw) || t.includes(kw);
+  });
+}
+
+const CATS = [
+  {k:'money', name:'금융·결제', color:'#22C55E',
+   kw:['bank','kb','kbbank','kbstar','shinhan','woori','hana','hanabank','nhbank','nhcard','농협','ibk','kbank','kakaobank','toss','viva','payco','kakaopay','naverpay','ssgpay','pay','samsungcard','hyundaicard','lottecard','shinhancard','bc','citi','securities','증권','은행','카드','캐피탈','보험','spay','samsungpay','월렛','wallet','삼성페이','네이버페이','카카오페이','저축','asset','invest','ledger','upbit','bithumb','coinone','korbit','fintech','credit']},
+  {k:'talk', name:'소통', color:'#38BDF8',
+   kw:['kakao','카카오','naver','네이버','다음','talk','line','instagram','facebook','twitter','telegram','whatsapp','band','discord','snapchat','wechat','tiktok','naver','cafe','blog','youtube','community','dcinside','everytime','dm','sms','message','messenger']},
+  {k:'shop', name:'쇼핑·생활', color:'#FF6B00',
+   kw:['coupang','gmarket','11st','auction','baemin','yogiyo','emart','lotte','ssg','kurly','oliveyoung','musinsa','zigzag','tmoney','kakaot','taxi','delivery','market','mart','shop','store','deal','ticket','interpark','yes24','교보','배달','마트','컬리','쿠팡','당근','중고','편의점','멤버십','포인트','coupon']},
+  {k:'game', name:'게임', color:'#A78BFA', kw:[]},
+  {k:'work', name:'도구·업무', color:'#94A3B8', kw:[]}
+];
+const nameOf = k => (CATS.find(c => c.k === k) || {}).name || k;
+const colorOf = k => (CATS.find(c => c.k === k) || {}).color || '#94A3B8';
+
+function catOf(a){
+  if (isGame(a)) return 'game';
+  const tk = toks(a.p + ' ' + a.n);
+  for (const c of CATS){
+    if (c.k === 'game' || c.k === 'work') continue;
+    if (c.kw.some(w => hit(tk, w))) return c.k;
   }
+  return 'work';
+}
+
+/* ---------- 안전 등급 ---------- */
+const KEEP = [
+  {re:/(bank|kbstar|shinhan|woori|hanabank|nhbank|ibk|kbank|kakaobank|toss|payco|kakaopay|naverpay|ssgpay|samsungcard|hyundaicard|lottecard|shinhancard|securities|증권|은행|카드앱|캐피탈|보험|자동이체|공인인증)/i,
+   why:'돈이 걸린 앱 — 인증서·자동이체·잔액이 들어 있어 지우면 다시 발급받아야 합니다'},
+  {re:/(kftc|공동인증|금융인증|인증서|인증센터|otp|certificate|보안카드|nhis|건강보험|국민연금|모바일신분증|운전면허|정부24|hometax|손택스|홈택스|minwon|welfare)/i,
+   why:'본인인증·OTP·공공 앱 — 지우면 은행·정부 업무를 못 합니다'},
+  {re:/(kakao\.talk|주소록|contacts|mms|message|메시지|dialer|전화)/i,
+   why:'연락처·대화가 든 앱 — 지우면 기록이 함께 사라집니다'},
+  {re:/(^com\.android\.|^android$|google\.android\.(gms|gsf|vending)|systemui|launcher|inputmethod|keyboard|키보드|^com\.sec\.android\.app\.settings|^com\.android\.settings)/i,
+   why:'폰이 돌아가는 기본 앱(시스템)입니다'},
+  {re:/(samsung\.android\.(spay|samsungpay|smp|pass)|삼성월렛|삼성페이|samsung ?wallet)/i,
+   why:'결제·신분증 지갑 — 교통카드·신분증이 들어 있습니다'},
+  {re:/(gallery|갤러리|photos|사진|카메라|camera|myfiles|파일관리)/i,
+   why:'사진·파일이 든 앱 — 원본이 사라질 수 있습니다'},
+  {re:/(vpn|백신|보안|security|backup|백업)/i,
+   why:'보안·백업 앱 — 끄면 폰이 위험해집니다'}
+];
+const CUT = [
+  {re:/(통신사|skt|tworld|t ?world|u\+|lgu|kt ?m|olleh|kt ?genie|지니뮤직|sbrowser|samsung ?(members|galaxy ?store|themes|bixby|ar ?zone|free|global ?goals|video|music|internet))/i,
+   why:'통신사·제조사 기본 앱 — 지워도 폰 사용에 지장이 없습니다'},
+  {re:/(체험|데모|샘플|sample|trial|쿠폰북|리워드|출석|만화|웹툰|키즈|어린이)/i,
+   why:'체험·오락성 앱 — 다시 필요하면 설치할 수 있습니다'},
+  {re:/(테마|theme|아이콘팩|글꼴|폰트|배경화면|wallpaper|벨소리|ringtone)/i,
+   why:'꾸미기 앱 — 기본 기능으로 대체됩니다'}
+];
+const GRADE = {
+  ok:   {t:'지워도 됨', cls:'g'},
+  check:{t:'확인 필요', cls:'c'},
+  keep: {t:'손대지 마', cls:'k'}
+};
+
+function gradeOf(a, cat){
+  const s = a.p + ' ' + a.n;
+  /* 게임이 가장 먼저 — '카드게임'이 금융으로, 'play'가 pay로 새던 v1 버그를 구조적으로 막는다 */
+  if (cat === 'game') return {g:'ok', why:'게임 — 다시 설치하면 계정으로 이어집니다(진행은 서버에 남습니다)'};
+  for (const r of KEEP) if (r.re.test(s)) return {g:'keep', why:r.why};
+  if (a.n === 'PASS' || a.n === 'pass' || a.n === '패스') return {g:'keep', why:'본인인증 앱 — 지우면 은행·정부 업무를 못 합니다'};
+  if (PIN.indexOf(a.p) >= 0) return {g:'keep', why:'자주 쓰는 6개에 고정한 앱입니다'};
+  for (const r of CUT) if (r.re.test(s)) return {g:'ok', why:r.why};
+  if (cat === 'money') return {g:'keep', why:'금융·결제로 분류된 앱 — 돈이 걸린 앱은 지우지 않습니다'};
+  if (cat === 'talk') return {g:'check', why:'계정·대화가 있는 앱 — 로그인 기록이 사라질 수 있습니다'};
+  if (cat === 'shop') return {g:'check', why:'포인트·쿠폰·주문내역이 있는 앱 — 확인 후 지우세요'};
+  return {g:'check', why:'설정·유료 결제가 걸려 있을 수 있습니다 — 앱 정보에서 확인 후 지우세요'};
+}
+
+/* ---------- 상태 ---------- */
+const $ = s => document.querySelector(s);
+const LS_PIN = 'kts_pin_v2', LS_WEB = 'kts_web_v2';
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+let PIN = load(LS_PIN, []), WEB = load(LS_WEB, []);
+let APPS = [], q = '', view = 'grade', gFilter = '', expanded = {};
+
+/* KTS 웹앱 — 기본 탑재(지울 수 없음) */
+const KTS_APPS = [
+  {n:'원클릭', u:'https://kim779944-max.github.io/K0612766940K-/oneclick/', i:'../oneclick/icon.png'},
+  {n:'더뷰(만능뷰어)', u:'https://kim779944-max.github.io/K0612766940K-/oneclick/viewer.html', i:'../oneclick/icon_viewer.png'},
+  {n:'세이캡 2026', u:'https://kim779944-max.github.io/K0612766940K-/saycap/', i:'../saycap/icon.png'},
+  {n:'속마음 내비', u:'https://kim779944-max.github.io/K0612766940K-/navi/', i:'../navi/icon-192.png'},
+  {n:'번개알바', u:'https://kim779944-max.github.io/bungaealba/', i:''},
+  {n:'대출·자금 조회기', u:'https://kim779944-max.github.io/K0612766940K-/oneclick/loan.html', i:'../oneclick/icon_loan.png'}
+];
+
+function toast(t){ const e = $('#toast'); e.textContent = t; e.classList.add('on'); clearTimeout(window._t); window._t = setTimeout(() => e.classList.remove('on'), 1600); }
+function iconHtml(a){
+  const fb = `<div class="ph">${(a.n || '?').slice(0, 1)}</div>`;
+  if (!a.i) return fb;
+  return `<img src="${a.i}" alt="" onerror="this.style.display='none'">` + fb.replace('class="ph"', 'class="ph" style="display:none"');
+}
+function openUrl(u){
+  if (window.Native && Native.open) Native.open(u);
+  else window.open(u, '_blank');
 }
 function launch(p){
-  if(window.Native && Native.launch){ Native.launch(p); }
-  else toast('이 기기에서는 바로 열 수 없습니다');
+  if (window.Native && Native.launch) Native.launch(p);
+  else toast('설치형 앱에서만 바로 열립니다');
 }
-function pin(p){
-  const idx=PIN.indexOf(p);
-  if(idx>=0){ PIN.splice(idx,1); toast('고정을 해제했습니다'); }
-  else if(PIN.length>=6){ toast('6개까지 고정할 수 있습니다'); return; }
+function appInfo(p){
+  if (window.Native && Native.info) { Native.info(p); closeSheet(); }
+  else toast('앱 정보 열기는 설치형 앱(APK)에서 됩니다');
+}
+
+/* ---------- 고정 6칸 ---------- */
+function renderPins(){
+  const el = $('#pins'); el.innerHTML = '';
+  for (let i = 0; i < 6; i++){
+    const p = PIN[i]; const d = document.createElement('div');
+    d.className = 'slot' + (p ? ' full' : '');
+    if (p){
+      const a = APPS.find(x => x.p === p) || {n:'?', p:p, i:''};
+      d.innerHTML = iconHtml(a) + `<div class="lb">${a.n || ''}</div><div class="x">✕</div>`;
+      d.onclick = e => {
+        if (e.target.className === 'x'){ PIN.splice(i, 1); save(LS_PIN, PIN); renderPins(); render(); return; }
+        launch(a.p);
+      };
+    } else {
+      d.innerHTML = '<div class="plus">+</div>';
+      d.onclick = () => toast('아래 앱을 길게 누르면 여기에 고정됩니다');
+    }
+    el.appendChild(d);
+  }
+}
+function togglePin(p){
+  const idx = PIN.indexOf(p);
+  if (idx >= 0){ PIN.splice(idx, 1); toast('고정을 해제했습니다'); }
+  else if (PIN.length >= 6){ toast('6개까지 고정할 수 있습니다'); return; }
   else { PIN.push(p); toast('자주 쓰는 앱에 고정했습니다'); }
-  save(LS_PIN,PIN); renderPins(); render();
+  save(LS_PIN, PIN); renderPins(); render();
 }
-function appBtn(a){
-  const b=document.createElement('button');
-  b.className='ap';
-  b.innerHTML=iconHtml(a)+`<span>${a.n}</span>`;
-  b.onclick=()=>launch(a.p);
-  let t=null;
-  b.addEventListener('touchstart',()=>{ t=setTimeout(()=>pin(a.p),600); },{passive:true});
-  b.addEventListener('touchend',()=>{ clearTimeout(t); });
-  b.addEventListener('touchmove',()=>{ clearTimeout(t); });
-  b.addEventListener('contextmenu',e=>{e.preventDefault();pin(a.p);});
+
+/* ---------- 앱 상세 시트 ---------- */
+function openSheet(a){
+  const cat = catOf(a), gr = gradeOf(a, cat);
+  const G = GRADE[gr.g];
+  $('#shBody').innerHTML = `
+    <div class="top">${iconHtml(a)}<div class="t"><b>${a.n}</b><span>${a.p}</span></div>
+      <button class="close" onclick="closeSheet()">✕</button></div>
+    <div class="grade ${G.cls}">${G.t}</div>
+    <div class="why">${gr.why}</div>
+    <div class="why" style="color:#8FA0B8">분류 : ${nameOf(cat)}</div>
+    ${gr.g === 'keep' ? '<div class="why" style="color:#FCA5A5"><b>이 앱은 지우지 마세요.</b> 인증서·자동이체·대화 기록이 함께 사라질 수 있습니다.</div>' : ''}
+    ${gr.g === 'ok' ? '<div class="why" style="color:#86EFAC">지워도 되는 앱입니다. 아래 <b>앱 정보</b>에서 삭제할 수 있습니다.</div>' : ''}
+    <div class="acts">
+      <button class="pri" onclick="launch('${a.p}')">앱 열기</button>
+      <button onclick="appInfo('${a.p}')">앱 정보 · 삭제</button>
+    </div>
+    <div class="acts" style="grid-template-columns:1fr">
+      <button onclick="togglePin('${a.p}');closeSheet()">${PIN.indexOf(a.p) >= 0 ? '고정 해제' : '자주 쓰는 6개에 고정'}</button>
+    </div>
+    <div class="note">삭제는 폰 설정의 앱 정보 화면에서 직접 합니다. 이 앱은 목록과 등급만 보여 주고, 대신 지우지 않습니다.</div>`;
+  $('#sheet').classList.add('on');
+}
+function closeSheet(){ $('#sheet').classList.remove('on'); }
+$('#sheet').onclick = e => { if (e.target.id === 'sheet') closeSheet(); };
+
+/* ---------- 목록 ---------- */
+function pool(){
+  const kw = q.trim().toLowerCase();
+  return APPS.filter(a => !kw || a.n.toLowerCase().includes(kw) || a.p.toLowerCase().includes(kw));
+}
+function badge(g){ const G = GRADE[g]; return `<span class="bdg ${G.cls}">${G.t}</span>`; }
+function rowOf(a){
+  const cat = catOf(a), gr = gradeOf(a, cat);
+  const b = document.createElement('button');
+  b.className = 'row';
+  b.innerHTML = `${iconHtml(a)}<div class="t"><b>${a.n}</b><span>${nameOf(cat)} · ${gr.why}</span></div>${badge(gr.g)}`;
+  b.onclick = () => openSheet(a);
+  let t = null;
+  b.addEventListener('touchstart', () => { t = setTimeout(() => togglePin(a.p), 620); }, {passive:true});
+  b.addEventListener('touchend', () => clearTimeout(t));
+  b.addEventListener('touchmove', () => clearTimeout(t));
+  b.addEventListener('contextmenu', e => { e.preventDefault(); togglePin(a.p); });
   return b;
 }
+function tileOf(a){
+  const cat = catOf(a), gr = gradeOf(a, cat);
+  const b = document.createElement('button');
+  b.className = 'ap';
+  b.innerHTML = `${iconHtml(a)}<span>${a.n}</span><i class="gb ${GRADE[gr.g].cls}">${gr.g === 'ok' ? '↓' : gr.g === 'check' ? '?' : '!'}</i>`;
+  b.onclick = () => openSheet(a);
+  let t = null;
+  b.addEventListener('touchstart', () => { t = setTimeout(() => togglePin(a.p), 620); }, {passive:true});
+  b.addEventListener('touchend', () => clearTimeout(t));
+  b.addEventListener('touchmove', () => clearTimeout(t));
+  return b;
+}
+function section(host, cls, title, list, key, asTiles){
+  if (!list.length) return;
+  const s = document.createElement('div');
+  s.className = 'sect ' + cls;
+  s.innerHTML = `<h2>${title}</h2><div class="ln"></div><div class="tip">${list.length}개</div>`;
+  host.appendChild(s);
+  const box = document.createElement('div');
+  box.className = asTiles ? 'grid' : 'rows';
+  const lim = expanded[key] ? 2000 : (asTiles ? 12 : 30);
+  list.slice(0, lim).forEach(a => box.appendChild(asTiles ? tileOf(a) : rowOf(a)));
+  if (list.length > lim){
+    const m = document.createElement('button');
+    m.className = 'more';
+    m.textContent = `+ ${list.length - lim}개 더 보기`;
+    m.onclick = () => { expanded[key] = true; render(); };
+    box.appendChild(m);
+  }
+  host.appendChild(box);
+}
 function render(){
-  const kw=q.trim().toLowerCase();
-  const pool=APPS.filter(a=>!kw || a.n.toLowerCase().includes(kw) || a.p.toLowerCase().includes(kw));
-  $('#cnt').textContent=`앱 ${APPS.length}개`;
-  $('#allTip').textContent=kw?`'${q}' 검색 ${pool.length}개`:'길게 눌러 고정';
-  const host=$('#cats'); host.innerHTML='';
-  if(!pool.length){
-    host.innerHTML=`<div class="cat" style="grid-column:1/-1"><div class="empty">'${q}' 로 시작하는 앱이 없습니다.</div></div>`;
+  const all = pool();
+  const graded = all.map(a => { const c = catOf(a); return {a, c, g: gradeOf(a, c).g}; });
+  const n = {ok:0, check:0, keep:0};
+  graded.forEach(x => n[x.g]++);
+  $('#v_ok').textContent = n.ok; $('#v_check').textContent = n.check; $('#v_keep').textContent = n.keep;
+  $('#cnt').textContent = `앱 ${APPS.length}개`;
+  document.querySelectorAll('.gc').forEach(b => b.classList.toggle('on', b.dataset.g === gFilter));
+
+  const host = $('#listHost'); host.innerHTML = '';
+  if (!graded.length){
+    host.innerHTML = `<div class="empty">'${q}' 로 시작하는 앱이 없습니다.</div>`;
     return;
   }
-  CATS.forEach(c=>{
-    const list=pool.filter(a=>catOf(a.p,a.n)===c.k);
-    if(!list.length) return;
-    const lim=expanded[c.k]?999:9;
-    const card=document.createElement('div'); card.className='cat';
-    card.innerHTML=`<h3><span class="dot" style="background:${c.color}"></span>${c.name}<span class="n">${list.length}</span></h3><div class="grid"></div>`;
-    const g=card.querySelector('.grid');
-    list.slice(0,lim).forEach(a=>g.appendChild(appBtn(a)));
-    if(list.length>lim){
-      const m=document.createElement('button'); m.className='more'; m.textContent=`+ ${list.length-lim}개 더 보기`;
-      m.onclick=()=>{ expanded[c.k]=true; render(); };
-      g.appendChild(m);
-    }
-    host.appendChild(card);
-  });
+  if (view === 'grade'){
+    ['ok', 'check', 'keep'].forEach(g => {
+      if (gFilter && gFilter !== g) return;
+      const list = graded.filter(x => x.g === g).map(x => x.a);
+      const sub = g === 'ok' ? '다시 설치할 수 있는 앱' : g === 'check' ? '확인 후 지우는 앱' : '지우면 안 되는 앱';
+      section(host, g === 'ok' ? 'g' : g === 'check' ? 'c' : 'k',
+        `${GRADE[g].t} <span style="color:#6F819B;font-weight:700">· ${sub}</span>`, list, 'g_' + g, false);
+    });
+  } else {
+    CATS.forEach(c => {
+      const list = graded.filter(x => x.c === c.k).map(x => x.a);
+      section(host, '', c.name, list, 'c_' + c.k, true);
+    });
+  }
+}
+function renderKts(){
+  const el = $('#ktsapps');
+  el.innerHTML = KTS_APPS.map(k =>
+    `<button class="ka" onclick="openUrl('${k.u}')"><img src="${k.i}" alt="" onerror="this.style.display='none'">
+      <div class="t"><b>${k.n}</b><span>1번에 열기</span></div></button>`).join('');
 }
 function renderWeb(){
-  const el=$('#wlist');
-  if(!WEB.length){ el.innerHTML='<div class="empty">자주 여는 사이트를 추가해 두세요.</div>'; return; }
-  el.innerHTML='';
-  WEB.forEach((w,i)=>{
-    const d=document.createElement('div'); d.className='wcard';
-    d.innerHTML=`<div class="wico">↗</div><div class="t"><b>${w.n}</b><span>${w.u}</span></div><button class="del">✕</button>`;
-    d.querySelector('.t').onclick=()=>{ if(window.Native&&Native.open) Native.open(w.u); else window.open(w.u,'_blank'); };
-    d.querySelector('.del').onclick=()=>{ WEB.splice(i,1); save(LS_WEB,WEB); renderWeb(); };
+  const el = $('#wlist');
+  if (!WEB.length){ el.innerHTML = '<div class="empty">자주 여는 사이트를 추가해 두세요.</div>'; return; }
+  el.innerHTML = '';
+  WEB.forEach((w, i) => {
+    const d = document.createElement('div'); d.className = 'wcard';
+    d.innerHTML = `<div class="wico">↗</div><div class="t"><b>${w.n}</b><span>${w.u}</span></div><button class="del">✕</button>`;
+    d.querySelector('.t').onclick = () => openUrl(w.u);
+    d.querySelector('.del').onclick = () => { WEB.splice(i, 1); save(LS_WEB, WEB); renderWeb(); };
     el.appendChild(d);
   });
 }
-$('#q').oninput=e=>{q=e.target.value;render()};
-$('#clr').onclick=()=>{q='';$('#q').value='';render()};
-$('#wadd').onclick=()=>{
-  const n=$('#wname').value.trim(), u=$('#wurl').value.trim();
-  if(!n||!u){ toast('이름과 주소를 넣어 주세요'); return; }
-  const url=/^https?:\/\//.test(u)?u:'https://'+u.replace(/^\/+/,'');
-  WEB.push({n,u:url}); save(LS_WEB,WEB); renderWeb();
-  $('#wname').value='';$('#wurl').value=''; toast('바로가기를 추가했습니다');
+$('#q').oninput = e => { q = e.target.value; render(); };
+$('#clr').onclick = () => { q = ''; $('#q').value = ''; render(); };
+document.querySelectorAll('#gsum .gc').forEach(b => b.onclick = () => {
+  gFilter = (gFilter === b.dataset.g) ? '' : b.dataset.g;
+  if (gFilter && view !== 'grade') view = 'grade';
+  document.querySelectorAll('#tgl button').forEach(x => x.classList.toggle('on', x.dataset.v === view));
+  render();
+});
+document.querySelectorAll('#tgl button').forEach(b => b.onclick = () => {
+  view = b.dataset.v;
+  document.querySelectorAll('#tgl button').forEach(x => x.classList.toggle('on', x === b));
+  render();
+});
+$('#wadd').onclick = () => {
+  const n = $('#wname').value.trim(), u = $('#wurl').value.trim();
+  if (!n || !u){ toast('이름과 주소를 넣어 주세요'); return; }
+  const url = /^https?:\/\//.test(u) ? u : 'https://' + u.replace(/^\/+/, '');
+  WEB.push({ n, u:url }); save(LS_WEB, WEB); renderWeb();
+  $('#wname').value = ''; $('#wurl').value = ''; toast('바로가기를 추가했습니다');
 };
+
+/* 데모 목록(설치형이 아닌 브라우저에서 열었을 때 화면 확인용) */
+const DEMO = [
+  {p:'com.kakao.talk', n:'카카오톡'},
+  {p:'viva.republica.toss', n:'토스'},
+  {p:'com.kbstar.kbbank', n:'KB스타뱅킹'},
+  {p:'com.kbcard.kbkookmincard', n:'KB국민카드'},
+  {p:'com.google.android.play.games', n:'Play 게임즈'},
+  {p:'com.playstudio.puzzlegame', n:'퍼즐 맞추기'},
+  {p:'com.gamevil.cardgame', n:'카드게임'},
+  {p:'com.skt.tworld', n:'T world'},
+  {p:'com.samsung.android.spay', n:'삼성월렛'},
+  {p:'com.ahnlab.v3mobileplus', n:'V3 Mobile'},
+  {p:'com.coupang.mobile', n:'쿠팡'},
+  {p:'com.instagram.android', n:'인스타그램'},
+  {p:'kr.go.hometax', n:'손택스'},
+  {p:'com.kftc.pass', n:'PASS'},
+  {p:'com.supercell.brawlstars', n:'브롤스타즈'}
+];
 function boot(raw){
-  try{ APPS=JSON.parse(raw||'[]'); }catch(e){ APPS=[]; }
-  if(!APPS.length){
-    APPS=[{p:'com.kakao.talk',n:'카카오톡',i:''},{p:'com.coupang.mobile',n:'쿠팡',i:''},
-          {p:'viva.republica.toss',n:'토스',i:''},{p:'com.instagram.android',n:'인스타그램',i:''}];
-    toast('앱 목록을 불러오는 중입니다');
+  try { APPS = JSON.parse(raw || '[]'); } catch (e) { APPS = []; }
+  if (!APPS.length){
+    APPS = DEMO.map(x => ({ p:x.p, n:x.n, i:'', c:-1 }));
+    toast('샘플 목록입니다 — 설치형 앱에서 실제 앱을 읽습니다');
   }
-  renderPins(); render(); renderWeb();
+  renderPins(); render(); renderKts(); renderWeb();
 }
-if(window.Native && Native.apps){ boot(Native.apps()); } else { boot(null); }
+if (window.Native && Native.apps) boot(Native.apps()); else boot(null);
 </script>
 </body>
 </html>

@@ -165,6 +165,9 @@ h2{font-size:20px;line-height:1.38;letter-spacing:-.8px;margin:7px 0 0;font-weig
 .lockbar.on{display:flex}
 .lockbar .lt{font-size:12px;font-weight:900;color:#fff}
 .lockbar .ls{font-size:10.5px;color:var(--ink2)}
+/* 전면 무료 공개 모드 — 잠금·가격 유도 요소를 화면에서 완전히 숨깁니다 */
+body.free .locktag,body.free .lockbar,body.free #licBar,body.free #btnLic{display:none!important}
+body.free .blur{filter:none!important;opacity:1!important;pointer-events:auto!important;user-select:auto!important}
 .mini-btn.taste{background:linear-gradient(180deg,#D9B876,var(--gold));border:1px solid rgba(198,160,84,.6);color:#20180A}
 .licbar{display:flex;align-items:center;gap:9px;border:1px solid rgba(198,160,84,.4);background:rgba(198,160,84,.08);
   border-radius:12px;padding:10px 12px;margin-bottom:10px}
@@ -223,7 +226,7 @@ h2{font-size:20px;line-height:1.38;letter-spacing:-.8px;margin:7px 0 0;font-weig
       <div style="display:grid;gap:9px;margin-top:18px">
         <button class="btn main" id="btnFull">전체 시작 — 그림 4문항</button>
         <div class="row2">
-          <button class="btn ghost sm" id="btnTaste">체험 2문항</button>
+          <button class="btn ghost sm" id="btnTaste">빠른 2문항</button>
           <button class="btn ghost sm" id="btnCodeIn">코드 받기</button>
         </div>
         <button class="btn ghost sm" id="btnRelay">상대에게 보내기 (문자·카톡)</button>
@@ -233,7 +236,7 @@ h2{font-size:20px;line-height:1.38;letter-spacing:-.8px;margin:7px 0 0;font-weig
         <b>먼저 알려 드립니다</b>
         <p>이 도구는 대화 시작을 돕는 <b>참고 도구</b>이며 심리검사·진단·예언이 아닙니다.
           고른 답과 결과는 서버로 보내지 않고 저장하지 않으며 이 기기 화면에서만 처리됩니다.
-          이용권 확인값만 브라우저에 보관되고, 브라우저 데이터를 지우면 삭제됩니다.
+          브라우저 데이터를 지우면 저장된 기록도 함께 사라집니다.
           결과는 상대와 상황에 따라 다르며 성과를 보장하지 않습니다.</p>
       </div>
     </div>
@@ -301,25 +304,25 @@ h2{font-size:20px;line-height:1.38;letter-spacing:-.8px;margin:7px 0 0;font-weig
     </div>
 
     <div class="card lock" id="orderCard">
-      <div class="ctit">설득 순서 — 이 순서로만 <span class="locktag">PRO</span></div>
+      <div class="ctit">설득 순서 — 이 순서로만 <span class="locktag">유료판</span></div>
       <div class="lockwrap"><div class="steps" id="orderBox"></div>
         <div class="lockbar" id="lockOrder">
-          <div class="lt">설득 순서 3단은 프로판입니다</div><div class="ls">맛보기 1회로 먼저 보실 수 있습니다</div>
+          <div class="lt">설득 순서 3단은 정식판에서 열립니다</div><div class="ls">맛보기 1회로 먼저 보실 수 있습니다</div>
           <button class="mini-btn taste" type="button">맛보기 1회 열기</button>
         </div></div>
     </div>
 
     <div class="card lock" id="forbidCard">
-      <div class="ctit">금기어 · 이 말은 닫힙니다 <span class="locktag">PRO</span></div>
+      <div class="ctit">금기어 · 이 말은 닫힙니다 <span class="locktag">유료판</span></div>
       <div class="lockwrap"><div class="forbid" id="forbidBox"></div>
-        <div class="lockbar" id="lockForbid"><div class="lt">금기어 3개는 프로판입니다</div>
+        <div class="lockbar" id="lockForbid"><div class="lt">금기어 3개는 정식판에서 열립니다</div>
           <div class="ls">지금 말하면 닫히는 문장입니다</div></div></div>
     </div>
 
     <div class="card lock" id="nextCard">
-      <div class="ctit">다음 1마디 — A / B <span class="locktag">PRO</span></div>
+      <div class="ctit">다음 1마디 — A / B <span class="locktag">유료판</span></div>
       <div class="lockwrap"><div class="nextLine" id="nextBox"></div>
-        <div class="lockbar" id="lockNext"><div class="lt">다음 한마디는 프로판입니다</div>
+        <div class="lockbar" id="lockNext"><div class="lt">다음 한마디는 정식판에서 열립니다</div>
           <div class="ls">복사 버튼까지 열립니다</div></div></div>
     </div>
 
@@ -494,7 +497,7 @@ $('#btnFull').onclick = () => { ST = {...ST, picks:[], bonus:[], taste:false, bo
 $('#btnTaste').onclick = () => { ST = {...ST, picks:[], bonus:[], taste:true, bonusSkipped:false}; quizIdx = 0; renderQ(false); route('q'); };
 $('#btnCodeIn').onclick = () => route('code');
 $('#btnRelay').onclick = () => { relayIdx = 0; relayPicks = []; route('relay'); renderRelay(); };
-$('#btnLic').onclick = () => { renderLic(); route('lic'); };
+$('#btnLic').onclick = () => { if (FREE_ALL) return; renderLic(); route('lic'); };
 
 /* ================= 모드 ================= */
 function renderModes(host, onPick, cur){
@@ -546,7 +549,7 @@ function finishTaste(){
   R = r;
   renderResult(r);
   ST.taste = true;
-  toast('체험 결과입니다 — 나머지 두 문항을 채우면 처방전이 나옵니다');
+  toast('두 문항만 본 간단 결과입니다 — 네 문항을 채우면 더 정확해집니다');
 }
 
 /* ================= 보강 ================= */
@@ -587,7 +590,7 @@ function renderResult(r){
     `<span class="meter ${cons.badge}">${cons.label === '네 축 일치' ? '네 축 일치 · 확실' : '응답 일관성 · ' + cons.label}</span>`
     + `<span class="tag">${r.modeNm} 모드</span>`
     + (ST.bonusSkipped ? `<span class="tag">일관성 낮음</span>` : '')
-    + (SN.licOn() ? `<span class="tag">이용권 확인</span>` : `<span class="tag">무료 구간</span>`);
+    + (FREE_ALL ? `<span class="tag">전면 무료 공개</span>` : (SN.licOn() ? `<span class="tag">이용권 확인</span>` : `<span class="tag">무료 구간</span>`));
   $('#codeBox').innerHTML = r.code.split('').map((n,i)=>
     `<div class="c"><b>${n}</b><span>${['결정','기준','압박','보상'][i]}</span></div>`).join('');
   $('#firstLine').textContent = r.first;
@@ -612,32 +615,40 @@ function renderResult(r){
   applyGate();
 }
 
-/* ---------- 이용권 잠금 (무료 = 가벼운 결과 / 프로 = 처방전) ---------- */
+/* ---------- 잠금 게이트 ----------
+   FREE_ALL = true : 전 기능 무료 공개(피드백 수집 중) — 처방전·설득 3단·금기어·다음 1마디·A4 인쇄가
+   쿠폰·키 입력 없이 100% 열립니다.
+   유료 전환 시 FREE_ALL = false 로만 바꾸면 기존 이용권(SN 키)·맛보기 잠금 구조가 그대로 살아납니다. */
+const FREE_ALL = true;
 let TASTE_OPEN = false;
+function gateOpen(){ return FREE_ALL || TASTE_OPEN || SN.licOn(); }
 function applyGate(){
   const lic = SN.licOn();
-  const open = lic || TASTE_OPEN;
-  ['#orderBox','#forbidBox','#nextBox'].forEach(s => $(s).classList.toggle('blur', !open));
-  ['#lockOrder','#lockForbid','#lockNext'].forEach(s => $(s).classList.add('on'));
-  ['#lockOrder','#lockForbid','#lockNext'].forEach(s => $(s).classList.toggle('on', !open));
-  document.querySelectorAll('#orderCard .locktag,#forbidCard .locktag,#nextCard .locktag')
-    .forEach(e => e.style.display = lic ? 'none' : '');
+  const open = gateOpen();
+  document.body.classList.toggle('free', FREE_ALL);
+  ['#orderBox','#forbidBox','#nextBox'].forEach(s => { const e = $(s); if (e) e.classList.toggle('blur', !open); });
+  ['#lockOrder','#lockForbid','#lockNext'].forEach(s => { const e = $(s); if (e) e.classList.toggle('on', !open); });
+  document.querySelectorAll('.locktag')
+    .forEach(e => e.style.display = (!FREE_ALL && !lic) ? '' : 'none');
   const bar = $('#licBar');
-  if (lic){ bar.style.display = 'none'; }
-  else {
-    bar.style.display = 'flex';
-    const used = SN.S.get('sn_taste', false);
-    $('#licBarText').innerHTML = TASTE_OPEN
-      ? '맛보기로 열어 둔 상태입니다 · 창을 닫으면 다시 잠깁니다'
-      : (used ? '<b>맛보기를 쓰셨습니다.</b> 처방전 전체는 이용권으로 열립니다.'
-              : '<b>무료 구간</b>입니다 · 설득 순서·금기어·다음 한마디는 맛보기 1회, 처방전은 이용권');
-    $('#licBarBtn').textContent = used && !TASTE_OPEN ? '이용권' : '맛보기';
+  if (bar){
+    if (FREE_ALL || lic){ bar.style.display = 'none'; }
+    else {
+      bar.style.display = 'flex';
+      const used = SN.S.get('sn_taste', false);
+      $('#licBarText').innerHTML = TASTE_OPEN
+        ? '맛보기로 열어 둔 상태입니다 · 창을 닫으면 다시 잠깁니다'
+        : (used ? '<b>맛보기를 쓰셨습니다.</b> 처방전 전체는 이용권으로 열립니다.'
+                : '<b>무료 구간</b>입니다 · 설득 순서·금기어·다음 한마디는 맛보기 1회, 처방전은 이용권');
+      $('#licBarBtn').textContent = used && !TASTE_OPEN ? '이용권' : '맛보기';
+    }
   }
-  $('#rxBtnLocked') && 0;
+  const licBtn = $('#btnLic');
+  if (licBtn) licBtn.style.display = FREE_ALL ? 'none' : '';
   document.querySelectorAll('.taste').forEach(b => b.onclick = onTaste);
 }
 function onTaste(){
-  if (SN.licOn()) return;
+  if (FREE_ALL || SN.licOn()) return;
   if (SN.S.get('sn_taste', false) && !TASTE_OPEN){
     toast('맛보기는 이미 사용하셨습니다 — 이용권으로 계속 쓰실 수 있습니다');
     renderLic(); route('lic'); return;
@@ -648,6 +659,7 @@ function onTaste(){
   toast('맛보기 1회를 열었습니다 — 이 창을 닫으면 다시 잠깁니다');
 }
 $('#licBarBtn').onclick = () => {
+  if (FREE_ALL) return;
   if (!SN.licOn() && !SN.S.get('sn_taste', false)) { onTaste(); return; }
   renderLic(); route('lic');
 };
@@ -657,9 +669,6 @@ $('#btnAgain').onclick = () => { quizIdx = 0; ST.picks = []; ST.bonus = []; ST.b
 $('#btnSend').onclick = () => { relayIdx = 0; relayPicks = []; route('relay'); renderRelay(); };
 $('#btnRx').onclick = () => {
   if (!R) return;
-  if (!SN.licOn() && !TASTE_OPEN){
-    toast('처방전 저장은 이용권이 필요합니다 — 맛보기로 먼저 보실 수 있습니다');
-  }
   renderRx(R); route('rx');
 };
 $('#btnRxBack').onclick = () => route('r');
@@ -709,7 +718,7 @@ function renderRx(r){
     <div class="rxf">이 처방전은 대화 시작을 돕는 참고 자료이며 심리검사·진단·예언이 아닙니다.
       고른 답과 결과는 서버로 전송·저장되지 않고 이 기기에서만 처리됩니다. 결과는 상대와 상황에 따라 다르며
       성과를 보장하지 않고, 부동산 거래상 중요사항의 설명 근거로 쓸 수 없습니다.
-      ${lic && lic.key ? '이용권 ' + lic.key.slice(0,10) + '** · 1기기 사용권' : '무료 구간 결과'}</div>
+      ${lic && lic.key ? '이용권 ' + lic.key.slice(0,10) + '** · 1기기 사용권' : '전면 무료 공개 중 · 피드백 수집 기간'}</div>
     ${wm ? `<div class="wm">${wm}</div>` : ''}`;
 }
 $('#btnPrint').onclick = () => window.print();
@@ -802,8 +811,9 @@ $('#btnLicBack').onclick = () => route('intro');
 
 /* ================= 시작 ================= */
 (function boot(){
+  if (FREE_ALL) document.body.classList.add('free');
   const h = (location.hash || '').replace('#/','');
-  if (SCR[h] && h !== 'rx'){ show(SCR[h]); if (h === 'mode') renderModes($('#modeGrid'), k => { ST.mode = k; quizIdx = 0; renderQ(true); route('q'); }, ST.mode); }
+  if (SCR[h] && h !== 'rx' && (h !== 'lic' || !FREE_ALL)){ show(SCR[h]); if (h === 'mode') renderModes($('#modeGrid'), k => { ST.mode = k; quizIdx = 0; renderQ(true); route('q'); }, ST.mode); }
   else route('intro');
 })();
 </script>

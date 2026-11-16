@@ -244,7 +244,7 @@ h2{font-size:20px;line-height:1.4;letter-spacing:-.8px;margin:8px 0 0;font-weigh
         <button class="btn ghost sm" id="btnHome" type="button">처음으로</button>
       </div>
     </div>
-    <p class="note" id="resNote">공유 링크에는 한 줄 요약과 속내 한 줄까지만 담깁니다.</p>
+    <p class="note" id="resNote">공유 링크에는 한 줄 요약과 속마음 한 줄까지만 담깁니다.</p>
     <p class="foot-note">오락·참고용이며, 심리검사·진단이 아닙니다.</p>
   </section>
 
@@ -257,7 +257,7 @@ h2{font-size:20px;line-height:1.4;letter-spacing:-.8px;margin:8px 0 0;font-weigh
       <div class="big" id="shSummary">—</div>
     </div>
     <div class="card">
-      <div class="ctit">속내 한 줄</div>
+      <div class="ctit">속마음 한 줄</div>
       <p class="small" id="shInner">—</p>
     </div>
     <div class="dock"><button class="btn main" id="btnShMine" type="button">나도 해 보기</button></div>
@@ -516,7 +516,7 @@ h2{font-size:20px;line-height:1.4;letter-spacing:-.8px;margin:8px 0 0;font-weigh
 
     var main = el('div', 'card amber');
     main.appendChild(el('div', 'big', v.line));
-    main.appendChild(el('p', 'small', '겉과 다른 속내 — ' + v.inner));
+    main.appendChild(el('p', 'small', '겉과 다른 속마음 — ' + v.inner));
     body.appendChild(main);
 
     if (res.mode === 'self'){
@@ -540,7 +540,7 @@ h2{font-size:20px;line-height:1.4;letter-spacing:-.8px;margin:8px 0 0;font-weigh
       b3.appendChild(r3);
       body.appendChild(b3);
 
-      $('#resNote').textContent = '공유 링크에는 한 줄 요약과 속내 한 줄까지만 담깁니다.';
+      $('#resNote').textContent = '공유 링크에는 한 줄 요약과 속마음 한 줄까지만 담깁니다.';
     } else {
       /* 상대 공략: 강점 살리기 · 비켜 갈 것 · 실제 한마디 */
       var b2 = el('div', 'card');
@@ -626,7 +626,7 @@ h2{font-size:20px;line-height:1.4;letter-spacing:-.8px;margin:8px 0 0;font-weigh
     card.appendChild(el('div', 'big', h.line || ''));
     box.appendChild(card);
     var c2 = el('div', 'card');
-    c2.appendChild(el('div', 'ctit', '속내 한 줄'));
+    c2.appendChild(el('div', 'ctit', '속마음 한 줄'));
     c2.appendChild(el('p', 'small', h.inner || ''));
     box.appendChild(c2);
     pane.appendChild(box);

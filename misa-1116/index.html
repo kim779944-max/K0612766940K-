@@ -7,6 +7,13 @@
 <meta name="googlebot" content="noindex,nofollow,noarchive">
 <title>미사 010 발송판</title>
 <meta name="theme-color" content="#0A1128">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="KTS 문자발송">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   :root{
     --navy:#0A1128; --navy2:#111B36; --card:rgba(255,255,255,.045);
@@ -206,7 +213,22 @@ function toast(msg){
   clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 1600);
 }
 function bodyFor(s){ return TPL.replace(/\{상호\}/g, s.smsName || s.name); }
-function smsHref(s){ return "sms:" + s.tel + "?body=" + encodeURIComponent(bodyFor(s)); }
+/* 문자 앱은 sms: 주소의 본문을 한 번 더 풀어 해석하는 경우가 있다.
+   본문에 & # 가 남아 있으면 그 자리에서 뒤가 잘린다(실측: '뷰티스토리 피부&헤어' → '피부'까지만 도착).
+   → 주소로 넘길 때만 & # 를 전각(＆ ＃)으로 바꾸고, % + ' ( ) ! * 까지 확실히 인코딩한다.
+   복사(⧉)는 원문 그대로라 기호가 바뀌지 않는다. */
+function smsNameFor(s){ return String(s.smsName || s.name).replace(/&/g, "＆").replace(/#/g, "＃"); }
+function smsBodyFor(s){ return TPL.replace(/\{상호\}/g, smsNameFor(s)); }
+function encAll(t){
+  return encodeURIComponent(String(t)).replace(/[!'()*]/g, function(c){
+    var h = c.charCodeAt(0).toString(16).toUpperCase();
+    return "%" + (h.length < 2 ? "0" + h : h);
+  });
+}
+function smsHref(s){
+  var tel = String(s.tel || "").replace(/[^0-9+]/g, "");
+  return "sms:" + tel + "?body=" + encAll(smsBodyFor(s));
+}
 
 /* ───── 잠금 ───── */
 let buf = "";
@@ -327,6 +349,14 @@ function fallbackCopy(text){
   try{ document.execCommand("copy"); toast("문구를 복사했습니다"); }
   catch(e){ toast("복사 실패 — 문구 미리보기에서 길게 눌러 복사하세요"); }
   document.body.removeChild(ta);
+}
+</script>
+<script>
+/* 홈 화면 바로가기(설치형) — 크롬 '설치 및 바로가기 만들기'가 뜨도록 */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  });
 }
 </script>
 </body>

@@ -32,6 +32,7 @@ function measure(tag){
 }
 
 f.addEventListener("load", () => {
+  if (location.search.includes("manual")) { log("manual mode — 대기"); return; }
   const d = f.contentDocument, w = f.contentWindow;
   measure("lock");
   log("lock visible=" + (w.getComputedStyle(d.getElementById("lock")).display !== "none"));

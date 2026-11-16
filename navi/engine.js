@@ -38,10 +38,6 @@
     const cons = consistency(d);
     const br = cons.flag ? window.BRANCH[String(cons.dominant)] : null;
 
-    const mind = `${a[1].read.replace('사람입니다','분')}. ${a[2].read.replace('사람입니다','분')}. `
-      + `결정은 ${({1:'손에 쥐는 순간',2:'원인 한 줄',3:'지금 불 끄는 순간',4:'선을 긋는 순간'})[d[2]]}에 나오고, `
-      + `칭찬은 ${a[4].nm}에 꽂힙니다.`;
-
     /* 받침에 맞는 조사 (감각으로 / 실리로) */
     const josaRo = w => {
       const c = String(w).charCodeAt(String(w).length - 1) - 0xAC00;
@@ -49,6 +45,10 @@
       const jong = c % 28;
       return (jong === 0 || jong === 8) ? '로' : '으로';
     };
+
+    const mind = `${a[1].read.replace('사람입니다','분')}. ${a[2].read.replace('사람입니다','분')}. `
+      + `결정은 ${({1:'손에 쥐는 순간',2:'원인 한 줄',3:'지금 불 끄는 순간',4:'선을 긋는 순간'})[d[2]]}에 나오고, `
+      + `칭찬은 ${a[4].nm}에 꽂힙니다.`;
 
     const sig = [
       `판단 기준 · ${a[2].nm} — ${a[2].read}. ${a[2].want}. ${a[2].press}.`,

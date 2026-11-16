@@ -8,12 +8,13 @@
  b{color:#6f6}
 </style></head>
 <body>
-<iframe id="f" src="index.html"></iframe>
+<iframe id="f"></iframe>
 <pre id="out">waiting…</pre>
 <script>
 const out = [];
 function log(s){ out.push(s); document.getElementById("out").textContent = out.join("\n"); }
 const f = document.getElementById("f");
+f.src = "index.html?v=" + Date.now();
 
 function measure(tag){
   const d = f.contentDocument, w = f.contentWindow;

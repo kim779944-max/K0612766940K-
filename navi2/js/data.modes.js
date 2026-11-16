@@ -345,11 +345,11 @@ junior: {
 };
 
 var MODES = {
-  self:  { nm:'나를 볼 때',  short:'본인',       q:'오늘의 나를 4문항으로',  rel:false },
-  deal:  { nm:'거래처',      short:'거래처',     q:'계약·값·답·서명의 사람',  rel:true },
-  love:  { nm:'애인',        short:'애인',       q:'가까운 사이의 사람',      rel:true },
-  senior:{ nm:'선배·윗사람', short:'선배',       q:'나를 세워 주는 사람',     rel:true },
-  junior:{ nm:'후배·지인',   short:'후배',       q:'내가 끌어 주는 사람',     rel:true }
+  self:  { nm:'나를 볼 때',  short:'본인',       q:'내가 아침에 손이 가는 곳부터', rel:false },
+  deal:  { nm:'거래처 사람', short:'거래처',     q:'계약·조건 앞에서 드러나는 결',  rel:true },
+  love:  { nm:'애인',        short:'애인',       q:'연락과 서운함에서 드러나는 결',  rel:true },
+  senior:{ nm:'선배·윗사람', short:'선배',       q:'보고·예우에서 드러나는 결',      rel:true },
+  junior:{ nm:'후배·지인',   short:'후배',       q:'부탁과 일머리에서 드러나는 결',  rel:true }
 };
 
 root.Q = Q; root.MODES = MODES;

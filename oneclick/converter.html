@@ -142,6 +142,23 @@ table.pv td.selcell{outline:2px solid #FF6B00;outline-offset:-2px}
  font-size:12.5px;font-weight:900;border-radius:10px;padding:10px 14px;box-shadow:0 10px 26px rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s;max-width:86vw;text-align:center}
 .toast.on{opacity:1}
 .ed tip{display:block;font-size:10px;color:var(--gray);margin:10px 12px 0;line-height:1.5}
+/* ---------- (추가) 무료 체험 도크 3버튼 · 본사 홈 무료 업그레이드 · 흐림 안내 ---------- */
+#dockHome .dockin{flex-direction:column;gap:6px}
+#dockHome .row3{display:flex;gap:7px}
+#dockHome .row3 .btn{flex:1;padding:12px 4px;font-size:12.5px}
+#dockHome .upgline{display:block;text-align:center;font-size:11px;font-weight:800;color:var(--amber2);padding:2px 0 1px}
+.upgcard{display:flex;align-items:center;gap:10px;margin-top:10px;padding:11px 12px;min-height:64px;border-radius:14px;
+ background:#0F1B33;border:1px solid rgba(198,160,84,.4);box-shadow:0 6px 16px rgba(0,0,0,.28)}
+.upgcard .t{flex:1;min-width:0}
+.upgcard .t b{display:block;font-size:12.5px;font-weight:900;color:#fff;letter-spacing:-.3px}
+.upgcard .t b i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber2);margin-right:5px;vertical-align:middle;box-shadow:0 0 7px var(--amber2)}
+.upgcard .t span{display:block;font-size:11px;color:#AFBDD0;line-height:1.45;margin-top:2px}
+.upgcard em{font-style:normal;font-size:12px;font-weight:900;color:var(--amber2);white-space:nowrap}
+.blurbox{margin:10px 12px 0;padding:11px 12px;border-radius:12px;background:rgba(255,107,0,.10);border:1px solid rgba(255,107,0,.45)}
+.blurbox b{display:block;font-size:12.5px;font-weight:900;color:#FFC08A}
+.blurbox span{display:block;font-size:11px;color:#C9D5E6;line-height:1.5;margin-top:3px}
+.blurbox .row{display:flex;gap:7px;margin-top:9px}
+.blurbox .row .btn{padding:11px 8px;font-size:12.5px}
 </style></head><body>
 <div id="app">
 
@@ -172,9 +189,10 @@ table.pv td.selcell{outline:2px solid #FF6B00;outline-offset:-2px}
       <div class="pick"><button class="btn sec" id="btnPaste">붙여넣은 표로 만들기</button></div>
     </details>
     <div class="note">표 사진은 <b>이 기기의 브라우저 안</b>에서 처리됩니다. 서버에 저장하지 않습니다.</div>
+    <div class="note" style="margin-top:6px">· 사진은 기기 안에서만 처리됩니다<br>· 100% 똑같이 나오지 않으면 다시 찍거나 붙여넣기<br>· 표 밖 내용은 복제하지 않습니다</div>
   </div>
 
-  <div class="card">
+  <div class="card" id="planCard">
     <h2><i>2</i>요금제 (7단)</h2>
     <div class="pseg" id="pseg">
       <button class="on" data-p="p">개인용</button>
@@ -204,6 +222,20 @@ table.pv td.selcell{outline:2px solid #FF6B00;outline-offset:-2px}
       · 폰에 한글·엑셀이 없어도 <b>만능 뷰어</b>로 그 자리에서 확인
     </div>
   </div>
+
+  <a class="upgcard" href="https://autooneclick.com/?from=converter" rel="noopener">
+    <span class="t"><b><i></i>본사 홈 무료 업그레이드</b><span>본사 홈에서 더 많은 도구를 무료로 써 보세요</span></span>
+    <em>열어보기 →</em>
+  </a>
+
+  <div class="dock" id="dockHome"><div class="dockin">
+    <div class="row3">
+      <button class="btn pri" id="dockFree">무료로 체험<span class="freeN" id="freeN"></span></button>
+      <button class="btn sec" id="dockBuy">구매·문의</button>
+      <button class="btn sec" id="dockCustom">커스텀 의뢰</button>
+    </div>
+    <a class="upgline" href="https://autooneclick.com/?from=converter" rel="noopener">본사 홈 무료 업그레이드 →</a>
+  </div></div>
 </main>
 
 <!-- ===== 작업 화면(변환 전 확인·수정) ===== -->
@@ -211,6 +243,14 @@ table.pv td.selcell{outline:2px solid #FF6B00;outline-offset:-2px}
   <div class="wbar">
     <button class="back" id="btnBack">← 뒤로가기</button>
     <div class="nm" id="wName">표 변환</div>
+  </div>
+  <div class="blurbox" id="blurBox" style="display:none">
+    <b>표가 흐립니다</b>
+    <span>글자를 충분히 읽지 못했습니다. 이대로 칸을 눌러 고쳐도 되고, 다시 찍거나 표를 붙여넣어도 됩니다.</span>
+    <div class="row">
+      <button class="btn sec" id="btnRetake">다시 찍기</button>
+      <button class="btn ghost" id="btnPaste2">붙여넣기</button>
+    </div>
   </div>
   <div class="src" id="srcBox">
     <img id="srcImg" alt="">
@@ -258,6 +298,10 @@ table.pv td.selcell{outline:2px solid #FF6B00;outline-offset:-2px}
   </div>
   <div class="rbody"><div class="pvbox"><div class="ptitle" id="rTitle"></div><div id="rTable"></div></div>
     <div class="pvnote" id="rNote"></div>
+    <a class="upgcard" href="https://autooneclick.com/?from=converter" rel="noopener">
+      <span class="t"><b><i></i>본사 홈 무료 업그레이드</b><span>본사 홈에서 더 많은 도구를 무료로 써 보세요</span></span>
+      <em>열어보기 →</em>
+    </a>
   </div>
   <div class="dock"><div class="dockin">
     <button class="btn sec" id="btnRHwpx">한글 저장</button>
@@ -308,6 +352,7 @@ table.pv td.selcell{outline:2px solid #FF6B00;outline-offset:-2px}
 <div class="toast" id="toast"></div>
 </div>
 
+<script src="localocr.js?v=20261117d" onerror="window.KTSPHOTO=null"></script>
 <script src="ai.js" onerror="window.KTS_AI={key:''}"></script>
 <script>
 const $ = s => document.querySelector(s);
@@ -440,12 +485,13 @@ function normalize(raw, preview){
     const len = toks.length ? Math.max(...toks.map(t => t.length)) : 0;
     minW[c.c] = Math.max(minW[c.c], Math.min(14, Math.max(3.5, len * 1.55)));
   });
-  cw = cw.map((w, i) => Math.max(w, minW[i]));
+  if (!raw.lockWidths) cw = cw.map((w, i) => Math.max(w, minW[i]));   /* 사진에서 읽은 원본 너비는 잠근다 */
   const tot2 = cw.reduce((a, b) => a + b, 0) || 1;
   cw = cw.map(w => Math.round(w / tot2 * 1000) / 10);
   const st = {title:String(raw.title || '').trim(), nRows, nCols, colWidths:cw, cells:out, preview};
   /* 실제 글자 폭(9pt)으로 다시 한 번 맞춤 — 미리보기·한글·엑셀이 같은 너비를 쓰게 */
-  try{ st.colWidths = fitColWidths(st, 41952); }catch(e){}
+  if (raw.lockWidths) st.lockWidths = true;   /* 사진에서 읽은 원본 열 너비를 그대로 고정 */
+  else { try{ st.colWidths = fitColWidths(st, 41952); }catch(e){} }
   return st;
 }
 function normHex(v){ const s = String(v || '').trim(); return /^#[0-9a-f]{6}$/i.test(s) ? s.toUpperCase() : ''; }
@@ -752,7 +798,7 @@ function hwHeader(base, need){
       + f + '</hh:borderFill>';
   });
   need.chars.forEach(c => {
-    chCnt++; const id = 99 + chCnt; chId[(c.b ? 1 : 0) + '|' + c.color] = id;
+    chCnt++; const id = 99 + chCnt; chId[(c.b ? 1 : 0) + '|' + (c.color || '') + '|' + (c.h || 900)] = id;
     chars += `<hh:charPr id="${id}" height="${c.h || 900}" textColor="${c.color || '#000000'}" shadeColor="none" useFontSpace="0" useKerning="0" symMark="NONE" borderFillIDRef="1">`
       + '<hh:fontRef hangul="0" latin="0" hanja="0" japanese="0" other="0" symbol="0" user="0"/>'
       + '<hh:ratio hangul="100" latin="100" hanja="100" japanese="100" other="100" symbol="100" user="100"/>'
@@ -796,6 +842,13 @@ function textUnits(s){
   const t = String(s == null ? '' : s);
   for(const ch of t) n += charUnits(ch);
   return n;
+}
+/* 원본 열 너비를 잠그고 글자를 줄여 넣는다 — 넘치면 임의 줄바꿈 대신 크기를 줄인다 */
+function shrinkH(text, w){
+  const avail = Math.max(600, w - CELL_MARGIN);
+  let h = 900;
+  while (h > 700 && textUnits(text) * (h / 900) > avail) h -= 50;
+  return h;
 }
 /* 열 너비(%): 원본 비율 유지하면서 ‘글자가 꾼기는 최소 폭’을 보장하고, 남는 폭에서 나눔 */
 function fitColWidths(st, totalW){
@@ -851,22 +904,28 @@ function rowLines(st, r, widths, totalW){
 async function buildHwpx(st){
   const t = await loadTpl();
   const totalW = t.parts.total_w;
-  /* 열 너비를 원본 비율로 시작해, 글자가 꺾이지 않는 최소 폭을 보장한다 (월일 열 3줄 꺾임 방지) */
-  st.colWidths = fitColWidths(st, totalW);
+  /* 열 너비를 원본 비율로 시작해, 글자가 꺾이지 않는 최소 폭을 보장한다 (월일 열 3줄 꺾임 방지)
+     사진에서 읽은 원본 너비는 그대로 잠그고(st.lockWidths) 글자 크기를 줄여 맞춘다 */
+  if (!st.lockWidths) st.colWidths = fitColWidths(st, totalW);
   const widths = st.colWidths.map(w => Math.max(600, Math.round(totalW * w / 100)));
   // 폭 합 보정
   let wsum = widths.reduce((a, b) => a + b, 0);
   widths[widths.length - 1] += totalW - wsum;
   const bgs = [...new Set(st.cells.map(c => c.bg || ''))];
   const charKeys = [];
-  st.cells.forEach(c => { const k = (c.bold ? 1 : 0) + '|' + (c.color || ''); if (!charKeys.includes(k)) charKeys.push(k); });
-  const chars = charKeys.map(k => { const [b, color] = k.split('|'); return {b:b === '1', color, h:900}; });
+  st.cells.forEach(c => {
+    let cw2 = 0; for (let k = 0; k < c.cs; k++) cw2 += widths[c.c + k] || 0;
+    c._h = st.lockWidths ? shrinkH(c.text, cw2) : 900;
+    const k = (c.bold ? 1 : 0) + '|' + (c.color || '') + '|' + c._h;
+    if (!charKeys.includes(k)) charKeys.push(k);
+  });
+  const chars = charKeys.map(k => { const p = k.split('|'); return {b:p[0] === '1', color:p[1], h:(+p[2] || 900)}; });
   chars.push({b:true, color:'#111111', h:1100});
   const aligns = [...new Set(st.cells.map(c => c.align || 'C'))];
   const face = FONT_ALIAS[CUR_FONT] || CUR_FONT || '';
   const H = hwHeader(hwFont(t.text['Contents__header.xml'], face), {bgs, chars, aligns});
-  const chGet = (b, color) => H.chId[(b ? 1 : 0) + '|' + (color || '')] || 0;
-  const titleChar = H.chId['1|#111111'];
+  const chGet = (b, color, h) => H.chId[(b ? 1 : 0) + '|' + (color || '') + '|' + (h || 900)] || 0;
+  const titleChar = H.chId['1|#111111|1100'];
   const rowH = (r) => { const n = rowLines(st, r, widths, totalW); return n <= 1 ? 1150 : (n * 1100 + 300); };
   st._rowLines = [];
   for (let r = 0; r < st.nRows; r++) st._rowLines.push(rowLines(st, r, widths, totalW));
@@ -919,7 +978,7 @@ async function buildHwpx(st){
 }
 function hwCell(cell, r, c, cs, rs, value, w, h, H, seq){
   const bf = H.bfId[cell.bg || ''] || 2;
-  const ch = H.chId[((cell.bold ? 1 : 0) + '|' + (cell.color || ''))] || 0;
+  const ch = H.chId[((cell.bold ? 1 : 0) + '|' + (cell.color || '') + '|' + (cell._h || 900))] || 0;
   const pa = H.paId[cell.align || 'C'] || 0;
   const lines = String(value == null ? '' : value).split('\n');
   let paras = '';
@@ -955,6 +1014,43 @@ $$('#pseg button').forEach(b => b.onclick = () => {
   $('#planB').style.display = b.dataset.p === 'b' ? '' : 'none';
 });
 $('#btnPick').onclick = () => $('#file').click();
+/* 하단 도크 3버튼 — 무료로 체험 · 구매·문의 · 커스텀 의뢰 */
+$('#dockFree').onclick = () => { $('#file').value = ''; $('#file').click(); };
+$('#dockBuy').onclick = () => {
+  const el = $('#planCard');
+  if (el) { el.scrollIntoView({behavior:'smooth', block:'start'}); } else { window.scrollTo(0, 0); }
+};
+$('#dockCustom').onclick = () => {
+  location.href = 'sms:01020022899?&body=' + encodeURIComponent('[원클릭] 변환기 커스텀 의뢰');
+};
+/* 흐림 안내 — 다시 찍기 / 붙여넣기 두 가지만 */
+$('#btnRetake').onclick = () => { $('#blurBox').style.display = 'none'; $('#file').value = ''; $('#file').click(); };
+$('#btnPaste2').onclick = () => {
+  $('#blurBox').style.display = 'none';
+  if ($('#work').style.display === 'block') $('#btnBack').click();
+  const d = document.querySelector('details.paste'); if (d) d.open = true;
+  setTimeout(() => { const t = $('#pasteArea'); if (t) t.focus(); }, 160);
+};
+function aiKey(){
+  const cfg = window.KTS_AI || {};
+  let k = cfg.key || '';
+  try{ k = localStorage.getItem('kts_ai_key') || k; }catch(e){}
+  return (!k || /^__/.test(k)) ? '' : k;
+}
+function updateFree(){
+  const el = $('#freeN'); if (!el) return;
+  const n = Math.min(3, quotaLeft());
+  el.textContent = n > 0 ? ' ' + n + '장' : ' 오늘 마감';
+}
+updateFree();
+function weakRead(st){
+  if (!st) return false;
+  if (st._ocrFailed) return true;
+  const cells = st.cells || [];
+  if (!cells.length) return true;
+  const filled = cells.filter(c => String(c.text || '').trim()).length;
+  return filled / cells.length < 0.25;
+}
 $('#file').onchange = async e => {
   const f = e.target.files && e.target.files[0]; if (!f) return;
   await runPhoto(f);
@@ -971,25 +1067,66 @@ async function runPhoto(file){
   CUR_NAME = (file.name || '표사진').replace(/\.[^.]+$/, '');
   const cap = quotaLeft();
   if (cap <= 0){ toast('오늘 체험 횟수를 다 쓰셨습니다. 내일 다시 시도해 주세요.'); return; }
-  busy(true, file.name || '표 사진', 'AI가 표를 읽는 중…', 12);
+  busy(true, file.name || '표 사진', '표를 읽는 중…', 12);
+  let phase = 'build';
+  const step = (msg, pct) => {
+    if (phase === 'build') busy(true, null, msg, pct);
+    else { const n = $('#rNote'); if (n) n.textContent = msg; }
+  };
   try{
-    const st = await visionStruct(file, (msg, pct) => busy(true, null, msg, pct));
+    let st = null, engine = '';
+    /* 1) 기기에 키를 넣어 둔 분은 AI 경로(더 정확) — 실패하면 기기 안 인식으로 이어서 진행 */
+    if (aiKey()){
+      try { st = await visionStruct(file, step); engine = 'ai'; }
+      catch(e){ st = null; }
+    }
+    /* 2) AI 키가 없어도 사진 한 장으로 여기까지 온다 — 기기 안 무료 인식(칸은 즉시, 글자는 뒤에서) */
+    if (!st){
+      if (!window.KTSPHOTO || typeof KTSPHOTO.struct !== 'function') throw new Error('NO_ENGINE');
+      st = await KTSPHOTO.struct(file, step);
+      engine = 'device';
+    }
     busy(true, file.name, '복제 파일을 만드는 중…', 88);
     useQuota();
     CUR = st;
     renderPreview($('#pvTable'), st, true);
     $('#pvTitle').textContent = st.title || '';
+    $('#blurBox').style.display = 'none';
     await buildAndShow(true);
+    updateFree();
+    if (st._textTask){
+      if (st._textPending) toast('칸 구조를 먼저 만들었습니다 · 글자는 뒤에서 채웁니다');
+      phase = 'text';
+      st._textTask.then(ok => {
+        phase = 'build';
+        if (CUR !== st) return;
+        if (!ok || weakRead(st)){
+          openWork();
+          $('#blurBox').style.display = '';
+          toast('글자를 충분히 읽지 못했습니다 · 다시 찍기 / 붙여넣기');
+        } else {
+          if ($('#res').style.display === 'block') buildAndShow(true);
+          else if ($('#work').style.display === 'block') openWork();
+          toast('표를 다 읽었습니다 · 칸을 눌러 고칠 수 있습니다');
+        }
+      }).catch(() => {});
+    } else if (weakRead(st)){
+      openWork();
+      $('#blurBox').style.display = '';
+    }
   }catch(err){
     busy(false);
-    if (err.message === 'QUOTA'){
-      toast('지금은 AI 변환 요청이 몰려 잠시 못 씁니다. 1분 뒤 다시 시도해 주세요.');
-    } else if (err.message === 'NO_KEY'){
-      toast('AI 키가 없습니다. 붙여넣기로 표를 넣어 주세요.');
+    if (err.message === 'NO_TABLE'){
+      toast('표를 찾지 못했습니다 · 다시 찍기 / 붙여넣기');
+      $('#blurBox').style.display = 'none';
+    } else if (err.message === 'NO_ENGINE'){
+      toast('지금은 사진 인식을 쓸 수 없습니다. 표를 붙여넣어 주세요.');
       $('#pasteArea').focus();
       document.querySelector('details.paste').open = true;
+    } else if (err.message === 'QUOTA'){
+      toast('지금은 요청이 몰려 잠시 못 씁니다. 1분 뒤 다시 시도해 주세요.');
     } else {
-      toast('AI 변환에 실패했습니다(' + (err.message || err) + '). 다시 시도하거나 붙여넣기를 써 주세요.');
+      toast('변환에 실패했습니다(' + (err.message || err) + '). 다시 시도하거나 붙여넣기를 써 주세요.');
     }
     console.error(err);
   }

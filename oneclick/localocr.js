@@ -368,8 +368,19 @@
       var colW = [], c;
       for (c = 0; c < built.nC; c++) colW.push(+(100 * (vx[c + 1] - vx[c]) / totalW).toFixed(1));
 
+      var bgLum = function (hex) {
+        if (!hex) return 255;
+        var r = parseInt(hex.substr(1, 2), 16), g = parseInt(hex.substr(3, 2), 16), b = parseInt(hex.substr(5, 2), 16);
+        return (r * 77 + g * 151 + b * 28) >> 8;
+      };
+      var bgTop = 0;
       cells.forEach(function (cl) {
         cl.bg = cellBg(grid, vx[cl.c], hy[cl.r], vx[cl.c + cl.cs], hy[cl.r + cl.rs]);
+        if (bgLum(cl.bg) > bgTop) bgTop = bgLum(cl.bg);
+      });
+      /* 표 전체 바탕(가장 밝은 칸)보다 확실히 어두운 칸만 색으로 인정 — 그림자·얼룩은 버린다 */
+      cells.forEach(function (cl) {
+        if (cl.bg && bgTop - bgLum(cl.bg) < 5) cl.bg = '';
       });
 
       var fill = 0, totalRows = built.nR;
@@ -397,6 +408,7 @@
           cl.text = tidy(cl.text);
           if (cl.text) fill++;
           cl.num = numLike(cl.text);
+          if (cl.num) { cl.align = 'C'; delete cl._l; delete cl._r; }
           if (cl._l != null) {
             var bx0 = vx[cl.c], bx1 = vx[cl.c + cl.cs];
             var leftPad = cl._l - bx0, rightPad = bx1 - cl._r;
@@ -422,7 +434,7 @@
               var x0 = vx[0] + 2, x1 = vx[vx.length - 1] - 2;
               var y0 = hy[r] + 2, y1 = hy[r + 1] - 2;
               if (y1 - y0 < 6) return;
-              var crop = cropRow(cv, x0, x1, y0, y1);
+              var crop = cropRow(cv, x0, x1, Math.max(0, y0 - 7), Math.min(cv.height, y1 + 7));
               onStep('글자를 읽는 중… (' + (r + 1) + '/' + totalRows + ')', 20 + Math.round(70 * (r + 1) / totalRows));
               function read(p) {
                 return w.setParameters({ tessedit_pageseg_mode: p }).then(function () {

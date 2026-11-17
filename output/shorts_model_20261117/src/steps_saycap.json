@@ -1,0 +1,7 @@
+{"page":"saycap/index.html","steps":[
+ {"name":"y1_home","js":"","wait":300,"marks":[{"kind":"tap","sel":"#goGallery"}]},
+ {"name":"y2_empty","js":"document.getElementById('goGallery').click(); await sleep(900)","wait":100,"marks":[{"kind":"tap","sel":"#emptySample"}]},
+ {"name":"y3_gallery","js":"document.getElementById('emptySample').click(); await sleep(4200)","wait":100,"marks":[{"kind":"hl","sel":"#galFeed"},{"kind":"tap","sel":"#galSearch"}]},
+ {"name":"y4_search","js":"const s=document.getElementById('galSearch'); s.value='큰방'; s.dispatchEvent(new Event('input',{bubbles:true})); s.blur(); await sleep(700)","wait":100,"marks":[{"kind":"hl","sel":".g-search"},{"kind":"tap","sel":".g-item"}]},
+ {"name":"y5_view","js":"const it=document.querySelector('.g-item'); const r=it.getBoundingClientRect(); document.elementFromPoint(r.x+r.width/2,r.y+r.height/2).click(); await sleep(1800)","wait":100,"marks":[{"kind":"hl","sel":"#viewCaption"}]}
+]}

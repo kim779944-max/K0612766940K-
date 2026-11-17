@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- v1.5: 안드로이드 14+ '사진 일부만 허용' — 고른 사진은 세이캡 '내 폰 사진' 목록에 바로 보입니다 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />

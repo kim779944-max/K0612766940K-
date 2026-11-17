@@ -1,0 +1,8 @@
+{"page":"oneclick/viewer.html","steps":[
+ {"name":"v1_home","js":"","wait":300,"marks":[{"kind":"tap","sel":"button.big"}]},
+ {"name":"v2_loading","js":"loader(true, '거래명세표_예시.csv', '파일을 여는 중…', 55); await sleep(500)","wait":100,"marks":[{"kind":"hl","sel":"#loader"}]},
+ {"name":"v3_open","file":{"sel":"#f","path":"거래명세표_예시.csv"},"js":"await sleep(1500); loader(false); window.scrollTo(0,0); await sleep(300)","wait":100,"marks":[{"kind":"hl","sel":"#out table"},{"kind":"tap","sel":"#kipEdit"}]},
+ {"name":"v4_edit","js":"document.getElementById('kipEdit').click(); await sleep(2600)","wait":100,"marks":[{"kind":"tap","sel":"#edSeal"}]},
+ {"name":"v5_seal","js":"document.getElementById('edSeal').click(); await sleep(2600)","wait":100,"marks":[{"kind":"hl","sel":".edobj.seal"},{"kind":"tap","sel":"#edSave"}]},
+ {"name":"v6_saved","js":"document.getElementById('edSave').click(); await sleep(400)","wait":50,"marks":[{"kind":"hl","sel":".toast"}]}
+]}

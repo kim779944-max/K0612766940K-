@@ -1,0 +1,70 @@
+{
+ "total": 25.639791666666667,
+ "maxZoom": 1.1,
+ "mime": "video/mp4;codecs=avc1.640028,mp4a.40.2",
+ "cues": [
+  {
+   "id": "c1",
+   "start": 0.35,
+   "end": 4.05,
+   "cut": 4.17,
+   "tapAt": null,
+   "frame": "c1_home",
+   "text": "표 사진 한 장이, 한글과 엑셀 파일이 됩니다."
+  },
+  {
+   "id": "c2",
+   "start": 4.17,
+   "end": 8.96,
+   "cut": 9.08,
+   "tapAt": 7.24,
+   "frame": "c2_paste",
+   "text": "사진이 없으면 표를 붙여넣고, 붙여넣은 표로 만들기를 누릅니다."
+  },
+  {
+   "id": "c3",
+   "start": 9.08,
+   "end": 12.6,
+   "cut": 12.72,
+   "tapAt": null,
+   "frame": "c3_work",
+   "text": "원본 양식 그대로, 표가 바로 만들어집니다."
+  },
+  {
+   "id": "c4",
+   "start": 12.72,
+   "end": 14.84,
+   "cut": 14.96,
+   "tapAt": 13.3,
+   "frame": "c3_work",
+   "text": "이제 한글 저장을 누르면,"
+  },
+  {
+   "id": "c5",
+   "start": 14.96,
+   "end": 17.36,
+   "cut": 17.48,
+   "tapAt": null,
+   "frame": "c4_busy",
+   "text": "한글 문서를 만드는 중이 뜨고,"
+  },
+  {
+   "id": "c6",
+   "start": 17.48,
+   "end": 20.43,
+   "cut": 20.55,
+   "tapAt": null,
+   "frame": "c5_res",
+   "text": "한글과 엑셀 파일이 함께 저장됩니다."
+  },
+  {
+   "id": "c7",
+   "start": 20.55,
+   "end": 24.44,
+   "cut": 24.56,
+   "tapAt": 23.45,
+   "frame": "c6_outro",
+   "text": "처음 세 장은 무료. 무료로 체험을 눌러 보세요."
+  }
+ ]
+}

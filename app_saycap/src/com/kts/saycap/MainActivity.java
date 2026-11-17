@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Base64;
+import android.util.LruCache;
 import android.view.KeyEvent;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
@@ -32,6 +35,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,6 +58,13 @@ import java.util.Map;
  *     → MediaStore 최신 이미지 + 네이티브 음성인식(SpeechRecognizer, WebView는 음성인식 미지원).
  *     사진은 MediaStore id로 같은 기록을 다시 열기 때문에 일기가 중복되지 않는다.
  *  3) 공유(카메라 → 공유 → 세이캡) 동선은 그대로 병행 유지.
+ *
+ * v1.5 (2026-11-17) — 어디서든 '내 폰 사진'
+ *  · SayCapApp.listPhotos(offset, limit) : MediaStore.Images 최신순 목록(JSON, content:// URI·날짜·크기)
+ *  · 가상 경로 __saycap_thumb?id=…&s=… (썸네일 JPEG) / __saycap_media?id=… (원본 바이트)
+ *    → shouldInterceptRequest 가 직접 응답하므로 웹뷰가 content:// 를 몰라도 <img>·fetch 로 바로 쓴다.
+ *  · 사진 권한: API 33+ READ_MEDIA_IMAGES(34+ 부분 허용 READ_MEDIA_VISUAL_USER_SELECTED 포함), 그 아래 READ_EXTERNAL_STORAGE
+ *  · 음성인식 소리 크기(onRmsChanged) → window.__saycapRms (자막 아래 이퀄라이저)
  */
 public class MainActivity extends Activity {
 
@@ -61,6 +74,16 @@ public class MainActivity extends Activity {
     private static final int REQ_FILE = 1001;
     private static final int REQ_PERM = 1002;
     private static final int REQ_PICK = 1003;
+    private static final int REQ_MEDIA = 1004;
+
+    /* v1.5 폰 사진 목록용 가상 경로 */
+    private static final String THUMB_PATH = "__saycap_thumb";
+    private static final String MEDIA_PATH = "__saycap_media";
+    private static final String PERM_USER_SELECTED = "android.permission.READ_MEDIA_VISUAL_USER_SELECTED";
+    private final LruCache<String, byte[]> thumbCache = new LruCache<String, byte[]>(12 * 1024 * 1024) {
+        @Override protected int sizeOf(String k, byte[] v) { return v.length; }
+    };
+    private volatile long lastRmsAt = 0;
 
     /* 공유로 들어온 사진이 건네지는 가상 경로 (실제 네트워크에는 나가지 않음) */
     private static final String SHARE_PATH = "__saycap_share";
@@ -135,6 +158,10 @@ public class MainActivity extends Activity {
                         }
                         return new WebResourceResponse("text/plain", "utf-8", 404, "Not Found", h,
                                 new ByteArrayInputStream(new byte[0]));
+                    }
+                    /* v1.5 폰 사진 썸네일 · 원본 (MediaStore id) */
+                    if (path != null && (path.endsWith(THUMB_PATH) || path.endsWith(MEDIA_PATH))) {
+                        return serveMedia(req.getUrl(), path.endsWith(THUMB_PATH));
                     }
                 } catch (Exception ignored) { }
                 return null;
@@ -211,7 +238,16 @@ public class MainActivity extends Activity {
        ========================================================= */
     public class Bridge {
         @JavascriptInterface
-        public String version() { return "1.3"; }
+        public String version() { return "1.5"; }
+
+        /* v1.5 폰 전체 사진 목록 (최신순, offset/limit 페이지) — 권한이 없으면 {"perm":false} 후 권한 요청,
+           결과는 window.__devPhotosReady(true|false) 로 알려 준다. */
+        @JavascriptInterface
+        public String listPhotos(int offset, int limit) { return listPhotosJson(offset, limit); }
+
+        /* v1.5 목록에서 고른 사진 1장을 기존 조각 전달 경로(__npBegin… → __npAllDone)로 넘긴다 (가상 경로를 못 쓸 때 대비) */
+        @JavascriptInterface
+        public void openPhoto(String id) { openPhotoById(id); }
 
         /* 앱을 열면 최신 사진 1장을 넘겨 달라 */
         @JavascriptInterface
@@ -269,9 +305,225 @@ public class MainActivity extends Activity {
        ========================================================= */
     private boolean hasMediaPermission() {
         if (Build.VERSION.SDK_INT >= 33) {
-            return checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED;
+            if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) return true;
+            /* 안드로이드 14+: '사진 일부만 허용'도 그 사진들은 목록에 보이도록 */
+            return Build.VERSION.SDK_INT >= 34
+                    && checkSelfPermission(PERM_USER_SELECTED) == PackageManager.PERMISSION_GRANTED;
         }
         return checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean mediaAskPending = false;
+
+    private void askMediaPermission() {
+        if (mediaAskPending) return;
+        mediaAskPending = true;
+        String[] need;
+        if (Build.VERSION.SDK_INT >= 34) {
+            need = new String[]{Manifest.permission.READ_MEDIA_IMAGES, PERM_USER_SELECTED};
+        } else if (Build.VERSION.SDK_INT >= 33) {
+            need = new String[]{Manifest.permission.READ_MEDIA_IMAGES};
+        } else {
+            need = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+        }
+        try {
+            requestPermissions(need, REQ_MEDIA);
+        } catch (Exception e) {
+            mediaAskPending = false;
+            post("window.__devPhotosReady&&window.__devPhotosReady(false)");
+        }
+    }
+
+    /* =========================================================
+       v1.5 폰 사진 목록 (MediaStore.Images) — JS 브리지 스레드에서 바로 조회
+       ========================================================= */
+    private String listPhotosJson(int offset, int limit) {
+        if (!hasMediaPermission()) {
+            runOnUiThread(MainActivity.this::askMediaPermission);
+            return "{\"perm\":false}";
+        }
+        if (offset < 0) offset = 0;
+        if (limit <= 0 || limit > 200) limit = 60;
+        Cursor c = null;
+        try {
+            String[] proj = {
+                    MediaStore.Images.Media._ID,
+                    MediaStore.Images.Media.DISPLAY_NAME,
+                    MediaStore.Images.Media.DATE_TAKEN,
+                    MediaStore.Images.Media.DATE_ADDED,
+                    MediaStore.Images.Media.WIDTH,
+                    MediaStore.Images.Media.HEIGHT,
+                    MediaStore.Images.Media.MIME_TYPE
+            };
+            /* 최신순 — 페이지는 커서 위치로 자른다 (안드로이드 11+는 정렬문에 LIMIT를 못 쓴다) */
+            String order = MediaStore.Images.Media.DATE_ADDED + " DESC, " + MediaStore.Images.Media._ID + " DESC";
+            c = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, proj, null, null, order);
+            JSONObject out = new JSONObject();
+            JSONArray arr = new JSONArray();
+            int total = c == null ? 0 : c.getCount();
+            if (c != null && offset < total && c.moveToPosition(offset)) {
+                int n = 0;
+                do {
+                    long id = c.getLong(0);
+                    long taken = c.isNull(2) ? 0L : c.getLong(2);
+                    long added = c.isNull(3) ? 0L : c.getLong(3) * 1000L;
+                    JSONObject o = new JSONObject();
+                    o.put("id", String.valueOf(id));
+                    o.put("uri", ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id).toString());
+                    o.put("name", c.isNull(1) ? "" : c.getString(1));
+                    o.put("date", taken > 0 ? taken : added);
+                    o.put("w", c.isNull(4) ? 0 : c.getInt(4));
+                    o.put("h", c.isNull(5) ? 0 : c.getInt(5));
+                    o.put("mime", c.isNull(6) ? "image/jpeg" : c.getString(6));
+                    arr.put(o);
+                    n++;
+                } while (n < limit && c.moveToNext());
+            }
+            out.put("perm", true);
+            out.put("total", total);
+            out.put("offset", offset);
+            out.put("items", arr);
+            return out.toString();
+        } catch (Exception e) {
+            return "{\"perm\":true,\"total\":0,\"items\":[],\"error\":true}";
+        } finally {
+            try { if (c != null) c.close(); } catch (Exception ignored) { }
+        }
+    }
+
+    private static long parseId(String s) {
+        try { return Long.parseLong(s == null ? "" : s.trim()); } catch (Exception e) { return -1L; }
+    }
+
+    private static WebResourceResponse notFound(Map<String, String> h) {
+        return new WebResourceResponse("text/plain", "utf-8", 404, "Not Found", h,
+                new ByteArrayInputStream(new byte[0]));
+    }
+
+    /* __saycap_thumb?id=…&s=… → 썸네일 JPEG / __saycap_media?id=… → 원본 그대로 */
+    private WebResourceResponse serveMedia(Uri url, boolean thumb) {
+        Map<String, String> h = new HashMap<>();
+        h.put("Access-Control-Allow-Origin", "*");
+        h.put("Cache-Control", thumb ? "max-age=86400" : "no-store");
+        long id = parseId(url.getQueryParameter("id"));
+        if (id < 0 || !hasMediaPermission()) return notFound(h);
+        Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+        if (thumb) {
+            int size = 320;
+            try { size = Integer.parseInt(url.getQueryParameter("s")); } catch (Exception ignored) { }
+            size = Math.max(96, Math.min(640, size));
+            byte[] b = thumbBytes(id, uri, size);
+            if (b == null) return notFound(h);
+            return new WebResourceResponse("image/jpeg", null, 200, "OK", h, new ByteArrayInputStream(b));
+        }
+        String mime = null;
+        try { mime = getContentResolver().getType(uri); } catch (Exception ignored) { }
+        if (mime == null || !mime.startsWith("image/")) mime = "image/jpeg";
+        try {
+            InputStream in = getContentResolver().openInputStream(uri);
+            if (in == null) return notFound(h);
+            return new WebResourceResponse(mime, null, 200, "OK", h, in);
+        } catch (Exception e) {
+            return notFound(h);
+        }
+    }
+
+    private byte[] thumbBytes(long id, Uri uri, int size) {
+        String key = id + ":" + size;
+        byte[] hit = thumbCache.get(key);
+        if (hit != null) return hit;
+        Bitmap bm = null;
+        boolean rotated = false;
+        try {
+            if (Build.VERSION.SDK_INT >= 29) {
+                bm = getContentResolver().loadThumbnail(uri, new android.util.Size(size, size), null);
+                rotated = true;              // loadThumbnail 은 사진 방향까지 맞춰 준다
+            } else {
+                bm = MediaStore.Images.Thumbnails.getThumbnail(getContentResolver(), id,
+                        MediaStore.Images.Thumbnails.MINI_KIND, null);
+            }
+        } catch (Throwable ignored) { bm = null; }
+        if (bm == null) { bm = decodeSampled(uri, size); rotated = false; }
+        if (bm == null) return null;
+        if (!rotated) {
+            int deg = orientationOf(id);
+            if (deg != 0) {
+                try {
+                    android.graphics.Matrix m = new android.graphics.Matrix();
+                    m.postRotate(deg);
+                    Bitmap r = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
+                    if (r != bm) { bm.recycle(); bm = r; }
+                } catch (Throwable ignored) { }
+            }
+        }
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        try { bm.compress(Bitmap.CompressFormat.JPEG, 82, bo); } catch (Throwable e) { return null; }
+        finally { try { bm.recycle(); } catch (Throwable ignored) { } }
+        byte[] out = bo.toByteArray();
+        if (out.length > 0) thumbCache.put(key, out);
+        return out.length > 0 ? out : null;
+    }
+
+    private int orientationOf(long id) {
+        Cursor c = null;
+        try {
+            c = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    new String[]{MediaStore.Images.Media.ORIENTATION},
+                    MediaStore.Images.Media._ID + "=?", new String[]{String.valueOf(id)}, null);
+            if (c != null && c.moveToFirst() && !c.isNull(0)) return c.getInt(0);
+        } catch (Exception ignored) {
+        } finally {
+            try { if (c != null) c.close(); } catch (Exception ignored) { }
+        }
+        return 0;
+    }
+
+    private Bitmap decodeSampled(Uri uri, int size) {
+        InputStream in = null;
+        try {
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            in = getContentResolver().openInputStream(uri);
+            if (in == null) return null;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+            in = null;
+            int s = 1;
+            while (o.outWidth / (s * 2) >= size && o.outHeight / (s * 2) >= size) s *= 2;
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = s;
+            in = getContentResolver().openInputStream(uri);
+            if (in == null) return null;
+            return BitmapFactory.decodeStream(in, null, o2);
+        } catch (Throwable e) {
+            return null;
+        } finally {
+            try { if (in != null) in.close(); } catch (Exception ignored) { }
+        }
+    }
+
+    /* 목록에서 고른 사진 → 조각 전달(가상 경로를 못 쓰는 환경 대비) */
+    private void openPhotoById(final String sid) {
+        new Thread(() -> {
+            long id = parseId(sid);
+            if (id < 0 || !hasMediaPermission()) {
+                post("window.__npFail&&window.__npFail('none')");
+                return;
+            }
+            Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+            byte[] data = readAll(uri, PHOTO_MAX);
+            if (data == null || data.length == 0) {
+                post("window.__npFail&&window.__npFail('none')");
+                return;
+            }
+            String mime = null;
+            try { mime = getContentResolver().getType(uri); } catch (Exception ignored) { }
+            String name = displayName(uri);
+            if (mime == null || !mime.startsWith("image/")) mime = guessMime(name);
+            if (name == null || name.trim().length() == 0) name = "SayCap_" + id + ".jpg";
+            deliverBytes("pick:0", name, mime, data);
+            post("window.__npAllDone&&window.__npAllDone(1)");
+        }).start();
     }
 
     private void requestLatest() {
@@ -465,7 +717,13 @@ public class MainActivity extends Activity {
     private final RecognitionListener listener = new RecognitionListener() {
         @Override public void onReadyForSpeech(Bundle params) { }
         @Override public void onBeginningOfSpeech() { noSpeechCount = 0; }
-        @Override public void onRmsChanged(float rmsdB) { }
+        /* v1.5 실제 목소리 크기 → 자막 아래 이퀄라이저 (약 14fps로 솎아서) */
+        @Override public void onRmsChanged(float rmsdB) {
+            long now = System.currentTimeMillis();
+            if (now - lastRmsAt < 70) return;
+            lastRmsAt = now;
+            post("window.__saycapRms&&window.__saycapRms(" + String.format(java.util.Locale.US, "%.1f", rmsdB) + ")");
+        }
         @Override public void onBufferReceived(byte[] buffer) { }
         @Override public void onEndOfSpeech() { }
 
@@ -583,7 +841,13 @@ public class MainActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int code, String[] perms, int[] result) {
         super.onRequestPermissionsResult(code, perms, result);
+        if (code == REQ_MEDIA) {           // v1.5 폰 사진 목록 권한
+            mediaAskPending = false;
+            post("window.__devPhotosReady&&window.__devPhotosReady(" + hasMediaPermission() + ")");
+            return;
+        }
         if (code != REQ_PERM) return;
+        if (hasMediaPermission()) post("window.__devPhotosReady&&window.__devPhotosReady(true)");
         boolean media = false, mic = true, askedMic = false;
         for (int i = 0; i < result.length && i < perms.length; i++) {
             boolean ok = result[i] == PackageManager.PERMISSION_GRANTED;

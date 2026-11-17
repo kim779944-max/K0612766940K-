@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<title>KTS 숏츠 플레이어 (나레이션 큐 기반)</title>
+<style>
+html,body{margin:0;background:#05080f;color:#fff;font-family:"Malgun Gothic",sans-serif}
+#cv{display:block;width:540px;height:960px;margin:10px auto;background:#0A1128}
+#ui{text-align:center;font-size:14px}
+button{font:inherit;padding:8px 16px;margin:4px;border-radius:8px;border:1px solid #FF6B00;background:#1a2340;color:#fff;cursor:pointer}
+</style></head>
+<body>
+<div id="ui">
+  <button onclick="go('converter')">변환기</button><button onclick="go('viewer')">더뷰</button><button onclick="go('saycap')">세이캡</button>
+  <button id="play">▶ 재생</button><button id="rec">● 녹화(MP4 저장)</button> <span id="st"></span>
+</div>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<script>
+/* ===== 3대 원칙 =====
+ * 1) 전체 화면 유지: 폰 프레임 안에 앱 화면(390x844) 전체를 항상 그림. 확대는 최대 MAXZ(1.10배)이고 확대해도 폰 전체가 캔버스 안에 남도록 위치를 보정.
+ * 2) 실제 누르는 버튼 표시: 캡처 시점에 실제 DOM에서 잰 버튼 위치에 주황(#FF6B00) 원 + 손가락 포인터 + 터치 파문.
+ * 3) 나레이션 1:1 싱크: 컷 경계 = 각 나레이션 WAV 길이 경계, 탭 시각 = SAPI 북마크(버튼 이름을 말하는 순간). 모든 그림은 AudioContext 시계로 그림.
+ */
+const W = 1080, H = 1920, NAVY = '#0A1128', OR = '#FF6B00';
+const SCR_W = 560, K = SCR_W / 390, SCR_H = Math.round(844 * K);      // 폰 화면 560 x 1212
+const BEZ = 16, PH_W = SCR_W + BEZ * 2, PH_H = SCR_H + BEZ * 2;
+const PH_X = (W - PH_W) / 2, PH_Y = 318;                                // 폰 기본 위치
+const TOP_LIMIT = 300, BOT_LIMIT = 1752, MAXZ = 1.10;
+const GAP = 0.12, LEAD = 0.35, TAIL = 1.2;
+const cv = document.getElementById('cv'), g = cv.getContext('2d');
+const qs = new URLSearchParams(location.search);
+let S = null, IMG = {}, ctx = null, BUF = [], TL = null, t0 = 0, running = false, analyser = null, dest = null, ampArr = null;
+
+function go(name){ location.search = '?s=' + name; }
+function loadScript(src){ return new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+function b64ToBuf(b64){ const bin = atob(b64); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u.buffer; }
+const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+
+async function init(){
+  const name = qs.get('s') || 'converter';
+  await loadScript('data_' + name + '.js');
+  S = window.SHORT;
+  await Promise.all(Object.entries(S.frames).map(([k, src]) => new Promise(ok => { const im = new Image(); im.onload = ok; im.src = src; IMG[k] = im; })));
+  ctx = new AudioContext({sampleRate: 48000});
+  dest = ctx.createMediaStreamDestination();
+  analyser = ctx.createAnalyser(); analyser.fftSize = 1024; ampArr = new Float32Array(analyser.fftSize);
+  for (const c of S.cues) BUF.push(await ctx.decodeAudioData(b64ToBuf(c.wav)));
+  // ---- 타임라인: 나레이션 길이로 컷 배치 ----
+  let t = LEAD; const cues = [];
+  S.cues.forEach((c, i) => {
+    const d = BUF[i].duration;
+    const cue = {...c, start: t, end: t + d, buf: BUF[i]};
+    if (c.tap != null && c.tapMs >= 0) cue.tapT = t + Math.max(c.tapMs / 1000 + 0.25, 0.45);   // 버튼 이름을 말하기 시작한 직후 누름
+    cue.hold = cue.tapT != null ? Math.max(cue.end, cue.tapT + 0.45) : cue.end;   // 탭 뒤 최소 0.45초는 같은 화면 유지 후 결과 화면으로 컷
+    cues.push(cue); t = cue.hold + GAP;
+  });
+  TL = {cues, total: t - GAP + TAIL};
+  window.CUESHEET = cues.map(c => ({id: c.id, start: +c.start.toFixed(2), end: +c.end.toFixed(2), cut: +(c.hold + GAP).toFixed(2), tapAt: c.tapT ? +c.tapT.toFixed(2) : null, frame: c.frame, text: c.text.replace('[tap]', '')}));
+  window.TOTAL = TL.total;
+  document.getElementById('st').textContent = S.title + ' · ' + TL.total.toFixed(1) + '초';
+  draw(0);
+  window.READY = true;
+}
+
+function cueAt(t){ const cs = TL.cues; let cur = cs[0]; for (const c of cs) if (t >= c.start - GAP) cur = c; return cur; }
+function rectOf(frame, idx){ const r = (S.rects[frame] || [])[idx]; return r || null; }
+
+/* 앱 화면 좌표(css px) → 캔버스 좌표 (확대 전) */
+function toCanvas(x, y){ return [PH_X + BEZ + x * K, PH_Y + BEZ + y * K]; }
+
+/* 현재 시각의 확대(z)와 이동(dx,dy) — 탭이 있는 큐에서만 최대 1.10배, 폰 전체가 화면 안에 남도록 보정 */
+function camAt(t){
+  const c = cueAt(t);
+  let z = 1, px = W / 2, py = PH_Y + PH_H / 2;
+  if (c.tapT != null){
+    const r = rectOf(c.frame, c.tap);
+    if (r){
+      const k = ease((t - (c.tapT - 1.0)) / 0.7) * (1 - ease((t - (c.hold + 0.05)) / 0.3));
+      z = 1 + (MAXZ - 1) * k;
+      [px, py] = toCanvas(r.x + r.w / 2, r.y + r.h / 2);
+    }
+  }
+  // 확대 후 폰 사각형
+  let x0 = px + (PH_X - px) * z, y0 = py + (PH_Y - py) * z, w = PH_W * z, h = PH_H * z;
+  let dx = 0, dy = 0;
+  if (x0 < 8) dx = 8 - x0; if (x0 + w > W - 8) dx = (W - 8) - (x0 + w);
+  if (y0 < TOP_LIMIT) dy = TOP_LIMIT - y0; if (y0 + h > BOT_LIMIT) dy = BOT_LIMIT - (y0 + h);
+  return {z, px, py, dx, dy};
+}
+function applyCam(cam, x, y){ return [cam.px + (x - cam.px) * cam.z + cam.dx, cam.py + (y - cam.py) * cam.z + cam.dy]; }
+
+function rr(x, y, w, h, r){ g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+
+function drawBg(){
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#0A1128'); gr.addColorStop(1, '#0d1838');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const rg = g.createRadialGradient(W * 0.85, 120, 10, W * 0.85, 120, 700); rg.addColorStop(0, 'rgba(255,107,0,.16)'); rg.addColorStop(1, 'rgba(255,107,0,0)');
+  g.fillStyle = rg; g.fillRect(0, 0, W, H);
+}
+
+function drawPhone(t, cam){
+  const c = cueAt(t);
+  const cs = TL.cues, i = cs.indexOf(c);
+  const prev = i > 0 ? cs[i - 1] : null;
+  const fade = prev && prev.frame !== c.frame ? ease((t - (c.start - GAP)) / 0.06) : 1;   // 거의 즉시 컷(60ms)
+  const [x0, y0] = applyCam(cam, PH_X, PH_Y);
+  const w = PH_W * cam.z, h = PH_H * cam.z, bz = BEZ * cam.z;
+  g.save();
+  g.shadowColor = 'rgba(0,0,0,.6)'; g.shadowBlur = 50; g.shadowOffsetY = 18;
+  rr(x0, y0, w, h, 64 * cam.z); g.fillStyle = '#1b2236'; g.fill();
+  g.restore();
+  rr(x0, y0, w, h, 64 * cam.z); g.lineWidth = 3; g.strokeStyle = '#3a4566'; g.stroke();
+  g.save();
+  rr(x0 + bz, y0 + bz, w - bz * 2, h - bz * 2, 50 * cam.z); g.clip();
+  if (prev && fade < 1){ g.drawImage(IMG[prev.frame], x0 + bz, y0 + bz, w - bz * 2, h - bz * 2); g.globalAlpha = fade; }
+  g.drawImage(IMG[c.frame], x0 + bz, y0 + bz, w - bz * 2, h - bz * 2);
+  g.restore();
+}
+
+/* 결과·로딩 강조: 주황 둥근 테두리 */
+function drawHl(t, cam){
+  const c = cueAt(t); if (!c.hl) return;
+  const a = ease((t - c.start) / 0.3) * (1 - ease((t - c.end) / 0.15));
+  if (a <= 0) return;
+  c.hl.forEach(idx => {
+    const r = rectOf(c.frame, idx); if (!r) return;
+    let [x1, y1] = applyCam(cam, ...toCanvas(r.x, r.y)), [x2, y2] = applyCam(cam, ...toCanvas(r.x + r.w, r.y + r.h));
+    const pad = 10 + 3 * Math.sin(t * 6);
+    x1 = Math.max(x1 - pad, 4); y1 -= pad; x2 = Math.min(x2 + pad, W - 4); y2 += pad;
+    g.save(); g.globalAlpha = a;
+    g.shadowColor = OR; g.shadowBlur = 24;
+    rr(x1, y1, x2 - x1, y2 - y1, 22); g.lineWidth = 7; g.strokeStyle = OR; g.stroke();
+    g.restore();
+  });
+}
+
+/* 누르는 버튼: 주황 원(타원) + 손가락 포인터 + 터치 파문 */
+function drawTap(t, cam){
+  const c = cueAt(t); if (c.tapT == null) return;
+  const r = rectOf(c.frame, c.tap); if (!r) return;
+  const [cx, cy] = applyCam(cam, ...toCanvas(r.x + r.w / 2, r.y + r.h / 2));
+  const rw = r.w * K * cam.z / 2 + 26, rh = r.h * K * cam.z / 2 + 22;
+  const ain = ease((t - (c.tapT - 0.7)) / 0.25), aout = 1 - ease((t - (c.hold + 0.02)) / 0.12);
+  const a = ain * aout; if (a <= 0) return;
+  // 주황 원
+  g.save(); g.globalAlpha = a;
+  g.shadowColor = OR; g.shadowBlur = 30;
+  g.beginPath(); g.ellipse(cx, cy, Math.min(rw, 520), rh, 0, 0, Math.PI * 2);
+  g.lineWidth = 9; g.strokeStyle = OR; g.stroke();
+  g.restore();
+  // 파문
+  const dt = t - c.tapT;
+  if (dt >= 0 && dt < 0.9){
+    for (let k = 0; k < 2; k++){
+      const d = dt - k * 0.18; if (d < 0) continue;
+      const p = d / 0.7; if (p > 1) continue;
+      g.save(); g.globalAlpha = (1 - p) * 0.9;
+      g.beginPath(); g.arc(cx, cy, 30 + p * 110, 0, Math.PI * 2); g.lineWidth = 8 * (1 - p) + 2; g.strokeStyle = k ? '#fff' : OR; g.stroke();
+      g.restore();
+    }
+    if (dt < 0.25){ g.save(); g.globalAlpha = 0.45 * (1 - dt / 0.25); g.beginPath(); g.arc(cx, cy, 34, 0, Math.PI * 2); g.fillStyle = OR; g.fill(); g.restore(); }
+  }
+  // 손가락 포인터: 오른쪽 아래에서 다가와 탭 순간 살짝 눌림
+  const m = ease((t - (c.tapT - 0.7)) / 0.55);
+  const ox = Math.min(rw * 0.3, 60), oy = Math.min(rh * 0.25, 18);
+  const fx = cx + ox + (1 - m) * 170, fy = cy + oy + (1 - m) * 260;
+  const press = dt >= -0.05 && dt < 0.22 ? 0.88 : 1;
+  drawFinger(fx, fy, press, a);
+}
+function drawFinger(x, y, s, a){
+  // 손끝(x,y)이 버튼 중앙에 오도록 그린 흰 손가락(검은 외곽선)
+  g.save(); g.globalAlpha = a; g.translate(x, y); g.scale(s * 1.25, s * 1.25); g.rotate(-0.18);
+  g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 16; g.shadowOffsetY = 6;
+  g.beginPath();
+  g.moveTo(-14, 6); g.arc(0, 6, 14, Math.PI, 0);                  // 검지 끝
+  g.lineTo(14, 58);
+  g.quadraticCurveTo(22, 48, 34, 52); g.quadraticCurveTo(44, 56, 42, 70);   // 중지
+  g.quadraticCurveTo(52, 62, 62, 68); g.quadraticCurveTo(70, 74, 66, 88);   // 약지
+  g.quadraticCurveTo(76, 84, 82, 92); g.quadraticCurveTo(88, 100, 82, 130);  // 새끼
+  g.quadraticCurveTo(76, 162, 46, 170); g.lineTo(2, 170);
+  g.quadraticCurveTo(-26, 150, -40, 112); g.quadraticCurveTo(-48, 92, -36, 86); g.quadraticCurveTo(-24, 82, -14, 100); // 엄지
+  g.closePath();
+  g.fillStyle = '#ffffff'; g.fill();
+  g.shadowColor = 'transparent'; g.lineWidth = 5; g.strokeStyle = '#111827'; g.stroke();
+  g.beginPath(); g.moveTo(14, 70); g.lineTo(14, 84); g.moveTo(42, 74); g.lineTo(42, 88); g.moveTo(66, 92); g.lineTo(66, 104); g.lineWidth = 3.5; g.stroke();
+  g.restore();
+}
+
+function wrapText(txt, maxW){
+  const words = txt.split(' '); const lines = []; let cur = '';
+  for (const w of words){ const tryS = cur ? cur + ' ' + w : w; if (g.measureText(tryS).width > maxW && cur){ lines.push(cur); cur = w; } else cur = tryS; }
+  if (cur) lines.push(cur); return lines;
+}
+/* 상단 자막: 지금 들리는 나레이션 그대로, 누르는 버튼 이름은 주황 */
+function drawSubtitle(t){
+  const c = cueAt(t);
+  const a = ease((t - (c.start - GAP)) / 0.15);
+  g.save();
+  g.font = '800 30px "Malgun Gothic"'; const chipW = g.measureText(S.title).width + 44;
+  g.fillStyle = 'rgba(255,107,0,.14)'; rr(40, 34, chipW, 62, 31); g.fill();
+  g.lineWidth = 2; g.strokeStyle = 'rgba(255,107,0,.7)'; g.stroke();
+  g.fillStyle = '#FFB273'; g.font = '800 30px "Malgun Gothic"'; g.textBaseline = 'middle';
+  g.fillText(S.title, 62, 66);
+  // 진행바
+  const p = Math.min(1, t / TL.total);
+  const bx = 40 + chipW + 24, bw = W - 40 - bx;
+  g.fillStyle = 'rgba(255,255,255,.12)'; rr(bx, 61, bw, 10, 5); g.fill();
+  g.fillStyle = OR; rr(bx, 61, Math.max(10, bw * p), 10, 5); g.fill();
+  const last = TL.cues[TL.cues.length - 1];
+  if (t > last.end + 0.1){ const e = ease((t - last.end - 0.1) / 0.25); g.globalAlpha = e; g.textBaseline = 'alphabetic';
+    g.fillStyle = '#fff'; g.font = '900 56px "Malgun Gothic"'; const a1 = '설치 없이 지금 무료로'; g.fillText(a1, (W - g.measureText(a1).width) / 2, 172);
+    g.fillStyle = OR; g.font = '900 66px "Malgun Gothic"'; const a2 = 'autooneclick.com'; g.fillText(a2, (W - g.measureText(a2).width) / 2, 250);
+    g.restore(); return; }
+  g.globalAlpha = a;
+  g.font = '800 54px "Malgun Gothic"'; g.textBaseline = 'alphabetic';
+  const raw = c.text; const plain = raw.replace('[tap]', '');
+  let key = '';
+  const ti = raw.indexOf('[tap]');
+  if (ti >= 0){ const rest = raw.slice(ti + 5); const m = rest.match(/^(.*?)(을|를|이라고|으로)/); key = m ? m[1] : rest.split(/[,.]/)[0]; }
+  const lines = wrapText(plain, 980);
+  let y = 170;
+  const kStart = key ? ti : -1, kEnd = kStart + key.length;   // [tap] 바로 뒤 버튼 이름만 주황
+  let off = 0;
+  lines.forEach(line => {
+    const lw = g.measureText(line).width; let x = (W - lw) / 2;
+    for (let i = 0; i < line.length; i++){
+      const ch = line[i], gi = off + i;
+      g.fillStyle = (kStart >= 0 && gi >= kStart && gi < kEnd) ? '#FF8A2B' : '#ffffff';
+      g.lineWidth = 8; g.strokeStyle = 'rgba(5,8,20,.85)'; g.strokeText(ch, x, y);
+      g.fillText(ch, x, y); x += g.measureText(ch).width;
+    }
+    off += line.length + 1; y += 68;
+  });
+  g.restore();
+}
+
+/* 안내 캐릭터(일러스트, 실사 아님) — 말할 때 입이 움직임 */
+function drawHost(t){
+  let amp = 0;
+  if (analyser && running){ analyser.getFloatTimeDomainData(ampArr); let s = 0; for (const v of ampArr) s += v * v; amp = Math.min(1, Math.sqrt(s / ampArr.length) * 9); }
+  else { const c = cueAt(t); if (t >= c.start && t <= c.end) amp = 0.4 + 0.3 * Math.sin(t * 22); }
+  const x = 104, y = 1836, r = 58;
+  g.save();
+  g.beginPath(); g.arc(x, y, r + 8, 0, Math.PI * 2); g.fillStyle = OR; g.fill();
+  g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fillStyle = '#13204a'; g.fill();
+  g.beginPath(); g.arc(x, y + 8, 36, 0, Math.PI * 2); g.fillStyle = '#FFD7B5'; g.fill();          // 얼굴
+  g.beginPath(); g.arc(x, y - 2, 38, Math.PI * 1.05, Math.PI * 1.95); g.lineWidth = 14; g.strokeStyle = '#1d2b55'; g.stroke(); // 머리
+  g.fillStyle = '#0A1128'; g.beginPath(); g.arc(x - 13, y + 4, 4.5, 0, 7); g.arc(x + 13, y + 4, 4.5, 0, 7); g.fill();
+  g.beginPath(); g.ellipse(x, y + 24, 10, 2 + amp * 9, 0, 0, Math.PI * 2); g.fillStyle = '#c2410c'; g.fill();  // 입
+  g.beginPath(); g.arc(x, y + 6, 44, Math.PI * 0.05, Math.PI * 0.45); g.lineWidth = 4; g.strokeStyle = OR; g.stroke();  // 헤드셋 마이크
+  g.restore();
+  g.fillStyle = '#9fb0d0'; g.font = '700 24px "Malgun Gothic"'; g.textBaseline = 'middle';
+  g.fillText('안내 캐릭터', 176, 1818);
+  g.fillStyle = '#fff'; g.font = '800 30px "Malgun Gothic"'; g.fillText('원클릭 도우미', 176, 1854);
+}
+function drawBrand(t){
+  g.textBaseline = 'middle';
+  g.fillStyle = OR; g.font = '900 46px "Malgun Gothic"';
+  const s = 'autooneclick.com'; const w = g.measureText(s).width;
+  g.fillText(s, W - 44 - w, 1840);
+}
+
+function draw(t){
+  const cam = camAt(t);
+  drawBg(); drawPhone(t, cam); drawHl(t, cam); drawTap(t, cam); drawSubtitle(t); drawHost(t); drawBrand(t);
+  window.MAXZ_USED = Math.max(window.MAXZ_USED || 1, cam.z);
+}
+
+function start(record){
+  return new Promise(done => {
+    running = true;
+    const T0 = ctx.currentTime + 0.25;
+    TL.cues.forEach(c => { const src = ctx.createBufferSource(); src.buffer = c.buf; src.connect(analyser); src.connect(dest); if (!record) src.connect(ctx.destination); src.start(T0 + c.start); });
+    let rec = null, chunks = [];
+    if (record){
+      const vs = cv.captureStream(30);
+      const stream = new MediaStream([...vs.getVideoTracks(), ...dest.stream.getAudioTracks()]);
+      const types = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'];
+      const mt = types.find(x => MediaRecorder.isTypeSupported(x));
+      window.REC_MIME = mt;
+      rec = new MediaRecorder(stream, {mimeType: mt, videoBitsPerSecond: 8000000, audioBitsPerSecond: 160000});
+      rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+      rec.onstop = () => {
+        const blob = new Blob(chunks, {type: mt});
+        const fr = new FileReader(); fr.onload = () => { window.OUT = fr.result.slice(fr.result.indexOf('base64,') + 7); window.OUT_LEN = window.OUT.length; done(); }; fr.readAsDataURL(blob);
+      };
+      rec.start(1000);
+    }
+    const tick = () => {
+      const t = ctx.currentTime - T0;
+      draw(Math.max(0, t));
+      if (t < TL.total) requestAnimationFrame(tick);
+      else { running = false; if (rec) setTimeout(() => rec.stop(), 150); else done(); }
+    };
+    requestAnimationFrame(tick);
+  });
+}
+document.getElementById('play').onclick = async () => { await ctx.resume(); start(false); };
+document.getElementById('rec').onclick = async () => {
+  await ctx.resume(); await start(true);
+  const a = document.createElement('a'); a.href = 'data:' + window.REC_MIME.split(';')[0] + ';base64,' + window.OUT;
+  a.download = 'short_' + S.name + (window.REC_MIME.includes('mp4') ? '.mp4' : '.webm'); a.click();
+};
+window.renderAt = t => { draw(t); return true; };   // 검증용: 특정 시각 프레임 그리기
+init();
+</script>
+</body></html>

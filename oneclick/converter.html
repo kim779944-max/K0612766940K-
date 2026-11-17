@@ -276,6 +276,7 @@ table.pv td.selcell{outline:2px solid #FF6B00;outline-offset:-2px}
     <div class="pvtools">
       <button type="button" class="ptool" id="btnEye">스포이드 · 칸 배경</button>
       <button type="button" class="ptool" id="btnEyeOff">배경 지우기</button>
+      <button type="button" class="ptool" id="btnUndo" style="opacity:.5">되돌리기</button>
       <span class="ptip" id="pickTip">칸을 먼저 누르고, 사진에서 색을 눌러 주세요</span>
     </div>
     <div class="pvbox"><div class="paperin">
@@ -352,7 +353,7 @@ table.pv td.selcell{outline:2px solid #FF6B00;outline-offset:-2px}
 <div class="toast" id="toast"></div>
 </div>
 
-<script src="localocr.js?v=20261117d" onerror="window.KTSPHOTO=null"></script>
+<script src="localocr.js?v=20261117e" onerror="window.KTSPHOTO=null"></script>
 <script src="ai.js" onerror="window.KTS_AI={key:''}"></script>
 <script>
 const $ = s => document.querySelector(s);
@@ -534,6 +535,8 @@ function renderPreview(host, st, editable){
       td.addEventListener('focus', () => {
         const k = td.dataset.k.split(',');
         SEL = {r:+k[0], c:+k[1]};
+        const c0 = byKey[+k[0] + ',' + +k[1]];
+        td.dataset.before = c0 ? String(c0.text || '') : '';
         document.querySelectorAll('table.pv td.selcell').forEach(e=>e.classList.remove('selcell'));
         td.classList.add('selcell');
         const tip = document.getElementById('pickTip');
@@ -541,11 +544,16 @@ function renderPreview(host, st, editable){
       });
       td.addEventListener('input', () => {
         const k = td.dataset.k.split(','), cell = byKey[+k[0] + ',' + +k[1]];
-        if (cell) cell.text = td.innerText.replace(/\u00a0/g, ' ');
+        if (cell){ cell.text = td.innerText.replace(/\u00a0/g, ' '); if (CUR) CUR._dirty = true; }
       });
       td.addEventListener('blur', () => {
         const k = td.dataset.k.split(','), cell = byKey[+k[0] + ',' + +k[1]];
-        if (cell){ cell.text = td.innerText.replace(/\u00a0/g, ' ').replace(/\n{2,}/g, '\n').trim(); td.innerText = cell.text; }
+        if (cell){
+          cell.text = td.innerText.replace(/\u00a0/g, ' ').replace(/\n{2,}/g, '\n').trim();
+          td.innerText = cell.text;
+          if (td.dataset.before !== cell.text){ pushUndo(+k[0], +k[1], td.dataset.before || ''); td.dataset.before = cell.text; }
+          if (CUR) CUR._dirty = true;
+        }
       });
     });
   }
@@ -577,6 +585,7 @@ function sampleImage(x, y){
   return '#' + hex2(Math.round(rr/n)) + hex2(Math.round(gg/n)) + hex2(Math.round(bb/n));
 }
 function applyPick(hex){
+  if (CUR) CUR._dirty = true;
   if (!CUR || !SEL) { toast('먼저 표에서 칸을 하나 눌러 주세요'); return; }
   const cell = CUR.cells.find(c => c.r === SEL.r && c.c === SEL.c);
   if (!cell){ toast('이 칸은 병합된 칸입니다 — 병합의 첫 칸을 눌러 주세요'); return; }
@@ -1167,6 +1176,7 @@ async function buildAndShow(autoSave){
     busy(true, CUR_NAME, '엑셀 표를 만드는 중…', 96);
     const blobX = await makeZip(buildXlsx(CUR));
     LAST.hwpx = blobH; LAST.xlsx = blobX;
+    if (CUR) CUR._dirty = false;
     busy(false);
     $('#home').style.display = 'none';
     $('#work').style.display = 'none';
@@ -1182,8 +1192,34 @@ async function buildAndShow(autoSave){
 }
 $('#btnHwpx').onclick = () => saveOne('hwpx');
 $('#btnXlsx').onclick = () => saveOne('xlsx');
+/* 되돌리기 — 잘못 고친 칸을 1탭으로 되돌린다 */
+let UNDO = [];
+function pushUndo(r, c, before){
+  UNDO.push({r:r, c:c, before:before});
+  if (UNDO.length > 30) UNDO.shift();
+  const b = $('#btnUndo'); if (b){ b.disabled = false; b.style.opacity = 1; }
+}
+$('#btnUndo').onclick = () => {
+  const u = UNDO.pop(); if (!u) return;
+  if (CUR){
+    const cell = CUR.cells.find(c => c.r === u.r && c.c === u.c);
+    if (cell) cell.text = u.before;
+    CUR._dirty = true;
+    renderPreview($('#pvTable'), CUR, true);
+  }
+  const b = $('#btnUndo'); if (b && !UNDO.length){ b.disabled = true; b.style.opacity = .5; }
+  toast('한 칸 되돌렸습니다');
+};
+/* 미리보기와 저장 파일이 어긋나지 않게 — 고친 뒤에는 파일을 다시 만든다 */
+async function rebuildFiles(){
+  if (!CUR) return;
+  const blobH = await makeZip(await buildHwpx(CUR));
+  const blobX = await makeZip(buildXlsx(CUR));
+  LAST.hwpx = blobH; LAST.xlsx = blobX; CUR._dirty = false;
+}
 async function saveOne(kind){
   if (!LAST[kind]){ await buildAndShow(); }
+  else if (CUR && CUR._dirty){ await rebuildFiles(); }
   const blob = LAST[kind];
   if (!blob) return;
   const name = outName(kind);
@@ -1246,6 +1282,7 @@ $('#btnResBack').onclick = () => {
 $('#btnRHwpx').onclick = () => saveOne('hwpx');
 $('#btnRXlsx').onclick = () => saveOne('xlsx');
 $('#btnOpen').onclick = async () => {
+  if (CUR && CUR._dirty) await rebuildFiles();
   const blob = LAST.hwpx || LAST.xlsx; if (!blob) return;
   const name = 'KTS_' + (CUR ? CUR_NAME : '표') + '_' + stamp() + (LAST.hwpx ? '.hwpx' : '.xlsx');
   try{

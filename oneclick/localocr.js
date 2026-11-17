@@ -283,14 +283,18 @@
   }
 
   function wordList(data) {
-    var out = [];
+    var out = [], seen = {};
     function push(w) {
       if (!w || !w.text || !w.bbox) return;
       var t = String(w.text).replace(/\s+/g, ' ').trim();
       if (!t) return;
+      var k = [w.bbox.x0, w.bbox.y0, w.bbox.x1, w.bbox.y1, t].join('_');
+      if (seen[k]) return;
+      seen[k] = 1;
       out.push({ t: t, x0: w.bbox.x0, x1: w.bbox.x1, y0: w.bbox.y0, y1: w.bbox.y1, conf: w.confidence || 0 });
     }
     (data.words || []).forEach(push);
+    if (out.length) return out;              /* 낱말 목록이 있으면 그것만 쓴다(중복 방지) */
     (data.blocks || []).forEach(function (b) {
       (b.paragraphs || []).forEach(function (p) {
         (p.lines || []).forEach(function (l) { (l.words || []).forEach(push); });
@@ -310,6 +314,14 @@
     g.imageSmoothingQuality = 'high';
     g.drawImage(cv, x0, y0, w, h, 0, 0, cc.width, cc.height);
     return { url: cc.toDataURL('image/png'), s: s };
+  }
+
+  /* 글자 다듬기 — 낱자 사이 공백 접기, 칸 테두리 기호(｜) 제거 */
+  function tidy(t) {
+    var s1 = String(t || '');
+    s1 = s1.replace(/[\u2502\uFF5C|]/g, ' ');
+    s1 = s1.replace(/([\uAC00-\uD7A3])\s+(?=[\uAC00-\uD7A3])/g, '$1');
+    return s1.replace(/\s+/g, ' ').trim();
   }
 
   function numLike(t) {
@@ -382,7 +394,7 @@
       function settle() {
         fill = 0;
         cells.forEach(function (cl) {
-          cl.text = (cl.text || '').replace(/\s+/g, ' ').trim();
+          cl.text = tidy(cl.text);
           if (cl.text) fill++;
           cl.num = numLike(cl.text);
           if (cl._l != null) {
@@ -412,8 +424,17 @@
               if (y1 - y0 < 6) return;
               var crop = cropRow(cv, x0, x1, y0, y1);
               onStep('글자를 읽는 중… (' + (r + 1) + '/' + totalRows + ')', 20 + Math.round(70 * (r + 1) / totalRows));
-              return w.recognize(crop.url, {}, { text: true, blocks: true }).then(function (out) {
-                var words = wordList((out && out.data) || {});
+              function read(p) {
+                return w.setParameters({ tessedit_pageseg_mode: p }).then(function () {
+                  return w.recognize(crop.url, {}, { text: true, blocks: true });
+                }).then(function (out) { return wordList((out && out.data) || {}); });
+              }
+              return read('7').then(function (words) {
+                /* 한 줄로 못 읽으면 '글자 덩어리' 모드로 한 번 더 */
+                if (words.length) return words;
+                return read('6').then(function (w2) { return w2; });
+              }).then(function (words) {
+                w.setParameters({ tessedit_pageseg_mode: '7' });
                 words.forEach(function (wd) {
                   var ax = x0 + wd.x0 / crop.s;
                   var axEnd = x0 + wd.x1 / crop.s;

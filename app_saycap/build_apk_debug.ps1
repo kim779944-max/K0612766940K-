@@ -107,7 +107,8 @@ $raw = [System.IO.File]::ReadAllText($mf)
 $new = [regex]::Replace($raw, 'android:versionCode="[0-9]+"', ('android:versionCode="' + $VersionCode + '"'))
 $new = [regex]::Replace($new, 'android:versionName="[^"]*"', ('android:versionName="' + $VersionName + '"'))
 if ($new -ne $raw) {
-  [System.IO.File]::WriteAllText($mf, $new, (New-Object System.Text.UTF8Encoding($false)))
+  $utf8NoBom = New-Object -TypeName System.Text.UTF8Encoding -ArgumentList $false
+  [System.IO.File]::WriteAllText($mf, $new, $utf8NoBom)
   Write-Host "manifest version bumped -> $VersionCode / $VersionName"
 } else {
   Write-Host "manifest already at $VersionCode / $VersionName"

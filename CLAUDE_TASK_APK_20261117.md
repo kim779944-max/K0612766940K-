@@ -1,8 +1,9 @@
 # PC 클로드 코드 작업 지시서 — 세이캡 APK 빌드 (2026-11-17)
 
 > **이 문서 하나만 읽고 끝까지 실행하세요. 마지막에 `git push`까지 하면 끝입니다.**
-> 대상: 이 저장소의 `app_saycap/` (KTS 세이캡 Android 앱 소스, 현재 v1.3 / versionCode 13)
-> 목표: ① 이 PC에 JDK·Android SDK를 설치해 **앞으로 PC에서 APK를 직접 빌드할 수 있게** 만들고 ② 그걸 증명하는 **세이캡 v1.4 debug APK**를 실제로 뽑아 저장소에 올린다.
+> 대상: 이 저장소의 `app_saycap/` (KTS 세이캡 Android 앱 소스, 현재 **v1.4 / versionCode 14**)
+> 목표: ① 이 PC에 JDK·Android SDK를 설치해 **앞으로 PC에서 APK를 직접 빌드할 수 있게** 만들고 ② 그걸 증명하는 **세이캡 v1.4 debug APK**를 실제로 뽑는다.
+> APK는 PC에만 둡니다(이 저장소는 공개라 상품 APK는 올리지 않습니다). 저장소에는 **빌드 결과 문서**만 올립니다.
 > 소요 예상: 15~30분(대부분 다운로드). 필요 디스크: 약 1GB.
 
 ---
@@ -108,9 +109,9 @@ Test-Path "$sdk\platforms\android-34\android.jar"
 
 ---
 
-## 4. 3단계 — versionCode / versionName 만 올리기 (14 / 1.4)
+## 4. 3단계 — versionCode / versionName 확인 (이미 14 / 1.4)
 
-`app_saycap/AndroidManifest.xml` 상단의 **이 두 속성 값만** 바꿉니다. 다른 속성·주석·줄 순서는 그대로 둡니다.
+`app_saycap/AndroidManifest.xml` 상단의 **이 두 속성 값만** 봅니다. 저장소에는 이미 `14` / `1.4`로 맞춰져 있으니, 그대로면 **아무것도 바꾸지 말고** 4단계로 넘어갑니다. 혹시 `13` / `1.3`이면 그 두 값만 `14` / `1.4`로 바꿉니다(15 이상으로 올리지 말 것).
 
 ```xml
     android:versionCode="14"
@@ -202,7 +203,7 @@ Get-Item $apk | Select-Object Name,Length
 1. 환경: `javac -version`, `JAVA_HOME`, `ANDROID_HOME`, build-tools/platforms 버전, 설치 방식(winget/zip)
 2. 빌드: 실행한 명령, 총 소요 시간
 3. 산출물: 파일명·바이트 크기·SHA256·서명 검증 결과(v1/v2/v3)·`versionCode`/`versionName`
-4. 변경 파일: `git diff --stat` 결과 (기대: `app_saycap/AndroidManifest.xml` 1개, 2줄)
+4. 변경 파일: `git status --short` / `git diff --stat` 결과 (저장소 매니페스트가 이미 14/1.4라서 **문서 외 변경 0건이면 정상**입니다. 그 경우 매니페스트는 건드리지 않았음을 적어 주세요)
 5. 막힌 점·경고: 있으면 오류 원문 그대로, 없으면 "없음"
 6. 대표님 안내 한 줄: **이 APK는 debug 서명이라 기존 v1.3(정식 키) 위에 덮어 설치되지 않습니다 → 폰에서 기존 세이캡을 지우고 설치해야 합니다.**
 

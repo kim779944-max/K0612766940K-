@@ -59,6 +59,29 @@ input,textarea{font-family:inherit}
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:0 12px;height:42px;backdrop-filter:blur(6px)}
 .home-search input{flex:1;background:none;border:0;outline:0;color:#fff;font-size:14px}
 .home-search input::placeholder{color:#7d787f}
+/* ---------- 1-b. 홈 입구 다듬기 (v1.4 · 화면 꾸밈만, 기능 무변경) ---------- */
+#home .home-logo{opacity:.95;filter:drop-shadow(0 0 22px rgba(255,107,0,.28));margin-bottom:10px}
+#home .home-brand{color:#fff;font-weight:800;letter-spacing:.12em;margin-bottom:8px}
+#home .home-brand i{font-style:normal;color:#FFA24D}
+#home .home-sub{color:#8D9AB0;font-size:11.5px;margin-bottom:18px}
+#home .home-lead{display:block;font-size:16px;font-weight:800;color:#F3F6FA;letter-spacing:-.02em;margin-bottom:4px}
+#home .home-steps{display:flex;gap:6px;justify-content:center;margin:0 0 34px;flex-wrap:wrap}
+#home .home-steps span{display:flex;align-items:center;gap:5px;font-size:11.5px;color:#C9D4E4;padding:5px 10px 5px 5px;border-radius:999px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+#home .home-steps i{font-style:normal;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:900;
+  background:#FF6B00;color:#0A1224}
+#home .home-btns{gap:14px;width:100%;max-width:330px}
+#home .home-btn{flex:1;width:auto;gap:10px;padding:18px 8px 16px;border-radius:22px;background:rgba(18,32,60,.72);
+  border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 26px rgba(0,0,0,.35);transition:transform .15s}
+#home .home-btn:active{transform:scale(.97)}
+#home .home-btn .ring{background:rgba(255,255,255,.06);width:70px;height:70px}
+#home .home-btn .ico{width:40px;height:40px;stroke:#E2E8F0;stroke-width:1.5}
+#home .home-btn span{color:#E6EDF7;font-weight:700}
+#home .home-btn.primary{background:linear-gradient(160deg,rgba(255,107,0,.28),rgba(18,32,60,.8) 70%);border-color:rgba(255,107,0,.6)}
+#home .home-btn.primary .ring{background:linear-gradient(135deg,#FF6B00,#FFA24D);box-shadow:0 0 24px rgba(255,107,0,.45)}
+#home .home-btn.primary .ico{stroke:#0A1224;stroke-width:2}
+#home .home-foot{color:#7D8AA0}
+ (max-height:640px){#home .home-logo{width:96px;height:96px}#home .home-steps{margin-bottom:20px}}
 
 /* ---------- 2. 카메라 ---------- */
 #camera{background:#000}
@@ -299,10 +322,11 @@ body.has-badge .edit-hint{top:calc(70px + env(safe-area-inset-top,0px))}
     <path d="M73 40c-5-5-13-6-18-2-6 4.5-4 12 3 15 6 3 12 5 12 11 0 6-6 10-13 9-5-1-9-4-10-8" stroke="#E2E8F0" stroke-width="1.5" stroke-linecap="round"/>
     <circle cx="90" cy="36" r="3" fill="#FF6B00"/>
   </svg>
-  <p class="home-brand">SayCap</p>
-  <p class="home-sub">말로 남기는 사진일기 · 2016 특허 · 2026 리부트</p>
+  <p class="home-brand"><i>Say</i>Cap</p>
+  <p class="home-sub"><b class="home-lead">말하면, 사진에 자막이 새겨집니다</b>말로 남기는 사진일기 · 2016 특허 · 2026 리부트</p>
+  <div class="home-steps" aria-hidden="true"><span><i>1</i>찍고</span><span><i>2</i>말하면 자막</span><span><i>3</i>단어로 찾기</span></div>
   <div class="home-btns">
-    <button class="home-btn" id="goCamera">
+    <button class="home-btn primary" id="goCamera">
       <span class="ring"><svg class="ico" viewBox="0 0 48 48"><path d="M6 16h6l4-6h16l4 6h6v24H6z"/><circle cx="24" cy="27" r="9"/></svg></span>
       <span>촬영하기</span>
     </button>

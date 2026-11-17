@@ -103,6 +103,18 @@ table.xl.fixed td,table.xl.fixed th{min-width:0}
 .doc.paper .bar #backb{white-space:nowrap;flex:0 0 auto}
 .doc.paper table.xl td,.doc.paper table.xl th{font-size:9.5px;padding:2px 3px;line-height:1.28;overflow-wrap:anywhere}
 table.xl td.b{font-weight:900}
+/* ---------- (추가) 더편집 · 본사 홈 무료 업그레이드 · 앱 모드 ---------- */
+.kipfoot{margin:12px 14px 14px}
+.kipedit{display:block;width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line2);background:#12203C;
+ color:#E6EDF7;font-size:13px;font-weight:900;text-align:center;font-family:inherit;letter-spacing:-.3px}
+.kipedit:active{transform:scale(.99)}
+.kipupg{display:flex;align-items:center;gap:10px;margin-top:9px;padding:11px 12px;min-height:64px;border-radius:14px;
+ background:#0F1B33;border:1px solid rgba(198,160,84,.4);text-decoration:none;color:inherit}
+.kipupg .t{flex:1;min-width:0}
+.kipupg .t b{display:block;font-size:12.5px;font-weight:900;color:#fff;letter-spacing:-.3px}
+.kipupg .t b i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber2);margin-right:5px;vertical-align:middle;box-shadow:0 0 7px var(--amber2)}
+.kipupg .t span{display:block;font-size:11px;color:#AFBDD0;line-height:1.45;margin-top:2px}
+.kipupg em{font-style:normal;font-size:12px;font-weight:900;color:var(--amber2);white-space:nowrap}
 </style></head><body>
 <div id="app">
 <header><span class="brand">KTS <i>더뷰</i></span><span class="sp"></span><a href="index.html">← 원클릭</a></header>
@@ -118,6 +130,14 @@ table.xl td.b{font-weight:900}
   <button class="big" onclick="document.getElementById('f').click()">파일 열기</button>
   <input type="file" id="f" hidden accept=".hwp,.hwpx,.xlsx,.xlsm,.docx,.csv,.txt,.pdf,image/*">
   <div class="hint">파일을 고르면 표·문서가 화면 전체로 바로 펼쳐집니다</div>
+</div>
+
+<div class="kipfoot" id="kipFoot">
+  <button type="button" class="kipedit" id="kipEdit">글자·표 고치기 (더편집)</button>
+  <a class="kipupg" id="kipUpg" href="https://autooneclick.com/?from=viewer" rel="noopener">
+    <span class="t"><b><i></i>본사 홈 무료 업그레이드</b><span>본사 홈에서 더 많은 도구를 무료로 써 보세요</span></span>
+    <em>열어보기 →</em>
+  </a>
 </div>
 
 <div id="loader">
@@ -735,6 +755,69 @@ document.addEventListener('click', e => {
     document.body.classList.toggle('has-badge', !!(b && b.getBoundingClientRect().height>0));
   }
   sync(); setInterval(sync, 1200);
+})();
+</script>
+
+<!-- ===== (추가) 앱(더뷰 APK) 연동 규약 — 파일 받기·준비 신호·돌아가기·더편집 ===== -->
+<script>
+(function(){
+  /* ① 앱이 넘긴 파일을 받는 창구 : MainActivity 의 window.__KTS_OPEN(name, path, base64) */
+  function b64ToBlob(b64){
+    var bin = atob(b64), len = bin.length, arr = new Uint8Array(len);
+    for (var i = 0; i < len; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], {type: 'application/octet-stream'});
+  }
+  window.__KTS_OPEN = function(name, path, b64){
+    try{
+      var blob = b64ToBlob(b64);
+      var f = new File([blob], name || 'document', {type: blob.type || ''});
+      if (typeof showFile === 'function') showFile(f);
+      else if (window.showFile) window.showFile(f);
+      else if (typeof showToast === 'function') showToast('파일을 열 수 없습니다');
+    }catch(e){
+      if (typeof showToast === 'function') showToast('파일을 읽지 못했습니다: ' + e.message);
+    }
+  };
+
+  /* ② 페이지가 준비됐다는 신호 — 로드 전에 넘어온 파일이 유실되지 않게 */
+  function signal(){
+    try{ if (window.KTSApp && typeof KTSApp.ready === 'function') KTSApp.ready(); }catch(e){}
+  }
+  if (document.readyState === 'complete') signal();
+  else window.addEventListener('load', signal);
+
+  /* ③ 앱 안에서는 헤더를 '← 돌아가기'로 — 앱 안에 쇼룸을 쌓지 않는다 */
+  function inApp(){
+    try{ if (window.KTSApp) return true; }catch(e){}
+    return /KTS[\s\S]*더뷰/.test(navigator.userAgent);
+  }
+  function openHome(){
+    try{ if (window.KTSApp && typeof KTSApp.openHome === 'function'){ KTSApp.openHome(); return; } }catch(e){}
+    location.href = 'https://autooneclick.com/?from=viewer';
+  }
+  if (inApp()){
+    var a = document.querySelector('header a[href="index.html"]');
+    if (a){
+      a.textContent = '← 돌아가기';
+      a.addEventListener('click', function(ev){
+        ev.preventDefault();
+        var d = document.getElementById('doc');
+        if (d && d.style.display !== 'none' && typeof resetView === 'function'){ resetView(); return; }
+        openHome();
+      });
+    }
+    var up = document.getElementById('kipUpg');
+    if (up) up.addEventListener('click', function(ev){ ev.preventDefault(); openHome(); });
+  }
+
+  /* ④ 더편집(서명·도장·글자 수정) — 아직 도구가 없으면 빈 화면 대신 '준비 중 · 알림 받기' */
+  var ed = document.getElementById('kipEdit');
+  if (ed) ed.addEventListener('click', function(){
+    if (typeof showToast === 'function') showToast('더편집은 준비 중입니다 · 문자로 알려 드릴게요');
+    setTimeout(function(){
+      location.href = 'sms:01020022899?&body=' + encodeURIComponent('[원클릭] 더편집(글자·표·서명 수정) 준비되면 알려주세요');
+    }, 600);
+  });
 })();
 </script>
 </body></html>

@@ -209,13 +209,14 @@ Get-Item $apk | Select-Object Name,Length
 ```powershell
 cd "$env:USERPROFILE\OneDrive\바탕 화면\KTS_작업실\K0612766940K-"
 git status --short
-git add app_saycap/AndroidManifest.xml app_saycap/build_apk_debug.ps1 app_saycap/README_BUILD.md app_saycap/.gitignore output/apk_20261117 CLAUDE_RESULT_APK_20261117.md
+git add app_saycap/AndroidManifest.xml app_saycap/build_apk_debug.ps1 app_saycap/README_BUILD.md app_saycap/.gitignore CLAUDE_RESULT_APK_20261117.md
 git commit -m "build: 세이캡 v1.4 debug APK + PC 빌드 환경(JDK17/SDK) 구축"
 git push origin main
 git log --oneline -1
 ```
 
 > `git add -A`는 쓰지 마세요(관계없는 파일이 섞입니다). 위 목록만 올립니다.
+> **APK 파일(`output\apk_20261117\*.apk`)은 커밋하지 않습니다.** 이 저장소는 공개라서, 상품 APK를 공개 주소에 두면 누구나 내려받게 됩니다. 빌드 결과물은 PC에 그대로 두고, 대표님께 전달합니다.
 
 ---
 

@@ -1,0 +1,3 @@
+[지니 -> PC 클로드 코드 연결 테스트]
+날짜: 2026-11-17
+이 파일을 읽었다면 같은 폴더에 TEST_REPLY_FROM_CLAUDE.txt 파일을 만들어 "연결 확인 완료!"라고 적고 git add, commit, push 해 주세요.

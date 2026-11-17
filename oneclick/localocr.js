@@ -14,7 +14,7 @@
     ],
     workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js',
     corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.0',
-    langPath: 'https://tessdata.projectnaptha.com/4.0.0',
+    langPath: 'https://tessdata.projectnaptha.com/4.0.0_fast',
     lang: 'kor'
   };
 
@@ -251,7 +251,7 @@
     });
   }
 
-  function ensureWorker() {
+  function ensureWorker(onStep) {
     if (_worker) return Promise.resolve(_worker);
     if (_loading) return _loading;
     _loading = (function () {
@@ -266,7 +266,12 @@
           workerPath: OCR.workerPath,
           corePath: OCR.corePath,
           langPath: OCR.langPath,
-          logger: function () {},
+          logger: function (m) {
+            if (!onStep || !m) return;
+            if (m.status === 'loading language traineddata' || m.status === 'initializing api' || m.status === 'loading tesseract core') {
+              onStep('글자 인식 준비 중… ' + Math.round((m.progress || 0) * 100) + '%', 8 + Math.round((m.progress || 0) * 12));
+            }
+          },
           errorHandler: function () {}
         });
       }).then(function (w) {
@@ -356,7 +361,26 @@
       });
 
       var fill = 0, totalRows = built.nR;
-      function finalize(ocrFailed) {
+
+      /* 1단계: 격자·병합·배경·열 너비는 네트워크 없이 바로 나온다(저장은 여기서 이미 가능) */
+      cells.sort(function (a, b) { return a.r - b.r || a.c - b.c; });
+      var st = {
+        title: '',
+        nRows: built.nR,
+        nCols: built.nC,
+        colWidths: colW,
+        cells: cells,
+        preview: cv.toDataURL('image/jpeg', 0.72),
+        lockWidths: true,
+        _fill: 0,
+        _cells: cells.length,
+        _ocrFailed: false,
+        _textPending: true,
+        _engine: 'device'
+      };
+
+      function settle() {
+        fill = 0;
         cells.forEach(function (cl) {
           cl.text = (cl.text || '').replace(/\s+/g, ' ').trim();
           if (cl.text) fill++;
@@ -367,27 +391,18 @@
             if (rightPad > leftPad * 2.2) cl.align = 'L';
             else if (leftPad > rightPad * 2.2) cl.align = 'R';
             else cl.align = 'C';
-          } else if (cl.c === 0) cl.align = 'L';
+          } else if (cl.c === 0) {
+            cl.align = 'L';
+          }
           delete cl._l; delete cl._r;
         });
-        cells.sort(function (a, b) { return a.r - b.r || a.c - b.c; });
-        return {
-          title: '',
-          nRows: built.nR,
-          nCols: built.nC,
-          colWidths: colW,
-          cells: cells,
-          preview: cv.toDataURL('image/jpeg', 0.72),
-          lockWidths: true,
-          _fill: fill,
-          _cells: cells.length,
-          _ocrFailed: !!ocrFailed,
-          _engine: 'device'
-        };
+        st._fill = fill;
+        st._textPending = false;
       }
 
-      return ensureWorker().catch(function () { return null; }).then(function (w) {
-        if (!w) return finalize(true);
+      /* 2단계: 글자는 기기 안 무료 OCR로 뒤에서 채운다 — 다운로드가 느려도 저장을 막지 않는다 */
+      st._textTask = ensureWorker(onStep).catch(function () { return null; }).then(function (w) {
+        if (!w) { settle(); st._ocrFailed = true; return false; }
         var chain = Promise.resolve();
         for (var r = 0; r < totalRows; r++) {
           (function (r) {
@@ -396,7 +411,7 @@
               var y0 = hy[r] + 2, y1 = hy[r + 1] - 2;
               if (y1 - y0 < 6) return;
               var crop = cropRow(cv, x0, x1, y0, y1);
-              onStep('표의 글자를 읽는 중… (' + (r + 1) + '/' + totalRows + ')', 30 + Math.round(62 * (r + 1) / totalRows));
+              onStep('글자를 읽는 중… (' + (r + 1) + '/' + totalRows + ')', 20 + Math.round(70 * (r + 1) / totalRows));
               return w.recognize(crop.url, {}, { text: true, blocks: true }).then(function (out) {
                 var words = wordList((out && out.data) || {});
                 words.forEach(function (wd) {
@@ -419,8 +434,14 @@
             });
           })(r);
         }
-        return chain.then(function () { return finalize(false); });
+        return chain.then(function () {
+          settle();
+          st._ocrFailed = fill === 0;
+          return true;
+        });
       });
+
+      return st;
     });
   }
 

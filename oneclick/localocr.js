@@ -434,7 +434,7 @@
               var x0 = vx[0] + 2, x1 = vx[vx.length - 1] - 2;
               var y0 = hy[r] + 2, y1 = hy[r + 1] - 2;
               if (y1 - y0 < 6) return;
-              var crop = cropRow(cv, x0, x1, Math.max(0, y0 - 7), Math.min(cv.height, y1 + 7));
+              var crop = cropRow(cv, x0, x1, y0, y1);
               onStep('글자를 읽는 중… (' + (r + 1) + '/' + totalRows + ')', 20 + Math.round(70 * (r + 1) / totalRows));
               function read(p) {
                 return w.setParameters({ tessedit_pageseg_mode: p }).then(function () {

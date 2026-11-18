@@ -87,6 +87,9 @@
     <div class="big">접수되었습니다.</div>
     <p>담당자가 확인하고 <b>오늘 중으로</b> 연락드립니다.<br>
       급하시면 이 화면을 닫고 받으신 문자로 답장 주셔도 됩니다.</p>
+    <p id="smsline" style="display:none">
+      <a class="link" id="smslink" href="sms:01020022899">문자로 바로 회신하기</a>
+    </p>
     <a class="link" href="#" onclick="location.reload();return false;">한 건 더 접수하기</a>
   </div>
 
@@ -118,17 +121,35 @@ document.getElementById('f').addEventListener('submit', function (e) {
   var tel = document.getElementById('tel').value.replace(/[^0-9]/g, '');
   if (!name) { e.preventDefault(); alert('업체명을 입력해 주세요.'); return; }
   if (tel.length < 9) { e.preventDefault(); alert('연락처를 정확히 입력해 주세요.'); return; }
-  if (!HOOK || HOOK.indexOf('__HOOK__') === 0) {
+  var notReady = (!HOOK || HOOK.indexOf('__HOOK__') === 0);
+  if (notReady) {
+    /* 접수 주소가 아직 없을 때: 손님이 쓴 내용을 잃지 않도록 문자 회신으로 유도 */
     e.preventDefault();
-    alert('접수 주소가 아직 설정되지 않았습니다. 문자로 회신 주시면 바로 연락드립니다.');
+    var msg = '(광고) 무료 안내 신청 - ' + name + ' / ' + tel +
+      ' / ' + document.getElementById('want').value +
+      ' / ' + (document.querySelector('textarea[name=text]').value || '') + ' / 무인비서 폼';
+    var link = document.getElementById('smslink');
+    link.href = 'sms:01020022899?body=' + encodeURIComponent(msg);
+    document.getElementById('smsline').style.display = 'block';
+    showDone();
     return;
   }
-  setTimeout(function () {
-    document.getElementById('form-area').style.display = 'none';
-    document.getElementById('done').style.display = 'block';
-    window.scrollTo(0, 0);
-  }, 350);
+  setTimeout(showDone, 350);
 });
+
+function showDone() {
+  document.getElementById('form-area').style.display = 'none';
+  document.getElementById('done').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+/* 검수용: 폼 주소에 ?preview=done 을 붙이면 완료 화면을 바로 볼 수 있다 */
+try {
+  if (new URLSearchParams(location.search).get('preview') === 'done') {
+    document.getElementById('smsline').style.display = 'block';
+    showDone();
+  }
+} catch (e) {}
 </script>
 </body>
 </html>

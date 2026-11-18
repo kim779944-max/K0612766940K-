@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>교환급매물 — 1:1 맞교환 매물 93건</title>
+<meta name="description" content="전국 부동산 1:1 맞교환·급매 매물 93건. 교환가와 실인수금, 희망 조건까지 한 화면에서 확인하세요.">
+<meta name="theme-color" content="#0A1224">
+<style>
+:root{--bg:#0A1224;--bg2:#0C1730;--card:#0F1B33;--card2:#12203C;--line:#26375F;--line2:#2E4370;
+ --ink:#F3F6FA;--ink2:#AFBDD0;--gray:#8FA0B8;--or:#FF6B00;--or2:#FFA24D;--on-or:#0A1224;--green:#22C55E}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.3px}
+#app{max-width:520px;margin:0 auto;padding:0 14px 92px;min-height:100vh}
+.hd{display:flex;align-items:center;gap:9px;padding:14px 2px 10px;position:sticky;top:0;background:linear-gradient(180deg,var(--bg) 78%,rgba(10,18,36,0));z-index:30}
+.logo{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(145deg,#FF8A2B,var(--or));color:var(--on-or);font-weight:900;font-size:15px;flex:0 0 auto;box-shadow:0 4px 14px rgba(255,107,0,.3)}
+.brand b{display:block;font-size:15px;font-weight:900;letter-spacing:-.6px}
+.brand span{display:block;font-size:10.5px;color:var(--gray);margin-top:1px}
+.hd .sp{flex:1}
+.live{font-size:10.5px;font-weight:800;color:#7BE3A3;border:1px solid rgba(34,197,94,.45);background:rgba(34,197,94,.1);border-radius:999px;padding:5px 9px;white-space:nowrap}
+
+.hero{background:linear-gradient(150deg,#152A4E,#0F1B33);border:1px solid rgba(255,107,0,.35);border-radius:16px;padding:15px 15px 14px;margin:4px 0 12px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:180px;height:180px;right:-70px;top:-80px;background:radial-gradient(circle,rgba(255,107,0,.28),transparent 70%);border-radius:50%}
+.hero .k{display:inline-block;font-size:10.5px;font-weight:900;color:var(--on-or);background:linear-gradient(90deg,var(--or),var(--or2));border-radius:6px;padding:4px 8px}
+.hero h1{font-size:20px;line-height:1.34;letter-spacing:-.9px;margin:9px 0 0;font-weight:900}
+.hero h1 em{font-style:normal;color:var(--or2)}
+.hero p{font-size:11.5px;color:var(--ink2);margin:7px 0 0;line-height:1.6}
+.legend{margin-top:9px;font-size:10.5px;color:#8FA0B8;line-height:1.55;background:rgba(10,18,36,.45);border:1px solid var(--line);border-radius:9px;padding:7px 9px;position:relative;z-index:1}
+.legend b{color:var(--or2);font-weight:900}
+.stats{display:flex;gap:7px;margin-top:12px;position:relative;z-index:1}
+.stat{flex:1;background:rgba(10,18,36,.5);border:1px solid var(--line);border-radius:11px;padding:8px 6px;text-align:center}
+.stat b{display:block;font-size:16px;font-weight:900;color:var(--or2);font-variant-numeric:tabular-nums;line-height:1}
+.stat span{display:block;font-size:9.5px;color:var(--gray);margin-top:4px}
+
+.sbar{display:flex;gap:7px;margin:0 0 9px}
+.sbox{flex:1;display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 11px}
+.sbox svg{flex:0 0 auto;opacity:.6}
+.sbox input{flex:1;background:none;border:0;outline:0;color:#fff;font-size:13px;padding:11px 0;font-family:inherit}
+.sbox input::placeholder{color:#66799A}
+.sbtn{width:44px;border:1px solid var(--line2);background:var(--card2);border-radius:12px;color:var(--ink2);font-size:15px;display:grid;place-items:center}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:1px 0 9px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line2);background:var(--card);color:var(--ink2);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:5px;font-family:inherit}
+.chip i{font-style:normal;font-size:10px;font-weight:900;color:var(--gray);background:rgba(255,255,255,.07);border-radius:999px;padding:1px 5px}
+.chip.on{background:linear-gradient(180deg,#FF8A2B,var(--or));border-color:var(--or);color:var(--on-or)}
+.chip.on i{color:var(--on-or);background:rgba(10,18,36,.16)}
+.cnt{font-size:11px;color:var(--gray);margin:0 2px 8px}
+.cnt b{color:var(--or2)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 13px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,transform .15s}
+.card:active{transform:scale(.994);border-color:var(--line2)}
+.ctop{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.tag{font-size:10px;font-weight:900;border-radius:6px;padding:3px 7px;background:rgba(255,107,0,.14);border:1px solid rgba(255,107,0,.45);color:var(--or2);white-space:nowrap}
+.tag.reg{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.4);color:#7DD3FC}
+.tag.g{background:rgba(255,255,255,.05);border-color:var(--line2);color:var(--gray);margin-left:auto}
+.cname{font-size:13.5px;font-weight:900;line-height:1.42;letter-spacing:-.5px;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.caddr{font-size:11px;color:var(--gray);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmoney{display:flex;gap:6px;margin-top:9px}
+.mbox{flex:1;background:rgba(10,18,36,.55);border:1px solid #1D2C4C;border-radius:9px;padding:6px 8px;min-width:0}
+.mbox span{display:block;font-size:9.5px;color:#7E90AB;margin-bottom:2px}
+.mbox b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:11.5px;font-weight:900;line-height:1.35;color:#fff;overflow:hidden;word-break:keep-all}
+.mbox.hi b{color:var(--or2)}
+.cwant{font-size:11.5px;color:var(--ink2);margin-top:8px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.cwant b{color:#7E90AB;font-weight:800;margin-right:4px}
+.more{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:10px;padding-top:9px;border-top:1px solid #1D2C4C;font-size:11.5px;font-weight:800;color:var(--or2)}
+.empty{text-align:center;color:var(--gray);font-size:12.5px;padding:40px 0;line-height:1.7}
+
+.dock{position:fixed;left:0;right:0;bottom:0;padding:9px 14px calc(9px + env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg) 55%,rgba(10,18,36,.85));z-index:40}
+.dock .in{max-width:520px;margin:0 auto;display:flex;gap:8px}
+.btn{flex:1;border:0;border-radius:13px;padding:14px;font-size:14px;font-weight:900;font-family:inherit;letter-spacing:-.4px;cursor:pointer}
+.btn.main{background:linear-gradient(180deg,#FF8A2B,var(--or));color:var(--on-or);box-shadow:0 8px 22px rgba(255,107,0,.28)}
+.btn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line2);flex:0 0 116px}
+
+/* 상세 시트 */
+.sheet{position:fixed;inset:0;background:rgba(4,8,16,.72);backdrop-filter:blur(4px);z-index:60;display:none;align-items:flex-end}
+.sheet.on{display:flex}
+.sheet .body{width:100%;max-width:520px;margin:0 auto;background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--line2);max-height:88vh;overflow-y:auto;padding:14px 16px calc(20px + env(safe-area-inset-bottom));animation:up .24s ease}
+@keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+.grab{width:38px;height:4px;border-radius:99px;background:#2E4370;margin:0 auto 12px}
+.sname{font-size:16px;font-weight:900;line-height:1.4;letter-spacing:-.6px;margin:8px 0 0}
+.saddr{font-size:11.5px;color:var(--gray);margin-top:5px}
+.rows{margin-top:14px;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.rw{display:flex;gap:10px;background:var(--card);padding:10px 12px}
+.rw .k{flex:0 0 74px;font-size:11px;font-weight:900;color:var(--gray);padding-top:1px}
+.rw .v{flex:1;font-size:12.5px;line-height:1.6;color:#E6EDF7;word-break:keep-all}
+.sclose{position:sticky;top:-14px;float:right;width:30px;height:30px;border-radius:50%;background:#1B2A48;border:1px solid var(--line2);color:var(--ink);display:grid;place-items:center;font-size:15px;margin-top:-6px}
+.foot{font-size:10.5px;color:#6F819B;line-height:1.7;text-align:center;margin:18px 0 0;padding-top:14px;border-top:1px solid #17233D}
+.foot b{color:var(--ink2)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="hd">
+    <div class="logo">⇄</div>
+    <div class="brand"><b>교환급매물</b><span>1:1 맞교환 · 급매 전문</span></div>
+    <div class="sp"></div>
+    <div class="live">검수 완료 93건</div>
+  </div>
+
+  <div class="hero">
+    <span class="k">교환가 · 실인수금 공개</span>
+    <h1>현금 없이도<br><em>바꿀 수 있는</em> 매물만 모았습니다</h1>
+    <p>교환가와 실인수금, 희망 조건을 그대로 적었습니다. 조건이 맞으면 바로 연결됩니다.</p>
+    <div class="legend"><b>교환가</b> 매물 전체 값 &nbsp;·&nbsp; <b>실인수금</b> 부채를 빼고 실제로 준비해야 하는 돈</div>
+    <div class="stats">
+      <div class="stat"><b>93</b><span>등록 매물</span></div>
+      <div class="stat"><b>7</b><span>매물 유형</span></div>
+      <div class="stat"><b>0원</b><span>매칭 비용</span></div>
+    </div>
+  </div>
+
+  <div class="sbar">
+    <div class="sbox">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA0B8" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="지역·물건명으로 찾기 (예: 대전, 상가, 임야)" autocomplete="off">
+    </div>
+    <button class="sbtn" id="clear" aria-label="지우기">✕</button>
+  </div>
+  <div class="chips" id="chips"><button class="chip on" data-t="전체">전체<i>93</i></button><button class="chip" data-t="토지·임야">토지·임야<i>25</i></button><button class="chip" data-t="상가·빌딩">상가·빌딩<i>20</i></button><button class="chip" data-t="주택·다가구">주택·다가구<i>18</i></button><button class="chip" data-t="기타">기타<i>12</i></button><button class="chip" data-t="숙박·호텔">숙박·호텔<i>10</i></button><button class="chip" data-t="공장·창고">공장·창고<i>7</i></button><button class="chip" data-t="오피스텔">오피스텔<i>1</i></button></div>
+  <div class="cnt" id="cnt"></div>
+  <div id="list"></div>
+</div>
+
+<div class="dock"><div class="in">
+  <a class="btn ghost" href="tel:010-2002-2899" style="display:grid;place-items:center;text-decoration:none">전화 상담</a>
+  <button class="btn main" id="askBtn">교환 조건 문의</button>
+</div></div>
+
+<div class="sheet" id="sheet"><div class="body" id="sheetBody"></div></div>
+
+<script>
+const DATA = [{"no": "E0001", "g": "정밀", "t": "상가·빌딩", "reg": "대전", "name": "대전 유성구 봉명동 동아벤처타워 3층 천연온천 사우나·스파 상가 (전용 268평, 라군풀·풀빌라 리모델링 최적)", "addr": "대전광역시 유성구 봉명동 538-8 동아벤처타워 3층 (309·310·311·314호 전층)", "scale": "전유 885.5㎡ (실평수 268.0평) / 계약 1,165.9㎡ (353.0평) / 3층 전 층 독점 단독사용", "price": "30억 (협의)", "debt": "융자 4.8억 / 보 8,000만 / 월 500만 (에쿼티 24.4억)", "real": "24.4억 원", "want": "전국 아파트, 상가, 토지 등과 1:1 맞교환 또는 상계 협의", "src": "자체 정밀 분석 물건", "date": "11.09"}, {"no": "E0002", "g": "정밀", "t": "상가·빌딩", "reg": "서울", "name": "서울 도봉구 도봉동 도봉엠블렘 상가 (분양 270평/전용 105평, 월세 650만 확정)", "addr": "서울시 도봉구 도봉동 62-1 도봉엠블렘", "scale": "분양 892.6㎡ (270평) / 전용 약 347.1㎡ (105평)", "price": "20.0억 원", "debt": "대출 9.0억 원 + 보증금 5천만 원", "real": "실인수가(잔가) 10.5억 원", "want": "수도권 및 지방 우량 부동산 맞교환 협의", "src": "남재우 사장님 직접 접수", "date": "11.09"}, {"no": "E0003", "g": "정밀", "t": "상가·빌딩", "reg": "서울", "name": "서울 노원구 월계동 광운대역세권 상가 통빌딩 (부채 72억 승계 인수)", "addr": "서울시 노원구 월계동 406 (광운대역 역세권 메인통)", "scale": "지하 1층~지상 7층 상가빌딩 (PC방, 복싱클럽, 구청임대, 주택 등)", "price": "협의 (부채 72억 포괄승계 조건)", "debt": "부채 총액 72.0억 원 (농협 1순위 65억 + 이자/원금 3억 + 보증금 3.3억 + 세금 1.2억)", "real": "부채 72억 승계 후 잔여 에쿼티 소액 협의", "want": "지방 부동산 또는 대체 자산 맞교환 협의", "src": "남재우 사장님 직접 접수", "date": "11.09"}, {"no": "E0004", "g": "정밀", "t": "상가·빌딩", "reg": "경기", "name": "경기 의정부시 가능동 2024년 2월 신축 메디컬빌딩 1,716평 (매가 200억 / 대출 260억 가능)", "addr": "경기도 의정부시 가능동 94-1 외 3필지", "scale": "대지 894㎡(270.4평) / 연면적 5,673.3㎡(1,716평) 지하3층~지상7층 (주차 42대, EV 2대)", "price": "200.0억 원 (분양가 대비 55% 반값급매)", "debt": "대출 최대 260억 원 가능 (업대출/마이너스 에쿼티 구조)", "real": "매매가 전액 대출 충당 가능 (무자본/초과자금 회수형)", "want": "병원운영 의료법인 또는 자산 맞교환/인수", "src": "남재우 사장님 직접 접수", "date": "11.09"}, {"no": "E0005", "g": "정밀", "t": "숙박·호텔", "reg": "충남", "name": "충남 보령 대천해수욕장 3분 1:1 드라이브인 셔터 무인텔 16실 (대지 524평, 융자 9.9억)", "addr": "충남 보령시 신흑동 686-3 (대 484평), 686-4 (도로 40평)", "scale": "토지 1,732㎡(524평) / 건물 2동 총 16실 (일반 7, 특실 7, 복층 VIP 2) / 1실 1주차 셔터 완비", "price": "20.0억 원 (신고가 18.0억)", "debt": "대출 9.9억 원 승계", "real": "실인수가 약 8.1억~10.1억 원", "want": "수도권 상가·아파트·빌라 등과 맞교환 협의", "src": "남재우 사장님 직접 접수", "date": "11.09"}, {"no": "E0006", "g": "정밀", "t": "공장·창고", "reg": "경기", "name": "경기 파주 적성면 계획관리 물류창고단지 9동 + 근생부지 총 6,790평 (인수가 28억)", "addr": "경기도 파주시 적성면 어유지리 53-17, 53-18, 53-10, 53-19 외 20필지", "scale": "총 22,446㎡ (6,790평 올 계획관리) / 기건축 창고 6동+사무실 3동(연면적 337평, 22년 2월 준공) + 추가 나대지 6,000평", "price": "68.0억 원 (신고가)", "debt": "융자 40.0억 원 승계", "real": "실인수가 28.0억 원", "want": "수도권 및 전국 상업용·수익형 부동산 맞교환 희망", "src": "남재우 사장님 직접 접수", "date": "11.09"}, {"no": "E0007", "g": "정밀", "t": "주택·다가구", "reg": "서울", "name": "서울 용산 재개발구역 단독주택 대지 34평 (평당 1억, 잔금 13.9억 맞교환 가능)", "addr": "서울시 용산구 이촌로 29길 5-14 (용산재개발 중심부)", "scale": "대지 112.4㎡ (34.0평)", "price": "34.0억 원 (평당 1.0억)", "debt": "대출 8.4억 + 압류 6.7억 (총부채 15.1억 승계)", "real": "현금 5억 + 잔금 약 13.9억 부동산 맞교환", "want": "잔금 13.9억 선에서 상가·주택·토지와 맞교환 확약", "src": "남재우 사장님 직접 접수", "date": "11.09"}, {"no": "E0008", "g": "정밀", "t": "토지·임야", "reg": "강원", "name": "강원 평창 봉평면 면온리 휘닉스파크 인접 개발용 대토지 4,840평", "addr": "강원도 평창군 봉평면 면온리 산112, 486-1, 486-7", "scale": "토지 16,000㎡ (총 4,840평)", "price": "협의", "debt": "협의", "real": "협의", "want": "전국 부동산 맞교환 협의", "src": "남재우 사장님 직접 접수", "date": "11.09"}, {"no": "E0009", "g": "정밀", "t": "토지·임야", "reg": "충남", "name": "보령 무창포 오션뷰 명소 카페 벨라코스타 (대지 994평, 건물 2동 261평)", "addr": "충남 보령시 남포면 월전리 689-15 (A동), 689-1 (B동 신축)", "scale": "대지 3,285.9㎡(994평) / 연면적 862.8㎡(261평) 건물 2동 (유리구름다리 연결)", "price": "70억 원", "debt": "융자 16.9억 원", "real": "53.1억 원", "want": "수도권 상업지·빌딩·토지 등 대형 자산과 맞교환 협의", "src": "남재우 사장님 직접 접수", "date": "11.09"}, {"no": "E0010", "g": "정밀", "t": "토지·임야", "reg": "충북", "name": "충주 목벌동 도로접 생산관리 623평 교환", "addr": "충북 충주시 목벌동 (생산관리지역, 도로접)", "scale": "생산관리 2,056㎡ (623평)", "price": "교환 1.2억 (융자 0원)", "debt": "융자 없음 (대출 7,000만 가능)", "real": "에쿼티 1.2억", "want": "\"전원주택·주말농장·근생 개발부지\" (전속중개)", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0011", "g": "정밀", "t": "상가·빌딩", "reg": "대구", "name": "대구 달성군 4차선접 일반상업지역 571평", "addr": "대구광역시 달성군 (4차선 도로접, 지번 유선확인)", "scale": "대지 1,886㎡ (571평)", "price": "교환 33억 (감정 42.4억 / 공시 27.63억)", "debt": "협의", "real": "감정가 -9.4억 (공시 대비 +5.4억)", "want": "주상복합 사업부지·개발부지 (전속중개)", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0012", "g": "정밀", "t": "공장·창고", "reg": "울산", "name": "울산 울주군 2차선접 일반공업지역 공장용지 2,863평", "addr": "울산광역시 울주군 (2차선 도로접, 지번 유선확인)", "scale": "공장용지 9,465.7㎡ (2,863평)", "price": "교환 23억 (감정 27.26억 / 공시 16억)", "debt": "협의", "real": "감정가 -4.26억", "want": "공장용지 (전속중개)", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0013", "g": "정밀", "t": "토지·임야", "reg": "강원", "name": "원주 소초면 4차선접 계획관리 잡종지·임야 1만 2,830평", "addr": "강원도 원주시 소초면 (4차선 도로접)", "scale": "잡종지 15,491㎡(4,685평) 임야 26,956㎡(8,145평)", "price": "교환 23억 (감정 30억 / 공시 23.4억)", "debt": "협의", "real": "감정가 -7억", "want": "창고·근생·개발부지 (전속중개)", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0014", "g": "정밀", "t": "공장·창고", "reg": "경기", "name": "경기 여주 등 창고·공장부지 1,000~2,000평", "addr": "경기 여주 지역 등 (상세 미기재)", "scale": "1,000~2,000평", "price": "협의/미기재", "debt": "미기재", "real": "미기재", "want": "창고·공장 최적지, 매매·교환", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0015", "g": "정밀", "t": "숙박·호텔", "reg": "경기", "name": "여주 천송동 신륵사 입구 여관 (숙박시설)", "addr": "경기 여주시 천송동 (신륵사 입구, 자연녹지·유원지)", "scale": "토지 1,159㎡(351평) 건물 941.54㎡(285평) 지하1~지상3층", "price": "매매 13억 (건물분 부가세 별도)", "debt": "융자 없음", "real": "13억 (2·3층 룸 각 9개, 1층 주인거주)", "want": "숙박시설 매매 / **수익성 건물과 교환**", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0016", "g": "정밀", "t": "숙박·호텔", "reg": "서울", "name": "횡성 둔내 모텔(27실) + 서울 면목동 아파트 34평", "addr": "강원 횡성군 둔내면 요지 서울 중랑구 면목동 (소유자 요청으로 상세주소 미공개)", "scale": "대지 1,851.2㎡ 연면적 991.7㎡ (모텔 지하1~3층, 주차 40대) 아파트 112㎡(34평)", "price": "모텔 20억 아파트 13.5억 (잔가 합계 29.5억)", "debt": "모텔 융자 약 4억 아파트 0원", "real": "모텔 16억 아파트 13.5억", "want": "**\"서울·경기·부산·경남 원룸건물, 상가주택, 사우나, 상가, 모텔 원함\"** (아파트만 교환 불가)", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0017", "g": "정밀", "t": "주택·다가구", "reg": "전북", "name": "전북 장수 전원주택 (토지 574평/건평 29평)", "addr": "전북 장수군 장수읍 팔공로 (해발 550m, 마을·버스길 800m 독립 입지)", "scale": "토지+대지 574평 건평 29평", "price": "매매 2.5억 (현금 시 20% 할인 협의)", "debt": "융자 없음", "real": "2.5억 (조경·정원 완료)", "want": "매매 및 교환 (**대출·보증금 떠넘기기 사절**)", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0018", "g": "정밀", "t": "상가·빌딩", "reg": "경기", "name": "용인 기흥 동백지구 25m 5레인 수영장 상가 200평", "addr": "경기 용인시 기흥구 동백지구 (근생, 아파트·주거밀집지 인접)", "scale": "상가 1층 200평 (25m 5레인 정규 수영장)", "price": "교환 25억 (매매 29억)", "debt": "융자 13억 보증금 2.5억", "real": "잔금 9.5억 (월세 850만, 2029.5 만기)", "want": "**\"경기 남부 임야 또는 서울 아파트\"** (5년 장기임차 중)", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0019", "g": "정밀", "t": "주택·다가구", "reg": "광주", "name": "광주 서구 쌍촌동 성우아파트 32평형 (상무역세권)", "addr": "광주광역시 서구 쌍촌동 891-2 (101동 중층 남향)", "scale": "대지 46.73㎡ 연면적 84.83㎡(25.6평)", "price": "매매 3억 (현금 시 일부 인하 추진)", "debt": "융자 1.6억 보증금 9,500만", "real": "실투자 약 4,500만 (월세 20만, 2027.6 만기)", "want": "**토지·구분상가 맞교환** (아파트 제외, 차액 4,500만)", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0020", "g": "정밀", "t": "기타", "reg": "인천", "name": "[중개법인] 전국 교환매물 카탈로그 11건", "addr": "대전 유성구 둔곡동 / 홍성 고암리 / 전주 서신동 / 김포 월곶면 / 일산 사리현동 / 고양 주엽·남양주 별내·인천 원창·주안 (각 상세는 원문 본문)", "scale": "최대 대전 둔곡동 대지 1,641.6㎡ 홍성 건물 953㎡(16가구)", "price": "대전 둔곡동 60억 홍성 21억 / 전주 23.6억 / 김포 21억", "debt": "대전 융자 47억(4.5%) 홍성 10.2억+보 5억 전주 16억 / 김포 15억", "real": "대전 에쿼티 13억 홍성 보증금 승계 시 5.8억", "want": "\"전국 모든 부동산과 교환 가능\" (법인 물건 다수, 전주·인천 2건은 토지·임야 선호)", "src": "대표님 파이프라인 정밀 분석", "date": "11.09"}, {"no": "E0021", "g": "정밀", "t": "토지·임야", "reg": "강원", "name": "강원 횡성 계획관리 1만평 대임야 (소방항공대 인접)", "addr": "강원특별자치도 횡성군 우천면 하궁리 산64 (총 30,510평 중 계획관리 10,694평 + 농림 19,816평)", "scale": "임야 30,510평 (계획관리 10,694평, 도로 접)", "price": "교환가 7.5억~8.0억 (협의 가능)", "debt": "융자 없음 (0원)", "real": "에쿼티 7.5억~8.0억 (공시가 3.37억 / AI시세 11억)", "want": "**\"아파트, 주거용 오피스텔, 건물, 수익형 부동산 교환! 지방 아파트 추가 패 보유\"** (40년 육송 1.5만평)", "src": "대표님 파이프라인 정밀 분석", "date": "11.08"}, {"no": "E0022", "g": "정밀", "t": "토지·임야", "reg": "경북", "name": "경북 의성 계획관리 임야·농원 (1.5만평 국유림 접)", "addr": "경북 의성군 단밀면 주선리 769, 산58번지 (2필지, 15,000평 국유림에 접해 독점 활용)", "scale": "토지 766평 (밭으로 개간 사용 중인 계획관리 임야)", "price": "교환가 8,000만 (절충 가능)", "debt": "협의", "real": "실투자 8,000만 (하우스·컨테이너·에어컨 포함)", "want": "**\"아파트, 빌라 또는 상가-임차권 교환! 추가금 지급 가능\"** (직불금 120만, 엄나무 200주, 과수 다수 식재)", "src": "대표님 파이프라인 정밀 분석", "date": "11.07"}, {"no": "E0023", "g": "정밀", "t": "상가·빌딩", "reg": "서울", "name": "서울 대로변 14층 신축 1층 상가 (동태탕 직영)", "addr": "서울시 대로변 14층 신축 오피스텔 1층 상가 (상세 지번 유선확인, 대로변 코너)", "scale": "실평수 40평 (14층 오피 중 1층 독점 상가)", "price": "매가 38.0억 (시설·영업권 포함, 절충가능)", "debt": "기업은행 20.0억 (대출 전액승계 가능)", "real": "순에쿼티 18.0억 (매출 30%대 고수익)", "want": "**\"건강상 급처분! 서울/인천/경기남부/제주 사업용토지 맞교환\"** (몸이 아파 식당운영 불가, 토지 갈망)", "src": "대표님 파이프라인 정밀 분석", "date": "11.07"}, {"no": "E0024", "g": "정밀", "t": "주택·다가구", "reg": "경북", "name": "경북 구미시 진평동 11세대 원룸 통건물 (올리모델링)", "addr": "경북 구미시 진평동 산업단지 배후 (상세 지번 유선확인, 5천세대 아파트 인접)", "scale": "대지 71평 / 건평 120평 (11세대: 원룸6/미투4/투룸1)", "price": "교환가 6.5억 (주인직접 급처분)", "debt": "보증금 2.24억 융자 2.2억 (전액승계)", "real": "실투자 2.06억 (월세 346만 고수익)", "want": "**\"주인직접 교환 또는 매매 / 대출전액승계\"** (실인수 2.06억에 월 346만 고수익)", "src": "대표님 파이프라인 정밀 분석", "date": "11.07"}, {"no": "E0025", "g": "정밀", "t": "상가·빌딩", "reg": "인천", "name": "인천 부평구 부평동 재래시장 내 5층 만실 통빌딩", "addr": "인천 부평구 부평동 재래시장 내 1필지 (일반상업지역, 상세 지번 유선확인)", "scale": "부지 116.3평 / 연면적 476.46평 (지하1~지상5층, 엘리베이터, 주차12대)", "price": "대폭인하 32.0억 (추가 10% 이상 인하 협의)", "debt": "협의", "real": "50% 현금 제공 (잔여 50% 맞교환)", "want": "**\"50%선 현금 제공, 잔여분 맞교환 추진! 현재 전층 만실\"** (상가·숙소 10년 장기 임차, 권리금 형성)", "src": "대표님 파이프라인 정밀 분석", "date": "11.07"}, {"no": "E0026", "g": "정밀", "t": "토지·임야", "reg": "인천", "name": "강화도 석모대교&파노라마오션뷰 대토지 (분할가능)", "addr": "인천 강화군 내가면 황청리 663-4 외 (바다 200m 영구조망, 계획관리)", "scale": "토지 소형분할 ~ 3,200평 (도로 접함, 즉시 건축가능)", "price": "평당 95만 원 (기존 120만▶파격인하)", "debt": "협의", "real": "소형 1.4억~1.9억 (300평 2.85억 / 3,200평 30.4억)", "want": "**\"120만▶95만 급처분 / 분할 매매·교환\"** (전원주택·펜션·카페 부지 추천)", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0027", "g": "정밀", "t": "숙박·호텔", "reg": "경북", "name": "경북 동해안 바닷가 초인접 카페·펜션부지 대토지", "addr": "경북 동해안 바닷가 최일선 (상세 지번 유선확인, 바다 조망)", "scale": "토지 약 900평 (지목: 대지+전, 계획관리지역)", "price": "감정가 40.0억 (교환가 협의)", "debt": "대출 25.0억 승계", "real": "순에쿼티 15.0억 (대형 베이커리/펜션부지)", "want": "**\"모텔, 상가 등 숙박시설 교환환영\"** (대형 빵카페·풀빌라 부지 추천)", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0028", "g": "정밀", "t": "주택·다가구", "reg": "부산", "name": "부산 북구 구포동 역세권 7층 원룸텔 통건물", "addr": "부산광역시 북구 구포동 일대 (상업지역 초역세권, 지번 유선확인)", "scale": "대지 46평 (152㎡) 연면적 184.5평 (지상 7층, 엘베)", "price": "매가 18.5억 (교환가 협의)", "debt": "융자 5.81억 보 4.67억", "real": "실인수 8.02억 (월세 838만 고수익)", "want": "**\"목욕탕 · 모텔 · 상가 물건 교환 적극 환영!\"** (에너지비·운영 스트레스 탈출 희망)", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0029", "g": "정밀", "t": "토지·임야", "reg": "세종", "name": "여주 세종대왕릉역 역세권 토지 (신청사 옆)", "addr": "경기 여주시 세종대왕면 신지리 333-2 (경강선 역세권, 여주시 신청사 인접)", "scale": "토지 291평 (도시지역 자연녹지, 실사용 600평)", "price": "교환 7.5억 (7.5억 이하만 교환)", "debt": "협의", "real": "개발행위허가 조건 (사용승락 가능)", "want": "**\"7억 5천 이하 물건만 교환 가능\"** (역세권 택지완료, 29년 신청사 착공 옆)", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0030", "g": "정밀", "t": "토지·임야", "reg": "경기", "name": "부천 순천향대병원 인근 지하 목욕탕", "addr": "경기 부천시 순천향대병원 인근 8층 건물 (지하 1~2층 + 지상 주차대지 32평)", "scale": "지하 224평 (남탕 127+여탕 97) 주차활용 대지 32평", "price": "교환 12.0억 (임대 1.5억/400)", "debt": "협의", "real": "엘리베이터 완비 (철거 원할 시 지원)", "want": "임대 또는 12억 부동산 맞교환 (사우나/스파 업종 전환)", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0031", "g": "정밀", "t": "기타", "reg": "인천", "name": "[메일수신] 영종도 공시가이하 초급매", "addr": "인천 중구 중산동 1216-15 외 3필지 (1216-15, 16, 17, 28)", "scale": "토지 1,818평 (건축인허가 득)", "price": "매가 26.0억 (공시가 42.6억)", "debt": "담보제공 가능 (업계약 협의)", "real": "공시가 대비 -16.6억 (계약금 10%)", "want": "공시지가 61% 초급매 처분 (담보제공/업계약 가능)", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0032", "g": "정밀", "t": "토지·임야", "reg": "충남", "name": "[메일수신] 서산 양대동 태양광 대토지", "addr": "충남 서산시 양대동 780 외 73필지", "scale": "토지 544,273평 (자연녹지)", "price": "매가 816.0억 (평당 15만)", "debt": "계약금 10% 잔금 협의", "real": "대형 프로젝트", "want": "전속중개 물건, 신재생에너지/대토 개발", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0033", "g": "정밀", "t": "토지·임야", "reg": "서울", "name": "[메일수신] 개봉동 도시개발사업부지", "addr": "서울 구로구 개봉동 산 27 외 11필지", "scale": "토지 17,972평 (1종일반주거)", "price": "매가 550.0억 (또는 지분투자)", "debt": "계약금 10억 잔금 협의", "real": "30~50억 투자 시 (수익 30% 배분)", "want": "1,200세대 아파트 개발, 매각 또는 공동사업자", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0034", "g": "정밀", "t": "공장·창고", "reg": "충남", "name": "[메일수신] 아산 음봉 신수리 공장부지", "addr": "충남 아산시 음봉면 신수리 406 외", "scale": "토지 32,000평 (공장허가 완료)", "price": "매가 89.6억 (평당 28만)", "debt": "협의", "real": "토목 조경석 가치", "want": "공장허가 완료 부지 처분", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0035", "g": "정밀", "t": "주택·다가구", "reg": "경기", "name": "성남 태평동 코너 상가주택 통건물", "addr": "경기 성남시 수정구 태평동 코너 (상세 지번 유선확인)", "scale": "대지 22평 건물 55평 (지하1~3층)", "price": "교환 10.4억 (매매 9.95억)", "debt": "전세 5.7억", "real": "실투자 4.25억", "want": "**전세 낀 1.8억 이하 빌라 또는 \"전원주택\" 교환 + 잔금**", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0036", "g": "정밀", "t": "토지·임야", "reg": "경기", "name": "용인 처인구 양지면 평창리 임야", "addr": "경기 용인시 처인구 양지면 평창리 (지번 유선확인, 도로 접)", "scale": "임야 178평 (차량 진입로 확보)", "price": "교환 1.3억 (네고 협의)", "debt": "융자 없음 (0원)", "real": "에쿼티 1.3억", "want": "융자 없는 부동산 맞교환 희망 (주택 제외, 현금 회수 희망)", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0037", "g": "정밀", "t": "공장·창고", "reg": "경기", "name": "김포 월곶면 고막리 과자공장", "addr": "경기 김포시 월곶면 고막리 일대 (지번 유선확인, 2종근생)", "scale": "대지 685평 건물 134평", "price": "매가 21.0억", "debt": "융자 15.0억", "real": "실에쿼티 6.0억", "want": "**전국 토지와 맞교환 희망** (공장 매도 후 토지 전환)", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0038", "g": "정밀", "t": "주택·다가구", "reg": "충남", "name": "충남 홍성 상가원룸 통건물", "addr": "충남 홍성군 홍성읍 고암리 일대 (터미널 인접 신축 상가원룸)", "scale": "대지 123평 건물 290평 (5층)", "price": "매가 21.0억 (초급매)", "debt": "융자 10.2억 보 5.0억", "real": "실투자 5.8억 (월세 790만)", "want": "**전국 모든 부동산 맞교환 가능** (소유주 건강상 초급처분)", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0039", "g": "정밀", "t": "기타", "reg": "경기", "name": "일산 사리현동 타운하우스", "addr": "경기 고양시 일산동구 사리현동 일대 (지번 유선확인, 1~3층)", "scale": "대지 47평 건물 27평", "price": "매가 2.6억", "debt": "융자 1.4억", "real": "실현금 1.2억", "want": "**전국 모든 부동산 맞교환 가능**", "src": "대표님 파이프라인 정밀 분석", "date": "11.06"}, {"no": "E0040", "g": "정밀", "t": "상가·빌딩", "reg": "부산", "name": "당진 초락도리 주유소·근생 5,040평", "addr": "충남 당진시 석문면 초락도리 204-5, 204-6 (북부산업로 3550, 석문파워주유소)", "scale": "대지 5,040평 (주유소 3800+근생 1200)", "price": "교환 60.0억 (실가치 60억대)", "debt": "융자 28.0억 보 11.0억", "real": "총채무 39억 (실현금 6~9억 선)", "want": "매달 이자 1,400만 부담 매도자 결핍 ➡️ 45~48억 후려치기 인수", "src": "대표님 파이프라인 정밀 분석", "date": "11.05"}, {"no": "E0041", "g": "정밀", "t": "기타", "reg": "경기", "name": "포천 영중면 양문리 스마트팜 단지", "addr": "경기 포천시 영중면 양문리 681-4, 681-5, 681-6 (7m 연동하우스 30동 수경재배)", "scale": "대지 8,500평 하우스 30동", "price": "감정 25.0억 (투입원가 27억)", "debt": "농협융자 13.0억", "real": "순에쿼티 12.0억", "want": "농취증 부담 ➡️ **농업회사법인 통인수 우회** 1:1 맞교환", "src": "대표님 파이프라인 정밀 분석", "date": "11.05"}, {"no": "E0042", "g": "정밀", "t": "토지·임야", "reg": "경기", "name": "용인 기흥구 보라동 대형 자연녹지", "addr": "경기 용인시 기흥구 보라동 159-1 일대 (주변 상권모닝사이드아파트 남측)", "scale": "토지 3,617평 (공시지가 88.5억)", "price": "-", "debt": "입금 55.0억 (시세의 반값)", "real": "진입로 맹지 결함으로 폭락 ➡️ 남측 자투리 도로개설로 120억 점프", "want": "**대표님 접수처**", "src": "대표님 파이프라인 정밀 분석", "date": "11.05"}, {"no": "E0043", "g": "정밀", "t": "주택·다가구", "reg": "서울", "name": "서울 서대문구 홍은동 다가구 급매", "addr": "서울 서대문구 홍은동 191-72 (인근 191-67 평당 1,911만 실거래)", "scale": "대지 49평 다가구 통매", "price": "매가 6.0억 (시세 9.5억)", "debt": "-", "real": "시세차익 3.5억", "want": "**\"지방 이주로 급처분 희망\"** ➡️ 지방 자산 맞교환 최적 패", "src": "대표님 파이프라인 정밀 분석", "date": "11.05"}, {"no": "E0044", "g": "정밀", "t": "기타", "reg": "제주", "name": "제주 조천읍 선흘리 온천·파크골프", "addr": "제주 제주시 조천읍 선흘리 산 일대 (온천 1일 300톤, 골프 27홀 인허가)", "scale": "토지 25,600평", "price": "교환 120.0억 (기투자 100억)", "debt": "융자 39.0억", "real": "에쿼티 81.0억", "want": "관광진흥기금 200억 신청 연계 (건축허가+담보 조건부)", "src": "대표님 파이프라인 정밀 분석", "date": "11.05"}, {"no": "E0045", "g": "정밀", "t": "토지·임야", "reg": "경기", "name": "양주 옥정동 추모공원 잔여 분양권", "addr": "경기 양주시 옥정동 864-98 (조계종 안국사 봉안당 부지)", "scale": "토지 650평 (2,570기 중 1,870기)", "price": "입금 20.0억 (토지호가 50억)", "debt": "-", "real": "분양가치 90억대", "want": "조계종 '안국사' 사찰 인허가 승계 필수 ➡️ 서류 미비 시 리스크", "src": "대표님 파이프라인 정밀 분석", "date": "11.05"}, {"no": "E0046", "g": "원문", "t": "주택·다가구", "reg": "전국", "name": "미용실과.>>>> 전원주택교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.12 (게시글 6795394)", "date": "11.12"}, {"no": "E0047", "g": "원문", "t": "토지·임야", "reg": "제주", "name": "제주도 제주시 한경면 두모리 주택건축단지토지 매매나 교환가능", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.12 (게시글 6795384)", "date": "11.12"}, {"no": "E0048", "g": "원문", "t": "토지·임야", "reg": "강원", "name": "[강원 원주] 토지 임야 교환 관심 있으신 분 클릭!", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.12 (게시글 6795378)", "date": "11.12"}, {"no": "E0049", "g": "원문", "t": "상가·빌딩", "reg": "전국", "name": "동두천시 메티컬빌딩건물 매매교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.12 (게시글 6795154)", "date": "11.12"}, {"no": "E0050", "g": "원문", "t": "기타", "reg": "전국", "name": "급 교환 또는 매매 합니다!!! 주인직접", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.12 (게시글 6794990)", "date": "11.12"}, {"no": "E0051", "g": "원문", "t": "상가·빌딩", "reg": "전국", "name": "전국 부동산 교환매물(토지·상가·주택 교환가능합니다.)", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.12 (게시글 6794971)", "date": "11.12"}, {"no": "E0052", "g": "원문", "t": "숙박·호텔", "reg": "전국", "name": "속초 호텔 1개 호실 매매 또는 교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.11 (게시글 6794866)", "date": "11.11"}, {"no": "E0053", "g": "원문", "t": "상가·빌딩", "reg": "전국", "name": "문정동 상가 매매및교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.11 (게시글 6794384)", "date": "11.11"}, {"no": "E0054", "g": "원문", "t": "토지·임야", "reg": "전국", "name": "포천 최고의 전원별장 다용도", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.11 (게시글 6794383)", "date": "11.11"}, {"no": "E0055", "g": "원문", "t": "토지·임야", "reg": "강원", "name": "전원부지및 투자로 추천 강원 사북", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.11 (게시글 6794382)", "date": "11.11"}, {"no": "E0056", "g": "원문", "t": "토지·임야", "reg": "전국", "name": "[매매·교환] 횡성 하궁리 임야 3만 510평 (계획관리 10,694평)", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.10 (게시글 6794277)", "date": "11.10"}, {"no": "E0057", "g": "원문", "t": "오피스텔", "reg": "부산", "name": "부산 연산동 교통요지 오피스텔 급매", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.10 (게시글 6794086)", "date": "11.10"}, {"no": "E0058", "g": "원문", "t": "상가·빌딩", "reg": "전국", "name": "수익용상가교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.10 (게시글 6794050)", "date": "11.10"}, {"no": "E0059", "g": "원문", "t": "토지·임야", "reg": "전국", "name": "역세권 자연녹지 291평 (융자무)", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.10 (게시글 6793998)", "date": "11.10"}, {"no": "E0060", "g": "원문", "t": "상가·빌딩", "reg": "전국", "name": "수익성 빌딩 엘리베이터유 재래시장내 만실 32억원 50% 현금 50% 맞교환", "addr": "", "scale": "", "price": "32억", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.10 (게시글 6793832)", "date": "11.10"}, {"no": "E0061", "g": "원문", "t": "주택·다가구", "reg": "전국", "name": "주인직거래 14억짜리 평택 상가주택 초초 급매 010 7922 9027", "addr": "", "scale": "", "price": "14억", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.10 (게시글 6793825)", "date": "11.10"}, {"no": "E0062", "g": "원문", "t": "숙박·호텔", "reg": "전국", "name": "호텔 수익률 최고 ! 통영시 상업지 중심상권 8층 호텔 매매.교환환영", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793713)", "date": "11.09"}, {"no": "E0063", "g": "원문", "t": "토지·임야", "reg": "전국", "name": "구미 약수터 있는 임야 교환 잔가 상관 없이 협의가능함.", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793682)", "date": "11.09"}, {"no": "E0064", "g": "원문", "t": "토지·임야", "reg": "전국", "name": "충주시 목벌동 도로접 생산관리 2,056m2 (융자무) 교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793557)", "date": "11.09"}, {"no": "E0065", "g": "원문", "t": "상가·빌딩", "reg": "대구", "name": "대구 달성군 4차선접 일반상업지역 감정가이하 1,886m2 교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793556)", "date": "11.09"}, {"no": "E0066", "g": "원문", "t": "공장·창고", "reg": "전국", "name": "울주군 2차선접 일반공업지역 공장용지 감정가이하 9,465.7m2 교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793554)", "date": "11.09"}, {"no": "E0067", "g": "원문", "t": "토지·임야", "reg": "전국", "name": "원주시 4차선접 계획관리 잡종지/임야 공시지가/감정가이하 교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793553)", "date": "11.09"}, {"no": "E0068", "g": "원문", "t": "공장·창고", "reg": "경기", "name": "경기 여주지역등 창고부지 공장건축등 가능 매매 교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793552)", "date": "11.09"}, {"no": "E0069", "g": "원문", "t": "숙박·호텔", "reg": "전국", "name": "여주시 천송동 신륵사 입구 여관 교환 13억", "addr": "", "scale": "", "price": "13억", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793545)", "date": "11.09"}, {"no": "E0070", "g": "원문", "t": "숙박·호텔", "reg": "서울", "name": "서울 역세권 아파트 + 모텔 교환합니다", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793427)", "date": "11.09"}, {"no": "E0071", "g": "원문", "t": "주택·다가구", "reg": "전국", "name": "전원주택 574/29평 매매 및 교환 (융자 무)", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793404)", "date": "11.09"}, {"no": "E0072", "g": "원문", "t": "주택·다가구", "reg": "서울", "name": "용인동백 상가 1층 200평 교환 경기 남부 임야 또는 서울아파트", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793319)", "date": "11.09"}, {"no": "E0073", "g": "원문", "t": "주택·다가구", "reg": "광주", "name": "광주 상무역세권 아파트 32평 3억원 현금시 일부인하추진 상가 토지등 맞교환 차액 4천5백 급매", "addr": "", "scale": "", "price": "3억", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793312)", "date": "11.09"}, {"no": "E0074", "g": "원문", "t": "상가·빌딩", "reg": "전국", "name": "연 3,000만 나오는 부여 포도농장! 수도권 상가·빌라 대출 2억 안고 귀농", "addr": "", "scale": "", "price": "3,000만", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.09 (게시글 6793298)", "date": "11.09"}, {"no": "E0075", "g": "원문", "t": "주택·다가구", "reg": "전국", "name": "토지교환=아파트,빌라,상가,임차권 등", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.07 (게시글 6792921)", "date": "11.07"}, {"no": "E0076", "g": "원문", "t": "상가·빌딩", "reg": "서울", "name": "서울 돈버는 상가랑 교환하세요(주인운영중)", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.07 (게시글 6792852)", "date": "11.07"}, {"no": "E0077", "g": "원문", "t": "기타", "reg": "전국", "name": "<급> 교환 또는 매매 진행합니다!!! 주인직접 대출전액승계!!", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.07 (게시글 6792784)", "date": "11.07"}, {"no": "E0078", "g": "원문", "t": "기타", "reg": "전국", "name": "강화도 석모대교&파노라마오션뷰 평당95", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.06 (게시글 6792674)", "date": "11.06"}, {"no": "E0079", "g": "원문", "t": "숙박·호텔", "reg": "전국", "name": "바닷가 최 일선 카페.펜션부지 교환 매매", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.06 (게시글 6792652)", "date": "11.06"}, {"no": "E0080", "g": "원문", "t": "주택·다가구", "reg": "부산", "name": "부산 북구 구포동 역세권 7층 원룸 매매,교환 월세 838만원 고수익형 건물", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.06 (게시글 6792628)", "date": "11.06"}, {"no": "E0081", "g": "원문", "t": "기타", "reg": "전국", "name": "전국의 부동산 교환매물 접수 받습니다", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.06 (게시글 6792373)", "date": "11.06"}, {"no": "E0082", "g": "원문", "t": "기타", "reg": "전국", "name": "양평 주택 1억대 주변 시세 절반? 계곡 바로 앞 30양평 2층 신축 주택 1억대", "addr": "", "scale": "", "price": "1억", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.06 (게시글 6792340)", "date": "11.06"}, {"no": "E0083", "g": "원문", "t": "토지·임야", "reg": "전국", "name": "용인시 처인구 소액 토지교환", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.05 (게시글 6792114)", "date": "11.05"}, {"no": "E0084", "g": "원문", "t": "주택·다가구", "reg": "경기", "name": "[매매/교환] 경기도성남시 재개발상가주택통건물 코인빨래방운영중 교환은 전세끼고1억8000만이하빌라 전원주택교환과잔금", "addr": "", "scale": "", "price": "1억", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.05 (게시글 6792105)", "date": "11.05"}, {"no": "E0085", "g": "원문", "t": "상가·빌딩", "reg": "경기", "name": "경기도구리시 집합상가1층", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.05 (게시글 6792078)", "date": "11.05"}, {"no": "E0086", "g": "원문", "t": "토지·임야", "reg": "전국", "name": "오피랑 토지랑 교환 소액월세나오는 오피예요", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.05 (게시글 6792068)", "date": "11.05"}, {"no": "E0087", "g": "원문", "t": "기타", "reg": "전국", "name": "교환요망.", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.05 (게시글 6791900)", "date": "11.05"}, {"no": "E0088", "g": "원문", "t": "상가·빌딩", "reg": "전국", "name": "화성시청근방 상가건물 교환원함", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.05 (게시글 6791838)", "date": "11.05"}, {"no": "E0089", "g": "원문", "t": "주택·다가구", "reg": "전국", "name": "원룸교환매매 수익성최고", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.05 (게시글 6791830)", "date": "11.05"}, {"no": "E0090", "g": "원문", "t": "상가·빌딩", "reg": "전국", "name": "200세대 대로변 상가 교환합니다.", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.05 (게시글 6791788)", "date": "11.05"}, {"no": "E0091", "g": "원문", "t": "숙박·호텔", "reg": "전국", "name": "(직) 펜션*쉼터*카페 최고자리", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.04 (게시글 6791705)", "date": "11.04"}, {"no": "E0092", "g": "원문", "t": "주택·다가구", "reg": "전국", "name": "(직-교환) 남한강뷰/신도시뷰/골프장뷰 유일한 전원주택을 교환합니다", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.04 (게시글 6791698)", "date": "11.04"}, {"no": "E0093", "g": "원문", "t": "기타", "reg": "전국", "name": "미아동 단독건물 교환원함", "addr": "", "scale": "", "price": "", "debt": "", "real": "", "want": "", "src": "카페 '급매물과 반값매매 · 부동산 교환합시다' 2026.11.04 (게시글 6791645)", "date": "11.04"}];
+let curT = '전체', q = '';
+const $ = s => document.querySelector(s);
+const esc = s => (s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function shortMoney(v){
+  if(!v) return '-';
+  return v.length > 30 ? v.slice(0,30) + '…' : v;
+}
+
+function render(){
+  const kw = q.trim().toLowerCase();
+  const list = DATA.filter(d => {
+    if(curT !== '전체' && d.t !== curT) return false;
+    if(!kw) return true;
+    return (d.name + ' ' + d.addr + ' ' + d.reg + ' ' + d.t + ' ' + d.want).toLowerCase().includes(kw);
+  });
+  $('#cnt').innerHTML = kw || curT !== '전체'
+    ? `조건에 맞는 매물 <b>${list.length}건</b> · 전체 ${DATA.length}건`
+    : `전체 <b>${DATA.length}건</b> · 교환가와 실인수금을 그대로 표기했습니다`;
+  if(!list.length){
+    $('#list').innerHTML = `<div class="empty">조건에 맞는 매물이 없습니다.<br>다른 지역이나 유형으로 찾아보세요.</div>`;
+    return;
+  }
+  $('#list').innerHTML = list.map((d,i) => `
+    <div class="card" data-i="${DATA.indexOf(d)}">
+      <div class="ctop">
+        <span class="tag">${esc(d.t)}</span>
+        <span class="tag reg">${esc(d.reg)}</span>
+        <span class="tag g">${esc(d.g)}</span>
+      </div>
+      <div class="cname">${esc(d.name)}</div>
+      <div class="caddr">${esc(d.addr)}</div>
+      <div class="cmoney">
+        <div class="mbox"><span>교환가</span><b>${esc(shortMoney(d.price))}</b></div>
+        <div class="mbox hi"><span>실인수금</span><b>${esc(shortMoney(d.real))}</b></div>
+      </div>
+      <div class="cwant"><b>희망</b>${esc(d.want || '협의')}</div>
+      <div class="more">권리·조건 자세히 보기 ▾</div>
+    </div>`).join('');
+  document.querySelectorAll('.card').forEach(el => {
+    el.onclick = () => openSheet(+el.dataset.i);
+  });
+}
+
+function openSheet(i){
+  const d = DATA[i];
+  const rows = [
+    ['유형', d.t], ['지역', d.reg], ['주소', d.addr],
+    ['규모', d.scale], ['교환가', d.price], ['부채', d.debt], ['실인수금', d.real],
+    ['희망 조건', d.want], ['구분', d.g], ['접수일', d.date]
+  ].filter(r => r[1]);
+  $('#sheetBody').innerHTML = `
+    <div class="grab"></div>
+    <button class="sclose" id="sx">✕</button>
+    <span class="tag">${esc(d.t)}</span> <span class="tag reg">${esc(d.reg)}</span>
+    <div class="sname">${esc(d.name)}</div>
+    <div class="saddr">${esc(d.addr)}</div>
+    <div class="rows">${rows.map(r => `<div class="rw"><div class="k">${r[0]}</div><div class="v">${esc(r[1])}</div></div>`).join('')}</div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <a class="btn ghost" href="tel:010-2002-2899" style="display:grid;place-items:center;text-decoration:none;flex:0 0 116px">전화</a>
+      <a class="btn main" href="sms:010-2002-2899?body=${encodeURIComponent('[교환 문의] ' + d.no + ' ' + d.name.slice(0,28))}" style="display:grid;place-items:center;text-decoration:none">문자로 조건 문의</a>
+    </div>
+    <div class="foot"><b>매물번호 ${esc(d.no)}</b> · 표기된 교환가·실인수금은 접수 시점 기준이며, 현장 확인과 권리분석 후 최종 조건이 정해집니다.</div>`;
+  $('#sheet').classList.add('on');
+  $('#sx').onclick = closeSheet;
+  document.body.style.overflow = 'hidden';
+}
+function closeSheet(){
+  $('#sheet').classList.remove('on');
+  document.body.style.overflow = '';
+}
+$('#sheet').onclick = e => { if(e.target.id === 'sheet') closeSheet(); };
+$('#q').oninput = e => { q = e.target.value; render(); };
+$('#clear').onclick = () => { q = ''; $('#q').value = ''; render(); };
+document.querySelectorAll('#chips .chip').forEach(c => {
+  c.onclick = () => {
+    document.querySelectorAll('#chips .chip').forEach(x => x.classList.remove('on'));
+    c.classList.add('on'); curT = c.dataset.t; render();
+  };
+});
+$('#askBtn').onclick = () => {
+  location.href = 'sms:010-2002-2899?body=' + encodeURIComponent('[교환 문의] 조건이 맞는 매물을 찾고 있습니다.');
+};
+render();
+</script>
+</body>
+</html>

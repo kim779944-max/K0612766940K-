@@ -1,0 +1,27 @@
+{
+"saycap": {"title":"세이캡 SayCap", "url":"autooneclick.com/saycap", "end1":"찍고 말하면 자막, 단어 하나로 검색", "cues":[
+ {"id":"y01","kind":"model","clip":"short3_saycap_00","text":"세이캡 카메라, 알고 계신가요?"},
+ {"id":"y02","kind":"photos","text":"폰 속 수천 장 사진, 그 한 장 찾으려고 아직도 손가락으로 뒤지시나요?"},
+ {"id":"y03","kind":"model","clip":"short2_theview_00","text":"2016년 특허 그대로, 찍고 말하면 끝입니다."},
+ {"id":"y04","frame":"y_home","text":"새 세이캡은 [tap]내 사진 불러오기, 한 번이면 됩니다.","key":"내 사진 불러오기","hl":[0],"tap":1},
+ {"id":"y05","frame":"y_editor","text":"사진이 열리면 [tap]마이크를 누르고 말하세요.","tap":0},
+ {"id":"y06","frame":"y_talk1","seq":["y_talk1","y_talk2","y_talk3"],"text":"말하는 동안 주황 이퀄라이저가 움직이고, 자막이 바로 새겨집니다.","hl":[0]},
+ {"id":"y07","frame":"y_talk3","text":"[tap]저장을 누르면,","tap":1},
+ {"id":"y08","frame":"y_saved","text":"저장한 뒤에도 [tap]수정 버튼으로 언제든 고칠 수 있어요.","key":"수정","hl":[0],"tap":1},
+ {"id":"y09","frame":"y_gallery","text":"몇 달 뒤엔 [tap]검색창에 단어 하나, 큰방.","key":"검색창","tap":1},
+ {"id":"y10","frame":"y_search","text":"수천 장 중에서 그 사진만 한 방에 찾아 줍니다.","hl":[0,1]},
+ {"id":"y11","kind":"end","text":"찍고 말하면 자막, 단어 하나로 검색. 세이캡."}
+]},
+"thescan": {"title":"더스캔 TheScan", "url":"autooneclick.com/thescan", "end1":"종이 한 장도, 백 장도 폰 하나로", "cues":[
+ {"id":"s01","kind":"model","clip":"short1_converter_00","text":"종이 서류, 아직도 스캐너 찾으세요?"},
+ {"id":"s02","frame":"t_home","text":"더스캔은 모서리 맞추기도, 초점 기다리기도 없습니다. [tap]찍기만 누르세요.","key":"찍기","hl":[0],"tap":1},
+ {"id":"s03","frame":"t_prog","text":"찍는 즉시 반듯하게 펴고, 그림자까지 지웁니다.","hl":[0]},
+ {"id":"s04","frame":"t_grid","text":"세 장이 바로 쌓였죠. 필요한 장만 쓰려면 [tap]분리하기.","key":"분리하기","hl":[0],"tap":1},
+ {"id":"s05","frame":"t_split","text":"원하는 페이지만 골라 [tap]따로 저장합니다.","key":"따로 저장","hl":[0],"tap":1},
+ {"id":"s06","frame":"t_grid2","text":"여러 장을 한 문서로 묶을 땐 [tap]연결하기.","key":"연결하기","tap":0},
+ {"id":"s07","frame":"t_join","text":"PDF 한 권을 고르고 [tap]합치기를 누르면,","hl":[0],"tap":1},
+ {"id":"s08","frame":"t_pdf","text":"세 쪽짜리 PDF가 바로 완성됩니다.","hl":[0]},
+ {"id":"s09","kind":"model","clip":"short2_theview_00","text":"종이 한 장도, 백 장도 폰 하나로 끝."},
+ {"id":"s10","kind":"end","text":"설치 없이 지금 무료로, 더스캔."}
+]}
+}

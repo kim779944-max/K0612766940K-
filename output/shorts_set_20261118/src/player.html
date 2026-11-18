@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<title>KTS 1세트 숏츠 플레이어 (모델 실사 클립 교차 편집)</title>
+<style>
+html,body{margin:0;background:#05080f;color:#fff;font-family:"Malgun Gothic",sans-serif}
+#cv{display:block;width:540px;height:960px;margin:10px auto;background:#0A1128}
+#ui{text-align:center;font-size:14px}
+button{font:inherit;padding:8px 16px;margin:4px;border-radius:8px;border:1px solid #FF6B00;background:#1a2340;color:#fff;cursor:pointer}
+</style></head>
+<body>
+<div id="ui">
+  <button onclick="go('saycap')">세이캡</button><button onclick="go('thescan')">더스캔</button>
+  <button id="play">▶ 재생</button><button id="rec">● 녹화(MP4 저장)</button> <span id="st"></span>
+</div>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<script>
+/* ===== 2026-11-18 1세트 규격 =====
+ * - 공식 모델 실사 클립(assets/model_clips/*.mp4)과 공식 모델 사진(model_friends_23_final.png)만 사용. 일러스트 캐릭터(drawHost) 없음.
+ * - 모델 장면: 원본 1080x1920 클립을 그대로(1.00배) 전체 화면. 클립에 박힌 원래 문구는 하단 자막 상자로 덮고 지금 나레이션을 씀.
+ * - 앱 장면: 실제 앱 화면(390x844) 전체를 폰 틀에 표시, 확대는 탭 순간 최대 1.10배. 왼쪽 아래 원형 창에 모델 실사 클립이 계속 재생.
+ * - 나레이션 1:1 싱크: 컷 경계 = 나레이션 WAV 길이, 탭 = SAPI 북마크. 모든 그림은 AudioContext 시계 기준.
+ */
+const W = 1080, H = 1920, OR = '#FF6B00';
+const SCR_W = 560, K = SCR_W / 390, SCR_H = Math.round(844 * K);
+const BEZ = 16, PH_W = SCR_W + BEZ * 2, PH_H = SCR_H + BEZ * 2;
+const PH_X = (W - PH_W) / 2, PH_Y = 318;
+const TOP_LIMIT = 300, BOT_LIMIT = 1752, MAXZ = 1.10;
+const GAP = 0.12, LEAD = 0.35, TAIL = 1.4;
+const cv = document.getElementById('cv'), g = cv.getContext('2d');
+const qs = new URLSearchParams(location.search);
+let S = null, IMG = {}, VID = {}, PIP = null, MODEL = null, THUMBS = [], ctx = null, BUF = [], TL = null, running = false, analyser = null, dest = null, ampArr = null, curCueId = null;
+
+function go(name){ location.search = '?s=' + name; }
+function loadScript(src){ return new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+function b64ToU8(b64){ const bin = atob(b64); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+const loadImg = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.src = src; });
+function makeVideo(url, loop){
+  return new Promise(ok => { const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.loop = !!loop; v.preload = 'auto';
+    v.onloadeddata = () => ok(v); v.src = url; v.load(); });
+}
+
+async function init(){
+  const name = qs.get('s') || 'saycap';
+  await loadScript('data_' + name + '.js');
+  S = window.SHORT;
+  for (const [k, src] of Object.entries(S.frames)) IMG[k] = await loadImg(src);
+  MODEL = await loadImg(S.model);
+  THUMBS = await Promise.all(S.thumbs.map(loadImg));
+  for (const [k, b64] of Object.entries(S.clips)){
+    const url = URL.createObjectURL(new Blob([b64ToU8(b64)], {type: 'video/mp4'}));
+    VID[k] = await makeVideo(url, false);
+    if (!PIP) PIP = await makeVideo(url, true);       // 앱 장면 왼쪽 아래 원형 창 (모델 실사 클립 반복)
+  }
+  ctx = new AudioContext({sampleRate: 48000});
+  dest = ctx.createMediaStreamDestination();
+  analyser = ctx.createAnalyser(); analyser.fftSize = 1024; ampArr = new Float32Array(analyser.fftSize);
+  for (const c of S.cues) BUF.push(await ctx.decodeAudioData(b64ToU8(c.wav).buffer));
+  let t = LEAD; const cues = [];
+  S.cues.forEach((c, i) => {
+    const d = BUF[i].duration;
+    const cue = {...c, kind: c.kind || 'app', start: t, end: t + d, buf: BUF[i]};
+    if (c.tap != null && c.tapMs >= 0){
+      const tm = Math.min(c.tapMs / 1000, Math.max(0, d - 0.7));              // 북마크가 문장 끝을 넘으면 끝 0.7초 전으로
+      cue.tapT = t + Math.max(tm + 0.25, 0.45);
+    }
+    cue.hold = cue.tapT != null ? Math.max(cue.end, cue.tapT + 0.45) : cue.end;
+    if (cue.kind === 'model' || cue.kind === 'end') cue.hold = Math.max(cue.hold, cue.start + 2.4);
+    cues.push(cue); t = cue.hold + GAP;
+  });
+  TL = {cues, total: t - GAP + TAIL};
+  window.CUESHEET = cues.map(c => ({id: c.id, kind: c.kind, clip: c.clip || null, start: +c.start.toFixed(2), end: +c.end.toFixed(2), cut: +(c.hold + GAP).toFixed(2), tapAt: c.tapT ? +c.tapT.toFixed(2) : null, frame: c.seq ? c.seq.join('>') : (c.frame || null), text: c.text.replace('[tap]', '')}));
+  window.TOTAL = TL.total;
+  document.getElementById('st').textContent = S.title + ' · ' + TL.total.toFixed(1) + '초';
+  draw(0);
+  window.READY = true;
+}
+
+function cueAt(t){ const cs = TL.cues; let cur = cs[0]; for (const c of cs) if (t >= c.start - GAP) cur = c; return cur; }
+function rectOf(frame, idx){ const r = (S.rects[frame] || [])[idx]; return r || null; }
+function frameOf(c, t){
+  if (!c.seq) return c.frame;
+  const span = (c.hold - c.start) / c.seq.length;
+  return c.seq[Math.max(0, Math.min(c.seq.length - 1, Math.floor((t - c.start) / span)))];
+}
+function toCanvas(x, y){ return [PH_X + BEZ + x * K, PH_Y + BEZ + y * K]; }
+
+function camAt(t){
+  const c = cueAt(t);
+  let z = 1, px = W / 2, py = PH_Y + PH_H / 2;
+  if (c.kind === 'app' && c.tapT != null){
+    const r = rectOf(c.frame, c.tap);
+    if (r){
+      const k = ease((t - (c.tapT - 1.0)) / 0.7) * (1 - ease((t - (c.hold + 0.05)) / 0.3));
+      z = 1 + (MAXZ - 1) * k;
+      [px, py] = toCanvas(r.x + r.w / 2, r.y + r.h / 2);
+    }
+  }
+  let x0 = px + (PH_X - px) * z, y0 = py + (PH_Y - py) * z, w = PH_W * z, h = PH_H * z;
+  let dx = 0, dy = 0;
+  if (x0 < 8) dx = 8 - x0; if (x0 + w > W - 8) dx = (W - 8) - (x0 + w);
+  if (y0 < TOP_LIMIT) dy = TOP_LIMIT - y0; if (y0 + h > BOT_LIMIT) dy = BOT_LIMIT - (y0 + h);
+  return {z, px, py, dx, dy};
+}
+function applyCam(cam, x, y){ return [cam.px + (x - cam.px) * cam.z + cam.dx, cam.py + (y - cam.py) * cam.z + cam.dy]; }
+function rr(x, y, w, h, r){ g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+
+function drawBg(){
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#0A1128'); gr.addColorStop(1, '#0d1838');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const rg = g.createRadialGradient(W * 0.85, 120, 10, W * 0.85, 120, 700); rg.addColorStop(0, 'rgba(255,107,0,.16)'); rg.addColorStop(1, 'rgba(255,107,0,0)');
+  g.fillStyle = rg; g.fillRect(0, 0, W, H);
+}
+
+/* 폰 틀 + 내용(painter: 화면 안쪽을 그리는 함수) */
+function phoneShell(cam, painter){
+  const [x0, y0] = applyCam(cam, PH_X, PH_Y);
+  const w = PH_W * cam.z, h = PH_H * cam.z, bz = BEZ * cam.z;
+  g.save(); g.shadowColor = 'rgba(0,0,0,.6)'; g.shadowBlur = 50; g.shadowOffsetY = 18;
+  rr(x0, y0, w, h, 64 * cam.z); g.fillStyle = '#1b2236'; g.fill(); g.restore();
+  rr(x0, y0, w, h, 64 * cam.z); g.lineWidth = 3; g.strokeStyle = '#3a4566'; g.stroke();
+  g.save(); rr(x0 + bz, y0 + bz, w - bz * 2, h - bz * 2, 50 * cam.z); g.clip();
+  painter(x0 + bz, y0 + bz, w - bz * 2, h - bz * 2);
+  g.restore();
+}
+function drawPhone(t, cam){
+  const c = cueAt(t), cs = TL.cues, i = cs.indexOf(c), prev = i > 0 ? cs[i - 1] : null;
+  const fr = frameOf(c, t);
+  const prevFr = prev && prev.kind === 'app' ? frameOf(prev, prev.hold) : null;
+  const fade = prevFr && prevFr !== fr ? ease((t - (c.start - GAP)) / 0.06) : 1;
+  phoneShell(cam, (x, y, w, h) => {
+    if (prevFr && fade < 1){ g.drawImage(IMG[prevFr], x, y, w, h); g.globalAlpha = fade; }
+    g.drawImage(IMG[fr], x, y, w, h); g.globalAlpha = 1;
+  });
+}
+
+/* '수천 장 사진첩' — 일반 폰 갤러리를 손가락으로 끝없이 넘기는 답답함 (세이캡 화면 아님) */
+function drawPhotos(t){
+  const c = cueAt(t), lt = Math.max(0, t - c.start);
+  const cam = {z: 1, px: W / 2, py: 0, dx: 0, dy: 0};
+  phoneShell(cam, (x, y, w, h) => {
+    g.fillStyle = '#000'; g.fillRect(x, y, w, h);
+    const cols = 4, gap = 4, cw = (w - gap * (cols - 1)) / cols, top = y + 150;
+    const scroll = lt * 2200 + Math.sin(lt * 9) * 40;                       // 휙휙 넘기다 멈칫
+    const row0 = Math.floor(scroll / (cw + gap));
+    g.save(); g.beginPath(); g.rect(x, top, w, h - 150); g.clip();
+    for (let r = row0 - 1; r < row0 + Math.ceil(h / (cw + gap)) + 2; r++){
+      for (let k = 0; k < cols; k++){
+        const n = Math.abs(r * 7 + k * 13) % 997, im = THUMBS[n % THUMBS.length];
+        const s = 0.35 + (n % 5) * 0.1, sw = im.width * s, sh = im.width * s;
+        const sx = (n * 37) % Math.max(1, im.width - sw), sy = (n * 53) % Math.max(1, im.height - sh);
+        const dx = x + k * (cw + gap), dy = top + r * (cw + gap) - scroll;
+        g.drawImage(im, sx, sy, sw, sh, dx, dy, cw, cw);
+        g.fillStyle = `hsla(${(n * 47) % 360},40%,${30 + (n % 3) * 15}%,.28)`; g.fillRect(dx, dy, cw, cw);
+      }
+    }
+    g.restore();
+    g.fillStyle = '#0b0b0f'; g.fillRect(x, y, w, 150);
+    g.fillStyle = '#fff'; g.font = '800 40px "Malgun Gothic"'; g.textBaseline = 'middle'; g.fillText('사진', x + 30, y + 70);
+    const cnt = Math.round(3482 * ease(lt / 1.2)).toLocaleString('ko-KR') + '장';
+    g.fillStyle = '#9aa3b5'; g.font = '700 30px "Malgun Gothic"'; g.fillText(cnt, x + 30, y + 118);
+    // 스크롤바와 '어디 있지?' 말풍선
+    g.fillStyle = 'rgba(255,255,255,.55)'; rr(x + w - 14, top + ((scroll / 40) % (h - 260)), 8, 90, 4); g.fill();
+    const a = ease((lt - 1.4) / 0.4);
+    if (a > 0){ g.save(); g.globalAlpha = a; g.fillStyle = 'rgba(10,17,40,.88)'; rr(x + w / 2 - 250, y + h / 2 - 70, 500, 140, 30); g.fill();
+      g.lineWidth = 4; g.strokeStyle = OR; g.stroke(); g.fillStyle = '#fff'; g.font = '900 46px "Malgun Gothic"';
+      const q = '그 사진 어디 있지?'; g.fillText(q, x + w / 2 - g.measureText(q).width / 2, y + h / 2); g.restore(); }
+  });
+}
+
+function drawHl(t, cam){
+  const c = cueAt(t); if (c.kind !== 'app' || !c.hl) return;
+  const a = ease((t - c.start) / 0.3) * (1 - ease((t - c.end) / 0.15)); if (a <= 0) return;
+  c.hl.forEach(idx => {
+    const r = rectOf(c.frame, idx); if (!r) return;
+    let [x1, y1] = applyCam(cam, ...toCanvas(r.x, r.y)), [x2, y2] = applyCam(cam, ...toCanvas(r.x + r.w, r.y + r.h));
+    const pad = 10 + 3 * Math.sin(t * 6);
+    x1 = Math.max(x1 - pad, 4); y1 -= pad; x2 = Math.min(x2 + pad, W - 4); y2 += pad;
+    g.save(); g.globalAlpha = a; g.shadowColor = OR; g.shadowBlur = 24;
+    rr(x1, y1, x2 - x1, y2 - y1, 22); g.lineWidth = 7; g.strokeStyle = OR; g.stroke(); g.restore();
+  });
+}
+function drawTap(t, cam){
+  const c = cueAt(t); if (c.kind !== 'app' || c.tapT == null) return;
+  const r = rectOf(c.frame, c.tap); if (!r) return;
+  const [cx, cy] = applyCam(cam, ...toCanvas(r.x + r.w / 2, r.y + r.h / 2));
+  const rw = r.w * K * cam.z / 2 + 26, rh = r.h * K * cam.z / 2 + 22;
+  const a = ease((t - (c.tapT - 0.7)) / 0.25) * (1 - ease((t - (c.hold + 0.02)) / 0.12)); if (a <= 0) return;
+  g.save(); g.globalAlpha = a; g.shadowColor = OR; g.shadowBlur = 30;
+  g.beginPath(); g.ellipse(cx, cy, Math.min(rw, 520), rh, 0, 0, Math.PI * 2); g.lineWidth = 9; g.strokeStyle = OR; g.stroke(); g.restore();
+  const dt = t - c.tapT;
+  if (dt >= 0 && dt < 0.9){
+    for (let k = 0; k < 2; k++){ const d = dt - k * 0.18; if (d < 0) continue; const p = d / 0.7; if (p > 1) continue;
+      g.save(); g.globalAlpha = (1 - p) * 0.9; g.beginPath(); g.arc(cx, cy, 30 + p * 110, 0, Math.PI * 2); g.lineWidth = 8 * (1 - p) + 2; g.strokeStyle = k ? '#fff' : OR; g.stroke(); g.restore(); }
+    if (dt < 0.25){ g.save(); g.globalAlpha = 0.45 * (1 - dt / 0.25); g.beginPath(); g.arc(cx, cy, 34, 0, Math.PI * 2); g.fillStyle = OR; g.fill(); g.restore(); }
+  }
+  const m = ease((t - (c.tapT - 0.7)) / 0.55);
+  const ox = Math.min(rw * 0.3, 60), oy = Math.min(rh * 0.25, 18);
+  drawFinger(cx + ox + (1 - m) * 170, cy + oy + (1 - m) * 260, dt >= -0.05 && dt < 0.22 ? 0.88 : 1, a);
+}
+function drawFinger(x, y, s, a){
+  g.save(); g.globalAlpha = a; g.translate(x, y); g.scale(s * 1.25, s * 1.25); g.rotate(-0.18);
+  g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 16; g.shadowOffsetY = 6;
+  g.beginPath(); g.moveTo(-14, 6); g.arc(0, 6, 14, Math.PI, 0); g.lineTo(14, 58);
+  g.quadraticCurveTo(22, 48, 34, 52); g.quadraticCurveTo(44, 56, 42, 70); g.quadraticCurveTo(52, 62, 62, 68); g.quadraticCurveTo(70, 74, 66, 88);
+  g.quadraticCurveTo(76, 84, 82, 92); g.quadraticCurveTo(88, 100, 82, 130); g.quadraticCurveTo(76, 162, 46, 170); g.lineTo(2, 170);
+  g.quadraticCurveTo(-26, 150, -40, 112); g.quadraticCurveTo(-48, 92, -36, 86); g.quadraticCurveTo(-24, 82, -14, 100); g.closePath();
+  g.fillStyle = '#ffffff'; g.fill(); g.shadowColor = 'transparent'; g.lineWidth = 5; g.strokeStyle = '#111827'; g.stroke();
+  g.beginPath(); g.moveTo(14, 70); g.lineTo(14, 84); g.moveTo(42, 74); g.lineTo(42, 88); g.moveTo(66, 92); g.lineTo(66, 104); g.lineWidth = 3.5; g.stroke();
+  g.restore();
+}
+
+function wrapText(txt, maxW){
+  const words = txt.split(' '); const lines = []; let cur = '';
+  for (const w of words){ const s = cur ? cur + ' ' + w : w; if (g.measureText(s).width > maxW && cur){ lines.push(cur); cur = w; } else cur = s; }
+  if (cur) lines.push(cur); return lines;
+}
+/* 나레이션 자막 — [tap] 바로 뒤 버튼 이름은 주황 */
+function paintCaption(c, y0, lh, maxW){
+  const raw = c.text, plain = raw.replace('[tap]', ''), ti = raw.indexOf('[tap]');
+  let key = c.key || '';
+  if (!key && ti >= 0){ const rest = raw.slice(ti + 5); const m = rest.match(/^(.*?)(을|를|이라고|으로)/); key = m ? m[1] : rest.split(/[,.]/)[0]; }
+  const kStart = key && ti >= 0 ? ti : -1, kEnd = kStart + key.length;
+  const lines = wrapText(plain, maxW); let y = y0, off = 0;
+  lines.forEach(line => {
+    let x = (W - g.measureText(line).width) / 2;
+    for (let i = 0; i < line.length; i++){
+      const ch = line[i], gi = off + i;
+      g.fillStyle = (kStart >= 0 && gi >= kStart && gi < kEnd) ? '#FF8A2B' : '#ffffff';
+      g.lineWidth = 8; g.strokeStyle = 'rgba(5,8,20,.85)'; g.strokeText(ch, x, y); g.fillText(ch, x, y); x += g.measureText(ch).width;
+    }
+    off += line.length + 1; y += lh;
+  });
+  return lines.length;
+}
+function drawTopBar(t){
+  g.save();
+  g.font = '800 30px "Malgun Gothic"'; const chipW = g.measureText(S.title).width + 44;
+  g.fillStyle = 'rgba(10,17,40,.72)'; rr(40, 34, chipW, 62, 31); g.fill();
+  g.lineWidth = 2; g.strokeStyle = 'rgba(255,107,0,.8)'; g.stroke();
+  g.fillStyle = '#FFB273'; g.textBaseline = 'middle'; g.fillText(S.title, 62, 66);
+  const p = Math.min(1, t / TL.total), bx = 40 + chipW + 24, bw = W - 40 - bx;
+  g.fillStyle = 'rgba(255,255,255,.22)'; rr(bx, 61, bw, 10, 5); g.fill();
+  g.fillStyle = OR; rr(bx, 61, Math.max(10, bw * p), 10, 5); g.fill();
+  g.restore();
+}
+function drawTopSubtitle(t){
+  const c = cueAt(t); g.save(); g.globalAlpha = ease((t - (c.start - GAP)) / 0.15);
+  g.font = '800 54px "Malgun Gothic"'; g.textBaseline = 'alphabetic'; paintCaption(c, 170, 68, 980); g.restore();
+}
+
+/* 모델 실사 장면: 클립 원본 그대로(1.00배) + 하단 자막 상자(클립에 박힌 원래 문구를 덮음) */
+function drawModel(t){
+  const c = cueAt(t), v = VID[c.clip];
+  if (v && v.readyState >= 2) g.drawImage(v, 0, 0, W, H); else { g.fillStyle = '#000'; g.fillRect(0, 0, W, H); }
+  g.save(); g.globalAlpha = ease((t - (c.start - GAP)) / 0.15);
+  g.fillStyle = 'rgba(10,17,40,.94)'; rr(60, 1420, W - 120, 300, 40); g.fill();
+  g.lineWidth = 4; g.strokeStyle = 'rgba(255,107,0,.9)'; g.stroke();
+  g.font = '900 64px "Malgun Gothic"'; g.textBaseline = 'middle';
+  const n = wrapText(c.text, W - 220).length;
+  paintCaption(c, 1570 - (n - 1) * 42, 84, W - 220);
+  g.restore();
+}
+/* 끝맺음: 공식 모델 사진 + 상품명 + 주소 */
+function drawEnd(t){
+  const c = cueAt(t), lt = t - c.start;
+  const s = Math.max(W / MODEL.width, H / MODEL.height), dw = MODEL.width * s, dh = MODEL.height * s;
+  g.drawImage(MODEL, (W - dw) / 2, (H - dh) / 2, dw, dh);
+  const gr = g.createLinearGradient(0, 1050, 0, H); gr.addColorStop(0, 'rgba(10,17,40,0)'); gr.addColorStop(.35, 'rgba(10,17,40,.88)'); gr.addColorStop(1, 'rgba(10,17,40,.97)');
+  g.fillStyle = gr; g.fillRect(0, 1050, W, H - 1050);
+  g.save(); g.textBaseline = 'alphabetic';
+  const a1 = ease(lt / 0.4), a2 = ease((lt - 0.5) / 0.4), a3 = ease((lt - 1.0) / 0.4);
+  const ctr = (txt, y) => g.fillText(txt, (W - g.measureText(txt).width) / 2, y);
+  g.globalAlpha = a1; g.fillStyle = '#fff'; g.font = '900 96px "Malgun Gothic"'; ctr(S.title, 1450);
+  g.globalAlpha = a2; g.fillStyle = '#E6ECF7'; g.font = '800 50px "Malgun Gothic"'; ctr(S.end1, 1550);
+  g.globalAlpha = a3; g.font = '900 64px "Malgun Gothic"'; const tw = g.measureText(S.url).width;
+  g.fillStyle = OR; rr((W - tw) / 2 - 40, 1625, tw + 80, 100, 50); g.fill(); g.fillStyle = '#fff'; ctr(S.url, 1697);
+  g.globalAlpha = a3 * 0.8; g.fillStyle = '#C7D3E3'; g.font = '700 32px "Malgun Gothic"'; ctr('설치 없이 지금 무료로 써 보세요', 1800);
+  g.restore();
+}
+/* 앱 장면 왼쪽 아래: 공식 모델 실사 클립(원형 창) — 일러스트 캐릭터 대체 아님 */
+function drawPip(t){
+  const x = 120, y = 1836, r = 74;
+  g.save(); g.beginPath(); g.arc(x, y, r + 7, 0, Math.PI * 2); g.fillStyle = OR; g.fill();
+  g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.clip();
+  if (PIP && PIP.readyState >= 2){ const sw = 760, sh = 760; g.drawImage(PIP, 120, 330, sw, sh, x - r, y - r, r * 2, r * 2); }
+  else { const s = (r * 2) / 520; g.drawImage(MODEL, 140, 260, 520, 520, x - r, y - r, r * 2, r * 2); }
+  g.restore();
+  g.fillStyle = '#9fb0d0'; g.font = '700 24px "Malgun Gothic"'; g.textBaseline = 'middle'; g.fillText('KTS 공식 모델', 212, 1818);
+  g.fillStyle = '#fff'; g.font = '800 30px "Malgun Gothic"'; g.fillText('실사용 시연', 212, 1854);
+}
+function drawBrand(){
+  g.textBaseline = 'middle'; g.fillStyle = OR; g.font = '900 42px "Malgun Gothic"';
+  const w = g.measureText(S.url).width; g.fillText(S.url, W - 44 - w, 1840);
+}
+
+function onCueChange(c){
+  if (c.kind === 'model'){ const v = VID[c.clip]; if (v){ const span = c.hold + GAP - c.start; v.playbackRate = Math.max(0.75, Math.min(1, v.duration / span)); v.currentTime = 0; v.play().catch(()=>{}); } }
+  if (c.kind === 'app' || c.kind === 'photos'){ if (PIP && PIP.paused) PIP.play().catch(()=>{}); }
+}
+function draw(t){
+  const c = cueAt(t);
+  if (running && c.id !== curCueId){ curCueId = c.id; onCueChange(c); }
+  let z = 1;
+  if (c.kind === 'model'){ drawModel(t); drawTopBar(t); }
+  else if (c.kind === 'end'){ drawEnd(t); drawTopBar(t); }
+  else {
+    drawBg();
+    if (c.kind === 'photos') drawPhotos(t);
+    else { const cam = camAt(t); z = cam.z; drawPhone(t, cam); drawHl(t, cam); drawTap(t, cam); }
+    drawTopBar(t); drawTopSubtitle(t); drawPip(t); drawBrand();
+  }
+  // 장면 종류가 바뀌는 컷: 0.18초 어둠에서 열기
+  const i = TL.cues.indexOf(c), prev = i > 0 ? TL.cues[i - 1] : null;
+  if (prev && (prev.kind === 'app' ? 'app' : prev.kind) !== c.kind){ const f = 1 - ease((t - (c.start - GAP)) / 0.18); if (f > 0){ g.fillStyle = `rgba(5,8,15,${f})`; g.fillRect(0, 0, W, H); } }
+  window.MAXZ_USED = Math.max(window.MAXZ_USED || 1, z);
+}
+
+function start(record){
+  return new Promise(done => {
+    running = true; curCueId = null;
+    const T0 = ctx.currentTime + 0.25;
+    TL.cues.forEach(c => { const src = ctx.createBufferSource(); src.buffer = c.buf; src.connect(analyser); src.connect(dest); if (!record) src.connect(ctx.destination); src.start(T0 + c.start); });
+    let rec = null, chunks = [];
+    if (record){
+      const vs = cv.captureStream(30);
+      const stream = new MediaStream([...vs.getVideoTracks(), ...dest.stream.getAudioTracks()]);
+      const types = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'];
+      const mt = types.find(x => MediaRecorder.isTypeSupported(x));
+      window.REC_MIME = mt;
+      rec = new MediaRecorder(stream, {mimeType: mt, videoBitsPerSecond: 8000000, audioBitsPerSecond: 160000});
+      rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+      rec.onstop = () => { const blob = new Blob(chunks, {type: mt}); const fr = new FileReader();
+        fr.onload = () => { window.OUT = fr.result.slice(fr.result.indexOf('base64,') + 7); window.OUT_LEN = window.OUT.length; done(); }; fr.readAsDataURL(blob); };
+      rec.start(1000);
+    }
+    const tick = () => {
+      const t = ctx.currentTime - T0;
+      draw(Math.max(0, t));
+      if (t < TL.total) requestAnimationFrame(tick);
+      else { running = false; if (rec) setTimeout(() => rec.stop(), 150); else done(); }
+    };
+    requestAnimationFrame(tick);
+  });
+}
+document.getElementById('play').onclick = async () => { await ctx.resume(); start(false); };
+document.getElementById('rec').onclick = async () => {
+  await ctx.resume(); await start(true);
+  const a = document.createElement('a'); a.href = 'data:' + window.REC_MIME.split(';')[0] + ';base64,' + window.OUT;
+  a.download = 'short_' + S.name + (window.REC_MIME.includes('mp4') ? '.mp4' : '.webm'); a.click();
+};
+/* 검증용: 특정 시각 프레임 (모델 클립은 해당 위치로 이동 후 그림) */
+window.renderAt = async t => {
+  const c = cueAt(t);
+  if (c.kind === 'model'){ const v = VID[c.clip]; const span = c.hold + GAP - c.start; const rate = Math.max(0.75, Math.min(1, v.duration / span));
+    await new Promise(ok => { v.onseeked = ok; v.currentTime = Math.min(v.duration - 0.05, Math.max(0, (t - c.start) * rate)); }); }
+  if (PIP){ await new Promise(ok => { PIP.onseeked = ok; PIP.currentTime = (t % PIP.duration); }); }
+  draw(t); return true;
+};
+init();
+</script>
+</body></html>

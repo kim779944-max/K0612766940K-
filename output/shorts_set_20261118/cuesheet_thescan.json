@@ -1,0 +1,117 @@
+{
+ "total": 38.037375,
+ "maxZoom": 1.1,
+ "mime": "video/mp4;codecs=avc1.640028,mp4a.40.2",
+ "cues": [
+  {
+   "id": "s01",
+   "kind": "model",
+   "clip": "short1_converter_00",
+   "start": 0.35,
+   "end": 3.48,
+   "cut": 3.6,
+   "tapAt": null,
+   "frame": null,
+   "text": "종이 서류, 아직도 스캐너 찾으세요?"
+  },
+  {
+   "id": "s02",
+   "kind": "app",
+   "clip": null,
+   "start": 3.6,
+   "end": 9.26,
+   "cut": 9.38,
+   "tapAt": 8.81,
+   "frame": "t_home",
+   "text": "더스캔은 모서리 맞추기도, 초점 기다리기도 없습니다. 찍기만 누르세요."
+  },
+  {
+   "id": "s03",
+   "kind": "app",
+   "clip": null,
+   "start": 9.38,
+   "end": 13.28,
+   "cut": 13.4,
+   "tapAt": null,
+   "frame": "t_prog",
+   "text": "찍는 즉시 반듯하게 펴고, 그림자까지 지웁니다."
+  },
+  {
+   "id": "s04",
+   "kind": "app",
+   "clip": null,
+   "start": 13.4,
+   "end": 17.77,
+   "cut": 17.89,
+   "tapAt": 17.32,
+   "frame": "t_grid",
+   "text": "세 장이 바로 쌓였죠. 필요한 장만 쓰려면 분리하기."
+  },
+  {
+   "id": "s05",
+   "kind": "app",
+   "clip": null,
+   "start": 17.89,
+   "end": 20.76,
+   "cut": 20.88,
+   "tapAt": 19.96,
+   "frame": "t_split",
+   "text": "원하는 페이지만 골라 따로 저장합니다."
+  },
+  {
+   "id": "s06",
+   "kind": "app",
+   "clip": null,
+   "start": 20.88,
+   "end": 23.85,
+   "cut": 23.97,
+   "tapAt": 23.4,
+   "frame": "t_grid2",
+   "text": "여러 장을 한 문서로 묶을 땐 연결하기."
+  },
+  {
+   "id": "s07",
+   "kind": "app",
+   "clip": null,
+   "start": 23.97,
+   "end": 26.94,
+   "cut": 27.06,
+   "tapAt": 26.21,
+   "frame": "t_join",
+   "text": "PDF 한 권을 고르고 합치기를 누르면,"
+  },
+  {
+   "id": "s08",
+   "kind": "app",
+   "clip": null,
+   "start": 27.06,
+   "end": 30.01,
+   "cut": 30.13,
+   "tapAt": null,
+   "frame": "t_pdf",
+   "text": "세 쪽짜리 PDF가 바로 완성됩니다."
+  },
+  {
+   "id": "s09",
+   "kind": "model",
+   "clip": "short2_theview_00",
+   "start": 30.13,
+   "end": 33.42,
+   "cut": 33.54,
+   "tapAt": null,
+   "frame": null,
+   "text": "종이 한 장도, 백 장도 폰 하나로 끝."
+  },
+  {
+   "id": "s10",
+   "kind": "end",
+   "clip": null,
+   "start": 33.54,
+   "end": 36.64,
+   "cut": 36.76,
+   "tapAt": null,
+   "frame": null,
+   "text": "설치 없이 지금 무료로, 더스캔."
+  }
+ ]
+}

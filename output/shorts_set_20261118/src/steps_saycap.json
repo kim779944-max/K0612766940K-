@@ -1,0 +1,10 @@
+{"page":"saycap/index.html","steps":[
+ {"name":"y_home","js":"await loadSamples(); for (const p of photos.filter(p=>p.caption&&p.caption.place==='101호 큰방')) await delPhoto(p.id); await loadIndex(); await sleep(3200)","wait":200,"marks":[{"kind":"hl","sel":"#homeHero"},{"kind":"tap","sel":"#goPhone"}]},
+ {"name":"y_editor","file":{"sel":"#filePick","path":"sample2.jpg"},"js":"await sleep(2500)","wait":100,"marks":[{"kind":"tap","sel":"#btnMic"}]},
+ {"name":"y_talk1","js":"sttRunning=true; try{syncCapEditing()}catch(e){}; eqStart(); editing.rec.caption.memo='큰방'; paintEditor(); for(let i=0;i<6;i++){eqPulse(.9); await sleep(60)}","wait":0,"marks":[{"kind":"hl","sel":"#editEq"}]},
+ {"name":"y_talk2","js":"editing.rec.caption.memo='큰방 — 창가 햇살'; paintEditor(); for(let i=0;i<5;i++){eqPulse(.6); await sleep(50)}","wait":0,"marks":[{"kind":"hl","sel":"#editEq"}]},
+ {"name":"y_talk3","js":"editing.rec.caption.memo='큰방 — 창가 햇살 들어오는 침대'; paintEditor(); for(let i=0;i<5;i++){eqPulse(1); await sleep(50)}","wait":0,"marks":[{"kind":"hl","sel":"#editEq"},{"kind":"tap","sel":"#editSave"}]},
+ {"name":"y_saved","js":"sttRunning=false; eqStop(); try{syncCapEditing()}catch(e){}; await sleep(800); document.getElementById('editSave').click(); await sleep(1500)","wait":100,"marks":[{"kind":"hl","sel":"#sheetSaved .sheet"},{"kind":"tap","sel":"#savedEdit"}]},
+ {"name":"y_gallery","js":"closeSheet('sheetSaved'); await sleep(900)","wait":100,"marks":[{"kind":"hl","sel":"#galFeed"},{"kind":"tap","sel":"#galSearch"}]},
+ {"name":"y_search","js":"const s=document.getElementById('galSearch'); s.value='큰방'; s.dispatchEvent(new Event('input',{bubbles:true})); s.blur(); await sleep(900)","wait":100,"marks":[{"kind":"hl","sel":".g-item"},{"kind":"hl","sel":".g-search"}]}
+]}

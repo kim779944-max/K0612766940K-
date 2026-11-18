@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 견적서 1초 발행 — 번호 자동, A4 1장 PDF·한글</title>
+<meta name="description" content="내 정보는 한 번만 저장하고, 고객과 품목만 넣으면 2026-0001 번호가 붙은 A4 한 장 견적서가 인쇄(PDF)·한글(.hwpx)로 바로 나옵니다. 모든 계산은 이 기기 안에서만.">
+<meta name="theme-color" content="#0A1128">
+<link rel="icon" href="icon.png">
+<style>
+/*@@CSS@@*/
+.it{background:#0B1729;border:1px solid var(--line);border-radius:12px;padding:9px;margin-top:8px}
+.it .hdr{display:flex;align-items:center;gap:6px}
+.it .no{font-size:12px;font-weight:900;color:var(--amber2)}
+.it .amt{margin-left:auto;font-size:13px;font-weight:900}
+.it .del{font-size:11px;font-weight:800;color:#FF9C9C;border:1px solid rgba(255,90,90,.5);border-radius:8px;padding:4px 8px}
+.it .g3{display:grid;grid-template-columns:1fr 70px 1.2fr;gap:0 6px}
+.it label.lb{margin:5px 0 3px;font-size:10.5px}
+.it input{padding:8px;font-size:13px}
+.sumq{margin-top:10px;border-radius:12px;background:#0B1729;border:1px solid var(--amber);padding:10px 12px}
+.sumq table{width:100%;font-size:13px;border-collapse:collapse}.sumq td{padding:3px 0}.sumq td:last-child{text-align:right;font-weight:900}
+.sumq .k{font-size:11.5px;color:var(--amber2);font-weight:800;margin-top:4px}
+.issue{margin-top:8px;border-radius:12px;padding:10px 12px;background:rgba(46,212,122,.08);border:1px solid rgba(46,212,122,.5);font-size:12.5px;line-height:1.55}
+.issue b{font-size:17px;color:#7FF0B0;letter-spacing:.5px}
+.issue.wait{background:rgba(255,107,0,.08);border-color:rgba(255,107,0,.5)}.issue.wait b{color:var(--amber2)}
+.led{margin-top:6px;font-size:12px}
+.led table{width:100%;border-collapse:collapse}
+.led td{padding:6px 4px;border-top:1px solid var(--line);color:#DCE6F2}
+.led td:last-child{text-align:right}
+.saved{font-size:11.5px;font-weight:800;color:#7FF0B0;margin-top:6px;min-height:16px}
+.paper{font-size:11.5px}
+.paper .ttl{text-align:center;font-size:26px;font-weight:900;letter-spacing:14px;margin:0 0 10px}
+.paper .hb{background:#EEF2F8;font-weight:700;text-align:center}
+.paper .r{text-align:right}.paper .c{text-align:center}
+@media print{
+ body{background:#fff;display:block}
+ #app,.bar,#toast,.modal,#busy{display:none!important}
+ #printArea{display:block}
+ #printArea .paper{width:auto;padding:0;font-size:9.6pt;line-height:1.42}
+ #printArea .paper td{padding:3.2pt 5pt}
+ @page{size:A4;margin:14mm 14mm}
+}
+</style>
+</head><body>
+<div id="app">
+<header class="top">
+ <div class="hd">
+  <div class="brand"><span class="mark">견</span>견적서 1초 발행 <small>KTS 원클릭</small></div>
+  <span class="sp"></span>
+  <button class="newb" id="newBtn">새 견적</button>
+ </div>
+ <div class="prog"><div class="track"><div class="fill" id="pfill"></div></div>
+  <div class="lbls" id="plbls"><button data-s="1">1 내 정보</button><button data-s="2">2 품목</button><button data-s="3">3 미리보기·발행</button></div></div>
+</header>
+<main>
+<!-- 1 내 정보 -->
+<section class="scr" id="s1">
+ <div class="card"><h2><span class="n">1</span>공급자(내 정보)</h2>
+  <p class="sub">한 번 저장해 두면 다음 견적부터는 바로 2단계에서 시작합니다. 이 기기에만 보관합니다.</p>
+  <div id="meBox"></div>
+  <div class="row"><button class="btn pri" id="meSave">내 정보 저장</button></div>
+  <p class="saved" id="meSaved"></p>
+ </div>
+</section>
+<!-- 2 품목 -->
+<section class="scr" id="s2">
+ <div class="card"><h2><span class="n">2</span>고객과 조건</h2>
+  <label class="lb">고객명<em>*</em><i>견적서에 "○○○ 귀하"로 나갑니다</i></label><input id="cust" data-q="cust" maxlength="40" placeholder="예: (주)한빛상사">
+  <div class="g2"><div><label class="lb">견적일<em>*</em></label><input type="date" id="qdate" data-q="date"></div>
+   <div><label class="lb">유효기간(일)</label><input id="valid" data-q="validDays" inputmode="numeric" maxlength="3"></div></div>
+  <div class="chips" id="validChips"><button data-d="7">D+7</button><button data-d="15">D+15</button><button data-d="30">D+30</button><button data-d="60">D+60</button></div>
+  <p class="kor" id="validWhen"></p>
+  <label class="lb">부가세</label>
+  <div class="seg" id="vatSeg"><button data-v="ex">부가세 별도</button><button data-v="in">부가세 포함</button></div>
+  <label class="lb">결제조건</label><input id="pay" data-q="pay" maxlength="60" placeholder="예: 납품 후 30일 이내 계좌이체">
+  <label class="lb">비고</label><textarea id="note" data-q="note" rows="2" maxlength="200" placeholder="예: 설치비 포함, 운송비 별도"></textarea>
+ </div>
+ <div class="card"><h2><span class="n">품</span>품목 <span id="nItems">0</span>개</h2>
+  <div id="items"></div>
+  <div class="row"><button class="btn sec sm" id="addItem">+ 품목 추가</button></div>
+  <div class="sumq" id="sumBox"></div>
+ </div>
+</section>
+<!-- 3 미리보기·발행 -->
+<section class="scr" id="s3">
+ <div class="card"><h2><span class="n">3</span>발행</h2>
+  <div class="issue wait" id="issueBox"></div>
+  <div class="row"><button class="btn pri" id="issueBtn">발행(번호 받기)</button></div>
+  <div class="row"><button class="btn sec" id="printBtn">인쇄 · PDF</button><button class="btn sec" id="hwpxBtn">한글(.hwpx)</button></div>
+  <p class="kv" id="outInfo">번호는 이 기기의 발행 대장에 기록되어 같은 번호가 다시 나오지 않습니다. 파일은 더뷰(<a href="viewer.html">viewer.html</a>)로 열어 확인할 수 있습니다.</p>
+ </div>
+ <div class="card"><h2><span class="n">보</span>견적서 미리보기</h2><div class="pvwrap" id="pvWrap"></div></div>
+ <div class="card"><h2><span class="n">대</span>발행 대장</h2><div class="led" id="ledger"></div></div>
+</section>
+
+<!--@@INQ@@-->
+<p class="foot">견적서 1초 발행 · KTS 원클릭 · 서버 0 · 유료 API 0<br>내 정보·견적·발행 대장은 이 기기 브라우저 안에만 저장됩니다.</p>
+</main>
+<div class="bar"><button class="btn sec back" id="backBtn">이전</button><button class="btn pri" id="nextBtn">다음</button></div>
+</div>
+<!--@@MODAL@@-->
+<script>
+/* converter.html 엔진 복사본 — 아래 블록은 oneclick/converter.html 엔진(docFromRaw·buildHwpx·makeZip 등)을 그대로 옮긴 것입니다 */
+/*@@ENGINE@@*/
+/*@@COMMON@@*/
+/* ---------- 상태 ---------- */
+const LS = 'kq_quote_v1', LS_ME = 'kq_me_v1', LS_LED = 'kq_ledger_v1';
+const ME_F = [['name', '상호', 1], ['rep', '대표자', 1], ['bizno', '사업자등록번호', 0, 'numeric'], ['addr', '주소', 0], ['tel', '연락처', 1, 'tel'], ['email', '이메일', 0, 'email'], ['bank', '입금 계좌', 0]];
+const blankItem = () => ({name:'', spec:'', qty:'1', price:''});
+const fresh = () => ({step:2, cust:'', date:todayS(), validDays:'30', vat:'ex', pay:'', note:'', items:[blankItem()], issued:'', issuedSig:''});
+let ME; try{ ME = JSON.parse(localStorage.getItem(LS_ME) || 'null'); }catch(e){ ME = null; }
+const meSaved = !!ME; ME = ME || {};
+let S; try{ S = Object.assign(fresh(), JSON.parse(localStorage.getItem(LS) || 'null') || {}); }catch(e){ S = fresh(); }
+if (!meSaved) S.step = 1;
+let saveT; const flush = () => { clearTimeout(saveT); saveT = null; try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} };
+const save = () => { clearTimeout(saveT); saveT = setTimeout(flush, 200); };
+window.addEventListener('pagehide', flush); document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
+const ledger = () => { try{ return JSON.parse(localStorage.getItem(LS_LED) || '[]'); }catch(e){ return []; } };
+
+/* ---------- 계산 ---------- */
+const lineAmt = it => num(it.qty) * num(it.price);
+function calc(){
+  const sum = S.items.reduce((a, it) => a + lineAmt(it), 0);
+  if (S.vat === 'in'){ const supply = Math.round(sum / 1.1); return {supply, vat:sum - supply, total:sum}; }
+  const vat = Math.floor(sum * 0.1); return {supply:sum, vat, total:sum + vat};
+}
+const validDate = () => { const d = parseD(S.date); return d ? addDays(d, num(S.validDays)) : null; };
+const sig = () => JSON.stringify([S.cust, S.date, S.validDays, S.vat, S.pay, S.note, S.items, ME]);
+const isIssued = () => S.issued && S.issuedSig === sig();
+
+/* ---------- 연번(같은 번호 중복 0) ---------- */
+function nextNo(year, led){
+  const pre = year + '-'; let mx = 0;
+  (led || ledger()).forEach(e => { if (String(e.no).startsWith(pre)) mx = Math.max(mx, +String(e.no).slice(pre.length) || 0); });
+  return pre + String(mx + 1).padStart(4, '0');
+}
+function issue(){
+  const ms = missing(); if (ms.length){ SHOW_MISS = true; markMissing(); toast('빨간 칸을 채워 주세요: ' + ms.slice(0, 3).join(', ')); return ''; }
+  if (isIssued()) return S.issued;
+  const y = (S.date || todayS()).slice(0, 4);
+  const led = ledger();                         /* 저장 직전에 대장을 다시 읽어 확인 */
+  const no = nextNo(y, led);
+  if (led.some(e => e.no === no)) { toast('번호가 겹쳐 다시 시도합니다'); return ''; }
+  const c = calc(); led.push({no, date:S.date, customer:S.cust, total:c.total, at:new Date().toISOString()});
+  try{ localStorage.setItem(LS_LED, JSON.stringify(led)); }catch(e){ toast('대장을 저장하지 못했습니다'); return ''; }
+  S.issued = no; S.issuedSig = sig(); flush(); renderIssue(); renderPaper(); renderLedger();
+  toast(`견적번호 ${no} 발행`);
+  return no;
+}
+
+/* ---------- 입력 화면 ---------- */
+function renderMe(){
+  $('#meBox').innerHTML = ME_F.map(([k, l, req, im]) => `<label class="lb">${l}${req ? '<em>*</em>' : ''}</label><input data-me="${k}" value="${escH(ME[k] || '')}" ${im ? `inputmode="${im}"` : ''} maxlength="60">`).join('');
+  $('#meSaved').textContent = meSaved || localStorage.getItem(LS_ME) ? '✓ 이 기기에 저장된 내 정보입니다. 바꾸면 다시 저장을 누르세요.' : '';
+}
+function renderItems(){
+  $('#items').innerHTML = S.items.map((it, i) => `<div class="it" data-i="${i}"><div class="hdr"><span class="no">${i + 1}</span><span class="amt" data-amt="${i}">${comma(lineAmt(it))}원</span><button class="del" data-del="${i}">−</button></div>
+   <label class="lb">품명<em>*</em></label><input data-it="name" value="${escH(it.name)}" maxlength="40" class="${SHOW_MISS && !it.name.trim() ? 'miss' : ''}">
+   <div class="g3"><div><label class="lb">규격</label><input data-it="spec" value="${escH(it.spec)}" maxlength="20"></div>
+   <div><label class="lb">수량<em>*</em></label><input data-it="qty" inputmode="numeric" value="${escH(it.qty)}" class="${SHOW_MISS && !num(it.qty) ? 'miss' : ''}"></div>
+   <div><label class="lb">단가<em>*</em></label><input data-it="price" inputmode="numeric" value="${num(it.price) ? comma(it.price) : ''}" class="${SHOW_MISS && !num(it.price) ? 'miss' : ''}"></div></div></div>`).join('');
+  $('#nItems').textContent = S.items.length; renderSum();
+}
+function renderSum(){
+  const c = calc();
+  $('#sumBox').innerHTML = `<table><tr><td>공급가액</td><td>${comma(c.supply)}원</td></tr><tr><td>부가세</td><td>${comma(c.vat)}원</td></tr><tr><td>합계</td><td>${comma(c.total)}원</td></tr></table><p class="k">일금 ${korNum(c.total)}원정 (${S.vat === 'in' ? '부가세 포함' : '부가세 별도 계산'})</p>`;
+}
+function renderCond(){
+  $('#cust').value = S.cust; $('#qdate').value = S.date; $('#valid').value = S.validDays; $('#pay').value = S.pay; $('#note').value = S.note;
+  $$('#vatSeg button').forEach(b => b.classList.toggle('on', b.dataset.v === S.vat));
+  const v = validDate(); $('#validWhen').textContent = v && num(S.validDays) ? `→ ${korDW(v)}까지 유효` : '';
+}
+function missing(){
+  const m = [];
+  ME_F.forEach(([k, l, req]) => { if (req && !String(ME[k] || '').trim()) m.push('내 정보 ' + l); });
+  if (!S.cust.trim()) m.push('고객명'); if (!S.date) m.push('견적일');
+  if (!S.items.some(it => it.name.trim() && num(it.qty) && num(it.price))) m.push('품목');
+  S.items.forEach((it, i) => { if ((it.name || it.price) && !(it.name.trim() && num(it.qty) && num(it.price))) m.push(`품목 ${i + 1}`); });
+  return m;
+}
+let SHOW_MISS = false;
+function markMissing(){
+  $$('#meBox input').forEach(el => { const f = ME_F.find(x => x[0] === el.dataset.me); el.classList.toggle('miss', SHOW_MISS && f[2] && !String(ME[f[0]] || '').trim()); });
+  $('#cust').classList.toggle('miss', SHOW_MISS && !S.cust.trim());
+  if (SHOW_MISS) renderItems();
+}
+
+/* ---------- 견적서 종이 ---------- */
+function paperRows(){
+  const rows = S.items.filter(it => it.name.trim() || num(it.price));
+  const out = rows.map((it, i) => [String(i + 1), it.name, it.spec, num(it.qty) ? comma(it.qty) : '', num(it.price) ? comma(it.price) : '', comma(lineAmt(it))]);
+  while (out.length < 10) out.push(['', '', '', '', '', '']);
+  return out;
+}
+function paperHtml(noLabel){
+  const c = calc(), d = parseD(S.date), v = validDate();
+  const no = noLabel || (isIssued() ? S.issued : '발행 전 (다음 ' + nextNo((S.date || todayS()).slice(0, 4)) + ')');
+  let h = `<div class="paper"><p class="ttl">견 적 서</p>
+  <table><colgroup><col style="width:50%"><col style="width:12%"><col style="width:38%"></colgroup>
+  <tr><td class="nb" style="vertical-align:top;padding-top:4px">
+    <p>견적번호: <b>${escH(no)}</b></p><p>견 적 일: ${escH(korD(d))}</p><p>유효기간: ${v && num(S.validDays) ? escH(korD(v)) + '까지' : '-'}</p>
+    <p style="font-size:15px;font-weight:700;margin-top:10px;border-bottom:1px solid #333;padding-bottom:3px">${escH(S.cust || '__________')} 귀하</p>
+    <p style="margin-top:6px">아래와 같이 견적합니다.</p></td>
+   <td class="hb">공<br>급<br>자</td>
+   <td style="padding:0"><table style="margin:0"><colgroup><col style="width:30%"><col style="width:70%"></colgroup>
+    <tr><td class="hb">등록번호</td><td>${escH(ME.bizno || '')}</td></tr><tr><td class="hb">상호</td><td>${escH(ME.name || '')}</td></tr>
+    <tr><td class="hb">대표자</td><td>${escH(ME.rep || '')} (인)</td></tr><tr><td class="hb">주소</td><td>${escH(ME.addr || '')}</td></tr>
+    <tr><td class="hb">연락처</td><td>${escH(ME.tel || '')}${ME.email ? '<br>' + escH(ME.email) : ''}</td></tr></table></td></tr></table>
+  <table><colgroup><col style="width:22%"><col style="width:78%"></colgroup><tr><td class="hb">합계금액<br><span style="font-weight:400;font-size:.85em">(${S.vat === 'in' ? '부가세 포함' : '공급가액+부가세'})</span></td>
+   <td style="font-size:14px;font-weight:700">일금 ${escH(korNum(c.total))}원정 (₩${comma(c.total)})</td></tr></table>
+  <table><colgroup><col style="width:7%"><col style="width:33%"><col style="width:16%"><col style="width:10%"><col style="width:15%"><col style="width:19%"></colgroup>
+  <tr><td class="hb">번호</td><td class="hb">품명</td><td class="hb">규격</td><td class="hb">수량</td><td class="hb">단가</td><td class="hb">금액</td></tr>`;
+  paperRows().forEach(r => { h += `<tr><td class="c">${escH(r[0]) || '&nbsp;'}</td><td>${escH(r[1])}</td><td class="c">${escH(r[2])}</td><td class="r">${escH(r[3])}</td><td class="r">${escH(r[4])}</td><td class="r">${r[0] ? escH(r[5]) : ''}</td></tr>`; });
+  h += `<tr><td class="hb" colspan="5">공급가액</td><td class="r">${comma(c.supply)}</td></tr><tr><td class="hb" colspan="5">부가세</td><td class="r">${comma(c.vat)}</td></tr><tr><td class="hb" colspan="5">합계</td><td class="r"><b>${comma(c.total)}</b></td></tr></table>
+  <table><colgroup><col style="width:18%"><col style="width:82%"></colgroup>
+  <tr><td class="hb">결제조건</td><td>${escH(S.pay || '-')}</td></tr><tr><td class="hb">입금 계좌</td><td>${escH(ME.bank || '-')}</td></tr><tr><td class="hb">비고</td><td>${escH(S.note || '-').replace(/\n/g, '<br>')}</td></tr></table>
+  <p style="font-size:9px;color:#666;margin-top:8px">본 견적은 유효기간 안에서만 유효하며, 수량·사양이 바뀌면 다시 견적합니다. · KTS 원클릭 견적서 1초 발행</p></div>`;
+  return h;
+}
+function renderPaper(){
+  if (S.step !== 3) return;
+  const w = $('#pvWrap'); w.innerHTML = paperHtml();
+  const p = w.firstChild, s = w.clientWidth / 720; p.style.transform = `scale(${s})`;
+  w.style.height = Math.ceil(p.offsetHeight * s) + 'px';
+}
+function renderIssue(){
+  const b = $('#issueBox');
+  if (isIssued()){ b.className = 'issue'; b.innerHTML = `발행 번호 <b>${escH(S.issued)}</b><br>${escH(S.cust)} 귀하 · ₩${comma(calc().total)} · 이 번호로 인쇄·한글 저장이 됩니다.`; $('#issueBtn').textContent = '발행됨 · 다음 견적은 [새 견적]'; }
+  else { b.className = 'issue wait'; b.innerHTML = (S.issued ? `이전 번호 ${escH(S.issued)} 발행 뒤 내용을 고쳤습니다. 고친 견적은 새 번호로 발행합니다.<br>` : '') + `다음 번호 <b>${escH(nextNo((S.date || todayS()).slice(0, 4)))}</b><br>[발행]을 누를 때 번호가 확정되고 대장에 기록됩니다.`; $('#issueBtn').textContent = '발행(번호 받기)'; }
+}
+function renderLedger(){
+  const L = ledger().slice().reverse();
+  $('#ledger').innerHTML = L.length ? '<table>' + L.slice(0, 15).map(e => `<tr><td><b>${escH(e.no)}</b></td><td>${escH(e.customer)}</td><td>₩${comma(e.total)}</td></tr>`).join('') + '</table>' + (L.length > 15 ? `<p class="kv">외 ${L.length - 15}건</p>` : '') : '<p class="empty">아직 발행한 견적이 없습니다.</p>';
+}
+
+/* ---------- 출력 ---------- */
+function doPrint(){ const no = issue(); if (!no) return; $('#printArea').innerHTML = paperHtml(no); setTimeout(() => window.print(), 150); }
+const HB = '#EEF2F8';
+const TX = (text, o = {}) => ({t:'text', align:o.al || 'L', size:o.sz || 10, bg:'', x:0, w:100, runs:[[text, o.b ? 1 : 0, o.c || '', '', '']]});
+function TB(colWidths, rows, o = {}){
+  const cells = [];
+  rows.forEach((row, r) => { let c = 0; row.forEach(sp => { if (sp === null){ c++; return; }
+    const x = typeof sp === 'string' ? {t:sp} : sp;
+    cells.push([r, c, x.rs || 1, x.cs || 1, x.t == null ? '' : String(x.t), x.b ? 1 : 0, x.al || 'L', x.bg || '', '', x.n ? 1 : 0, x.nb ? 1 : 0]); c += x.cs || 1; }); });
+  return {t:'table', main:o.main ? 1 : 0, x:o.x || 0, w:o.w || 100, nRows:rows.length, nCols:colWidths.length, colWidths, cells};
+}
+const Lb = (t, o = {}) => Object.assign({t, b:1, bg:HB, al:'C'}, o);
+function buildDoc(no){
+  const c = calc(), d = parseD(S.date), v = validDate(), blocks = [];
+  blocks.push(TX('견 적 서', {al:'C', sz:20, b:1}));
+  blocks.push(TX(`견적번호: ${no}    견적일: ${korD(d)}    유효기간: ${v && num(S.validDays) ? korD(v) + '까지' : '-'}`));
+  blocks.push(TX(`${S.cust} 귀하 — 아래와 같이 견적합니다.`, {b:1, sz:12}));
+  blocks.push(TB([18, 32, 18, 32], [
+    [Lb('공급자 상호'), ME.name || '', Lb('등록번호'), ME.bizno || ''],
+    [Lb('대표자'), (ME.rep || '') + ' (인)', Lb('연락처'), ME.tel || ''],
+    [Lb('주소'), {t:ME.addr || '', cs:3}, null, null]]));
+  blocks.push(TB([22, 78], [[Lb('합계금액'), {t:`일금 ${korNum(c.total)}원정 (₩${comma(c.total)}) ${S.vat === 'in' ? '부가세 포함' : '공급가액+부가세'}`, b:1}]]));
+  const rows = [[Lb('번호'), Lb('품명'), Lb('규격'), Lb('수량'), Lb('단가'), Lb('금액')]];
+  S.items.filter(it => it.name.trim() || num(it.price)).forEach((it, i) => rows.push([{t:String(i + 1), al:'C'}, it.name, {t:it.spec, al:'C'}, {t:comma(num(it.qty)), al:'R', n:1}, {t:comma(num(it.price)), al:'R', n:1}, {t:comma(lineAmt(it)), al:'R', n:1}]));
+  rows.push([Lb('공급가액', {cs:5}), null, null, null, null, {t:comma(c.supply), al:'R', n:1}]);
+  rows.push([Lb('부가세', {cs:5}), null, null, null, null, {t:comma(c.vat), al:'R', n:1}]);
+  rows.push([Lb('합계', {cs:5}), null, null, null, null, {t:comma(c.total), al:'R', n:1, b:1}]);
+  blocks.push(TB([7, 33, 16, 10, 15, 19], rows, {main:1}));
+  blocks.push(TB([18, 82], [[Lb('결제조건'), S.pay || '-'], [Lb('입금 계좌'), ME.bank || '-'], [Lb('비고'), S.note || '-']]));
+  blocks.push(TX('본 견적은 유효기간 안에서만 유효하며, 수량·사양이 바뀌면 다시 견적합니다.', {sz:8, c:'#666666'}));
+  return {blocks};
+}
+async function hwpxBlob(no){
+  const st = docFromRaw(buildDoc(no), ''); if (!st) throw new Error('문서를 만들지 못했습니다');
+  return new Blob([await makeZip(await buildHwpx(st))], {type:'application/hwp+zip'});
+}
+async function doHwpx(){
+  const no = issue(); if (!no) return;
+  try{ const b = await hwpxBlob(no), nm = `견적서_${no}_${S.cust.replace(/[\\/:*?"<>|\s]/g, '')}.hwpx`; downloadBlob(b, nm);
+    $('#outInfo').innerHTML = `<span class="dot"></span>${escH(nm)} 저장 (${Math.max(1, Math.round(b.size / 1024))}KB). 더뷰(<a href="viewer.html">viewer.html</a>)로 열어 확인할 수 있습니다.`; toast('한글 파일을 저장했습니다');
+  }catch(e){ toast('파일을 만들지 못했습니다: ' + (e.message || '')); }
+}
+
+/* ---------- 단계·이벤트 ---------- */
+function go(n, quiet){
+  S.step = n; save();
+  $$('.scr').forEach(s => s.classList.toggle('on', s.id === 's' + n));
+  $('#pfill').style.width = (n / 3 * 100) + '%';
+  $$('#plbls button').forEach(b => { b.classList.toggle('on', +b.dataset.s === n); b.classList.toggle('done', +b.dataset.s < n); });
+  $('#backBtn').style.display = n === 1 ? 'none' : '';
+  $('#nextBtn').textContent = n === 3 ? '인쇄 · PDF' : (n === 1 ? '다음: 품목' : '다음: 미리보기·발행');
+  if (n === 1) renderMe(); if (n === 2){ renderCond(); renderItems(); }
+  if (n === 3){ renderIssue(); renderPaper(); renderLedger(); }
+  if (!quiet) window.scrollTo(0, 0);
+}
+function saveMe(){
+  $$('#meBox input').forEach(el => { ME[el.dataset.me] = el.value.trim(); });
+  try{ localStorage.setItem(LS_ME, JSON.stringify(ME)); }catch(e){}
+  $('#meSaved').textContent = '✓ 이 기기에 저장했습니다. 다음 견적부터는 품목부터 시작합니다.'; toast('내 정보를 저장했습니다');
+}
+$('#meSave').onclick = saveMe;
+$('#meBox').addEventListener('input', e => { const k = e.target.dataset.me; if (k){ ME[k] = e.target.value; e.target.classList.remove('miss'); } });
+$('#nextBtn').onclick = () => { if (S.step === 1){ saveMe(); go(2); } else if (S.step === 2) go(3); else doPrint(); };
+$('#backBtn').onclick = () => go(Math.max(1, S.step - 1));
+$('#plbls').onclick = e => { const b = e.target.closest('button'); if (b) go(+b.dataset.s); };
+$('#issueBtn').onclick = () => { if (isIssued()) return toast('이미 발행했습니다. 다음 견적은 [새 견적]을 누르세요'); issue(); };
+$('#printBtn').onclick = doPrint;
+$('#hwpxBtn').onclick = doHwpx;
+$('#newBtn').onclick = () => { S = fresh(); SHOW_MISS = false; flush(); go(localStorage.getItem(LS_ME) ? 2 : 1); toast('새 견적을 시작합니다'); };
+document.addEventListener('input', e => {
+  const el = e.target, q = el.dataset.q, f = el.dataset.it;
+  if (q){ S[q] = q === 'validDays' ? (el.value = el.value.replace(/[^\d]/g, '')) : el.value; if (q === 'cust') el.classList.remove('miss'); save(); renderCond(); }
+  if (f){ const i = +el.closest('.it').dataset.i, it = S.items[i];
+    if (f === 'price'){ it.price = String(num(el.value) || ''); el.value = it.price ? comma(it.price) : ''; }
+    else if (f === 'qty'){ it.qty = el.value = el.value.replace(/[^\d]/g, ''); } else it[f] = el.value;
+    el.classList.remove('miss'); $(`[data-amt="${i}"]`).textContent = comma(lineAmt(it)) + '원'; save(); renderSum(); }
+});
+$('#validChips').onclick = e => { const b = e.target.closest('[data-d]'); if (!b) return; S.validDays = b.dataset.d; save(); renderCond(); };
+$('#vatSeg').onclick = e => { const b = e.target.closest('button'); if (!b) return; S.vat = b.dataset.v; save(); renderCond(); renderSum(); };
+$('#addItem').onclick = () => { S.items.push(blankItem()); save(); renderItems(); const ins = $$('#items .it'); ins[ins.length - 1].querySelector('input').focus(); };
+$('#items').onclick = e => { const d = e.target.closest('[data-del]'); if (!d) return; S.items.splice(+d.dataset.del, 1); if (!S.items.length) S.items.push(blankItem()); save(); renderItems(); };
+window.addEventListener('resize', () => renderPaper());
+
+initInquiry('견적서 1초 발행', '지금 견적서 발행·번호 대장·한글 저장은 바로 무료로 쓰실 수 있습니다.');
+$('#qMsg').placeholder = '예: 견적서에 회사 도장 그림도 넣고 싶습니다';
+/* 시험·설명서용 손잡이 */
+window.QT = {get S(){ return S; }, set S(v){ S = v; }, get ME(){ return ME; }, go, calc, issue, nextNo, ledger, hwpxBlob, buildDoc, paperHtml, fresh, save, flush, isIssued};
+go(S.step || 1, true);
+</script>
+</body></html>

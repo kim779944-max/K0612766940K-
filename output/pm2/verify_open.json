@@ -1,0 +1,62 @@
+﻿[
+    {
+        "file":  "지출결의서_11월영업팀경비_20261118.xlsx",
+        "bytes":  3484,
+        "zipEntries":  6,
+        "formulas":  6,
+        "zipMissing":  "",
+        "formulaMissing":  "",
+        "viewerMissing":  "",
+        "viewerErrors":  "[]",
+        "shot":  "open_지출결의서_11월영업팀경비_20261118_xlsx.png",
+        "result":  "PASS"
+    },
+    {
+        "file":  "지출결의서_출장.xlsx",
+        "bytes":  3638,
+        "zipEntries":  6,
+        "formulas":  6,
+        "zipMissing":  "",
+        "formulaMissing":  "",
+        "viewerMissing":  "",
+        "viewerErrors":  "[]",
+        "shot":  "open_지출결의서_출장_xlsx.png",
+        "result":  "PASS"
+    },
+    {
+        "file":  "지출결의서_접대.xlsx",
+        "bytes":  3669,
+        "zipEntries":  6,
+        "formulas":  6,
+        "zipMissing":  "",
+        "formulaMissing":  "",
+        "viewerMissing":  "",
+        "viewerErrors":  "[]",
+        "shot":  "open_지출결의서_접대_xlsx.png",
+        "result":  "PASS"
+    },
+    {
+        "file":  "견적서_2026-0001.hwpx",
+        "bytes":  8636,
+        "zipEntries":  9,
+        "formulas":  0,
+        "zipMissing":  "",
+        "formulaMissing":  "",
+        "viewerMissing":  "",
+        "viewerErrors":  "[]",
+        "shot":  "open_견적서_2026-0001_hwpx.png",
+        "result":  "PASS"
+    },
+    {
+        "file":  "견적서_2026-0003.hwpx",
+        "bytes":  8081,
+        "zipEntries":  9,
+        "formulas":  0,
+        "zipMissing":  "",
+        "formulaMissing":  "",
+        "viewerMissing":  "",
+        "viewerErrors":  "[]",
+        "shot":  "open_견적서_2026-0003_hwpx.png",
+        "result":  "PASS"
+    }
+]

@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>민원·내용증명 초안 1초 작성 사용설명서</title>
+<style>
+@page{size:A4;margin:12mm}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:#111;font-size:11pt;line-height:1.55}
+.cover{background:#0A1128;color:#fff;border-radius:10px;padding:22px 24px;margin-bottom:14px}
+.cover h1{font-size:21pt;letter-spacing:-1px}
+.cover p{color:#C9D3E3;margin-top:8px;font-size:10.5pt}
+.legend{display:flex;gap:18px;font-size:9.5pt;color:#444;margin:0 0 10px}
+.legend span{display:flex;align-items:center;gap:6px}
+.pair{display:flex;gap:16px;page-break-inside:avoid;margin-bottom:14px}
+.st{flex:1;display:flex;gap:12px;page-break-inside:avoid}
+.shot{position:relative;width:180px;flex:0 0 180px;border-radius:12px;overflow:hidden;border:2px solid #0A1128;align-self:flex-start}
+.shot img{display:block;width:180px}
+.txt h2{font-size:11.5pt;color:#0A1128;border-left:4px solid #FF6B00;padding-left:7px;margin-bottom:5px;letter-spacing:-.4px}
+.txt p{font-size:9.6pt;color:#333}
+.ring{position:absolute;border:3px solid #FF6B00;border-radius:12px;box-shadow:0 0 0 2px rgba(255,255,255,.85)}
+.tap{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:rgba(255,107,0,.35);border:3px solid #FF6B00}
+.fing{position:absolute;width:30px;height:36px;margin:2px 0 0 -4px}
+.lbl{position:absolute;font-size:7.5pt;font-weight:700;color:#fff;background:#FF6B00;border-radius:4px;padding:0 4px;white-space:nowrap}
+.wide{page-break-before:always}
+.wide img{max-width:100%;max-height:235mm;border:1px solid #999;margin-top:8px}
+.foot{font-size:8.5pt;color:#666;margin-top:8px}
+</style></head><body>
+<div class="cover"><h1>민원·내용증명 초안 1초 작성 사용설명서</h1><p>사건 개요만 넣으면 수신·제목·본문·붙임·작성일 규격을 갖춘 내용증명·민원신청서·이의신청서·사실확인서 초안이 나옵니다. 초안 작성 보조용이며 법률 자문이 아닙니다. 발송·제출은 본인이 직접 하십시오(이 앱은 우편·문자·메일을 보내지 않습니다).</p><p>화면은 실제 앱을 390px 휴대폰 크기로 연 그대로의 캡처이고, 손가락·원은 캡처할 때 실제로 누른 자리입니다.</p></div>
+<div class="legend"><span><svg width="18" height="18"><circle cx="9" cy="9" r="7" fill="rgba(255,107,0,.35)" stroke="#FF6B00" stroke-width="3"/></svg>여기를 누르세요(손가락)</span><span><svg width="22" height="16"><rect x="2" y="2" width="18" height="12" rx="4" fill="none" stroke="#FF6B00" stroke-width="3"/></svg>여기를 보세요(원)</span></div>
+<div id="list"></div>
+
+<p class="foot">KTS 원클릭 · 서버 0 · 유료 API 0 · 외부 발송 0 · 모든 처리는 손님 기기 안에서만 합니다.</p>
+<script>
+const MARKS = [
+    {
+        "shot":  "01_kinds",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  203.7,
+                          "w":  164,
+                          "h":  92,
+                          "note":  "서식 고르기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  14,
+                          "y":  47.9,
+                          "w":  362,
+                          "h":  45.5,
+                          "note":  "고지 고정 표시"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "02_notice_empty",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  259.4,
+                          "w":  336,
+                          "h":  38.1,
+                          "note":  "예시 넣기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  306.5,
+                          "w":  336,
+                          "h":  933.6,
+                          "note":  "사건 개요"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "03_notice_typed",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  250.0,
+                          "w":  336,
+                          "h":  42.3,
+                          "note":  "금액 → 한글 병기"
+                      },
+                      {
+                          "kind":  "tap",
+                          "x":  73.9,
+                          "y":  369.2,
+                          "w":  48.1,
+                          "h":  27.9,
+                          "note":  "기한 D+14"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  119,
+                          "y":  334.4,
+                          "w":  150.1,
+                          "h":  17.4,
+                          "note":  "실제 날짜"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "04_notice_draft",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  234.2,
+                          "w":  336,
+                          "h":  260,
+                          "note":  "본문(바로 고치기)"
+                      },
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  554.0,
+                          "w":  164.5,
+                          "h":  47.0,
+                          "note":  "인쇄·PDF"
+                      },
+                      {
+                          "kind":  "tap",
+                          "x":  198.5,
+                          "y":  554.0,
+                          "w":  164.5,
+                          "h":  47.0,
+                          "note":  "텍스트 복사"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "05_notice_preview",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  170.5,
+                          "w":  336,
+                          "h":  401,
+                          "note":  "수신·제목·본문·붙임·작성일"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "06_civil_input",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  152.4,
+                          "w":  336,
+                          "h":  38.1,
+                          "note":  "예시 넣기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  199.5,
+                          "w":  336,
+                          "h":  16.7,
+                          "note":  "민원신청서 전용 칸"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "07_civil_preview",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  170.5,
+                          "w":  336,
+                          "h":  340,
+                          "note":  "민원신청서 초안"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "08_objection_input",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  152.4,
+                          "w":  336,
+                          "h":  38.1,
+                          "note":  "예시 넣기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  199.5,
+                          "w":  336,
+                          "h":  16.7,
+                          "note":  "이의신청서 전용 칸"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "09_objection_preview",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  170.5,
+                          "w":  336,
+                          "h":  381,
+                          "note":  "이의신청서 초안"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "10_fact_input",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  152.4,
+                          "w":  336,
+                          "h":  38.1,
+                          "note":  "예시 넣기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  199.5,
+                          "w":  336,
+                          "h":  16.7,
+                          "note":  "사실확인서 전용 칸"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "11_fact_preview",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  170.5,
+                          "w":  336,
+                          "h":  288,
+                          "note":  "사실확인서 초안"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "12_missing",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  292.2,
+                          "w":  336,
+                          "h":  44.3,
+                          "note":  "빨간 칸 = 빈 칸"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "90_inquiry",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  538.1,
+                          "w":  164.5,
+                          "h":  38.1,
+                          "note":  "답장 초안"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  584.2,
+                          "w":  336,
+                          "h":  189.3,
+                          "note":  "자동 발송 없음"
+                      }
+                  ],
+        "scrollWidth":  390
+    }
+]
+;
+const STEPS = [["01_kinds","1. 종류 고르기","내용증명 · 민원신청서 · 이의신청서 · 사실확인서 중 하나를 누르면 바로 다음 단계로 넘어갑니다."],["02_notice_empty","2. 사건 개요","누가·언제·무엇을·어떻게·무엇을 요구하는지 짧게 적습니다. 처음이면 [예시 넣기]로 모양을 먼저 보세요."],["03_notice_typed","2-1. 금액·날짜 자동 병기","금액은 \"금 1,200,000원(금 일백이십만 원)\", 날짜는 \"2026년 12월 2일(수)\"처럼 숫자와 한글로 함께 적힙니다. 기한은 [D+14] 단추로 고릅니다."],["04_notice_draft","3. 초안 확인·고치기","본문 칸에서 바로 고치면 인쇄·복사에 그대로 들어갑니다. [자동 초안으로 되돌리기]로 처음 초안을 다시 부를 수 있습니다."],["05_notice_preview","3-1. 내용증명 미리보기","수신(귀하)·발신·제목·번호 매긴 본문·요구사항 목록·붙임·작성일·발신인(인)이 A4 한 장에 들어갑니다."],["06_civil_input","4. 민원신청서","민원 분야와 처리 기관을 넣으면 신청인 소개 → 발생 경위 → 불편·피해 → 요청 사항 → 회신 방법 순서로 만듭니다."],["07_civil_preview","4-1. 민원신청서 초안","요청 사항은 번호 목록으로, 회신받을 연락처는 맨 끝에 들어갑니다."],["08_objection_input","5. 이의신청서","처분명·처분일·통지 받은 날을 넣으면 작성일 기준으로 며칠 지났는지도 함께 적습니다."],["09_objection_preview","5-1. 이의신청서 초안","대상 처분 → 사실관계 → 이의 이유 → 신청 취지 → 증빙 안내 순서입니다."],["11_fact_preview","6. 사실확인서","확인자·확인 사항·\"사실과 다름이 없음을 확인합니다\"·제출처와 용도가 들어갑니다."],["12_missing","7. 빈 칸 표시","빈 칸이 있으면 빨간 테두리로 보이고, 그대로 초안을 보면 그 자리는 밑줄(____)로 나갑니다."],["90_inquiry","8. 60초 문의","필요한 서식을 남기면 답장 초안이 바로 만들어집니다. 실제 발송은 담당자가 확인한 뒤에만 합니다."]];
+const S = 180 / 390;
+const fing = '<svg class="fing" viewBox="0 0 30 36"><path d="M9 3c1.7 0 3 1.3 3 3v10l1-.2V12c0-1.6 1.3-2.8 2.8-2.8S18.6 10.4 18.6 12v4l.8-.1c1.5 0 2.7 1.2 2.7 2.7v1l.6-.1c1.5 0 2.8 1.2 2.8 2.8V26c0 4.4-3.6 8-8 8h-3.3c-2.6 0-5-1.3-6.4-3.4L3.3 24c-.9-1.3-.6-3 .7-3.9 1.2-.8 2.8-.6 3.7.5L6 21V6c0-1.7 1.3-3 3-3z" fill="#fff" stroke="#0A1128" stroke-width="1.6"/></svg>';
+const byShot = {}; (Array.isArray(MARKS) ? MARKS : [MARKS]).forEach(m => byShot[m.shot] = m.marks || []);
+const card = s => {
+  const [shot, h, p] = s; let ov = '';
+  (byShot[shot] || []).forEach(m => {
+    if (!m) return;
+    if (m.y > 844 || m.y + m.h < 0) return;
+    if (m.kind === 'tap'){ const cx = (m.x + m.w / 2) * S, cy = (m.y + m.h / 2) * S;
+      ov += '<div class="tap" style="left:' + cx + 'px;top:' + cy + 'px"></div><div style="position:absolute;left:' + cx + 'px;top:' + cy + 'px">' + fing + '</div>'; }
+    else { const pd = 3, y0 = Math.max(0, m.y), y1 = Math.min(844, m.y + m.h); ov += '<div class="ring" style="left:' + (m.x * S - pd) + 'px;top:' + (y0 * S - pd) + 'px;width:' + (m.w * S + pd * 2) + 'px;height:' + ((y1 - y0) * S + pd * 2) + 'px"></div>'; }
+    if (m.note) ov += '<div class="lbl" style="left:' + Math.max(2, Math.min(80, m.x * S)) + 'px;top:' + Math.max(2, Math.min(370, Math.max(0, m.y) * S - 14)) + 'px">' + m.note + '</div>';
+  });
+  return '<div class="st"><div class="shot"><img src="' + shot + '.png">' + ov + '</div><div class="txt"><h2>' + h + '</h2><p>' + p + '</p></div></div>';
+};
+let html = ''; for (let i = 0; i < STEPS.length; i += 2) html += '<div class="pair">' + card(STEPS[i]) + (STEPS[i + 1] ? card(STEPS[i + 1]) : '<div class="st"></div>') + '</div>';
+document.getElementById('list').innerHTML = html;
+</script></body></html>

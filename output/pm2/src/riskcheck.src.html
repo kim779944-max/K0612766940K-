@@ -1,0 +1,425 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 독소조항 1초 검토기 — 계약서 위험 조항 찾기</title>
+<meta name="description" content="계약서 조항을 붙여 넣거나 사진으로 넣으면 자동 연장·일방 해지·과도한 위약금·책임 면제 같은 위험 조항을 표로 짚고, 바꿔 달라고 할 문구까지 만들어 드립니다. 모든 처리는 이 기기 안에서만.">
+<meta name="theme-color" content="#0A1128">
+<link rel="icon" href="icon.png">
+<style>
+/*@@CSS@@*/
+textarea.big{min-height:190px;font-size:13px;line-height:1.55}
+.sumrow{display:flex;gap:6px;margin-top:8px}
+.sumrow div{flex:1;text-align:center;border-radius:11px;padding:9px 4px;background:#0B1729;border:1px solid var(--line)}
+.sumrow b{display:block;font-size:20px;font-weight:900}
+.sumrow span{font-size:11px;font-weight:800;color:var(--ink2)}
+.sumrow .hi b{color:#FF7A7A}.sumrow .md b{color:#FFB547}.sumrow .lo b{color:#7FB0FF}
+.rk{background:#0B1729;border:1px solid var(--line);border-radius:12px;margin-top:8px;overflow:hidden}
+.rk.hi{border-color:rgba(255,90,90,.7)}.rk.md{border-color:rgba(255,181,71,.6)}
+.rk table{width:100%;border-collapse:collapse;table-layout:fixed}
+.rk th{width:74px;text-align:left;font-size:11px;font-weight:800;color:var(--ink2);padding:7px 8px;vertical-align:top;border-top:1px solid var(--line);background:#0E1A31}
+.rk td{font-size:12.5px;line-height:1.5;color:#E6EDF7;padding:7px 9px;border-top:1px solid var(--line);overflow-wrap:anywhere}
+.rk tr:first-child th,.rk tr:first-child td{border-top:0}
+.rk mark{background:rgba(255,107,0,.35);color:#fff;border-radius:3px;padding:0 1px}
+.rk .fix{color:#BFF0D2}
+.rk .ck{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:var(--amber2);padding:8px 9px;border-top:1px solid var(--line);background:#0E1A31}
+.rk .ck input{width:17px;height:17px;accent-color:#FF6B00}
+.ai{font-size:10px;font-weight:900;color:#0A1224;background:#7FE0B0;border-radius:6px;padding:1px 5px;margin-left:4px}
+.oklist{font-size:11.5px;color:var(--gray);margin-top:8px;line-height:1.6}
+.req{min-height:200px;font-size:12.5px;line-height:1.6}
+.thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.thumbs img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line2)}
+/* 요약지(A4 1장) */
+.paper{font-size:11px}
+.paper h1{font-size:19px;text-align:center;margin:0 0 4px;letter-spacing:-.5px}
+.paper .meta td{font-size:10.5px}
+.paper .lv{font-weight:700;text-align:center}
+.paper .lv.hi{color:#C62828}.paper .lv.md{color:#B26A00}.paper .lv.lo{color:#1E5BB8}
+.paper .note{font-size:9px;color:#666;margin-top:6px}
+.paper th{border:1px solid #333;background:#EEF2F8;font-size:10px;padding:4px 5px}
+@media print{
+ body{background:#fff;display:block}
+ #app,.bar,#toast,.modal,#busy{display:none!important}
+ #printArea{display:block}
+ #printArea .paper{width:auto;padding:0;font-size:8.6pt;line-height:1.38}
+ #printArea .paper h1{font-size:15pt}
+ #printArea .paper td,#printArea .paper th{padding:2.2pt 3.5pt;font-size:8.2pt}
+ @page{size:A4;margin:11mm 12mm}
+}
+</style>
+</head><body>
+<div id="app">
+<header class="top">
+ <div class="hd">
+  <div class="brand"><span class="mark">검</span>독소조항 1초 검토기 <small>KTS 원클릭</small></div>
+  <span class="sp"></span>
+  <button class="keyb" id="keyBtn">AI 열쇠 · 없음</button>
+  <button class="newb" id="newBtn">새로</button>
+ </div>
+ <p class="legal" id="legalTop"></p>
+ <div class="prog"><div class="track"><div class="fill" id="pfill"></div></div>
+  <div class="lbls" id="plbls"><button data-s="1">1 넣기</button><button data-s="2">2 검토</button><button data-s="3">3 정리</button></div></div>
+</header>
+<main>
+<!-- 1 넣기 -->
+<section class="scr" id="s1">
+ <div class="card">
+  <h2><span class="n">1</span>계약서 넣기</h2>
+  <p class="sub">받은 계약서의 조항을 그대로 붙여 넣으세요. 조항 번호(제1조, 1), ①, [특약])를 찾아 조항별로 자릅니다.</p>
+  <label class="lb">예시 계약서로 먼저 해 보기</label>
+  <div class="seg" id="sampleSeg"><button data-v="sale">부동산<br>매매</button><button data-v="house">주택<br>임대차</button><button data-v="shop">상가건물<br>임대차</button></div>
+  <label class="lb">계약서 이름<i>요약지 머리글</i></label><input id="docTitle" maxlength="40" placeholder="예: 마포 KTS빌라 301호 월세 계약서">
+  <label class="lb">내 입장<i>바꿔 쓸 문구를 내 쪽에 맞춥니다</i></label>
+  <div class="seg" id="sideSeg"><button data-v="b">을<br><small>매수인·임차인·고객</small></button><button data-v="a">갑<br><small>매도인·임대인·회사</small></button></div>
+  <label class="lb">조항 붙여넣기<em>*</em></label><textarea class="big" id="docText" placeholder="제1조(목적) …&#10;제2조(기간) …&#10;[특약]&#10;1) …"></textarea>
+  <p class="kv" id="clauseInfo"></p>
+ </div>
+ <div class="card">
+  <h2><span class="n">사</span>사진으로 넣기(선택)</h2>
+  <p class="sub">계약서 사진 여러 장을 고르면 AI 열쇠가 있을 때 글자를 읽어 위 칸에 붙여 넣습니다. 열쇠가 없으면 사진은 이 기기에서 보기만 하고, 조항은 직접 붙여 넣어 주세요.</p>
+  <input type="file" id="photoIn" accept="image/*" multiple style="display:none">
+  <div class="row"><button class="btn sec sm" id="photoBtn">계약서 사진 고르기</button><button class="btn sec sm" id="ocrBtn">사진 글자 읽기(AI)</button></div>
+  <div class="thumbs" id="thumbs"></div>
+ </div>
+</section>
+<!-- 2 검토 -->
+<section class="scr" id="s2">
+ <div class="card">
+  <h2><span class="n">2</span>검토 결과</h2>
+  <p class="sub" id="revLead"></p>
+  <div class="sumrow"><div class="hi"><b id="nHi">0</b><span>높음</span></div><div class="md"><b id="nMd">0</b><span>보통</span></div><div class="lo"><b id="nLo">0</b><span>낮음</span></div></div>
+  <div class="row"><button class="btn sec sm" id="aiBtn">AI로 쉽게 풀기 · 규칙 밖 조항 추정</button></div>
+ </div>
+ <div class="card"><h2><span class="n">표</span>위험 후보 검토표</h2>
+  <p class="sub">조항 번호 · 원문 발췌 · 위험 등급 · 왜 위험한지 · 바꿔 쓸 문구. 체크한 조항만 수정 요청 문구에 들어갑니다.</p>
+  <div id="riskList"></div>
+  <p class="oklist" id="okList"></p>
+ </div>
+</section>
+<!-- 3 정리 -->
+<section class="scr" id="s3">
+ <div class="card"><h2><span class="n">3</span>상대에게 보낼 수정 요청 문구</h2>
+  <p class="sub">복사해서 문자·메신저에 붙여 넣으세요. 이 앱은 직접 보내지 않습니다. 고쳐 쓴 내용도 그대로 복사됩니다.</p>
+  <textarea class="req" id="reqText"></textarea>
+  <div class="row"><button class="btn pri" id="copyBtn">수정 요청 문구 복사</button><button class="btn pri" id="printBtn">요약 인쇄 · PDF</button></div>
+  <p class="kv" id="outInfo">요약지는 A4 한 장으로 인쇄됩니다.</p>
+ </div>
+ <div class="card"><h2><span class="n">보</span>검토 요약 1장 미리보기</h2><div class="pvwrap" id="pvWrap"></div></div>
+</section>
+
+<!--@@INQ@@-->
+<p class="foot">독소조항 1초 검토기 · KTS 원클릭 · 서버 0 · 유료 API 0<br>붙여 넣은 계약서는 이 기기 브라우저 안에만 저장됩니다.</p>
+</main>
+<div class="bar"><button class="btn sec back" id="backBtn">이전</button><button class="btn pri" id="nextBtn">다음</button></div>
+</div>
+<!--@@MODAL@@-->
+<script>
+/*@@COMMON@@*/
+const LEGAL = '본 검토는 작성 보조용이며 법률 자문이 아닙니다. 효력 판단은 변호사·공인중개사 확인이 필요합니다.';
+$('#legalTop').textContent = LEGAL;
+
+/* ---------- 상태(자동 저장) ---------- */
+const LS = 'krc_riskcheck_v1';
+const fresh = () => ({step:1, side:'b', title:'', text:'', off:{}, ai:{}});
+let S; try{ S = Object.assign(fresh(), JSON.parse(localStorage.getItem(LS) || 'null') || {}); }catch(e){ S = fresh(); }
+let saveT; const flush = () => { clearTimeout(saveT); saveT = null; try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} };
+const save = () => { clearTimeout(saveT); saveT = setTimeout(flush, 200); };
+window.addEventListener('pagehide', flush); document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
+
+/* ---------- 예시 계약서 3종 (contract.html 샘플의 당사자·금액을 그대로 쓰고, 상대가 내밀 법한 위험 특약을 섞음) ---------- */
+const SAMPLES = {
+ sale:{title:'송파 KTS아파트 1203호 매매계약서', text:`부동산 매매계약서
+매도인 김매도와 매수인 이매수는 아래 부동산에 대하여 다음 내용으로 매매계약을 맺는다.
+소재지: 서울특별시 송파구 올림픽로 300 KTS아파트 101동 1203호(84.97㎡)
+제1조(목적물과 대금) 매도인은 위 부동산을 매수인에게 팔고 매수인은 이를 사기로 하며, 매매대금은 금 850,000,000원으로 한다. 계약금 금 85,000,000원은 계약할 때, 중도금 금 300,000,000원은 2026년 12월 18일, 잔금 금 465,000,000원은 2027년 1월 17일에 지급한다.
+제2조(소유권 이전과 인도) 매도인은 잔금을 받는 날 소유권 이전등기에 필요한 서류를 매수인에게 건네고, 같은 날 부동산을 넘겨준다.
+제3조(권리의 정리) 매도인은 잔금일까지 저당권 등 소유권 행사를 막는 권리를 정리한다. 다만 매수인은 현 상태를 확인하였으므로 매도인은 하자에 대하여 일체의 책임을 지지 않는다.
+제4조(계약의 해제) 매수인이 중도금을 주기 전까지 매도인은 받은 계약금의 배액을 돌려주고, 매수인은 낸 계약금을 포기하고 이 계약을 해제할 수 있다.
+제5조(위약) 매수인이 잔금을 하루라도 늦게 지급하면 매도인은 즉시 계약을 해지할 수 있으며, 매수인은 매매대금의 30%를 위약금으로 지급한다.
+제6조(관할) 이 계약에 관한 소송은 매도인의 주소지 관할 법원으로 한다.
+[특약]
+1) 잔금일에 관리비 선수금은 매수인이 매도인에게 지급한다.
+2) 이 계약서에 적히지 않은 사항이나 해석에 다툼이 있으면 매도인의 해석에 따른다.
+3) 매수인이 등기 서류 받을 날을 통지하지 않으면 매도인이 정한 날에 받은 것으로 본다.`},
+ house:{title:'마포 KTS빌라 301호 월세 계약서', text:`주택 임대차계약서(월세)
+임대인 박임대와 임차인 정임차는 아래 주택에 대하여 다음 내용으로 임대차계약을 맺는다.
+소재지: 서울특별시 마포구 독막로 50 KTS빌라 301호(45.2㎡)
+제1조(보증금과 차임) 보증금은 금 50,000,000원, 차임은 매월 금 1,200,000원으로 하며 매월 9일에 지급한다.
+제2조(임대 기간) 임대 기간은 2026년 12월 9일부터 2028년 12월 8일까지 24개월로 한다.
+제3조(기간의 연장) 기간 만료 3개월 전까지 임차인이 서면으로 해지 의사를 통지하지 않으면 이 계약은 동일한 조건으로 자동 연장된 것으로 본다.
+제4조(수리) 임대인은 임차인이 집을 쓰는 데 필요한 수리를 하고, 임차인의 잘못으로 생긴 파손은 임차인이 고친다.
+제5조(계약의 해지) 임차인이 차임을 2회 이상 연체하면 임대인은 계약을 해지할 수 있다. 임차인은 임대 기간 중 어떠한 사정이 있어도 중도 해지를 할 수 없다.
+제6조(계약의 종료) 계약이 끝나면 임차인은 입주 당시 상태 그대로 원상복구하여야 하며, 통상의 마모도 포함한다.
+[특약]
+1) 보증금은 새로운 임차인이 들어와 보증금을 낸 후에 돌려준다.
+2) 임차인은 반려동물을 키우지 않는다.
+3) 도배·장판은 임대인이 입주 전에 새로 한다.`},
+ shop:{title:'센텀 KTS타워 102호 상가 임대차계약서', text:`상가건물 임대차계약서
+임대인 (주)KTS빌딩과 임차인 한카페는 아래 상가에 대하여 다음 내용으로 임대차계약을 맺는다.
+소재지: 부산광역시 해운대구 센텀중앙로 20 KTS타워 1층 102호(66.0㎡)
+제1조(보증금과 차임) 보증금은 금 30,000,000원, 차임은 월 금 2,500,000원(부가세 별도), 관리비는 월 금 300,000원으로 한다.
+제2조(임대 기간) 임대 기간은 2026년 12월 2일부터 24개월로 한다.
+제3조(용도) 임차인은 카페(일반음식점) 용도로만 사용한다.
+제4조(경업 금지) 임차인은 계약이 끝난 뒤 5년간 반경 3km 안에서 동종 영업을 하지 못한다.
+제5조(손해) 임대인은 건물 관리 중 생긴 어떠한 손해에 대하여도 민·형사상 책임이 없다.
+제6조(위약금) 임차인이 이 계약을 어기면 보증금의 2배를 위약금으로 지급한다.
+제7조(원상복구) 계약이 끝나면 임차인은 점포를 원상복구한다.
+[특약]
+1) 관리비 산정과 부과 방법은 임대인이 정하는 바에 따른다.
+2) 임대인은 필요한 경우 언제든지 계약을 해지할 수 있다.
+3) 이 계약과 관련한 분쟁은 임대인 본점 소재지 법원을 관할로 한다.
+4) 구두 약정은 효력이 없다.`}
+};
+
+/* ---------- 조항 자르기 ---------- */
+function splitClauses(text){
+  const lines = String(text || '').replace(/\r/g, '').split('\n');
+  const out = []; let cur = null, inSp = false, para = 0;
+  const push = (id, t) => { cur = {id, text:t.trim()}; out.push(cur); };
+  const CIRC = '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳';
+  let blank = true;
+  for (const raw of lines){
+    const l = raw.trim();
+    if (!l){ blank = true; continue; }
+    let m;
+    if ((m = /^\[?\s*특\s*약(\s*사\s*항)?\s*\]?\s*:?\s*(.*)$/.exec(l)) && l.length < 40 && !/^특약\s*\d/.test(l)){ inSp = true; if (m[2]) push('특약', m[2]); else cur = null; blank = false; continue; }
+    if ((m = /^(?:\d+\.\s*)?특약\s*사항\s*$/.exec(l))){ inSp = true; cur = null; blank = false; continue; }
+    if ((m = /^(제\s*\d+\s*조(?:의\s*\d+)?)\s*(.*)$/.exec(l))){ inSp = false; push(m[1].replace(/\s/g, ''), m[2] || l); blank = false; continue; }
+    if ((m = /^[(（]?(\d{1,2})[)）]\s*(.+)$/.exec(l)) || (m = /^(\d{1,2})\.\s+(.+)$/.exec(l))){ push((inSp ? '특약 ' : '') + m[1] + (inSp ? '' : (/^\d+\./.test(l) ? '.' : ')')), m[2]); blank = false; continue; }
+    if (CIRC.includes(l[0])){ const k = CIRC.indexOf(l[0]) + 1; const base = cur && /^제\d+조/.test(cur.id) ? cur.id.replace(/ .*/, '') : ''; push((base ? base + ' ' : '') + '제' + k + '항', l.slice(1)); blank = false; continue; }
+    if (cur && !blank){ cur.text += ' ' + l; continue; }
+    if (cur && blank && /^제\d+조|^특약/.test(cur.id)){ cur.text += ' ' + l; blank = false; continue; }
+    para++; push(out.length ? '문단 ' + para : '머리말', l); blank = false;
+  }
+  out.forEach((c, i) => { c.n = i; });
+  return out.filter(c => c.text);
+}
+
+/* ---------- 판정 기준표(A1) ---------- */
+const GA = '(?<![가-힣])갑(?=[은는이가의과와 ,)·])', EUL = '(?<![가-힣])을(?=[은는이가의과와 ,)·])';
+const SIDE = {a:GA + '|임대인|매도인|회사|사업자|발주자|도급인|위탁자', b:EUL + '|임차인|매수인|고객|수급인|수탁자|이용자'};
+const LV = ['낮음', '보통', '높음'], LVC = ['lo', 'md', 'hi'];
+const SYM = /양\s*당사자|서로|각각|쌍방|어느\s*한\s*쪽|어느\s*일방/;
+function rules(side){
+  const ME = SIDE[side], OT = SIDE[side === 'a' ? 'b' : 'a'];
+  const meWord = side === 'a' ? '갑(임대인·매도인)' : '을(임차인·매수인)';
+  return [
+  {id:'R1', name:'자동 갱신·연장', lv:1, sym:0,
+   re:[/자동\s*(으로\s*)?(갱신|연장)/, /이의(를)?\s*제기하지\s*않(으면|는\s*한)[^.]{0,30}(연장|갱신)/, /(동일한|같은)\s*조건으로\s*(연장|갱신)/],
+   up:t => { let x; const r = /(\d+)\s*(개월|달|일)\s*전/g; while ((x = r.exec(t))){ if ((x[2] === '일' && +x[1] >= 30) || (x[2] !== '일' && +x[1] >= 2)) return true; } return false; },
+   why:'끝내려면 정해진 날 전에 따로 알려야 해서, 놓치면 원하지 않아도 계약이 이어집니다.',
+   fix:'기간이 끝나면 계약은 종료되며, 연장은 양 당사자가 서면으로 다시 합의한다.'},
+  {id:'R2', name:'일방 해지·해지권 배제', lv:2, sym:1,
+   re:[new RegExp('(' + OT + ')(은|는|이|가)?[^.]{0,30}(언제든지|즉시|임의로|일방적으로)[^.]{0,15}해지'), new RegExp('(' + ME + ')(은|는|이|가)?[^.]{0,40}해지(를)?\\s*(할\\s*수\\s*없|하지\\s*못)'), /중도\s*해지[^.]{0,10}(불가|할\s*수\s*없|하지\s*못)/],
+   why:'한쪽만 마음대로 계약을 끝낼 수 있거나, 내 쪽은 끝낼 수 없게 되어 힘의 균형이 깨집니다.',
+   fix:'어느 한쪽이 계약을 어기면 상대방은 상당한 기간을 정해 이행을 요구한 뒤 해지할 수 있다(양쪽 같은 조건). 부득이한 사정이 생기면 1개월 전 서면 통지로 중도 해지할 수 있다.'},
+  {id:'R3', name:'과도한 위약금·손해배상 예정', lv:1, sym:1,
+   re:[/위약금|위약벌|손해배상(액)?(의)?\s*예정/],
+   up:t => { let x; const r1 = /(\d+(?:\.\d+)?)\s*배(?!액)/g; while ((x = r1.exec(t))) if (+x[1] >= 2) return true;
+     const r2 = /(\d{1,3})\s*(%|퍼센트)/g; while ((x = r2.exec(t))) if (+x[1] >= 20) return true; return false; },
+   why:'실제 손해보다 훨씬 큰 돈을 물어야 할 수 있습니다.',
+   fix:'위약금은 계약금 상당액으로 하고, 실제 손해가 더 크면 그 손해를 증명하여 청구한다(양쪽 같은 조건).'},
+  {id:'R4', name:'책임 전부 면제', lv:2, sym:0,
+   re:[/(일체|모든|어떠한)[^.]{0,6}(책임|손해)[^.]{0,24}(지지\s*않|면제|부담하지\s*않|없다|없음)/, /민\s*[·ㆍ.]?\s*형사상[^.]{0,12}책임[^.]{0,6}(없|지지\s*않)/],
+   why:'상대가 잘못해도 책임을 묻기 어려워집니다.',
+   fix:'고의 또는 중대한 과실로 생긴 손해는 그 당사자가 배상한다.'},
+  {id:'R5', name:'전속·경업 금지', lv:1, sym:0,
+   re:[/경업/, /동종\s*(업종|영업|업)/, /전속/, /독점(적)?으로/, /다른\s*(업체|사람|회사)와[^.]{0,12}(계약|거래)하지/],
+   up:t => { let x; const r = /(\d+)\s*년/g; while ((x = r.exec(t))) if (+x[1] >= 3) return true; return /전국/.test(t); },
+   why:'계약이 끝난 뒤에도 같은 일을 못 하거나, 다른 곳과의 거래가 막힙니다.',
+   fix:'같은 업종 제한은 같은 건물 안, 계약 기간 동안으로 한정한다.'},
+  {id:'R6', name:'재판관할·준거법 일방 지정', lv:0, sym:0,
+   re:[/관할\s*(법원)?/, /준거법/, /중재/],
+   up:t => new RegExp('(' + OT + ')의?\\s*(주소지|본점|소재지|본사)').test(t),
+   why:'다툼이 생기면 상대 쪽 동네 법원까지 가야 할 수 있습니다.',
+   fix:'이 계약에 관한 분쟁은 민사소송법에 따른 관할 법원에서 다툰다.'},
+  {id:'R7', name:'보증금 반환 조건 과다', lv:2, sym:0,
+   re:[/보증금[^.]{0,40}(새로운|신규|다음)\s*(임차인|세입자)[^.]{0,30}(후|뒤|때)/, /보증금[^.]{0,20}(반환하지\s*않|돌려주지\s*않|몰수)/, /보증금[^.]{0,25}(공제|차감)/],
+   down:t => /보증금[^.]{0,25}(공제|차감)/.test(t) && /(밀린|연체)[^.]{0,8}(차임|관리비)/.test(t) && !/(새로운|신규|다음)\s*(임차인|세입자)|몰수|반환하지\s*않/.test(t),
+   why:'새 세입자가 구해질 때까지 보증금을 못 받거나, 이유 없이 깎일 수 있습니다.',
+   fix:'임대인은 계약이 끝나는 날 보증금을 돌려주고, 밀린 차임·관리비만 빼고 돌려준다.'},
+  {id:'R8', name:'원상복구 범위 과다', lv:1, sym:0,
+   re:[/원상\s*(복구|회복)/, /(입주|최초|계약)\s*(당시|전)\s*(의\s*)?(상태|그대로)/, /원래\s*상태로/],
+   up:t => /일체|모든\s*시설|(통상|자연)[^.]{0,4}(마모|손모)[^.]{0,8}포함|(입주|최초|계약)\s*(당시|전)\s*(의\s*)?상태\s*그대로/.test(t),
+   why:'살면서 생긴 자연스러운 낡음까지 고쳐 놓으라고 할 수 있습니다.',
+   fix:'원상복구는 임차인이 새로 설치한 시설과 임차인 잘못으로 생긴 파손에 한하며, 통상의 사용으로 낡은 부분은 제외한다.'},
+  {id:'R9', name:'통지 의무 일방 부과', lv:1, sym:1,
+   re:[new RegExp('(' + ME + ')(은|는|이|가)?[^.]{0,30}(통지|통보|알려)'), /(통지|통보)하지\s*않으면[^.]{0,40}(간주|본다|것으로)/],
+   up:t => /(간주|본다|것으로\s*(한다|본다)|동의한\s*것)/.test(t) && /(통지|통보)하지\s*않으면/.test(t),
+   why:'알리지 않으면 내가 동의한 것으로 처리되거나, 내 쪽에만 알릴 의무가 생깁니다.',
+   fix:'중요 사항의 통지는 양 당사자 모두 서면(문자 포함)으로 하며, 답이 없다는 이유로 동의한 것으로 보지 않는다.'},
+  {id:'R10', name:'계약 해석 우선순위', lv:2, sym:0,
+   re:[new RegExp('(' + OT + ')의?\\s*(해석|판단|결정)에\\s*따른다'), new RegExp('(' + OT + ')(이|가)?\\s*정하는\\s*바에\\s*따른다'), /별도\s*(약관|규정)[^.]{0,12}우선/],
+   why:'뜻이 애매하거나 정하지 않은 일은 상대 쪽 생각대로 정해집니다.',
+   fix:'정하지 않았거나 뜻이 분명하지 않은 사항은 양 당사자가 협의하여 정하고, 협의가 안 되면 관련 법령과 일반 관례에 따른다.'},
+  {id:'R11', name:'말로 한 약속 배제', lv:0, sym:0,
+   re:[/구두\s*(약정|합의|약속)[^.]{0,12}(효력이\s*없|인정하지|무효)/],
+   why:'말로 한 약속은 남지 않으니, 받기로 한 것은 꼭 특약에 적어야 합니다.',
+   fix:'계약 전에 말로 약속한 사항(예: 도배·수리·옵션)은 아래 특약에 모두 적는다.'}
+  ].map(r => Object.assign(r, {meWord}));
+}
+function excerpt(t, re){
+  const m = re ? re.exec(t) : null;
+  if (!m) return {pre:'', hit:'', post:t.length > 70 ? t.slice(0, 70) + '…' : t};
+  const a = Math.max(0, m.index - 28), b = Math.min(t.length, m.index + m[0].length + 28);
+  return {pre:(a > 0 ? '…' : '') + t.slice(a, m.index), hit:m[0], post:t.slice(m.index + m[0].length, b) + (b < t.length ? '…' : '')};
+}
+function review(){
+  const cls = splitClauses(S.text), R = rules(S.side), out = [], ok = [];
+  for (const c of cls){
+    const hits = [];
+    for (const r of R){
+      const re = r.re.find(x => x.test(c.text)); if (!re) continue;
+      let lv = r.lv;
+      if (r.up && r.up(c.text)) lv = Math.min(2, lv + 1);
+      if (r.down && r.down(c.text)) lv = 0;
+      if (r.sym && SYM.test(c.text)) lv = Math.max(0, lv - 1);
+      hits.push({r, lv, re});
+    }
+    const ai = S.ai[c.id + '|' + c.text.slice(0, 20)];
+    if (!hits.length && !ai){ ok.push(c.id); continue; }
+    if (!hits.length && ai){ out.push({c, lv:ai.lv, names:['AI 추정'], why:ai.why, fix:ai.fix, ex:excerpt(c.text, null), ai:1}); continue; }
+    hits.sort((x, y) => y.lv - x.lv);
+    const top = hits[0];
+    out.push({c, lv:top.lv, names:hits.map(h => h.r.name), why:hits.map(h => h.r.why).filter((v, i, a) => a.indexOf(v) === i).join(' '),
+      fix:hits.map(h => h.r.fix).filter((v, i, a) => a.indexOf(v) === i).join(' '), ex:excerpt(c.text, new RegExp(top.re.source)), plain:ai && ai.plain, ids:hits.map(h => h.r.id)});
+  }
+  out.sort((a, b) => b.lv - a.lv || a.c.n - b.c.n);
+  out.forEach(o => { o.key = o.c.id + '|' + o.c.text.slice(0, 20); });
+  return {cls, out, ok};
+}
+
+/* ---------- 화면 ---------- */
+function renderInfo(){
+  const n = splitClauses(S.text).length;
+  $('#clauseInfo').innerHTML = S.text.trim() ? `<span class="dot"></span>조항 ${n}개로 잘랐습니다. [다음: 검토]를 누르세요.` : '조항을 붙여 넣거나 위 예시 단추를 누르세요.';
+}
+function segOn(){ $$('#sideSeg button').forEach(b => b.classList.toggle('on', b.dataset.v === S.side)); }
+let LAST = null;
+function renderReview(){
+  const R = LAST = review();
+  const cnt = [0, 0, 0]; R.out.forEach(o => cnt[o.lv]++);
+  $('#nHi').textContent = cnt[2]; $('#nMd').textContent = cnt[1]; $('#nLo').textContent = cnt[0];
+  $('#revLead').textContent = `조항 ${R.cls.length}개 중 ${R.out.length}개에서 위험 후보를 찾았습니다. 높음은 서명 전에 꼭 바꿔 달라고 하세요.`;
+  $('#riskList').innerHTML = R.out.length ? R.out.map((o, i) => `<div class="rk ${LVC[o.lv]}" data-i="${i}"><table>
+   <tr><th>조항 번호</th><td><b>${escH(o.c.id)}</b> · ${escH(o.names.join(', '))}${o.ai ? '<span class="ai">AI 추정</span>' : ''}</td></tr>
+   <tr><th>원문 발췌</th><td>${escH(o.ex.pre)}${o.ex.hit ? '<mark>' + escH(o.ex.hit) + '</mark>' : ''}${escH(o.ex.post)}</td></tr>
+   <tr><th>위험 등급</th><td><span class="pill ${LVC[o.lv]}">${LV[o.lv]}</span></td></tr>
+   <tr><th>왜 위험한지</th><td>${escH(o.plain || o.why)}</td></tr>
+   <tr><th>바꿔 쓸 문구</th><td class="fix">${escH(o.fix)}</td></tr></table>
+   <label class="ck"><input type="checkbox" data-key="${escH(o.key)}" ${S.off[o.key] ? '' : 'checked'}>수정 요청에 넣기</label></div>`).join('')
+   : '<p class="empty">기준표에 걸린 조항이 없습니다. 그래도 금액·날짜·특약은 직접 한 번 더 읽어 보세요.</p>';
+  $('#okList').textContent = R.ok.length ? '걸린 것 없는 조항: ' + R.ok.join(', ') : '';
+}
+function reqText(){
+  const R = LAST || review(); const pick = R.out.filter(o => !S.off[o.key]);
+  if (!pick.length) return '';
+  const nm = S.title.trim() || '보내 주신 계약서';
+  let t = `안녕하세요. ${nm}를 검토하다가 몇 가지 조항을 조정하고 싶어 말씀드립니다.\n아래 조항을 이렇게 바꾸어 주시기를 요청드립니다.\n\n`;
+  pick.forEach((o, i) => { t += `${i + 1}) ${o.c.id} — 현재: "${(o.ex.pre + o.ex.hit + o.ex.post).replace(/\s+/g, ' ').trim()}"\n   → 요청: ${o.fix}\n`; });
+  t += '\n서로 같은 조건으로 맞추려는 취지입니다. 검토해 주시고 의견 주시면 감사하겠습니다.';
+  return t;
+}
+function paperHtml(){
+  const R = LAST || review(); const cnt = [0, 0, 0]; R.out.forEach(o => cnt[o.lv]++);
+  const MAX = 12, rows = R.out.slice(0, MAX);
+  let h = `<div class="paper"><h1>계약서 검토 요약</h1>
+  <table class="meta"><colgroup><col style="width:16%"><col style="width:34%"><col style="width:16%"><col style="width:34%"></colgroup>
+  <tr><td style="background:#EEF2F8;font-weight:700">계약서</td><td colspan="3">${escH(S.title.trim() || '(이름 없음)')}</td></tr>
+  <tr><td style="background:#EEF2F8;font-weight:700">검토일</td><td>${escH(korDW(new Date()))}</td><td style="background:#EEF2F8;font-weight:700">내 입장</td><td>${S.side === 'a' ? '갑(매도인·임대인·회사)' : '을(매수인·임차인·고객)'}</td></tr>
+  <tr><td style="background:#EEF2F8;font-weight:700">조항 수</td><td>${R.cls.length}개 (위험 후보 ${R.out.length}개)</td><td style="background:#EEF2F8;font-weight:700">등급</td><td><b style="color:#C62828">높음 ${cnt[2]}</b> · <b style="color:#B26A00">보통 ${cnt[1]}</b> · <b style="color:#1E5BB8">낮음 ${cnt[0]}</b></td></tr></table>
+  <table><colgroup><col style="width:11%"><col style="width:27%"><col style="width:8%"><col style="width:25%"><col style="width:29%"></colgroup>
+  <tr><th>조항 번호</th><th>원문 발췌</th><th>위험 등급</th><th>왜 위험한지</th><th>바꿔 쓸 문구</th></tr>`;
+  rows.forEach(o => { h += `<tr><td>${escH(o.c.id)}</td><td>${escH((o.ex.pre + o.ex.hit + o.ex.post).replace(/\s+/g, ' '))}</td><td class="lv ${LVC[o.lv]}">${LV[o.lv]}</td><td>${escH(o.plain || o.why)}</td><td>${escH(o.fix)}</td></tr>`; });
+  if (!rows.length) h += '<tr><td colspan="5" style="text-align:center">기준표에 걸린 조항이 없습니다.</td></tr>';
+  h += '</table>';
+  if (R.out.length > MAX) h += `<p>외 ${R.out.length - MAX}건은 화면 검토표에서 확인하세요.</p>`;
+  h += `<p style="margin-top:5px"><b>다음 할 일</b> — 높음 조항은 서명 전에 수정 요청 문구를 보내 바꿔 달라고 하고, 답을 받은 뒤 고친 계약서로 다시 검토하세요.</p>`;
+  h += `<p class="note">${LEGAL} 판정은 키워드·문장 규칙 기준표로 한 것이며, 규칙에 없는 위험이 있을 수 있습니다. · KTS 원클릭 독소조항 1초 검토기</p></div>`;
+  return h;
+}
+function renderPaper(){
+  const w = $('#pvWrap'); w.innerHTML = paperHtml();
+  const p = w.firstChild, s = w.clientWidth / 720; p.style.transform = `scale(${s})`;
+  w.style.height = Math.ceil(p.offsetHeight * s) + 'px';
+}
+function go(n, quiet){
+  if (n > 1 && !S.text.trim()){ toast('조항을 붙여 넣거나 예시를 고르세요'); $('#docText').classList.add('miss'); n = 1; }
+  S.step = n; save();
+  $$('.scr').forEach(s => s.classList.toggle('on', s.id === 's' + n));
+  $('#pfill').style.width = (n / 3 * 100) + '%';
+  $$('#plbls button').forEach(b => { b.classList.toggle('on', +b.dataset.s === n); b.classList.toggle('done', +b.dataset.s < n); });
+  $('#backBtn').style.display = n === 1 ? 'none' : '';
+  $('#nextBtn').textContent = n === 3 ? '수정 요청 문구 복사' : (n === 1 ? '다음: 검토' : '다음: 정리');
+  if (n >= 2) renderReview();
+  if (n === 3){ $('#reqText').value = reqText(); renderPaper(); }
+  if (!quiet) window.scrollTo(0, 0);
+}
+function doPrint(){
+  LAST = review(); $('#printArea').innerHTML = paperHtml();
+  setTimeout(() => window.print(), 150);
+}
+async function doCopy(){
+  const t = $('#reqText').value.trim(); if (!t) return toast('수정 요청에 넣은 조항이 없습니다');
+  const ok = await copyText(t);
+  $('#outInfo').innerHTML = ok ? '<span class="dot"></span>수정 요청 문구를 복사했습니다. 문자·메신저에 붙여 넣어 보내세요(이 앱은 보내지 않습니다).' : '복사가 막혀 있습니다. 위 칸을 길게 눌러 직접 복사하세요.';
+  toast(ok ? '복사했습니다' : '직접 복사해 주세요');
+}
+
+$('#sampleSeg').onclick = e => { const b = e.target.closest('button'); if (!b) return; const s = SAMPLES[b.dataset.v];
+  S.text = s.text; S.title = s.title; S.off = {}; S.ai = {}; $('#docText').value = s.text; $('#docTitle').value = s.title; $('#docText').classList.remove('miss');
+  $$('#sampleSeg button').forEach(x => x.classList.toggle('on', x === b)); save(); renderInfo(); toast('예시 계약서를 넣었습니다'); };
+$('#sideSeg').onclick = e => { const b = e.target.closest('button'); if (!b) return; S.side = b.dataset.v; S.off = {}; save(); segOn(); };
+$('#docText').oninput = e => { S.text = e.target.value; e.target.classList.remove('miss'); save(); renderInfo(); };
+$('#docTitle').oninput = e => { S.title = e.target.value; save(); };
+$('#riskList').addEventListener('change', e => { const k = e.target.dataset.key; if (!k) return; if (e.target.checked) delete S.off[k]; else S.off[k] = 1; save(); });
+$('#nextBtn').onclick = () => { if (S.step < 3) go(S.step + 1); else doCopy(); };
+$('#backBtn').onclick = () => go(Math.max(1, S.step - 1));
+$('#plbls').onclick = e => { const b = e.target.closest('button'); if (b) go(+b.dataset.s); };
+$('#printBtn').onclick = doPrint;
+$('#copyBtn').onclick = doCopy;
+$('#newBtn').onclick = () => { S = fresh(); try{ localStorage.removeItem(LS); }catch(e){} $('#docText').value = ''; $('#docTitle').value = ''; $('#thumbs').innerHTML = ''; PHOTOS = []; $$('#sampleSeg button').forEach(x => x.classList.remove('on')); segOn(); renderInfo(); go(1); toast('새로 시작합니다'); };
+window.addEventListener('resize', () => { if (S.step === 3) renderPaper(); });
+
+/* 사진: 열쇠가 있을 때만 글자 읽기 */
+let PHOTOS = [];
+$('#photoBtn').onclick = () => $('#photoIn').click();
+$('#photoIn').onchange = e => { PHOTOS = [...e.target.files]; $('#thumbs').innerHTML = PHOTOS.map(f => `<img src="${URL.createObjectURL(f)}" alt="">`).join('');
+  toast(myKey() ? `사진 ${PHOTOS.length}장 · [사진 글자 읽기]를 누르세요` : `사진 ${PHOTOS.length}장 · 글자 읽기는 AI 열쇠가 있을 때만 됩니다`); };
+$('#ocrBtn').onclick = async () => {
+  if (!PHOTOS.length) return toast('먼저 계약서 사진을 고르세요');
+  if (!myKey()) return toast(aiErr(new Error('NO_KEY')));
+  const parts = [];
+  try{
+    for (let i = 0; i < PHOTOS.length; i++){
+      busyOn(`사진 ${i + 1}/${PHOTOS.length} 글자 읽는 중…`);
+      const o = await askAI('이미지는 계약서 한 쪽입니다. 보이는 글자를 줄바꿈을 살려 그대로 옮겨 JSON {"text":"..."} 하나만 출력하세요. 조항 번호(제1조, 1), ①)는 줄 맨 앞에 두세요. 지어내지 마세요.', await photoB64(PHOTOS[i]));
+      parts.push(String(o.text || ''));
+    }
+    S.text = (S.text.trim() ? S.text.trim() + '\n' : '') + parts.join('\n'); $('#docText').value = S.text; save(); renderInfo(); toast('사진 글자를 붙여 넣었습니다. 틀린 글자를 확인하세요');
+  }catch(e){ toast(aiErr(e)); } finally { busyOff(); }
+};
+/* AI: 해설을 쉬운 말로 + 규칙 밖 조항 위험도 추정 */
+$('#aiBtn').onclick = async () => {
+  if (!myKey()) return toast(aiErr(new Error('NO_KEY')));
+  const R = review(); const flagged = new Set(R.out.map(o => o.c.id));
+  const items = R.cls.filter(c => c.text.length >= 15).slice(0, 40).map(c => ({id:c.id, text:c.text.slice(0, 300), flagged:flagged.has(c.id)}));
+  busyOn('AI가 조항을 쉬운 말로 풀고 있습니다…');
+  try{
+    const o = await askAI('아래는 계약서 조항 목록입니다. 읽는 사람은 ' + (S.side === 'a' ? '갑(매도인·임대인·회사)' : '을(매수인·임차인·고객)') + ' 입장입니다. 각 조항마다 JSON {"items":[{"id":"조항 번호","level":"높음|보통|낮음|없음","plain":"왜 위험한지 쉬운 말 1문장","fix":"바꿔 달라고 할 문구 1문장"}]} 만 출력하세요. 법률 자문처럼 단정하지 말고, 위험이 없으면 level을 "없음"으로. 조항: ' + JSON.stringify(items));
+    let n = 0;
+    (o.items || []).forEach(it => { const c = R.cls.find(x => x.id === it.id); if (!c) return; const lv = LV.indexOf(it.level);
+      const k = c.id + '|' + c.text.slice(0, 20);
+      if (flagged.has(c.id)){ S.ai[k] = Object.assign(S.ai[k] || {}, {plain:String(it.plain || '')}); n++; }
+      else if (lv >= 0){ S.ai[k] = {lv, why:String(it.plain || ''), fix:String(it.fix || ''), plain:''}; n++; } });
+    save(); renderReview(); toast(`AI가 ${n}개 조항을 풀어 썼습니다`);
+  }catch(e){ toast(aiErr(e)); } finally { busyOff(); }
+};
+
+initKey();
+initInquiry('독소조항 1초 검토기', '지금 있는 위험 조항 기준표 11종은 바로 무료로 쓰실 수 있습니다.');
+$('#qMsg').placeholder = '예: 프랜차이즈 가맹계약서도 검토되면 좋겠습니다';
+$('#docText').value = S.text; $('#docTitle').value = S.title; segOn(); renderInfo();
+/* 시험·설명서용 손잡이 */
+window.RC = {get S(){ return S; }, set S(v){ S = v; }, splitClauses, review, reqText, paperHtml, go, doPrint, SAMPLES, rules};
+go(S.step || 1, true);
+</script>
+</body></html>

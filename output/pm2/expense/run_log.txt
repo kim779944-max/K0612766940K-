@@ -1,0 +1,17 @@
+﻿photos -> rows: ["receipt_1_한빛식당.jpg","receipt_2_KTS문구.jpg","receipt_3_서울택시.jpg"]
+after typing: [{"d":"2026-11-03","v":"한빛식당","total":"48000","vat":"4364","use":"식대","proof":"카드영수증"},{"d":"2026-11-07","v":"KTS문구","total":"132000","vat":"12000","use":"소모품","proof":"세금계산서"},{"d":"2026-11-12","v":"서울택시","total":"15800","vat":"0","use":"교통비","proof":"간이영수증"}]
+dup check: {"dup":[1,4],"miss":0}
+missing on empty row: 4
+vat off flag (4000 instead of 4364): [1]
+after 1/11: row1 vat=4364
+app totals: {"supply":179436,"vat":16364,"total":195800,"ok":true}
+hand check: rows=43636+4364=48000, 120000+12000=132000, 15800+0=15800 / sum supply=179436 vat=16364 total=195800 / match=True
+xlsx btn: 지출결의서_11월영업팀경비_20261118.xlsx 저장 (3KB · 3줄 · 합계 수식 포함). 더뷰(viewer.html)로 열어 확인할 수 있습니다.
+print called: 1
+general pdf pages=1
+general + photo list pdf pages=2 (결의서 1 + 사진 목록 1)
+trip pdf pages=1
+ent pdf pages=1
+after reload: {"rows":3,"title":"11월 영업팀 경비","total":195800,"thumbs":3}
+errors(now): [] / before-nav: []
+print calls: 0

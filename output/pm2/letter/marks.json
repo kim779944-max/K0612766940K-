@@ -1,0 +1,264 @@
+﻿[
+    {
+        "shot":  "01_kinds",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  203.7,
+                          "w":  164,
+                          "h":  92,
+                          "note":  "서식 고르기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  14,
+                          "y":  47.9,
+                          "w":  362,
+                          "h":  45.5,
+                          "note":  "고지 고정 표시"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "02_notice_empty",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  259.4,
+                          "w":  336,
+                          "h":  38.1,
+                          "note":  "예시 넣기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  306.5,
+                          "w":  336,
+                          "h":  933.6,
+                          "note":  "사건 개요"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "03_notice_typed",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  250.0,
+                          "w":  336,
+                          "h":  42.3,
+                          "note":  "금액 → 한글 병기"
+                      },
+                      {
+                          "kind":  "tap",
+                          "x":  73.9,
+                          "y":  369.2,
+                          "w":  48.1,
+                          "h":  27.9,
+                          "note":  "기한 D+14"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  119,
+                          "y":  334.4,
+                          "w":  150.1,
+                          "h":  17.4,
+                          "note":  "실제 날짜"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "04_notice_draft",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  234.2,
+                          "w":  336,
+                          "h":  260,
+                          "note":  "본문(바로 고치기)"
+                      },
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  554.0,
+                          "w":  164.5,
+                          "h":  47.0,
+                          "note":  "인쇄·PDF"
+                      },
+                      {
+                          "kind":  "tap",
+                          "x":  198.5,
+                          "y":  554.0,
+                          "w":  164.5,
+                          "h":  47.0,
+                          "note":  "텍스트 복사"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "05_notice_preview",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  170.5,
+                          "w":  336,
+                          "h":  401,
+                          "note":  "수신·제목·본문·붙임·작성일"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "06_civil_input",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  152.4,
+                          "w":  336,
+                          "h":  38.1,
+                          "note":  "예시 넣기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  199.5,
+                          "w":  336,
+                          "h":  16.7,
+                          "note":  "민원신청서 전용 칸"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "07_civil_preview",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  170.5,
+                          "w":  336,
+                          "h":  340,
+                          "note":  "민원신청서 초안"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "08_objection_input",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  152.4,
+                          "w":  336,
+                          "h":  38.1,
+                          "note":  "예시 넣기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  199.5,
+                          "w":  336,
+                          "h":  16.7,
+                          "note":  "이의신청서 전용 칸"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "09_objection_preview",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  170.5,
+                          "w":  336,
+                          "h":  381,
+                          "note":  "이의신청서 초안"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "10_fact_input",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  152.4,
+                          "w":  336,
+                          "h":  38.1,
+                          "note":  "예시 넣기"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  199.5,
+                          "w":  336,
+                          "h":  16.7,
+                          "note":  "사실확인서 전용 칸"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "11_fact_preview",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  170.5,
+                          "w":  336,
+                          "h":  288,
+                          "note":  "사실확인서 초안"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "12_missing",
+        "marks":  [
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  292.2,
+                          "w":  336,
+                          "h":  44.3,
+                          "note":  "빨간 칸 = 빈 칸"
+                      }
+                  ],
+        "scrollWidth":  390
+    },
+    {
+        "shot":  "90_inquiry",
+        "marks":  [
+                      {
+                          "kind":  "tap",
+                          "x":  27,
+                          "y":  538.1,
+                          "w":  164.5,
+                          "h":  38.1,
+                          "note":  "답장 초안"
+                      },
+                      {
+                          "kind":  "circle",
+                          "x":  27,
+                          "y":  584.2,
+                          "w":  336,
+                          "h":  189.3,
+                          "note":  "자동 발송 없음"
+                      }
+                  ],
+        "scrollWidth":  390
+    }
+]

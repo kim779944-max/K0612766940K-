@@ -1,0 +1,14 @@
+﻿me saved: {"name":"KTS인테리어","rep":"김대표","bizno":"123-45-67890","addr":"서울특별시 송파구 올림픽로 300 KTS타워 5층","tel":"02-123-4567","email":"kts@example.com","bank":"KTS은행 100-200-300400 (KTS인테리어)"}
+quote1 calc={"supply":1955000,"vat":195500,"total":2150500} / hand: supply=1955000 vat=195500 total=2150500
+quote1 no=2026-0001 pdf pages=1
+hwpx btn: 견적서_2026-0001_(주)한빛상사.hwpx 저장 (8KB). 더뷰(viewer.html)로 열어 확인할 수 있습니다.
+new quote starts at step: 2
+quote2 (vat incl.) calc={"supply":100000,"vat":10000,"total":110000} / hand: total=110000 supply=100000 vat=10000
+quote2 no=2026-0002 (auto-issued by print) pdf pages=1
+quote3 no=2026-0003 pdf pages=1
+re-issue same quote: toast=이미 발행했습니다. 다음 견적은 [새 견적]을 누르세요 / ledger=["2026-0001","2026-0002","2026-0003"]
+edited after issue: isIssued=false next=2026-0004
+ledger nos=2026-0001,2026-0002,2026-0003 unique=True
+after reload: {"step":3,"me":"KTS인테리어","ledger":3}
+errors(now): [] / before-nav: []
+print calls: 0

@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 민원·내용증명 초안 1초 작성 — 내용증명·민원신청서·이의신청서·사실확인서</title>
+<meta name="description" content="사건 개요만 넣으면 수신·제목·본문·붙임·작성일 규격을 갖춘 내용증명·민원신청서·이의신청서·사실확인서 초안이 바로 나옵니다. 인쇄(PDF)와 복사만 하고, 발송은 직접 하십니다.">
+<meta name="theme-color" content="#0A1128">
+<link rel="icon" href="icon.png">
+<style>
+/*@@CSS@@*/
+.kinds{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.kinds button{text-align:left;background:#0B1729;border:1px solid var(--line2);border-radius:12px;padding:11px 10px;min-height:92px}
+.kinds button b{display:block;font-size:14.5px;font-weight:900;color:#fff}
+.kinds button span{display:block;font-size:11px;color:var(--gray);margin-top:4px;line-height:1.45}
+.kinds button.on{border-color:var(--amber);background:rgba(255,107,0,.12);box-shadow:0 0 0 1px var(--amber) inset}
+.kinds button.on b{color:var(--amber2)}
+textarea.body{min-height:260px;font-size:12.5px;line-height:1.6}
+.paper{font-family:"Batang","바탕","AppleMyungjo","Noto Serif KR","Malgun Gothic",serif;font-size:12.5px;line-height:1.75}
+.paper .ttl{text-align:center;font-size:24px;font-weight:900;letter-spacing:10px;margin:0 0 14px}
+.paper .hd td{border:0;padding:1px 2px;vertical-align:top}
+.paper .hd td:first-child{width:62px;font-weight:700;letter-spacing:3px;white-space:nowrap}
+.paper hr{border:0;border-top:2px solid #111;margin:6px 0 10px}
+.paper .bd{white-space:pre-wrap;margin:6px 0 10px}
+.paper .dt{text-align:center;margin:16px 0 8px}
+.paper .sg{text-align:right;margin-top:4px}
+.paper .lg{font-family:"Malgun Gothic",sans-serif;font-size:9px;color:#666;margin-top:16px;border-top:1px solid #bbb;padding-top:4px}
+@media print{
+ body{background:#fff;display:block}
+ #app,.bar,#toast,.modal,#busy{display:none!important}
+ #printArea{display:block}
+ #printArea .paper{width:auto;padding:0;font-size:10.6pt;line-height:1.68}
+ @page{size:A4;margin:20mm 20mm 16mm}
+}
+</style>
+</head><body>
+<div id="app">
+<header class="top">
+ <div class="hd">
+  <div class="brand"><span class="mark">문</span>민원·내용증명 초안 <small>KTS 원클릭</small></div>
+  <span class="sp"></span>
+  <button class="newb" id="newBtn">새로</button>
+ </div>
+ <p class="legal" id="legalTop"></p>
+ <div class="prog"><div class="track"><div class="fill" id="pfill"></div></div>
+  <div class="lbls" id="plbls"><button data-s="1">1 종류</button><button data-s="2">2 사건 개요</button><button data-s="3">3 초안</button></div></div>
+</header>
+<main>
+<!-- 1 종류 -->
+<section class="scr" id="s1">
+ <div class="card"><h2><span class="n">1</span>어떤 서류인가요?</h2>
+  <div class="kinds" id="kinds">
+   <button data-v="notice"><b>① 내용증명</b><span>돈·물건·약속을 기한까지 지켜 달라고 글로 남길 때</span></button>
+   <button data-v="civil"><b>② 민원신청서</b><span>관공서에 불편·피해 해결을 요청할 때</span></button>
+   <button data-v="objection"><b>③ 이의신청서</b><span>받은 처분(과태료·부과 등)이 잘못됐다고 다툴 때</span></button>
+   <button data-v="fact"><b>④ 사실확인서</b><span>내가 보거나 겪은 일을 사실이라고 확인해 줄 때</span></button>
+  </div>
+  <p class="kv">고른 뒤 [다음]을 누르세요. 처음이면 2단계에서 [예시 넣기]로 모양을 먼저 보셔도 됩니다.</p>
+ </div>
+</section>
+<!-- 2 사건 개요 -->
+<section class="scr" id="s2">
+ <div class="card"><h2><span class="n">2</span><span id="kindName"></span> · 사건 개요</h2>
+  <p class="sub">짧게 적어도 됩니다. 날짜(2026-11-18)·금액(1200000원)은 초안에서 "2026년 11월 18일(수)", "금 1,200,000원(금 일백이십만 원)"처럼 숫자와 한글로 함께 적힙니다.</p>
+  <div class="row"><button class="btn sec sm" id="sampleBtn">예시 넣기</button></div>
+  <div id="evBox"></div>
+ </div>
+ <div class="card"><h2><span class="n">사</span>보내는 사람 · <span id="toTitle">받는 사람</span></h2><div id="pBox"></div></div>
+</section>
+<!-- 3 초안 -->
+<section class="scr" id="s3">
+ <div class="card"><h2><span class="n">3</span>초안 확인</h2>
+  <p class="sub">본문은 아래 칸에서 바로 고칠 수 있습니다. 고친 내용이 인쇄·복사에 그대로 들어갑니다.</p>
+  <textarea class="body" id="bodyText"></textarea>
+  <div class="row"><button class="btn sec sm" id="resetBody">자동 초안으로 되돌리기</button></div>
+  <div class="row"><button class="btn pri" id="printBtn">인쇄 · PDF</button><button class="btn pri" id="copyBtn">텍스트 복사</button></div>
+  <p class="kv" id="outInfo">이 앱은 우편·문자·메일을 보내지 않습니다. 인쇄해서 직접 우체국·기관에 내시거나, 복사해서 직접 쓰세요.</p>
+ </div>
+ <div class="card"><h2><span class="n">보</span>초안 미리보기(A4)</h2><div class="pvwrap" id="pvWrap"></div></div>
+</section>
+
+<!--@@INQ@@-->
+<p class="foot">민원·내용증명 초안 1초 작성 · KTS 원클릭 · 서버 0 · 유료 API 0 · 외부 발송 0<br>입력값은 이 기기 브라우저 안에만 저장됩니다.</p>
+</main>
+<div class="bar"><button class="btn sec back" id="backBtn">이전</button><button class="btn pri" id="nextBtn">다음</button></div>
+</div>
+<!--@@MODAL@@-->
+<script>
+/*@@COMMON@@*/
+const LEGAL = '초안 작성 보조용이며 법률 자문이 아닙니다. 발송·제출은 본인이 직접 하십시오.';
+$('#legalTop').textContent = LEGAL;
+const KIND = {notice:{name:'내용증명', doc:'내 용 증 명', to:'받는 사람'}, civil:{name:'민원신청서', doc:'민 원 신 청 서', to:'처리 기관'},
+  objection:{name:'이의신청서', doc:'이 의 신 청 서', to:'처분 기관'}, fact:{name:'사실확인서', doc:'사 실 확 인 서', to:'제출처'}};
+const LS = 'kl_letter_v1';
+const fresh = () => ({step:1, kind:'notice', from:{name:'', addr:'', tel:''}, to:{name:'', addr:''},
+  ev:{subject:'', when:'', who:'', what:'', how:'', demand:'', amount:'', dueDays:'14', attach:'', date:todayS(), field:'', dispName:'', dispDate:'', noticeDate:'', purpose:''}, edited:''});
+let S; try{ const o = JSON.parse(localStorage.getItem(LS) || 'null'); S = fresh(); if (o){ Object.assign(S, o); S.ev = Object.assign(fresh().ev, o.ev || {}); } }catch(e){ S = fresh(); }
+let saveT; const flush = () => { clearTimeout(saveT); saveT = null; try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} };
+const save = () => { clearTimeout(saveT); saveT = setTimeout(flush, 200); };
+window.addEventListener('pagehide', flush); document.addEventListener('visibilitychange', () => { if (document.hidden) flush(); });
+
+/* ---------- 입력 칸(A1 서식별 뼈대) ---------- */
+const F = {
+ notice:[['subject', '제목', 0, '비우면 자동: "금 ○원 지급 요청의 건"'], ['when', '언제', 1, '', 'date'], ['who', '누가', 1, '예: 본인과 귀하는'], ['what', '무엇을', 1, '예: 서울특별시 마포구 독막로 50 KTS빌라 301호에 대한 임대차계약을 맺었습니다', 'area'],
+   ['how', '어떻게(지금까지 경과)', 1, '예: 계약이 2026-10-31에 끝나 집을 비워 드렸으나, 보증금 중 1200000원을 아직 돌려받지 못했습니다', 'area'], ['demand', '무엇을 요구(줄마다 1개)', 1, '예: 남은 보증금 1200000원을 아래 계좌로 돌려주십시오', 'area'],
+   ['amount', '요구 금액(원)', 0, '예: 1200000', 'num'], ['dueDays', '기한(작성일로부터 며칠)', 1, '', 'days'], ['attach', '붙임(줄마다 1개)', 0, '예: 임대차계약서 사본 1부', 'area'], ['date', '작성일', 1, '', 'date']],
+ civil:[['field', '민원 분야', 1, '예: 도로·소음·주차·쓰레기'], ['subject', '제목', 0, '비우면 자동: "○○에 관한 민원 신청"'], ['when', '언제부터', 1, '', 'date'], ['who', '누가(어디서)', 1, '예: 우리 집 앞 독막로 50 골목에서'], ['what', '무슨 일이', 1, '예: 밤 11시 이후 공사 소음이 계속되고 있습니다', 'area'],
+   ['how', '현재 불편·피해', 1, '예: 2주째 잠을 이루기 어렵고, 아이가 아침에 일어나지 못합니다', 'area'], ['demand', '요청 사항(줄마다 1개)', 1, '예: 야간 공사 시간을 확인해 주십시오', 'area'], ['attach', '붙임(줄마다 1개)', 0, '예: 소음 측정 사진 3장', 'area'], ['date', '작성일', 1, '', 'date']],
+ objection:[['dispName', '처분명', 1, '예: 주정차 위반 과태료 부과'], ['dispDate', '처분일', 1, '', 'date'], ['noticeDate', '통지 받은 날', 1, '', 'date'], ['subject', '제목', 0, '비우면 자동: "○○ 처분에 대한 이의신청"'],
+   ['when', '언제', 1, '', 'date'], ['who', '누가(어디서)', 1, '예: 본인은 송파구 올림픽로 300 앞에서'], ['what', '무엇을', 1, '예: 환자를 내려 드리려고 3분간 정차하였습니다', 'area'], ['how', '이의 이유', 1, '예: 비상등을 켜고 운전석에 앉아 있었으며, 이를 보여 주는 블랙박스 영상이 있습니다', 'area'],
+   ['demand', '신청 취지(줄마다 1개)', 1, '예: 위 과태료 부과 처분을 취소하여 주십시오', 'area'], ['attach', '붙임(줄마다 1개)', 0, '예: 블랙박스 영상 캡처 2장', 'area'], ['date', '작성일', 1, '', 'date']],
+ fact:[['purpose', '용도', 1, '예: 임대차 분쟁 조정 신청 자료'], ['when', '언제', 1, '', 'date'], ['who', '누가(어디서)', 1, '예: 본인은 마포구 독막로 50 KTS빌라 3층 복도에서'], ['what', '무엇을 보았나/겪었나', 1, '예: 301호 임차인 정임차 씨가 집 열쇠 2개를 임대인 박임대 씨에게 건네는 것을 보았습니다', 'area'],
+   ['how', '자세한 내용', 0, '예: 그때 임대인은 집 상태에 문제가 없다고 말했습니다', 'area'], ['attach', '붙임(줄마다 1개)', 0, '예: 확인자 신분증 사본 1부', 'area'], ['date', '작성일', 1, '', 'date']]};
+const PF = [['from', 'name', '보내는 사람 성명', 1], ['from', 'addr', '보내는 사람 주소', 1], ['from', 'tel', '보내는 사람 연락처', 1, 'tel'], ['to', 'name', '', 1], ['to', 'addr', '', 0]];
+const SAMPLE = {
+ notice:{from:{name:'정임차', addr:'서울특별시 관악구 관악로 1', tel:'010-7777-8888'}, to:{name:'박임대', addr:'서울특별시 마포구 월드컵로 10'},
+  ev:{subject:'', when:'2024-11-09', who:'본인과 귀하는', what:'서울특별시 마포구 독막로 50 KTS빌라 301호에 대한 임대차계약을 맺었습니다', how:'계약이 2026-10-31에 끝나 같은 날 집을 비워 드렸으나, 보증금 50000000원 중 1200000원을 아직 돌려받지 못했습니다. 2026-11-05에 전화로 요청드렸으나 답을 받지 못했습니다', demand:'남은 보증금 1200000원을 본인 명의 계좌(KTS은행 123-456-789012)로 돌려주십시오\n공제할 금액이 있다면 그 내역을 글로 알려 주십시오', amount:'1200000', dueDays:'14', attach:'임대차계약서 사본 1부\n보증금 입금 확인증 사본 1부'}},
+ civil:{from:{name:'김민원', addr:'서울특별시 마포구 독막로 52', tel:'010-2222-3333'}, to:{name:'마포구청장', addr:'서울특별시 마포구 월드컵로 212'},
+  ev:{field:'야간 공사 소음', subject:'', when:'2026-11-02', who:'우리 집 앞 독막로 50 골목 신축 공사장에서', what:'밤 11시가 넘어서도 굴착기 공사 소음이 계속되고 있습니다', how:'2주째 잠을 이루기 어렵고, 아이가 아침에 일어나지 못합니다. 공사장에 두 번 말씀드렸으나 달라지지 않았습니다', demand:'공사장의 허가된 작업 시간을 확인해 주십시오\n작업 시간을 넘긴 공사를 멈추도록 조치해 주십시오', attach:'소음 측정 앱 화면 사진 3장'}},
+ objection:{from:{name:'이운전', addr:'서울특별시 송파구 올림픽로 310', tel:'010-4444-5555'}, to:{name:'송파구청장', addr:'서울특별시 송파구 올림픽로 326'},
+  ev:{dispName:'주정차 위반 과태료 40000원 부과', dispDate:'2026-11-06', noticeDate:'2026-11-10', subject:'', when:'2026-10-28', who:'본인은 송파구 올림픽로 300 KTS아파트 정문 앞에서', what:'다리를 다친 어머니를 내려 드리려고 3분간 정차하였습니다', how:'비상등을 켜고 운전석에 앉아 있었으며, 내려 드린 뒤 바로 출발하였습니다. 이를 보여 주는 블랙박스 영상이 있습니다', demand:'위 과태료 부과 처분을 취소하여 주십시오', attach:'블랙박스 영상 캡처 2장\n어머니 진단서 사본 1부'}},
+ fact:{from:{name:'최이웃', addr:'서울특별시 마포구 독막로 50 KTS빌라 302호', tel:'010-6666-7777'}, to:{name:'서울특별시 주택임대차분쟁조정위원회', addr:''},
+  ev:{purpose:'임대차 분쟁 조정 신청 자료', when:'2026-10-31', who:'본인은 마포구 독막로 50 KTS빌라 3층 복도에서', what:'301호 임차인 정임차 씨가 집 열쇠 2개를 임대인 박임대 씨에게 건네는 것을 보았습니다', how:'그때 임대인 박임대 씨는 집 상태에 문제가 없다고 말하였습니다', attach:'확인자 신분증 사본 1부'}}};
+
+function renderForm(){
+  const k = S.kind; $('#kindName').textContent = KIND[k].name; $('#toTitle').textContent = KIND[k].to;
+  $('#evBox').innerHTML = F[k].map(([f, l, req, ph, t]) => {
+    const v = escH(S.ev[f] || ''), cls = SHOW_MISS && req && !String(S.ev[f] || '').trim() ? 'miss' : '';
+    if (t === 'area') return `<label class="lb">${l}${req ? '<em>*</em>' : ''}</label><textarea data-e="${f}" rows="${f === 'demand' || f === 'attach' ? 2 : 3}" placeholder="${escH(ph)}" class="${cls}">${v}</textarea>`;
+    if (t === 'date') return `<label class="lb">${l}${req ? '<em>*</em>' : ''}</label><input type="date" data-e="${f}" value="${v}" class="${cls}"><p class="kor" data-w="${f}">${S.ev[f] ? korDW(parseD(S.ev[f])) : ''}</p>`;
+    if (t === 'days') return `<label class="lb">${l}${req ? '<em>*</em>' : ''}</label><div class="dd"><input data-e="${f}" inputmode="numeric" value="${v}" class="${cls}"><span class="when" data-w="due">${dueText()}</span></div><div class="chips" id="dueChips"><button data-d="7">D+7</button><button data-d="14">D+14</button><button data-d="30">D+30</button></div>`;
+    return `<label class="lb">${l}${req ? '<em>*</em>' : ''}${t === 'num' ? '<i data-w="amount">' + (num(S.ev.amount) ? escH(wonBoth(num(S.ev.amount))) : '') + '</i>' : ''}</label><input data-e="${f}" ${t === 'num' ? 'inputmode="numeric"' : ''} value="${t === 'num' && num(v) ? comma(v) : v}" placeholder="${escH(ph)}" maxlength="80" class="${cls}">`;
+  }).join('');
+  $('#pBox').innerHTML = PF.map(([g, f, l, req, im]) => { const lab = l || KIND[k].to + (f === 'name' ? (k === 'notice' ? ' 성명' : ' 이름') : ' 주소');
+    const cls = SHOW_MISS && req && !String(S[g][f] || '').trim() ? 'miss' : '';
+    return `<label class="lb">${lab}${req ? '<em>*</em>' : ''}</label><input data-g="${g}" data-k="${f}" value="${escH(S[g][f] || '')}" ${im ? 'inputmode="' + im + '"' : ''} maxlength="60" class="${cls}">`; }).join('');
+}
+const dueDate = () => { const d = parseD(S.ev.date); return d && num(S.ev.dueDays) ? addDays(d, num(S.ev.dueDays)) : null; };
+const dueText = () => { const d = dueDate(); return d ? '→ ' + korDW(d) + '까지' : ''; };
+function missing(){
+  const m = [];
+  F[S.kind].forEach(([f, l, req]) => { if (req && !String(S.ev[f] || '').trim()) m.push(l); });
+  PF.forEach(([g, f, l, req]) => { if (req && !String(S[g][f] || '').trim()) m.push(l || KIND[S.kind].to); });
+  return m;
+}
+let SHOW_MISS = false;
+
+/* ---------- 규격 규칙: 날짜·금액 병기, 존댓말 마침, 번호 목록 ---------- */
+function fmt(s){
+  s = String(s || '').trim();
+  s = s.replace(/(\d{4})-(\d{1,2})-(\d{1,2})(?!\d)/g, (m, y, mo, d) => korDW(new Date(+y, +mo - 1, +d)));
+  s = s.replace(/(?<![\d,])(\d{1,3}(?:,\d{3})+|\d{4,})\s*원(?!\s*\()/g, (m, n) => wonBoth(num(n)));
+  return s;
+}
+const end = s => { s = fmt(s); return !s ? '' : (/[.。!?]$/.test(s) ? s : s + '.'); };
+const lines = s => String(s || '').split('\n').map(x => x.trim()).filter(Boolean);
+const list = (s, ind = '   ') => lines(s).map((x, i) => `${ind}${i + 1}) ${end(x)}`).join('\n');
+const dW = s => s ? korDW(parseD(s)) : '____년 __월 __일';
+const sinceDays = s => { const d = parseD(s), t = parseD(S.ev.date) || new Date(); return d ? Math.round((t - d) / 864e5) : null; };
+function titleOf(){
+  const e = S.ev; if (e.subject.trim()) return fmt(e.subject.trim());
+  if (S.kind === 'notice') return num(e.amount) ? `${wonBoth(num(e.amount))} 지급 요청의 건` : '약속 이행 요청의 건';
+  if (S.kind === 'civil') return `${e.field.trim() || '생활 불편'}에 관한 민원 신청`;
+  if (S.kind === 'objection') return `${fmt(e.dispName.trim()) || '행정'} 처분에 대한 이의신청`;
+  return '사실확인서';
+}
+function bodyGen(){
+  const e = S.ev, k = S.kind, fact = `${dW(e.when)}, ${fmt(e.who)} ${end(e.what)}`;
+  if (k === 'notice') return [
+    '1. 귀하의 평안을 기원합니다. 본인은 아래 일과 관련하여 귀하께 이행을 요청드리고자 이 글을 보냅니다.',
+    `2. 사실관계: ${fact}`,
+    `3. 경과: ${end(e.how)}`,
+    '4. 요구사항\n' + list(e.demand) + (num(e.amount) ? `\n   ※ 요구 금액: ${wonBoth(num(e.amount))}` : ''),
+    `5. 위 요구사항을 ${dueDate() ? korDW(dueDate()) : '____년 __월 __일'}까지 이행하여 주시기 바랍니다. 기한까지 이행되지 않으면 본인은 부득이 조정 신청 등 법적 절차를 검토할 수 있음을 알려 드립니다.`,
+    '6. 원만하게 해결되기를 바랍니다.'].join('\n\n');
+  if (k === 'civil') return [
+    `1. 신청인은 ${fmt(S.from.addr) || '(주소)'}에 사는 ${S.from.name || '(성명)'}입니다. ${fmt(e.field) || '생활 불편'} 문제로 민원을 신청합니다.`,
+    `2. 발생 경위: ${dW(e.when)}부터 ${fmt(e.who)} ${end(e.what)}`,
+    `3. 현재 불편·피해: ${end(e.how)}`,
+    '4. 요청 사항\n' + list(e.demand),
+    `5. 처리 결과는 ${S.from.tel || '(연락처)'}(으)로 알려 주시기 바랍니다.`].join('\n\n');
+  if (k === 'objection'){ const sd = sinceDays(e.noticeDate); return [
+    `1. 대상 처분\n   - 처분 기관: ${S.to.name || '(처분 기관)'}\n   - 처분명: ${fmt(e.dispName) || '(처분명)'}\n   - 처분일: ${dW(e.dispDate)}\n   - 통지 받은 날: ${dW(e.noticeDate)}${sd != null && sd >= 0 ? `(작성일 기준 ${sd}일 지남)` : ''}`,
+    `2. 사실관계: ${fact}`,
+    `3. 이의 이유: ${end(e.how)}`,
+    '4. 신청 취지\n' + list(e.demand),
+    '5. 위 이유를 밝히는 자료를 붙임과 같이 제출하오니 살펴 주시기 바랍니다.'].join('\n\n'); }
+  return [
+    `1. 확인자: ${S.from.name || '(성명)'} / 주소: ${fmt(S.from.addr) || '(주소)'} / 연락처: ${S.from.tel || '(연락처)'}`,
+    `2. 확인 사항: ${fact}${e.how.trim() ? ' ' + end(e.how) : ''}`,
+    '3. 위 내용은 본인이 직접 보고 겪은 것으로, 사실과 다름이 없음을 확인합니다.',
+    `4. 이 확인서는 ${S.to.name || '(제출처)'}에 ${fmt(e.purpose) || '(용도)'} 용도로 제출합니다.`].join('\n\n');
+}
+const bodyText = () => S.edited || bodyGen();
+function headRows(){
+  const k = S.kind, r = [];
+  if (k === 'fact'){ r.push(['제출처', `${S.to.name || '__________'} 귀하`]); }
+  else { r.push(['수신', `${S.to.name || '__________'} 귀하`]); if (S.to.addr) r.push(['주소', fmt(S.to.addr)]); }
+  r.push([k === 'fact' ? '확인자' : '발신', `${S.from.name || '__________'}  (연락처 ${S.from.tel || '______'})`]);
+  if (S.from.addr) r.push(['주소', fmt(S.from.addr)]);
+  r.push(['제목', titleOf()]);
+  return r;
+}
+const attachText = () => { const a = lines(S.ev.attach); return a.length ? a.map((x, i) => `${i + 1}. ${fmt(x)}`).join('\n') : ''; };
+function fullText(){
+  let t = `[${KIND[S.kind].name}]\n` + headRows().map(([a, b]) => `${a}: ${b}`).join('\n') + '\n\n' + bodyText() + '\n';
+  const a = attachText(); if (a) t += '\n붙임\n' + a + '\n';
+  t += `\n${dW(S.ev.date)}\n${S.kind === 'fact' ? '확인자' : '발신인'} ${S.from.name || '__________'} (인)\n\n※ ${LEGAL}`;
+  return t;
+}
+function paperHtml(){
+  const a = attachText();
+  return `<div class="paper"><p class="ttl">${KIND[S.kind].doc}</p><table class="hd">${headRows().map(([x, y]) => `<tr><td>${escH(x)}</td><td>${escH(y)}</td></tr>`).join('')}</table><hr>
+   <div class="bd">${escH(bodyText())}</div>${a ? `<div class="bd"><b>붙임</b>\n${escH(a)}</div>` : ''}
+   <p class="dt">${escH(dW(S.ev.date))}</p><p class="sg">${S.kind === 'fact' ? '확인자' : '발신인'} ${escH(S.from.name || '__________')} (인)</p>
+   <p class="lg">※ ${LEGAL} · KTS 원클릭 민원·내용증명 초안</p></div>`;
+}
+function renderPaper(){
+  if (S.step !== 3) return;
+  const w = $('#pvWrap'); w.innerHTML = paperHtml();
+  const p = w.firstChild, s = w.clientWidth / 720; p.style.transform = `scale(${s})`;
+  w.style.height = Math.ceil(p.offsetHeight * s) + 'px';
+}
+
+/* ---------- 단계·이벤트 ---------- */
+function go(n, quiet){
+  if (n === 3){ const m = missing(); if (m.length){ SHOW_MISS = true; renderForm(); toast(`빈 칸 ${m.length}곳(${m.slice(0, 2).join(', ')}…)은 밑줄로 나갑니다`); } }
+  S.step = n; save();
+  $$('.scr').forEach(s => s.classList.toggle('on', s.id === 's' + n));
+  $('#pfill').style.width = (n / 3 * 100) + '%';
+  $$('#plbls button').forEach(b => { b.classList.toggle('on', +b.dataset.s === n); b.classList.toggle('done', +b.dataset.s < n); });
+  $$('#kinds button').forEach(b => b.classList.toggle('on', b.dataset.v === S.kind));
+  $('#backBtn').style.display = n === 1 ? 'none' : '';
+  $('#nextBtn').textContent = n === 3 ? '인쇄 · PDF' : (n === 1 ? '다음: 사건 개요' : '다음: 초안 보기');
+  if (n === 2) renderForm();
+  if (n === 3){ $('#bodyText').value = bodyText(); renderPaper(); }
+  if (!quiet) window.scrollTo(0, 0);
+}
+function doPrint(){ $('#printArea').innerHTML = paperHtml(); setTimeout(() => window.print(), 150); }
+async function doCopy(){ const ok = await copyText(fullText());
+  $('#outInfo').innerHTML = ok ? '<span class="dot"></span>초안 전체(수신·제목·본문·붙임·작성일)를 복사했습니다. 보내기·제출은 직접 하십시오.' : '복사가 막혀 있습니다. 위 본문 칸을 길게 눌러 직접 복사하세요.'; toast(ok ? '복사했습니다' : '직접 복사해 주세요'); }
+$('#kinds').onclick = e => { const b = e.target.closest('button'); if (!b) return; if (S.kind !== b.dataset.v){ S.kind = b.dataset.v; S.edited = ''; } save(); go(2); };
+$('#sampleBtn').onclick = () => { const x = SAMPLE[S.kind]; S.from = Object.assign({}, x.from); S.to = Object.assign({}, x.to); S.ev = Object.assign(fresh().ev, x.ev, {date:S.ev.date || todayS()}); S.edited = ''; save(); renderForm(); toast('예시를 넣었습니다. 내 사건에 맞게 고치세요'); };
+document.addEventListener('input', e => {
+  const el = e.target, f = el.dataset.e, g = el.dataset.g;
+  if (f){ let v = el.value; if (f === 'amount'){ v = String(num(v) || ''); el.value = v ? comma(v) : ''; const w = $('[data-w="amount"]'); if (w) w.textContent = num(v) ? wonBoth(num(v)) : ''; }
+    if (f === 'dueDays') v = el.value = v.replace(/[^\d]/g, '');
+    S.ev[f] = v; S.edited = ''; el.classList.remove('miss'); save();
+    const w = $(`[data-w="${f}"]`); if (w && el.type === 'date') w.textContent = v ? korDW(parseD(v)) : '';
+    const dw = $('[data-w="due"]'); if (dw) dw.textContent = dueText(); }
+  if (g){ S[g][el.dataset.k] = el.value; S.edited = ''; el.classList.remove('miss'); save(); }
+  if (el.id === 'bodyText'){ S.edited = el.value; save(); renderPaper(); }
+});
+$('#evBox').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (!b) return; S.ev.dueDays = b.dataset.d; S.edited = ''; save(); $('[data-e="dueDays"]').value = b.dataset.d; $('[data-w="due"]').textContent = dueText(); });
+$('#resetBody').onclick = () => { S.edited = ''; save(); $('#bodyText').value = bodyGen(); renderPaper(); toast('자동 초안으로 되돌렸습니다'); };
+$('#nextBtn').onclick = () => { if (S.step < 3) go(S.step + 1); else doPrint(); };
+$('#backBtn').onclick = () => go(Math.max(1, S.step - 1));
+$('#plbls').onclick = e => { const b = e.target.closest('button'); if (b) go(+b.dataset.s); };
+$('#printBtn').onclick = doPrint;
+$('#copyBtn').onclick = doCopy;
+$('#newBtn').onclick = () => { const k = S.kind; S = fresh(); S.kind = k; SHOW_MISS = false; flush(); go(1); toast('새로 시작합니다'); };
+window.addEventListener('resize', () => renderPaper());
+
+initInquiry('민원·내용증명 초안', '지금 있는 서식 4종(내용증명·민원신청서·이의신청서·사실확인서)은 바로 무료로 쓰실 수 있습니다.');
+$('#qMsg').placeholder = '예: 합의서·차용증 서식도 있으면 좋겠습니다';
+/* 시험·설명서용 손잡이 */
+window.LT = {get S(){ return S; }, set S(v){ S = v; }, go, bodyGen, fullText, paperHtml, missing, fmt, SAMPLE, fresh, save, flush, doPrint};
+go(S.step || 1, true);
+</script>
+</body></html>

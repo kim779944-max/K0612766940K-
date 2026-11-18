@@ -1,0 +1,18 @@
+﻿missing on empty: 16
+typed name saved: 김매도
+kor 120000000: 금 일억이천만 원정 / input=120,000,000
+D+60: → 2027년 1월 17일 (일)
+after reload: {"name":"김매도","total":"120000000","step":2}
+sale missing: []
+sale copies: ["매도인 보관용","매수인 보관용","개업공인중개사 보관용"]
+sale printArea pages: 3
+house missing: []
+house copies: ["임대인 보관용","임차인 보관용","개업공인중개사 보관용"]
+house printArea pages: 3
+shop missing: []
+shop copies: ["임대인 보관용","임차인 보관용","개업공인중개사 보관용"]
+shop printArea pages: 3
+copies after uncheck: ["임대인 보관용","임차인 보관용"]
+jeonse doc: {"title":"주택 임대차계약서 (전세)","rows":["보증금","계약금","잔금"]}
+errors: [] / before-nav: []
+print calls: 0

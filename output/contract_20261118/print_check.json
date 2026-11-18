@@ -1,0 +1,29 @@
+﻿[
+    {
+        "type":  "sale",
+        "pdf":  "매매계약서_3부_인쇄.pdf",
+        "pages":  3,
+        "copies":  3,
+        "onePagePerCopy":  true,
+        "layoutHeightPx":  818,
+        "errs":  "[]"
+    },
+    {
+        "type":  "house",
+        "pdf":  "주택임대차계약서_3부_인쇄.pdf",
+        "pages":  3,
+        "copies":  3,
+        "onePagePerCopy":  true,
+        "layoutHeightPx":  850,
+        "errs":  "[]"
+    },
+    {
+        "type":  "shop",
+        "pdf":  "상가임대차계약서_3부_인쇄.pdf",
+        "pages":  3,
+        "copies":  3,
+        "onePagePerCopy":  true,
+        "layoutHeightPx":  867,
+        "errs":  "[]"
+    }
+]

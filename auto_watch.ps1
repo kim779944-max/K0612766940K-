@@ -117,9 +117,27 @@ try {
     }
   }
 
-  $todo = $cands |
-    Sort-Object -Property @{ Expression = { $_.DateKey }; Descending = $true }, @{ Expression = { $_.Time }; Descending = $true } |
-    Select-Object -First 1
+  # ---------- 3-2) 실행 순서 (CLAUDE_QUEUE.txt 우선) ----------
+  # git pull 직후에는 날짜가 같은 지시서들의 수정시각이 같아져 '가장 최근' 정렬이 뒤섞인다.
+  # 저장소에 CLAUDE_QUEUE.txt 가 있으면 그 순서를 따르고, 큐에 없는 지시서는 기존 정렬(최근순)로 뒤에 붙인다.
+  $byRecent = @($cands |
+    Sort-Object -Property @{ Expression = { $_.DateKey }; Descending = $true }, @{ Expression = { $_.Time }; Descending = $true })
+  $queueFile = Join-Path $Repo 'CLAUDE_QUEUE.txt'
+  $ordered = @()
+  if (Test-Path -LiteralPath $queueFile) {
+    foreach ($line in (Get-Content -LiteralPath $queueFile -Encoding UTF8)) {
+      $name = $line.Trim()
+      if (-not $name -or $name.StartsWith('#')) { continue }
+      $hit = $cands | Where-Object { $_.Name -eq $name } | Select-Object -First 1
+      if ($hit) { $ordered += $hit }
+    }
+    foreach ($c in $byRecent) {
+      if (-not ($ordered | Where-Object { $_.Name -eq $c.Name })) { $ordered += $c }
+    }
+  }
+  else { $ordered = $byRecent }
+
+  $todo = $ordered | Select-Object -First 1
   if (-not $todo) { exit 0 }   # 할 일 없음(모든 지시서에 결과 파일이 있거나 시도 초과) → 조용히 종료
 
   $task   = $todo.Name

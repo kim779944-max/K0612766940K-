@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더매물 — 매물 A4 브리핑 시트 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+:root{--bg:#0A1128;--card:#111B36;--card2:#16223F;--line:#24314F;--line2:#2E4370;--ink:#ECEFF4;--sub:#93A0B4;
+ --or:#FF6B00;--or2:#FFA24D;--on:#0A1128;--red:#FF5A5A;--green:#35C48A;--yel:#FFC24D}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Roboto,sans-serif;
+ background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5;letter-spacing:-.2px;word-break:keep-all;overflow-wrap:break-word}
+#app{max-width:460px;margin:0 auto;overflow-x:hidden;min-height:100vh;
+ background:radial-gradient(120% 40% at 50% -6%,rgba(255,107,0,.10) 0%,rgba(255,107,0,0) 62%),var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;letter-spacing:-.2px}
+input,select,textarea{font:inherit;color:var(--ink);background:#0B1530;border:1px solid var(--line2);border-radius:10px;padding:10px 11px;width:100%;font-size:14px;min-width:0}
+textarea{resize:vertical;line-height:1.5}
+input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;accent-color:#FF6B00;padding:0}
+input[type=file]{font-size:12px;padding:7px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--or2)}
+input.miss,textarea.miss{border-color:var(--red)}
+a{color:var(--or2)}
+header.top{position:sticky;top:0;z-index:40;background:rgba(10,17,40,.97);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:8px;padding:10px 14px 6px}
+.brand{display:flex;align-items:center;gap:7px;font-size:15.5px;font-weight:900;color:#fff;letter-spacing:-.6px;min-width:0}
+.brand .mark{flex:0 0 24px;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,var(--or2),var(--or));color:var(--on);font-size:12px;font-weight:900}
+.brand span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp{flex:1}
+.home{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:999px;padding:5px 10px;text-decoration:none;white-space:nowrap}
+.privacy{font-size:11px;color:var(--sub);padding:0 14px 8px;display:flex;align-items:center;gap:6px}
+.privacy::before{content:"";flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+main{padding:6px 14px 40px}
+.hero h1{font-size:21px;line-height:1.32;font-weight:900;letter-spacing:-.8px;margin-top:10px}
+.hero h1 em{font-style:normal;color:var(--or)}
+.hero p{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 12px;margin-top:12px}
+.card h2{font-size:14.5px;font-weight:900;color:#fff;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.card h2 .n{flex:0 0 20px;width:20px;height:20px;border-radius:6px;background:var(--or);color:var(--on);font-size:11px;font-weight:900;display:grid;place-items:center}
+.card h3{font-size:13px;font-weight:900;color:var(--or2);margin:12px 0 5px}
+.sub{font-size:11.5px;color:var(--sub);margin-top:4px;line-height:1.55}
+label.lb{display:block;font-size:11.5px;font-weight:800;color:#C6D0DF;margin:10px 0 4px}
+label.lb i{font-style:normal;color:var(--sub);font-weight:700;margin-left:4px;font-size:10.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.g2>*{min-width:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border-radius:12px;padding:13px 12px;font-size:14.5px;font-weight:900;text-decoration:none;text-align:center;line-height:1.3}
+.btn.pri{color:var(--on);background:linear-gradient(145deg,var(--or2),var(--or));box-shadow:0 8px 22px rgba(255,107,0,.28)}
+.btn.sec{color:#E6EDF7;background:var(--card2);border:1px solid var(--line2)}
+.btn.sm{padding:9px 6px;font-size:12.5px;border-radius:10px}
+.row{display:flex;gap:7px;margin-top:9px}.row>*{flex:1;min-width:0}
+.chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.chips button{font-size:12px;font-weight:800;color:#DCE6F2;border:1px solid var(--line2);border-radius:999px;padding:7px 11px;background:var(--card2)}
+.chips button.on{background:var(--or);border-color:var(--or);color:var(--on)}
+.pill{display:inline-block;font-size:10.5px;font-weight:900;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.pill.a,.pill.hi{background:var(--red);color:#fff}.pill.b,.pill.md{background:var(--yel);color:#1a1200}.pill.c,.pill.lo{background:#3B82F6;color:#fff}.pill.d,.pill.no{background:#3A4766;color:#DCE6F2}.pill.ok{background:var(--green);color:#062014}
+.item{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:7px}
+.item .q{font-size:13px;font-weight:800;color:#fff}
+.item .a{font-size:12.5px;color:#D3DBE7;margin-top:4px;line-height:1.55}
+.item.warn{border-color:rgba(255,90,90,.55)}
+.kv{font-size:11px;color:var(--sub);line-height:1.55;margin-top:6px}
+.out{white-space:pre-wrap;font-size:13px;line-height:1.6;background:#0B1530;border:1px dashed var(--or2);border-radius:10px;padding:10px;margin-top:8px;color:#E3E9F2}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.stat div{background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;min-width:0}
+.stat b{display:block;font-size:18px;font-weight:900;color:#fff}
+.stat span{font-size:10.5px;color:var(--sub)}
+table.t{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed;font-size:12px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.t th{color:var(--sub);font-size:11px;font-weight:800}
+.fixnote{font-size:11.5px;line-height:1.55;color:#FFD7B8;background:rgba(255,107,0,.10);border:1px solid rgba(255,107,0,.45);border-radius:10px;padding:8px 10px;margin-top:10px}
+details.rule{margin-top:8px;background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
+details.rule summary{font-weight:800;color:var(--or2);cursor:pointer}
+.hide{display:none!important}
+.empty{font-size:12px;color:var(--sub);text-align:center;padding:12px 6px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:#1E2C4D;border:1px solid var(--or);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:10px 14px;z-index:90;width:max-content;max-width:340px;text-align:center;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{font-size:10.5px;color:#6E7F99;text-align:center;margin-top:16px;line-height:1.6}
+#printArea{display:none}
+.paper{background:#fff;color:#111;font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:10.5pt;line-height:1.5;letter-spacing:-.1px}
+.paper h1{font-size:16pt;margin-bottom:4px}.paper h2{font-size:12pt;margin:11px 0 5px;border-left:4px solid #FF6B00;padding-left:7px}
+.paper table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0}
+.paper th,.paper td{border:1px solid #444;padding:4px 6px;text-align:left;vertical-align:top;font-size:9.5pt;overflow-wrap:anywhere;word-break:keep-all}
+.paper th{background:#F1F3F7}
+.paper .note{font-size:9pt;color:#444;margin-top:8px}
+.paper .pre{white-space:pre-wrap}
+@media print{
+ @page{size:A4;margin:12mm}
+ html,body{background:#fff!important;min-height:0!important}
+ body>*:not(#printArea){display:none!important}
+ #printArea{display:block!important}
+}
+.ph{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px}
+.ph label{position:relative;aspect-ratio:1;border:1px dashed var(--line2);border-radius:9px;background:#0B1530;display:grid;place-items:center;font-size:10px;color:var(--sub);text-align:center;overflow:hidden;cursor:pointer;line-height:1.25}
+.ph label img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph input{display:none}
+.lack{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.lack label{display:flex;align-items:center;gap:5px;font-size:12px;background:#0B1530;border:1px solid var(--line2);border-radius:999px;padding:6px 10px}
+.lack input{width:15px;height:15px;flex:0 0 15px}
+.pv{margin-top:10px;background:#fff;border-radius:6px;overflow:hidden;position:relative}
+.pv .paper{position:absolute;left:0;top:0;transform-origin:0 0}
+/* A4 시트 */
+.sheet{width:186mm;padding:0;color:#111}
+.sheet .hd2{display:flex;align-items:flex-end;gap:8px;border-bottom:3px solid #0A1128;padding-bottom:5px}
+.sheet .hd2 h1{flex:1;font-size:17pt;margin:0;letter-spacing:-.5px}
+.sheet .hd2 span{font-size:9pt;color:#555;white-space:nowrap}
+.sheet .tag{display:inline-block;background:#FF6B00;color:#fff;font-weight:700;border-radius:4px;padding:1px 7px;font-size:9.5pt;margin-right:6px}
+.sheet .grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:38mm 38mm;gap:2mm;margin-top:3mm}
+.sheet{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sheet .grid div{background:#E9ECF1;border:1px solid #999;position:relative;overflow:hidden}
+.sheet .grid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sheet .grid div:first-child{grid-row:1/3}
+.sheet .grid div span{position:absolute;left:0;bottom:0;background:rgba(10,17,40,.8);color:#fff;font-size:8pt;padding:1px 5px}
+.sheet .two{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:2mm}
+.sheet ol{margin:2px 0 0 18px;font-size:10pt}
+.sheet ol li{margin:2px 0}
+.sheet .lk{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px}
+.sheet .lk span{border:1.5px solid #FF6B00;border-radius:6px;padding:3px 7px;font-size:9.5pt;font-weight:700}
+.sheet .must{margin-top:4mm;border:1.5px solid #B91C1C;color:#7F1D1D;background:#FEF2F2;padding:5px 8px;font-size:10pt;font-weight:700}
+</style></head>
+<body><div id="app">
+<header class="top">
+ <div class="hd"><div class="brand"><span class="mark">K</span><span class="t">KTS 더매물 · A4 브리핑 시트</span></div><span class="sp"></span><a class="home" href="index.html">원클릭 쇼룸</a></div>
+ <div class="privacy">입력하신 내용은 이 기기 안에서만 처리됩니다</div>
+</header>
+<main>
+<section class="hero">
+ <h1>사진 5장과 조건만 넣으면<br><em>교환 영업용 A4 브리핑 1장</em></h1>
+ <p>5대 사진 배치 · 교환 포인트 3줄 · 상대방 결핍 카드 · A4 인쇄(PDF 저장). 실명·개인 연락처는 시트에 넣지 않습니다(이니셜·지역만).</p>
+</section>
+
+<section class="card">
+ <h2><span class="n">1</span>매물 정보</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">샘플 매물 1건 넣기</button></div>
+ <label class="lb">제목</label><input id="title" maxlength="40" placeholder="예) 하남 미사 대로변 상가 1층">
+ <label class="lb">유형</label>
+ <div class="chips" id="kind"><button>토지</button><button>상가</button><button>건물</button><button>공장</button><button>주택</button><button>숙박</button></div>
+ <label class="lb">소재지<i>시·구·동까지만</i></label><input id="loc" maxlength="40" placeholder="경기 하남시 망월동">
+ <div class="g2">
+  <div><label class="lb">면적(㎡)</label><input id="area" inputmode="decimal"><div class="kv" id="pyeong"></div></div>
+  <div><label class="lb">희망가(만 원)</label><input id="price" inputmode="numeric"><div class="kv" id="priceK"></div></div>
+  <div><label class="lb">융자 · 보증금</label><input id="loan" maxlength="40"></div>
+  <div><label class="lb">월 수입(임대료 등)</label><input id="rent" maxlength="40"></div>
+ </div>
+ <label class="lb">원하는 교환 물건</label><input id="want" maxlength="60" placeholder="예) 서울 동남권 아파트 · 차액 정산">
+ <label class="lb">교환 포인트 3줄</label>
+ <input id="pt1" maxlength="60"><input id="pt2" maxlength="60" style="margin-top:5px"><input id="pt3" maxlength="60" style="margin-top:5px">
+ <label class="lb">상대방 결핍 카드<i>이 물건이 채워 줄 수 있는 것</i></label>
+ <div class="lack" id="lack"></div>
+ <div class="g2"><div><label class="lb">담당 이니셜</label><input id="agent" maxlength="10" placeholder="K.T.S"></div><div><label class="lb">작성일</label><input id="made" type="date"></div></div>
+ <h3>사진 5장 (전경 · 진입로 · 내부 · 주변 · 지도)</h3>
+ <div class="ph" id="ph"></div>
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">A4 브리핑 시트 만들기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>A4 미리보기</h2>
+ <div class="row"><button class="btn pri sm" id="printBtn">인쇄 · PDF 저장</button><button class="btn sec sm" id="copyBtn">요약 문구 복사</button></div>
+ <p class="kv" id="guard"></p>
+ <div class="pv" id="pv"></div>
+</section>
+<section class="card qa" id="inq">
+ <h2><span class="n">?</span>60초 문의</h2>
+ <p class="sub">우리 매장에 맞게 고쳐 쓰고 싶으시면 이름·연락처·문의 한 줄만 남겨 주세요. 담당자가 확인한 뒤 연락드립니다.</p>
+ <div class="row"><a class="btn sec" id="inqLink" href="../misa-1116/form.html" target="_blank" rel="noopener">60초 문의 폼 열기 (이름 · 연락처 · 문의)</a></div>
+ <p class="kv">KTS 60초 접수 폼을 그대로 씁니다. 이 화면에서 만든 작업 내용은 폼으로 넘어가지 않습니다.</p>
+</section>
+<p class="foot">KTS 원클릭 · 서버 0 · 외부 발송 0 · 모든 처리는 이 기기 안에서만 합니다<br><a href="index.html">원클릭 쇼룸으로</a></p>
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/* ===== KTS 원클릭 9차 공통 도우미 (복사·저장·인쇄·기기 저장·개인정보 가림) ===== */
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+let _tt; function toast(m){ const e = $('#toast'); e.textContent = m; e.classList.add('on'); clearTimeout(_tt); _tt = setTimeout(() => e.classList.remove('on'), 2400); }
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(e){}
+  try{ const a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); const ok = document.execCommand('copy'); a.remove(); return ok; }catch(e){ return false; }
+}
+function copyOut(t, msg){ window.__lastCopy = t; copyText(t).then(ok => toast(ok ? (msg || '복사했습니다') : '복사하지 못했습니다. 글자를 길게 눌러 직접 복사해 주세요')); }
+function download(name, text, mime){ window.__lastDownload = {name:name, size:text.length}; const b = new Blob([text], {type:mime || 'text/plain;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+const toCSV = rows => rows.map(r => r.map(c => { c = String(c == null ? '' : c); return /[",\r\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(',')).join('\r\n');
+function saveCSV(name, rows){ download(name, '﻿' + toCSV(rows), 'text/csv;charset=utf-8'); toast('CSV 파일을 저장했습니다 (엑셀에서 열림)'); }
+function printDoc(html){ $('#printArea').innerHTML = html; setTimeout(() => window.print(), 60); }
+const LS = { get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} } };
+const pad2 = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayS = () => ymd(new Date());
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const parseD = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const WK = ['일', '월', '화', '수', '목', '금', '토'];
+const korD = d => d ? `${d.getMonth() + 1}월 ${d.getDate()}일(${WK[d.getDay()]})` : '';
+/* CSV 붙여넣기 읽기 (따옴표·쉼표·탭 지원) */
+function parseCSV(text){
+  text = String(text || '').replace(/^﻿/, '');
+  const sep = (text.split('\n')[0].indexOf('\t') >= 0) ? '\t' : ',';
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){ if (c === '"'){ if (text[i + 1] === '"'){ cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === sep){ row.push(cur.trim()); cur = ''; }
+    else if (c === '\n'){ row.push(cur.trim()); rows.push(row); row = []; cur = ''; }
+    else if (c !== '\r') cur += c;
+  }
+  if (cur !== '' || row.length){ row.push(cur.trim()); rows.push(row); }
+  return rows.filter(r => r.some(x => x !== ''));
+}
+/* 개인정보 가림: 휴대폰·일반전화·이메일 */
+function maskPII(s){
+  return String(s || '')
+    .replace(/([\w.+-]{1,64})@([\w-]+(?:\.[\w-]+)+)/g, (m, u, d) => u.slice(0, 2) + '***@' + d)
+    .replace(/(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/g, (m, a, b, c) => a + '-****-' + c)
+    .replace(/(0[2-6]\d?)[-.\s](\d{3,4})[-.\s](\d{4})/g, (m, a, b, c) => a + '-****-' + c);
+}
+/* 받침에 맞춘 조사: jo('주문','을를') → 주문을 */
+const jo = (w, p) => { w = String(w); const c = w.charCodeAt(w.length - 1); const has = c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; return w + (has ? p[0] : p[1]); };
+const PHONE_RE = /(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/;
+/* ===== 공통 도우미 끝 ===== */
+const SLOTS = ['전경', '진입로', '내부', '주변', '지도'];
+const LACKS = ['현금 흐름(월세)', '세금 부담 정리', '관리 부담 줄이기', '실거주 필요', '대출 만기 해결', '공동명의·상속 정리', '지역 이동', '규모 줄이기'];
+const PH = [null, null, null, null, null];
+let KIND = '';
+$('#ph').innerHTML = SLOTS.map((s, i) => `<label data-i="${i}"><span>${i + 1}<br>${s}</span><input type="file" accept="image/*" data-i="${i}"></label>`).join('');
+$('#lack').innerHTML = LACKS.map((l, i) => `<label><input type="checkbox" value="${esc(l)}">${esc(l)}</label>`).join('');
+function setPhoto(i, url){ PH[i] = url; const lb = document.querySelector(`#ph label[data-i="${i}"]`); lb.querySelector('img') && lb.querySelector('img').remove(); if (url){ const im = new Image(); im.src = url; lb.appendChild(im); } }
+$('#ph').onchange = e => { const inp = e.target; const f = inp.files[0]; if (!f) return; const i = +inp.dataset.i;
+  const url = URL.createObjectURL(f), im = new Image(); im.onload = () => { const s = Math.min(1, 1400 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(url); setPhoto(i, c.toDataURL('image/jpeg', .85)); }; im.src = url; };
+$('#kind').onclick = e => { const b = e.target.closest('button'); if (!b) return; KIND = b.textContent; $$('#kind button').forEach(x => x.classList.toggle('on', x === b)); };
+const upd = () => { const a = parseFloat($('#area').value); $('#pyeong').textContent = a ? `약 ${(a / 3.3058).toFixed(1)}평` : ''; const p = +String($('#price').value).replace(/\D/g, ''); $('#priceK').textContent = p ? won(p) : ''; };
+const won = man => { const eok = Math.floor(man / 10000), r = man % 10000; return (eok ? eok + '억 ' : '') + (r ? r.toLocaleString() + '만 ' : '') + '원'; };
+$('#area').oninput = upd; $('#price').oninput = upd;
+function samplePhoto(i){
+  const c = document.createElement('canvas'); c.width = 800; c.height = 560; const g = c.getContext('2d');
+  const sky = g.createLinearGradient(0, 0, 0, 560); sky.addColorStop(0, ['#9EC9F0','#B8D4E8','#E8E2D6','#A9D18E','#EDEFF2'][i]); sky.addColorStop(1, ['#E8F1F8','#DDE6EC','#CFC6B6','#6FA35A','#DCE1E7'][i]); g.fillStyle = sky; g.fillRect(0, 0, 800, 560);
+  g.fillStyle = '#5C6B7A';
+  if (i === 0){ g.fillStyle = '#7E8C99'; g.fillRect(180, 120, 440, 360); g.fillStyle = '#C9D6E2'; for (let y = 150; y < 380; y += 70) for (let x = 210; x < 590; x += 95) g.fillRect(x, y, 60, 40); g.fillStyle = '#FF6B00'; g.fillRect(180, 400, 440, 80); g.fillStyle = '#3F4A55'; g.fillRect(0, 480, 800, 80); }
+  if (i === 1){ g.fillStyle = '#6B6F75'; g.beginPath(); g.moveTo(300, 560); g.lineTo(380, 220); g.lineTo(420, 220); g.lineTo(560, 560); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 6; g.setLineDash([30, 30]); g.beginPath(); g.moveTo(430, 560); g.lineTo(400, 230); g.stroke(); g.setLineDash([]); g.fillStyle = '#8A9AA8'; g.fillRect(560, 140, 160, 300); g.fillRect(80, 180, 150, 260); }
+  if (i === 2){ g.fillStyle = '#B9AE9C'; g.fillRect(0, 380, 800, 180); g.fillStyle = '#F4F1EA'; g.fillRect(90, 80, 260, 200); g.fillRect(450, 80, 260, 200); g.strokeStyle = '#8E8576'; g.lineWidth = 8; g.strokeRect(90, 80, 260, 200); g.strokeRect(450, 80, 260, 200); }
+  if (i === 3){ g.fillStyle = '#4E7F3F'; for (let k = 0; k < 7; k++){ g.beginPath(); g.arc(90 + k * 110, 300, 70, 0, 7); g.fill(); } g.fillStyle = '#8B95A1'; g.fillRect(0, 400, 800, 160); g.fillStyle = '#DCE3EA'; g.fillRect(560, 150, 180, 250); }
+  if (i === 4){ g.strokeStyle = '#B5BFCA'; g.lineWidth = 3; for (let k = 0; k < 800; k += 80){ g.beginPath(); g.moveTo(k, 0); g.lineTo(k, 560); g.stroke(); } for (let k = 0; k < 560; k += 80){ g.beginPath(); g.moveTo(0, k); g.lineTo(800, k); g.stroke(); }
+    g.strokeStyle = '#F2C14E'; g.lineWidth = 22; g.beginPath(); g.moveTo(0, 300); g.lineTo(800, 260); g.stroke(); g.fillStyle = '#FF6B00'; g.beginPath(); g.arc(420, 230, 26, 0, 7); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(420, 230, 10, 0, 7); g.fill(); }
+  g.fillStyle = 'rgba(10,17,40,.55)'; g.font = 'bold 30px Malgun Gothic, sans-serif'; g.textAlign = 'center'; g.fillText('샘플', 400, 300);
+  return c.toDataURL('image/jpeg', .85);
+}
+const SAMPLE = {title:'하남 미사 대로변 상가 1층 (임차 안정)', kind:'상가', loc:'경기 하남시 망월동', area:'84.2', price:'95000', loan:'보증금 1억 / 융자 3억', rent:'월 420만 원',
+  want:'서울 동남권 아파트 · 차액 정산 협의', pt:['미사역 도보 6분, 대로변 코너 1층 · 유동 인구 많음','10년 차 프랜차이즈 임차인 · 연체 이력 없음','교환 시 차액은 현금·대출 승계로 맞출 수 있음'],
+  lack:['현금 흐름(월세)', '관리 부담 줄이기', '지역 이동'], agent:'K.T.S'};
+$('#sampleBtn').onclick = () => {
+  const S = SAMPLE; $('#title').value = S.title; $('#loc').value = S.loc; $('#area').value = S.area; $('#price').value = S.price; $('#loan').value = S.loan; $('#rent').value = S.rent; $('#want').value = S.want;
+  S.pt.forEach((p, i) => $('#pt' + (i + 1)).value = p); $$('#lack input').forEach(c => c.checked = S.lack.indexOf(c.value) >= 0); $('#agent').value = S.agent; $('#made').value = todayS();
+  KIND = S.kind; $$('#kind button').forEach(x => x.classList.toggle('on', x.textContent === S.kind)); [0, 1, 2, 3, 4].forEach(i => setPhoto(i, samplePhoto(i))); upd();
+  toast('샘플 매물과 사진 5장을 넣었습니다');
+};
+/* 개인정보 가드: 전화·이메일 제거, 이름처럼 보이는 담당란은 이니셜만 */
+let GUARD = [];
+function clean(s, where){
+  let t = String(s || '');
+  const t2 = t.replace(/[\w.+-]+@[\w-]+(\.[\w-]+)+/g, '').replace(/(01[016789]|0[2-6]\d?)[-.\s]?\d{3,4}[-.\s]?\d{4}/g, '').replace(/\s{2,}/g, ' ').trim();
+  if (t2 !== t.trim()) GUARD.push(`${where}의 연락처를 뺐습니다`);
+  return t2;
+}
+function initials(s){ s = (s || '').trim(); if (/^[가-힣]{2,4}$/.test(s)){ GUARD.push('담당란의 이름을 이니셜로 바꿨습니다'); return s[0] + '○'; } return clean(s, '담당란'); }
+function data(){
+  GUARD = [];
+  const d = {title:clean($('#title').value, '제목'), kind:KIND, loc:clean($('#loc').value, '소재지'), area:$('#area').value.trim(), price:+String($('#price').value).replace(/\D/g, '') || 0,
+    loan:clean($('#loan').value, '융자'), rent:clean($('#rent').value, '월 수입'), want:clean($('#want').value, '교환 물건'), pt:[1, 2, 3].map(i => clean($('#pt' + i).value, '교환 포인트')).filter(Boolean),
+    lack:$$('#lack input:checked').map(c => c.value), agent:initials($('#agent').value), made:$('#made').value || todayS()};
+  if (/\d+\s*(번지|호)\b|\d+-\d+\s*(번지)?$/.test(d.loc)){ d.loc = d.loc.replace(/\s*\d[\d-]*\s*(번지|호)?$/,'').trim(); GUARD.push('소재지는 동까지만 남겼습니다'); }
+  return d;
+}
+function sheet(d){
+  const a = parseFloat(d.area);
+  return `<div class="paper sheet"><div class="hd2"><h1>${esc(d.title || '매물 브리핑')}</h1><span>KTS 더매물 · ${esc(d.made)}</span></div>
+  <div style="margin-top:3mm">${d.kind ? `<span class="tag">${esc(d.kind)}</span>` : ''}<b>${esc(d.loc)}</b></div>
+  <div class="grid">${SLOTS.map((s, i) => `<div>${PH[i] ? `<img src="${PH[i]}" alt="">` : ''}<span>${i + 1}. ${s}</span></div>`).join('')}</div>
+  <table style="margin-top:3mm"><colgroup><col style="width:16%"><col style="width:34%"><col style="width:16%"><col></colgroup>
+   <tr><th>면적</th><td>${a ? `${a}㎡ (약 ${(a / 3.3058).toFixed(1)}평)` : ''}</td><th>희망가</th><td><b>${d.price ? won(d.price) : ''}</b></td></tr>
+   <tr><th>융자·보증금</th><td>${esc(d.loan)}</td><th>월 수입</th><td>${esc(d.rent)}</td></tr>
+   <tr><th>교환 희망</th><td colspan="3">${esc(d.want)}</td></tr></table>
+  <div class="two"><div><h2>교환 포인트 3줄</h2><ol>${d.pt.map(p => `<li>${esc(p)}</li>`).join('')}</ol></div>
+  <div><h2>상대방 결핍 카드</h2><p style="font-size:9pt;color:#555;margin:0">이 물건으로 채워 줄 수 있는 것</p><div class="lk">${d.lack.map(l => `<span>${esc(l)}</span>`).join('') || '<span>—</span>'}</div></div></div>
+  <div class="must">권리관계(소유권·근저당·임차권 등)는 반드시 등기부등본으로 확인하십시오. 이 시트는 영업 참고 자료이며 권리를 보증하지 않습니다.</div>
+  <p class="note">담당 ${esc(d.agent || '—')} · 실명·개인 연락처는 싣지 않습니다(이니셜·지역만) · 사진 ${PH.filter(Boolean).length}/5</p></div>`;
+}
+let CUR = null;
+function fitPv(){ const pv = $('#pv'), p = pv.querySelector('.paper'); if (!p) return; const s = pv.clientWidth / p.offsetWidth; p.style.transform = `scale(${s})`; pv.style.height = Math.ceil(p.offsetHeight * s) + 'px'; }
+$('#runBtn').onclick = () => {
+  if (!$('#title').value.trim()){ $('#title').classList.add('miss'); return toast('제목을 넣어 주세요'); } $('#title').classList.remove('miss');
+  CUR = data(); $('#pv').innerHTML = sheet(CUR); setTimeout(fitPv, 30);
+  $('#guard').textContent = (GUARD.length ? '개인정보 가드: ' + [...new Set(GUARD)].join(' · ') + '. ' : '') + `사진 ${PH.filter(Boolean).length}/5장 · A4 1장으로 인쇄됩니다.`;
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+};
+window.addEventListener('resize', fitPv);
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(sheet(CUR)); };
+$('#copyBtn').onclick = () => { if (!CUR) return; const d = CUR; copyOut(`[KTS 더매물] ${d.title}\n${d.kind} · ${d.loc} · ${d.area}㎡ · 희망가 ${d.price ? won(d.price) : '-'}\n교환 희망: ${d.want}\n` + d.pt.map((p, i) => `${i + 1}) ${p}`).join('\n') + `\n※ 권리관계는 등기부등본 확인`, '요약 문구를 복사했습니다'); };
+$('#made').value = todayS();
+</script>
+</body></html>

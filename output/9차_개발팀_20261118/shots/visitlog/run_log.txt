@@ -1,0 +1,14 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+after sample: customers=10 month=4 overdue=3
+today5: 한상우:연락일 10일 지남, 김영희:연락일 5일 지남, 박철수:연락일 2일 지남, 이순자:오늘 연락일, 윤재석:오늘 연락일
+after add: today5: 한상우:연락일 10일 지남, 박철수:연락일 2일 지남, 이순자:오늘 연락일, 윤재석:오늘 연락일, 정미경:마지막 방문 95일 전 overdue=2 tel autofill=010-0000-3001
+export: {"name":"KTS더방문_백업_2026-11-18.json","size":2095}
+backup/restore: before=14 wiped=0 imported=14 after=14 re-import dup=0
+persist after reload: 14
+print today5: pages=1 bytes=44100 file=files\visitlog_today5.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2725 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+errors(now): [] / before-nav: []
+print calls: 1
+shots=5 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

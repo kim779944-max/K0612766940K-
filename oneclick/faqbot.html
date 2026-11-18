@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>24시간 FAQ 챗봇 설정 생성기 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+:root{--bg:#0A1128;--card:#111B36;--card2:#16223F;--line:#24314F;--line2:#2E4370;--ink:#ECEFF4;--sub:#93A0B4;
+ --or:#FF6B00;--or2:#FFA24D;--on:#0A1128;--red:#FF5A5A;--green:#35C48A;--yel:#FFC24D}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Roboto,sans-serif;
+ background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5;letter-spacing:-.2px;word-break:keep-all;overflow-wrap:break-word}
+#app{max-width:460px;margin:0 auto;overflow-x:hidden;min-height:100vh;
+ background:radial-gradient(120% 40% at 50% -6%,rgba(255,107,0,.10) 0%,rgba(255,107,0,0) 62%),var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;letter-spacing:-.2px}
+input,select,textarea{font:inherit;color:var(--ink);background:#0B1530;border:1px solid var(--line2);border-radius:10px;padding:10px 11px;width:100%;font-size:14px;min-width:0}
+textarea{resize:vertical;line-height:1.5}
+input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;accent-color:#FF6B00;padding:0}
+input[type=file]{font-size:12px;padding:7px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--or2)}
+input.miss,textarea.miss{border-color:var(--red)}
+a{color:var(--or2)}
+header.top{position:sticky;top:0;z-index:40;background:rgba(10,17,40,.97);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:8px;padding:10px 14px 6px}
+.brand{display:flex;align-items:center;gap:7px;font-size:15.5px;font-weight:900;color:#fff;letter-spacing:-.6px;min-width:0}
+.brand .mark{flex:0 0 24px;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,var(--or2),var(--or));color:var(--on);font-size:12px;font-weight:900}
+.brand span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp{flex:1}
+.home{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:999px;padding:5px 10px;text-decoration:none;white-space:nowrap}
+.privacy{font-size:11px;color:var(--sub);padding:0 14px 8px;display:flex;align-items:center;gap:6px}
+.privacy::before{content:"";flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+main{padding:6px 14px 40px}
+.hero h1{font-size:21px;line-height:1.32;font-weight:900;letter-spacing:-.8px;margin-top:10px}
+.hero h1 em{font-style:normal;color:var(--or)}
+.hero p{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 12px;margin-top:12px}
+.card h2{font-size:14.5px;font-weight:900;color:#fff;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.card h2 .n{flex:0 0 20px;width:20px;height:20px;border-radius:6px;background:var(--or);color:var(--on);font-size:11px;font-weight:900;display:grid;place-items:center}
+.card h3{font-size:13px;font-weight:900;color:var(--or2);margin:12px 0 5px}
+.sub{font-size:11.5px;color:var(--sub);margin-top:4px;line-height:1.55}
+label.lb{display:block;font-size:11.5px;font-weight:800;color:#C6D0DF;margin:10px 0 4px}
+label.lb i{font-style:normal;color:var(--sub);font-weight:700;margin-left:4px;font-size:10.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.g2>*{min-width:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border-radius:12px;padding:13px 12px;font-size:14.5px;font-weight:900;text-decoration:none;text-align:center;line-height:1.3}
+.btn.pri{color:var(--on);background:linear-gradient(145deg,var(--or2),var(--or));box-shadow:0 8px 22px rgba(255,107,0,.28)}
+.btn.sec{color:#E6EDF7;background:var(--card2);border:1px solid var(--line2)}
+.btn.sm{padding:9px 6px;font-size:12.5px;border-radius:10px}
+.row{display:flex;gap:7px;margin-top:9px}.row>*{flex:1;min-width:0}
+.chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.chips button{font-size:12px;font-weight:800;color:#DCE6F2;border:1px solid var(--line2);border-radius:999px;padding:7px 11px;background:var(--card2)}
+.chips button.on{background:var(--or);border-color:var(--or);color:var(--on)}
+.pill{display:inline-block;font-size:10.5px;font-weight:900;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.pill.a,.pill.hi{background:var(--red);color:#fff}.pill.b,.pill.md{background:var(--yel);color:#1a1200}.pill.c,.pill.lo{background:#3B82F6;color:#fff}.pill.d,.pill.no{background:#3A4766;color:#DCE6F2}.pill.ok{background:var(--green);color:#062014}
+.item{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:7px}
+.item .q{font-size:13px;font-weight:800;color:#fff}
+.item .a{font-size:12.5px;color:#D3DBE7;margin-top:4px;line-height:1.55}
+.item.warn{border-color:rgba(255,90,90,.55)}
+.kv{font-size:11px;color:var(--sub);line-height:1.55;margin-top:6px}
+.out{white-space:pre-wrap;font-size:13px;line-height:1.6;background:#0B1530;border:1px dashed var(--or2);border-radius:10px;padding:10px;margin-top:8px;color:#E3E9F2}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.stat div{background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;min-width:0}
+.stat b{display:block;font-size:18px;font-weight:900;color:#fff}
+.stat span{font-size:10.5px;color:var(--sub)}
+table.t{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed;font-size:12px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.t th{color:var(--sub);font-size:11px;font-weight:800}
+.fixnote{font-size:11.5px;line-height:1.55;color:#FFD7B8;background:rgba(255,107,0,.10);border:1px solid rgba(255,107,0,.45);border-radius:10px;padding:8px 10px;margin-top:10px}
+details.rule{margin-top:8px;background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
+details.rule summary{font-weight:800;color:var(--or2);cursor:pointer}
+.hide{display:none!important}
+.empty{font-size:12px;color:var(--sub);text-align:center;padding:12px 6px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:#1E2C4D;border:1px solid var(--or);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:10px 14px;z-index:90;width:max-content;max-width:340px;text-align:center;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{font-size:10.5px;color:#6E7F99;text-align:center;margin-top:16px;line-height:1.6}
+#printArea{display:none}
+.paper{background:#fff;color:#111;font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:10.5pt;line-height:1.5;letter-spacing:-.1px}
+.paper h1{font-size:16pt;margin-bottom:4px}.paper h2{font-size:12pt;margin:11px 0 5px;border-left:4px solid #FF6B00;padding-left:7px}
+.paper table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0}
+.paper th,.paper td{border:1px solid #444;padding:4px 6px;text-align:left;vertical-align:top;font-size:9.5pt;overflow-wrap:anywhere;word-break:keep-all}
+.paper th{background:#F1F3F7}
+.paper .note{font-size:9pt;color:#444;margin-top:8px}
+.paper .pre{white-space:pre-wrap}
+@media print{
+ @page{size:A4;margin:12mm}
+ html,body{background:#fff!important;min-height:0!important}
+ body>*:not(#printArea){display:none!important}
+ #printArea{display:block!important}
+}
+.fld textarea{min-height:44px}
+.flt{display:flex;gap:6px;margin-top:8px}
+.flt button{flex:1;font-size:12px;font-weight:800;border:1px solid var(--line2);border-radius:9px;padding:8px 4px;background:var(--card2);color:#DCE6F2}
+.flt button.on{background:var(--or);color:var(--on);border-color:var(--or)}
+.item .meta{display:flex;gap:6px;align-items:center;margin-bottom:4px;font-size:10.5px;color:var(--sub)}
+.jsonbox{font-family:Consolas,Menlo,monospace;font-size:11px;max-height:220px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+</style></head>
+<body><div id="app">
+<header class="top">
+ <div class="hd"><div class="brand"><span class="mark">K</span><span class="t">FAQ 챗봇 설정 생성기</span></div><span class="sp"></span><a class="home" href="index.html">원클릭 쇼룸</a></div>
+ <div class="privacy">입력하신 내용은 이 기기 안에서만 처리됩니다</div>
+</header>
+<main>
+<section class="hero">
+ <h1>매장 정보만 넣으면<br><em>손님 질문 40개와 답변</em>이 나옵니다</h1>
+ <p>영업시간·주차·배달·예약·환불을 넣으면 카카오톡 채널·홈페이지·인스타 DM에 붙일 FAQ 설정을 만듭니다. 답변은 <b>넣은 내용만</b> 씁니다. 빈 칸은 매장 문의로 안내합니다. AI 없이 동작합니다.</p>
+</section>
+
+<section class="card" id="inputCard">
+ <h2><span class="n">1</span>매장 정보</h2>
+ <p class="sub">처음이면 예시 매장을 눌러 모양을 먼저 보세요. 모르는 칸은 비워 두셔도 됩니다.</p>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 매장 넣기</button><button class="btn sec sm" id="clearBtn">모두 지우기</button></div>
+ <div class="g2">
+  <div><label class="lb">상호</label><input id="f_name" maxlength="30" placeholder="예) 미사 한상차림"></div>
+  <div><label class="lb">대표 전화</label><input id="f_tel" maxlength="20" inputmode="tel" placeholder="031-000-0000"></div>
+ </div>
+ <div id="fields"></div>
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">질문 40개 · 답변 만들기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>FAQ 40문항</h2>
+ <div class="stat"><div><b id="sAll">0</b><span>전체 질문</span></div><div><b id="sOk">0</b><span>입력값으로 답변</span></div><div><b id="sFb">0</b><span>매장 문의 안내</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">설정 JSON 복사</button><button class="btn sec sm" id="csvBtn">CSV 저장</button><button class="btn sec sm" id="printBtn">인쇄 · PDF</button></div>
+ <div class="flt" id="flt"><button class="on" data-f="all">전체</button><button data-f="ok">답변 있음</button><button data-f="fb">매장 문의</button></div>
+ <div id="list"></div>
+ <h3>손님처럼 물어보기 (규칙 시험)</h3>
+ <div class="row"><input id="testQ" placeholder="예) 주차 돼요?"><button class="btn sec sm" id="testBtn" style="flex:0 0 74px">물어보기</button></div>
+ <div class="out hide" id="testA"></div>
+ <h3>설정 JSON (카톡 채널·홈페이지·DM 공통)</h3>
+ <div class="out jsonbox" id="jsonOut"></div>
+ <p class="kv">카카오톡 채널 관리자센터의 자동응답·키워드 답변, 홈페이지 FAQ, 인스타 DM 빠른 답장에 질문/답변을 그대로 옮겨 붙이세요. 이 화면은 어디에도 직접 올리거나 보내지 않습니다.</p>
+</section>
+<section class="card qa" id="inq">
+ <h2><span class="n">?</span>60초 문의</h2>
+ <p class="sub">우리 매장에 맞게 고쳐 쓰고 싶으시면 이름·연락처·문의 한 줄만 남겨 주세요. 담당자가 확인한 뒤 연락드립니다.</p>
+ <div class="row"><a class="btn sec" id="inqLink" href="../misa-1116/form.html" target="_blank" rel="noopener">60초 문의 폼 열기 (이름 · 연락처 · 문의)</a></div>
+ <p class="kv">KTS 60초 접수 폼을 그대로 씁니다. 이 화면에서 만든 작업 내용은 폼으로 넘어가지 않습니다.</p>
+</section>
+<p class="foot">KTS 원클릭 · 서버 0 · 외부 발송 0 · 모든 처리는 이 기기 안에서만 합니다<br><a href="index.html">원클릭 쇼룸으로</a></p>
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/* ===== KTS 원클릭 9차 공통 도우미 (복사·저장·인쇄·기기 저장·개인정보 가림) ===== */
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+let _tt; function toast(m){ const e = $('#toast'); e.textContent = m; e.classList.add('on'); clearTimeout(_tt); _tt = setTimeout(() => e.classList.remove('on'), 2400); }
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(e){}
+  try{ const a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); const ok = document.execCommand('copy'); a.remove(); return ok; }catch(e){ return false; }
+}
+function copyOut(t, msg){ window.__lastCopy = t; copyText(t).then(ok => toast(ok ? (msg || '복사했습니다') : '복사하지 못했습니다. 글자를 길게 눌러 직접 복사해 주세요')); }
+function download(name, text, mime){ window.__lastDownload = {name:name, size:text.length}; const b = new Blob([text], {type:mime || 'text/plain;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+const toCSV = rows => rows.map(r => r.map(c => { c = String(c == null ? '' : c); return /[",\r\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(',')).join('\r\n');
+function saveCSV(name, rows){ download(name, '﻿' + toCSV(rows), 'text/csv;charset=utf-8'); toast('CSV 파일을 저장했습니다 (엑셀에서 열림)'); }
+function printDoc(html){ $('#printArea').innerHTML = html; setTimeout(() => window.print(), 60); }
+const LS = { get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} } };
+const pad2 = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayS = () => ymd(new Date());
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const parseD = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const WK = ['일', '월', '화', '수', '목', '금', '토'];
+const korD = d => d ? `${d.getMonth() + 1}월 ${d.getDate()}일(${WK[d.getDay()]})` : '';
+/* CSV 붙여넣기 읽기 (따옴표·쉼표·탭 지원) */
+function parseCSV(text){
+  text = String(text || '').replace(/^﻿/, '');
+  const sep = (text.split('\n')[0].indexOf('\t') >= 0) ? '\t' : ',';
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){ if (c === '"'){ if (text[i + 1] === '"'){ cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === sep){ row.push(cur.trim()); cur = ''; }
+    else if (c === '\n'){ row.push(cur.trim()); rows.push(row); row = []; cur = ''; }
+    else if (c !== '\r') cur += c;
+  }
+  if (cur !== '' || row.length){ row.push(cur.trim()); rows.push(row); }
+  return rows.filter(r => r.some(x => x !== ''));
+}
+/* 개인정보 가림: 휴대폰·일반전화·이메일 */
+function maskPII(s){
+  return String(s || '')
+    .replace(/([\w.+-]{1,64})@([\w-]+(?:\.[\w-]+)+)/g, (m, u, d) => u.slice(0, 2) + '***@' + d)
+    .replace(/(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/g, (m, a, b, c) => a + '-****-' + c)
+    .replace(/(0[2-6]\d?)[-.\s](\d{3,4})[-.\s](\d{4})/g, (m, a, b, c) => a + '-****-' + c);
+}
+/* 받침에 맞춘 조사: jo('주문','을를') → 주문을 */
+const jo = (w, p) => { w = String(w); const c = w.charCodeAt(w.length - 1); const has = c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; return w + (has ? p[0] : p[1]); };
+const PHONE_RE = /(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/;
+/* ===== 공통 도우미 끝 ===== */
+const F = [
+ {k:'hours', lb:'영업시간', ph:'매일 11:00~21:00 (브레이크 15:00~17:00)', pre:'영업시간 안내드립니다.', q:['영업시간이 어떻게 되나요?','몇 시에 문 열어요?','몇 시까지 해요?','브레이크 타임 있나요?']},
+ {k:'closed', lb:'휴무일', ph:'매주 월요일 · 명절 당일', pre:'휴무일 안내드립니다.', q:['쉬는 날이 언제예요?','주말에도 영업하나요?','공휴일에 문 여나요?']},
+ {k:'addr', lb:'주소 · 찾아오는 길', ph:'경기 하남시 미사강변대로 100, 1층 (미사역 3번 출구 도보 5분)', pre:'매장 위치 안내드립니다.', q:['매장 주소가 어디예요?','지하철역에서 어떻게 가요?','찾아가는 길 알려 주세요']},
+ {k:'parking', lb:'주차', ph:'건물 지하 주차장 1시간 무료 (영수증 제시)', pre:'주차 안내드립니다.', q:['주차 되나요?','주차비 무료인가요?','주차장이 어디 있어요?']},
+ {k:'delivery', lb:'배달', ph:'배달앱(배민·쿠팡이츠) 주문 가능, 반경 3km, 최소 주문 15,000원', pre:'배달 안내드립니다.', q:['배달 되나요?','배달 가능 지역이 어디까지예요?','배달 최소 주문 금액이 있나요?','배달비는 얼마예요?']},
+ {k:'takeout', lb:'포장', ph:'포장 주문 시 1,000원 할인, 전화 주문 후 20분 뒤 방문', pre:'포장 안내드립니다.', q:['포장 되나요?','포장 할인 있어요?']},
+ {k:'reserve', lb:'예약', ph:'전화 예약만 가능 · 4인 이상은 하루 전까지', pre:'예약 안내드립니다.', q:['예약 되나요?','예약은 어떻게 해요?','당일 예약 가능한가요?','예약 취소는 어떻게 하나요?']},
+ {k:'refund', lb:'환불 · 교환 · 취소', ph:'조리 시작 전 취소는 전액 환불, 조리 후에는 취소 불가', pre:'환불·취소 기준 안내드립니다.', q:['환불 되나요?','주문 취소하고 싶어요','음식에 문제가 있으면 어떻게 하나요?']},
+ {k:'pay', lb:'결제 수단', ph:'카드 · 현금 · 제로페이 · 하남사랑상품권', pre:'결제 수단 안내드립니다.', q:['카드 결제 되나요?','지역화폐(상품권) 쓸 수 있나요?','현금영수증 되나요?']},
+ {k:'price', lb:'대표 메뉴 · 가격', ph:'김치찌개 9,000원 / 제육볶음 10,000원 / 공기밥 1,000원', pre:'메뉴와 가격 안내드립니다.', q:['메뉴판 보여 주세요','가격이 얼마예요?','대표 메뉴가 뭐예요?','1인분 주문 되나요?']},
+ {k:'group', lb:'단체 · 좌석', ph:'최대 24석, 단체룸 1개(10명)', pre:'좌석·단체 안내드립니다.', q:['단체 손님 받나요?','룸(방)이 있나요?']},
+ {k:'pet', lb:'반려동물', ph:'(예: 테라스석만 동반 가능)', pre:'반려동물 동반 안내드립니다.', q:['반려동물 데려가도 되나요?','강아지 동반 되나요?']},
+ {k:'wifi', lb:'와이파이 · 편의', ph:'와이파이 있음 (비밀번호는 매장 안내문)', pre:'편의시설 안내드립니다.', q:['와이파이 있나요?']},
+ {k:'event', lb:'이벤트 · 할인', ph:'(예: 리뷰 작성 시 음료 1개)', pre:'진행 중인 이벤트 안내드립니다.', q:['지금 하는 이벤트 있나요?','할인 쿠폰 있나요?']}
+];
+const KW = {hours:['영업','몇 시','몇시','오픈','문 열','마감','브레이크','시간'], closed:['쉬는','휴무','주말','공휴일','명절','일요일','월요일'],
+ addr:['주소','위치','어디','찾아','역에서','길'], parking:['주차'], delivery:['배달','배민','쿠팡'], takeout:['포장','테이크'],
+ reserve:['예약'], refund:['환불','취소','교환','문제','반품'], pay:['카드','결제','현금','상품권','지역화폐','제로페이','영수증'],
+ price:['메뉴','가격','얼마','대표','1인분','값'], group:['단체','룸','방','좌석','인원'], pet:['반려','강아지','고양이','애견'], wifi:['와이파이','wifi','콘센트','충전'], event:['이벤트','할인','쿠폰']};
+const SAMPLE = {name:'미사 한상차림', tel:'031-000-0000', hours:'매일 11:00~21:00 (브레이크 15:00~17:00, 라스트오더 20:30)', closed:'매주 월요일 · 설·추석 당일',
+ addr:'경기 하남시 미사강변대로 100, 1층 (미사역 3번 출구 도보 5분)', parking:'건물 지하 주차장 1시간 무료 (계산 시 차량번호 말씀)',
+ delivery:'배달앱(배민·쿠팡이츠) 주문 가능, 반경 3km, 최소 주문 15,000원, 배달비는 앱 표시 기준', takeout:'포장 주문 시 1,000원 할인, 전화 주문 후 20분 뒤 방문',
+ reserve:'전화 예약만 가능 · 4인 이상은 하루 전까지 · 취소는 방문 2시간 전까지 전화', refund:'조리 시작 전 취소는 전액 환불, 조리 후에는 취소 불가. 음식에 문제가 있으면 바로 직원에게 말씀해 주세요',
+ pay:'카드 · 현금 · 제로페이 · 하남사랑상품권 (현금영수증 발행)', price:'김치찌개 9,000원 / 제육볶음 10,000원 / 고등어구이 11,000원 / 공기밥 1,000원',
+ group:'최대 24석, 단체룸 1개(10명까지)', pet:'', wifi:'와이파이 있음 (비밀번호는 테이블 안내문)', event:''};
+const LSK = 'kts_faqbot_v1';
+function fieldsHtml(){ return F.map(f => `<div class="fld"><label class="lb">${f.lb}<i>비우면 "매장 문의" 안내</i></label><textarea id="f_${f.k}" rows="2" maxlength="300" placeholder="${esc(f.ph)}"></textarea></div>`).join(''); }
+$('#fields').innerHTML = fieldsHtml();
+const val = k => ($('#f_' + k).value || '').trim();
+function getAll(){ const o = {name:val('name'), tel:val('tel')}; F.forEach(f => o[f.k] = val(f.k)); return o; }
+function setAll(o){ $('#f_name').value = o.name || ''; $('#f_tel').value = o.tel || ''; F.forEach(f => $('#f_' + f.k).value = o[f.k] || ''); }
+function fallback(o){ return `정확한 안내를 위해 매장으로 문의 부탁드립니다 (전화${o.tel ? ' ' + o.tel : ''})`; }
+function build(o){
+  const faq = []; let id = 0;
+  F.forEach(f => f.q.forEach(q => {
+    const v = o[f.k]; id++;
+    faq.push({id, field:f.k, label:f.lb, q, answered:!!v, a: v ? `${f.pre} ${v}` : fallback(o)});
+  }));
+  return faq;
+}
+function config(o, faq){
+  return {format:'KTS-FAQBOT-1', made:todayS(), store:{name:o.name, tel:o.tel},
+    rule:{source:'매장 입력값만 사용 (가격·환불·영업시간 추측 금지)', fallback:fallback(o)},
+    channels:{kakao_channel:'자동응답/키워드 답변에 q→a 등록', homepage:'FAQ 목록', instagram_dm:'빠른 답장'},
+    keywords:Object.fromEntries(F.map(f => [f.k, KW[f.k]])),
+    faq:faq.map(x => ({id:x.id, q:x.q, a:x.a, field:x.field, answered:x.answered}))};
+}
+let CUR = null, FLT = 'all';
+function renderList(){
+  const L = CUR.faq.filter(x => FLT === 'all' || (FLT === 'ok' ? x.answered : !x.answered));
+  $('#list').innerHTML = L.map(x => `<div class="item${x.answered ? '' : ' warn'}"><div class="meta"><span class="pill ${x.answered ? 'ok' : 'no'}">${x.answered ? '입력값 답변' : '매장 문의'}</span>${esc(x.label)} · Q${x.id}</div><div class="q">${esc(x.q)}</div><div class="a">${esc(x.a)}</div></div>`).join('') || '<div class="empty">해당 질문이 없습니다</div>';
+}
+function run(){
+  const o = getAll();
+  if (!o.name){ $('#f_name').classList.add('miss'); toast('상호를 넣어 주세요'); $('#f_name').focus(); return; }
+  $('#f_name').classList.remove('miss');
+  LS.set(LSK, o);
+  const faq = build(o); CUR = {o, faq, cfg:config(o, faq)};
+  $('#sAll').textContent = faq.length; $('#sOk').textContent = faq.filter(x => x.answered).length; $('#sFb').textContent = faq.filter(x => !x.answered).length;
+  $('#jsonOut').textContent = JSON.stringify(CUR.cfg, null, 1);
+  renderList(); $('#result').classList.remove('hide');
+  $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+  toast('질문 ' + faq.length + '개를 만들었습니다');
+}
+function answer(q){
+  if (!CUR) return '';
+  const s = q.replace(/\s+/g, ' ');
+  let best = null, bs = 0;
+  F.forEach(f => { const sc = KW[f.k].reduce((n, w) => n + (s.toLowerCase().indexOf(w) >= 0 ? w.length : 0), 0); if (sc > bs){ bs = sc; best = f; } });
+  if (!best) return fallback(CUR.o);
+  const v = CUR.o[best.k]; return v ? `${best.pre} ${v}` : fallback(CUR.o);
+}
+$('#sampleBtn').onclick = () => { setAll(SAMPLE); toast('예시 매장을 넣었습니다. [질문 40개 · 답변 만들기]를 누르세요'); };
+$('#clearBtn').onclick = () => { setAll({}); toast('모두 지웠습니다'); };
+$('#runBtn').onclick = run;
+$('#flt').onclick = e => { const b = e.target.closest('button'); if (!b) return; FLT = b.dataset.f; $$('#flt button').forEach(x => x.classList.toggle('on', x === b)); renderList(); };
+$('#copyBtn').onclick = () => CUR && copyOut(JSON.stringify(CUR.cfg, null, 1), '설정 JSON을 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`FAQ_${CUR.o.name}_${todayS()}.csv`, [['번호','분류','질문','답변','답변 근거']].concat(CUR.faq.map(x => [x.id, x.label, x.q, x.a, x.answered ? '매장 입력값' : '입력 없음 → 매장 문의'])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>${esc(CUR.o.name)} 자주 묻는 질문 (FAQ ${CUR.faq.length}문항)</h1><p class="note">작성일 ${todayS()} · 답변은 매장 입력값만 사용 · 입력이 없는 질문은 "${esc(fallback(CUR.o))}"</p>
+ <table><colgroup><col style="width:8%"><col style="width:14%"><col style="width:30%"><col></colgroup><tr><th>번호</th><th>분류</th><th>질문</th><th>답변</th></tr>${CUR.faq.map(x => `<tr><td>${x.id}</td><td>${esc(x.label)}</td><td>${esc(x.q)}</td><td>${esc(x.a)}</td></tr>`).join('')}</table></div>`); };
+$('#testBtn').onclick = () => { const q = $('#testQ').value.trim(); if (!q) return toast('질문을 적어 주세요'); if (!CUR) return toast('먼저 [만들기]를 눌러 주세요'); $('#testA').classList.remove('hide'); $('#testA').textContent = 'Q. ' + q + '\nA. ' + answer(q); };
+const saved = LS.get(LSK, null); if (saved) setAll(saved);
+</script>
+</body></html>

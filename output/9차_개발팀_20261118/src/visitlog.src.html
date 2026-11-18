@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더방문 — 고객 방문·AS 이력 카드 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.cu{display:flex;align-items:center;gap:9px;cursor:pointer}
+.cu .av{flex:0 0 36px;height:36px;border-radius:11px;background:#16223F;border:1px solid var(--line2);display:grid;place-items:center;font-weight:900;color:var(--or2)}
+.cu .bd{flex:1;min-width:0}
+.cu .bd b{display:block;font-size:13.5px;color:#fff}
+.cu .bd span{display:block;font-size:11px;color:var(--sub)}
+.cu .rt{flex:0 0 auto;text-align:right;font-size:11px;color:var(--sub)}
+.dates{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.dates button{font-size:11.5px;font-weight:800;border:1px solid var(--line2);border-radius:999px;padding:5px 9px;background:var(--card2);color:#DCE6F2}
+.ccard{border:1px solid var(--or);border-radius:13px;padding:11px;margin-top:9px;background:#0E1838}
+.ccard .hh{display:flex;align-items:center;gap:8px}
+.ccard .hh b{flex:1;font-size:15px;color:#fff}
+.tl{margin-top:8px;border-left:2px solid var(--line2);padding-left:10px}
+.tl div{font-size:12.5px;margin-top:7px;color:#D3DBE7}
+.tl div small{display:block;color:var(--or2);font-weight:800;font-size:11px}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더방문 · 방문·AS 이력 카드@@-->
+<main>
+<section class="hero">
+ <h1>방문·AS를 한 줄씩 적으면<br><em>오늘 연락할 5명</em>이 나옵니다</h1>
+ <p>고객 카드 · 연락일 지난 고객 · 이번 달 방문 수. 기록은 이 기기에만 저장되고, JSON 파일로 백업·복원합니다.</p>
+</section>
+
+<section class="card">
+ <h2><span class="n">1</span>방문 기록 적기</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">샘플 고객 10명 넣기</button></div>
+ <div class="g2">
+  <div><label class="lb">이름</label><input id="v_name" maxlength="20" list="names"></div>
+  <div><label class="lb">연락처</label><input id="v_tel" maxlength="20" inputmode="tel"></div>
+  <div><label class="lb">방문일</label><input id="v_date" type="date"></div>
+  <div><label class="lb">다음 연락일</label><input id="v_next" type="date"></div>
+ </div>
+ <div class="dates" id="nextChips"><button data-d="7">+1주</button><button data-d="30">+1달</button><button data-d="90">+3달</button><button data-d="180">+6달</button><button data-d="0">없음</button></div>
+ <label class="lb">내용</label><textarea id="v_memo" rows="2" maxlength="300" placeholder="예) 에어컨 필터 교체, 다음엔 실외기 점검 요청"></textarea>
+ <datalist id="names"></datalist>
+ <button class="btn pri" id="runBtn" style="margin-top:10px">기록 저장</button>
+</section>
+
+<section class="card" id="result">
+ <h2><span class="n">2</span>오늘 연락할 5명</h2>
+ <div class="stat"><div><b id="sCu">0</b><span>고객</span></div><div><b id="sMon">0</b><span>이번 달 방문</span></div><div><b id="sOver">0</b><span>연락일 지남</span></div></div>
+ <div id="today5"></div>
+ <div class="row"><button class="btn sec sm" id="copyBtn">5명 목록 복사</button><button class="btn sec sm" id="printBtn">인쇄</button></div>
+ <div id="card"></div>
+ <h3>연락일이 지난 고객</h3><div id="over"></div>
+ <h3>전체 고객</h3><div id="all"></div>
+</section>
+
+<section class="card">
+ <h2><span class="n">3</span>백업 · 복원</h2>
+ <p class="sub">휴대폰을 바꾸거나 브라우저 기록을 지우기 전에 JSON 파일로 받아 두세요. 서버로는 보내지 않습니다.</p>
+ <div class="row"><button class="btn sec sm" id="expBtn">JSON 내보내기</button><button class="btn sec sm" id="impBtn">JSON 불러오기</button><button class="btn sec sm" id="csvBtn">CSV</button></div>
+ <input type="file" id="impFile" accept=".json,application/json" class="hide">
+ <div class="row"><button class="btn sec sm" id="wipeBtn">이 기기 기록 모두 지우기</button></div>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const LSK = 'kts_visitlog_v1';
+let DB = LS.get(LSK, {v:1, rec:[]});
+const save = () => LS.set(LSK, DB);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const keyOf = r => r.name + '|' + (r.tel || '').replace(/\D/g, '');
+function customers(){
+  const M = {};
+  DB.rec.forEach(r => { const k = keyOf(r); (M[k] = M[k] || {k, name:r.name, tel:r.tel, rec:[]}).rec.push(r); });
+  return Object.values(M).map(c => { c.rec.sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id)); c.last = c.rec[0].date; c.next = c.rec[0].next || ''; return c; });
+}
+const days = (a, b) => Math.round((parseD(a) - parseD(b)) / 864e5);
+function pick5(C){
+  const T = todayS();
+  const over = C.filter(c => c.next && c.next < T).sort((a, b) => a.next.localeCompare(b.next));
+  const due = C.filter(c => c.next === T);
+  const stale = C.filter(c => !c.next && days(T, c.last) >= 60).sort((a, b) => a.last.localeCompare(b.last));
+  return over.map(c => [c, `연락일 ${days(T, c.next)}일 지남`]).concat(due.map(c => [c, '오늘 연락일']), stale.map(c => [c, `마지막 방문 ${days(T, c.last)}일 전`])).slice(0, 5);
+}
+function sample(){
+  const t = new Date(), d = n => ymd(addDays(t, n));
+  const S = [
+   ['김영희','010-0000-3001',[[-200,'에어컨 설치',-20],[-35,'필터 교체',-5]]], ['박철수','010-0000-3002',[[-120,'보일러 점검',-2]]],
+   ['이순자','010-0000-3003',[[-60,'정수기 필터',0]]], ['최동훈','010-0000-3004',[[-14,'세탁기 소음 AS',16]]],
+   ['정미경','010-0000-3005',[[-300,'렌탈 계약',''],[-95,'정기 점검','']]], ['한상우','010-0000-3006',[[-40,'공기청정기 설치',-10]]],
+   ['오지현','010-0000-3007',[[-3,'제습기 상담',4]]], ['윤재석','010-0000-3008',[[-8,'냉장고 AS',0]]],
+   ['장민호','010-0000-3009',[[-180,'비데 설치',''],[-70,'노즐 교체','']]], ['서다은','010-0000-3010',[[-1,'정수기 신규 설치',89]]]
+  ];
+  const rec = [];
+  S.forEach(([n, tel, V]) => V.forEach(([dd, memo, nx]) => rec.push({id:uid(), name:n, tel, date:d(dd), memo, next: nx === '' ? '' : d(nx)})));
+  return rec;
+}
+function cuRow(c, note){ return `<div class="item cu" data-k="${esc(c.k)}"><div class="av">${esc(c.name.slice(0, 1))}</div><div class="bd"><b>${esc(c.name)}</b><span>${esc(c.tel)} · 방문 ${c.rec.length}회 · 마지막 ${c.last}</span></div><div class="rt">${note ? `<span class="pill ${/지남/.test(note) ? 'hi' : 'md'}">${esc(note)}</span>` : (c.next ? '다음 ' + c.next.slice(5) : '')}</div></div>`; }
+let OPEN = '';
+function render(){
+  const C = customers(), T = todayS(), M = T.slice(0, 7);
+  $('#sCu').textContent = C.length; $('#sMon').textContent = DB.rec.filter(r => r.date.slice(0, 7) === M).length;
+  const over = C.filter(c => c.next && c.next < T).sort((a, b) => a.next.localeCompare(b.next));
+  $('#sOver').textContent = over.length;
+  const P = pick5(C); window.__today5 = P.map(([c, n]) => c.name + ':' + n);
+  $('#today5').innerHTML = P.map(([c, n]) => cuRow(c, n)).join('') || '<div class="empty">오늘 연락할 고객이 없습니다</div>';
+  $('#over').innerHTML = over.map(c => cuRow(c, `연락일 ${days(T, c.next)}일 지남`)).join('') || '<div class="empty">없음</div>';
+  $('#all').innerHTML = C.sort((a, b) => a.name.localeCompare(b.name, 'ko')).map(c => cuRow(c)).join('') || '<div class="empty">아직 기록이 없습니다</div>';
+  $('#names').innerHTML = C.map(c => `<option value="${esc(c.name)}">`).join('');
+  renderCard();
+}
+function renderCard(){
+  const c = customers().find(x => x.k === OPEN); if (!c){ $('#card').innerHTML = ''; return; }
+  $('#card').innerHTML = `<div class="ccard" id="ccard"><div class="hh"><b>${esc(c.name)}</b><button class="btn sec sm" style="width:auto" id="cClose">닫기</button></div><div class="kv">${esc(c.tel)} · 방문 ${c.rec.length}회 · 다음 연락일 ${c.next || '없음'}</div>
+   <div class="row"><button class="btn sec sm" id="cAdd">이 고객 새 기록</button></div>
+   <div class="tl">${c.rec.map(r => `<div><small>${r.date}${r.next ? ' → 다음 ' + r.next : ''}</small>${esc(r.memo || '(내용 없음)')}</div>`).join('')}</div></div>`;
+  $('#cClose').onclick = () => { OPEN = ''; renderCard(); };
+  $('#cAdd').onclick = () => { $('#v_name').value = c.name; $('#v_tel').value = c.tel; $('#v_date').value = todayS(); $('#v_memo').focus(); };
+}
+document.addEventListener('click', e => { const it = e.target.closest('.cu[data-k]'); if (!it) return; OPEN = it.dataset.k; renderCard(); $('#card').scrollIntoView({block:'center'}); });
+$('#nextChips').onclick = e => { const b = e.target.closest('button'); if (!b) return; const base = parseD($('#v_date').value) || new Date(); $('#v_next').value = +b.dataset.d ? ymd(addDays(base, +b.dataset.d)) : ''; };
+$('#runBtn').onclick = () => {
+  const r = {id:uid(), name:$('#v_name').value.trim(), tel:$('#v_tel').value.trim(), date:$('#v_date').value || todayS(), next:$('#v_next').value || '', memo:$('#v_memo').value.trim()};
+  if (!r.name){ $('#v_name').classList.add('miss'); return toast('이름을 넣어 주세요'); } $('#v_name').classList.remove('miss');
+  if (!r.tel){ const c = customers().find(x => x.name === r.name); if (c) r.tel = c.tel; }
+  DB.rec.push(r); save(); OPEN = keyOf(r); render();
+  ['v_name', 'v_tel', 'v_memo', 'v_next'].forEach(id => $('#' + id).value = ''); $('#v_date').value = todayS();
+  toast(r.name + '님 기록을 저장했습니다');
+};
+$('#sampleBtn').onclick = () => { DB.rec = DB.rec.concat(sample()); save(); render(); toast('샘플 고객 10명을 넣었습니다'); };
+const list5 = () => pick5(customers()).map(([c, n], i) => `${i + 1}. ${c.name} ${c.tel} — ${n} / 마지막: ${c.rec[0].memo}`).join('\n');
+$('#copyBtn').onclick = () => copyOut(`[오늘 연락할 5명 ${todayS()}]\n` + list5(), '5명 목록을 복사했습니다');
+$('#printBtn').onclick = () => { const P = pick5(customers()); printDoc(`<div class="paper"><h1>오늘 연락할 고객 (${todayS()})</h1><table><colgroup><col style="width:6%"><col style="width:14%"><col style="width:20%"><col style="width:18%"><col><col style="width:9%"></colgroup><tr><th>순</th><th>이름</th><th>연락처</th><th>사유</th><th>최근 기록</th><th>완료</th></tr>${P.map(([c, n], i) => `<tr><td>${i + 1}</td><td>${esc(c.name)}</td><td>${esc(c.tel)}</td><td>${esc(n)}</td><td>${c.rec[0].date} ${esc(c.rec[0].memo)}</td><td>□</td></tr>`).join('')}</table></div>`); };
+$('#expBtn').onclick = () => { download(`KTS더방문_백업_${todayS()}.json`, JSON.stringify(DB, null, 1), 'application/json'); toast('백업 파일을 저장했습니다 (' + DB.rec.length + '건)'); };
+$('#impBtn').onclick = () => $('#impFile').click();
+function importJSON(text){
+  const o = JSON.parse(text); if (!o || !Array.isArray(o.rec)) throw new Error('형식이 다릅니다');
+  const ids = new Set(DB.rec.map(r => r.id)); let n = 0;
+  o.rec.forEach(r => { if (r && r.name && r.date && !ids.has(r.id)){ DB.rec.push({id:r.id || uid(), name:String(r.name), tel:String(r.tel || ''), date:String(r.date), next:String(r.next || ''), memo:String(r.memo || '')}); n++; } });
+  save(); render(); return n;
+}
+$('#impFile').onchange = e => { const f = e.target.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { try{ const n = importJSON(rd.result); toast(n + '건을 불러왔습니다 (중복 제외)'); }catch(err){ toast('불러오지 못했습니다: ' + err.message); } }; rd.readAsText(f); e.target.value = ''; };
+$('#csvBtn').onclick = () => saveCSV(`KTS더방문_${todayS()}.csv`, [['이름','연락처','방문일','내용','다음 연락일']].concat(DB.rec.map(r => [r.name, r.tel, r.date, r.memo, r.next])));
+$('#wipeBtn').onclick = () => { if (!confirm('이 기기의 방문 기록을 모두 지울까요? (먼저 JSON 내보내기를 권합니다)')) return; DB = {v:1, rec:[]}; save(); OPEN = ''; render(); toast('모두 지웠습니다'); };
+window.VL = {importJSON, exportJSON:() => JSON.stringify(DB)};
+$('#v_date').value = todayS();
+render();
+</script>
+</body></html>

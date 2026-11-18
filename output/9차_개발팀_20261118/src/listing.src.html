@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더매물 — 매물 A4 브리핑 시트 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.ph{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px}
+.ph label{position:relative;aspect-ratio:1;border:1px dashed var(--line2);border-radius:9px;background:#0B1530;display:grid;place-items:center;font-size:10px;color:var(--sub);text-align:center;overflow:hidden;cursor:pointer;line-height:1.25}
+.ph label img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph input{display:none}
+.lack{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.lack label{display:flex;align-items:center;gap:5px;font-size:12px;background:#0B1530;border:1px solid var(--line2);border-radius:999px;padding:6px 10px}
+.lack input{width:15px;height:15px;flex:0 0 15px}
+.pv{margin-top:10px;background:#fff;border-radius:6px;overflow:hidden;position:relative}
+.pv .paper{position:absolute;left:0;top:0;transform-origin:0 0}
+/* A4 시트 */
+.sheet{width:186mm;padding:0;color:#111}
+.sheet .hd2{display:flex;align-items:flex-end;gap:8px;border-bottom:3px solid #0A1128;padding-bottom:5px}
+.sheet .hd2 h1{flex:1;font-size:17pt;margin:0;letter-spacing:-.5px}
+.sheet .hd2 span{font-size:9pt;color:#555;white-space:nowrap}
+.sheet .tag{display:inline-block;background:#FF6B00;color:#fff;font-weight:700;border-radius:4px;padding:1px 7px;font-size:9.5pt;margin-right:6px}
+.sheet .grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:38mm 38mm;gap:2mm;margin-top:3mm}
+.sheet{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sheet .grid div{background:#E9ECF1;border:1px solid #999;position:relative;overflow:hidden}
+.sheet .grid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sheet .grid div:first-child{grid-row:1/3}
+.sheet .grid div span{position:absolute;left:0;bottom:0;background:rgba(10,17,40,.8);color:#fff;font-size:8pt;padding:1px 5px}
+.sheet .two{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:2mm}
+.sheet ol{margin:2px 0 0 18px;font-size:10pt}
+.sheet ol li{margin:2px 0}
+.sheet .lk{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px}
+.sheet .lk span{border:1.5px solid #FF6B00;border-radius:6px;padding:3px 7px;font-size:9.5pt;font-weight:700}
+.sheet .must{margin-top:4mm;border:1.5px solid #B91C1C;color:#7F1D1D;background:#FEF2F2;padding:5px 8px;font-size:10pt;font-weight:700}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더매물 · A4 브리핑 시트@@-->
+<main>
+<section class="hero">
+ <h1>사진 5장과 조건만 넣으면<br><em>교환 영업용 A4 브리핑 1장</em></h1>
+ <p>5대 사진 배치 · 교환 포인트 3줄 · 상대방 결핍 카드 · A4 인쇄(PDF 저장). 실명·개인 연락처는 시트에 넣지 않습니다(이니셜·지역만).</p>
+</section>
+
+<section class="card">
+ <h2><span class="n">1</span>매물 정보</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">샘플 매물 1건 넣기</button></div>
+ <label class="lb">제목</label><input id="title" maxlength="40" placeholder="예) 하남 미사 대로변 상가 1층">
+ <label class="lb">유형</label>
+ <div class="chips" id="kind"><button>토지</button><button>상가</button><button>건물</button><button>공장</button><button>주택</button><button>숙박</button></div>
+ <label class="lb">소재지<i>시·구·동까지만</i></label><input id="loc" maxlength="40" placeholder="경기 하남시 망월동">
+ <div class="g2">
+  <div><label class="lb">면적(㎡)</label><input id="area" inputmode="decimal"><div class="kv" id="pyeong"></div></div>
+  <div><label class="lb">희망가(만 원)</label><input id="price" inputmode="numeric"><div class="kv" id="priceK"></div></div>
+  <div><label class="lb">융자 · 보증금</label><input id="loan" maxlength="40"></div>
+  <div><label class="lb">월 수입(임대료 등)</label><input id="rent" maxlength="40"></div>
+ </div>
+ <label class="lb">원하는 교환 물건</label><input id="want" maxlength="60" placeholder="예) 서울 동남권 아파트 · 차액 정산">
+ <label class="lb">교환 포인트 3줄</label>
+ <input id="pt1" maxlength="60"><input id="pt2" maxlength="60" style="margin-top:5px"><input id="pt3" maxlength="60" style="margin-top:5px">
+ <label class="lb">상대방 결핍 카드<i>이 물건이 채워 줄 수 있는 것</i></label>
+ <div class="lack" id="lack"></div>
+ <div class="g2"><div><label class="lb">담당 이니셜</label><input id="agent" maxlength="10" placeholder="K.T.S"></div><div><label class="lb">작성일</label><input id="made" type="date"></div></div>
+ <h3>사진 5장 (전경 · 진입로 · 내부 · 주변 · 지도)</h3>
+ <div class="ph" id="ph"></div>
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">A4 브리핑 시트 만들기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>A4 미리보기</h2>
+ <div class="row"><button class="btn pri sm" id="printBtn">인쇄 · PDF 저장</button><button class="btn sec sm" id="copyBtn">요약 문구 복사</button></div>
+ <p class="kv" id="guard"></p>
+ <div class="pv" id="pv"></div>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const SLOTS = ['전경', '진입로', '내부', '주변', '지도'];
+const LACKS = ['현금 흐름(월세)', '세금 부담 정리', '관리 부담 줄이기', '실거주 필요', '대출 만기 해결', '공동명의·상속 정리', '지역 이동', '규모 줄이기'];
+const PH = [null, null, null, null, null];
+let KIND = '';
+$('#ph').innerHTML = SLOTS.map((s, i) => `<label data-i="${i}"><span>${i + 1}<br>${s}</span><input type="file" accept="image/*" data-i="${i}"></label>`).join('');
+$('#lack').innerHTML = LACKS.map((l, i) => `<label><input type="checkbox" value="${esc(l)}">${esc(l)}</label>`).join('');
+function setPhoto(i, url){ PH[i] = url; const lb = document.querySelector(`#ph label[data-i="${i}"]`); lb.querySelector('img') && lb.querySelector('img').remove(); if (url){ const im = new Image(); im.src = url; lb.appendChild(im); } }
+$('#ph').onchange = e => { const inp = e.target; const f = inp.files[0]; if (!f) return; const i = +inp.dataset.i;
+  const url = URL.createObjectURL(f), im = new Image(); im.onload = () => { const s = Math.min(1, 1400 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(url); setPhoto(i, c.toDataURL('image/jpeg', .85)); }; im.src = url; };
+$('#kind').onclick = e => { const b = e.target.closest('button'); if (!b) return; KIND = b.textContent; $$('#kind button').forEach(x => x.classList.toggle('on', x === b)); };
+const upd = () => { const a = parseFloat($('#area').value); $('#pyeong').textContent = a ? `약 ${(a / 3.3058).toFixed(1)}평` : ''; const p = +String($('#price').value).replace(/\D/g, ''); $('#priceK').textContent = p ? won(p) : ''; };
+const won = man => { const eok = Math.floor(man / 10000), r = man % 10000; return (eok ? eok + '억 ' : '') + (r ? r.toLocaleString() + '만 ' : '') + '원'; };
+$('#area').oninput = upd; $('#price').oninput = upd;
+function samplePhoto(i){
+  const c = document.createElement('canvas'); c.width = 800; c.height = 560; const g = c.getContext('2d');
+  const sky = g.createLinearGradient(0, 0, 0, 560); sky.addColorStop(0, ['#9EC9F0','#B8D4E8','#E8E2D6','#A9D18E','#EDEFF2'][i]); sky.addColorStop(1, ['#E8F1F8','#DDE6EC','#CFC6B6','#6FA35A','#DCE1E7'][i]); g.fillStyle = sky; g.fillRect(0, 0, 800, 560);
+  g.fillStyle = '#5C6B7A';
+  if (i === 0){ g.fillStyle = '#7E8C99'; g.fillRect(180, 120, 440, 360); g.fillStyle = '#C9D6E2'; for (let y = 150; y < 380; y += 70) for (let x = 210; x < 590; x += 95) g.fillRect(x, y, 60, 40); g.fillStyle = '#FF6B00'; g.fillRect(180, 400, 440, 80); g.fillStyle = '#3F4A55'; g.fillRect(0, 480, 800, 80); }
+  if (i === 1){ g.fillStyle = '#6B6F75'; g.beginPath(); g.moveTo(300, 560); g.lineTo(380, 220); g.lineTo(420, 220); g.lineTo(560, 560); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 6; g.setLineDash([30, 30]); g.beginPath(); g.moveTo(430, 560); g.lineTo(400, 230); g.stroke(); g.setLineDash([]); g.fillStyle = '#8A9AA8'; g.fillRect(560, 140, 160, 300); g.fillRect(80, 180, 150, 260); }
+  if (i === 2){ g.fillStyle = '#B9AE9C'; g.fillRect(0, 380, 800, 180); g.fillStyle = '#F4F1EA'; g.fillRect(90, 80, 260, 200); g.fillRect(450, 80, 260, 200); g.strokeStyle = '#8E8576'; g.lineWidth = 8; g.strokeRect(90, 80, 260, 200); g.strokeRect(450, 80, 260, 200); }
+  if (i === 3){ g.fillStyle = '#4E7F3F'; for (let k = 0; k < 7; k++){ g.beginPath(); g.arc(90 + k * 110, 300, 70, 0, 7); g.fill(); } g.fillStyle = '#8B95A1'; g.fillRect(0, 400, 800, 160); g.fillStyle = '#DCE3EA'; g.fillRect(560, 150, 180, 250); }
+  if (i === 4){ g.strokeStyle = '#B5BFCA'; g.lineWidth = 3; for (let k = 0; k < 800; k += 80){ g.beginPath(); g.moveTo(k, 0); g.lineTo(k, 560); g.stroke(); } for (let k = 0; k < 560; k += 80){ g.beginPath(); g.moveTo(0, k); g.lineTo(800, k); g.stroke(); }
+    g.strokeStyle = '#F2C14E'; g.lineWidth = 22; g.beginPath(); g.moveTo(0, 300); g.lineTo(800, 260); g.stroke(); g.fillStyle = '#FF6B00'; g.beginPath(); g.arc(420, 230, 26, 0, 7); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(420, 230, 10, 0, 7); g.fill(); }
+  g.fillStyle = 'rgba(10,17,40,.55)'; g.font = 'bold 30px Malgun Gothic, sans-serif'; g.textAlign = 'center'; g.fillText('샘플', 400, 300);
+  return c.toDataURL('image/jpeg', .85);
+}
+const SAMPLE = {title:'하남 미사 대로변 상가 1층 (임차 안정)', kind:'상가', loc:'경기 하남시 망월동', area:'84.2', price:'95000', loan:'보증금 1억 / 융자 3억', rent:'월 420만 원',
+  want:'서울 동남권 아파트 · 차액 정산 협의', pt:['미사역 도보 6분, 대로변 코너 1층 · 유동 인구 많음','10년 차 프랜차이즈 임차인 · 연체 이력 없음','교환 시 차액은 현금·대출 승계로 맞출 수 있음'],
+  lack:['현금 흐름(월세)', '관리 부담 줄이기', '지역 이동'], agent:'K.T.S'};
+$('#sampleBtn').onclick = () => {
+  const S = SAMPLE; $('#title').value = S.title; $('#loc').value = S.loc; $('#area').value = S.area; $('#price').value = S.price; $('#loan').value = S.loan; $('#rent').value = S.rent; $('#want').value = S.want;
+  S.pt.forEach((p, i) => $('#pt' + (i + 1)).value = p); $$('#lack input').forEach(c => c.checked = S.lack.indexOf(c.value) >= 0); $('#agent').value = S.agent; $('#made').value = todayS();
+  KIND = S.kind; $$('#kind button').forEach(x => x.classList.toggle('on', x.textContent === S.kind)); [0, 1, 2, 3, 4].forEach(i => setPhoto(i, samplePhoto(i))); upd();
+  toast('샘플 매물과 사진 5장을 넣었습니다');
+};
+/* 개인정보 가드: 전화·이메일 제거, 이름처럼 보이는 담당란은 이니셜만 */
+let GUARD = [];
+function clean(s, where){
+  let t = String(s || '');
+  const t2 = t.replace(/[\w.+-]+@[\w-]+(\.[\w-]+)+/g, '').replace(/(01[016789]|0[2-6]\d?)[-.\s]?\d{3,4}[-.\s]?\d{4}/g, '').replace(/\s{2,}/g, ' ').trim();
+  if (t2 !== t.trim()) GUARD.push(`${where}의 연락처를 뺐습니다`);
+  return t2;
+}
+function initials(s){ s = (s || '').trim(); if (/^[가-힣]{2,4}$/.test(s)){ GUARD.push('담당란의 이름을 이니셜로 바꿨습니다'); return s[0] + '○'; } return clean(s, '담당란'); }
+function data(){
+  GUARD = [];
+  const d = {title:clean($('#title').value, '제목'), kind:KIND, loc:clean($('#loc').value, '소재지'), area:$('#area').value.trim(), price:+String($('#price').value).replace(/\D/g, '') || 0,
+    loan:clean($('#loan').value, '융자'), rent:clean($('#rent').value, '월 수입'), want:clean($('#want').value, '교환 물건'), pt:[1, 2, 3].map(i => clean($('#pt' + i).value, '교환 포인트')).filter(Boolean),
+    lack:$$('#lack input:checked').map(c => c.value), agent:initials($('#agent').value), made:$('#made').value || todayS()};
+  if (/\d+\s*(번지|호)\b|\d+-\d+\s*(번지)?$/.test(d.loc)){ d.loc = d.loc.replace(/\s*\d[\d-]*\s*(번지|호)?$/,'').trim(); GUARD.push('소재지는 동까지만 남겼습니다'); }
+  return d;
+}
+function sheet(d){
+  const a = parseFloat(d.area);
+  return `<div class="paper sheet"><div class="hd2"><h1>${esc(d.title || '매물 브리핑')}</h1><span>KTS 더매물 · ${esc(d.made)}</span></div>
+  <div style="margin-top:3mm">${d.kind ? `<span class="tag">${esc(d.kind)}</span>` : ''}<b>${esc(d.loc)}</b></div>
+  <div class="grid">${SLOTS.map((s, i) => `<div>${PH[i] ? `<img src="${PH[i]}" alt="">` : ''}<span>${i + 1}. ${s}</span></div>`).join('')}</div>
+  <table style="margin-top:3mm"><colgroup><col style="width:16%"><col style="width:34%"><col style="width:16%"><col></colgroup>
+   <tr><th>면적</th><td>${a ? `${a}㎡ (약 ${(a / 3.3058).toFixed(1)}평)` : ''}</td><th>희망가</th><td><b>${d.price ? won(d.price) : ''}</b></td></tr>
+   <tr><th>융자·보증금</th><td>${esc(d.loan)}</td><th>월 수입</th><td>${esc(d.rent)}</td></tr>
+   <tr><th>교환 희망</th><td colspan="3">${esc(d.want)}</td></tr></table>
+  <div class="two"><div><h2>교환 포인트 3줄</h2><ol>${d.pt.map(p => `<li>${esc(p)}</li>`).join('')}</ol></div>
+  <div><h2>상대방 결핍 카드</h2><p style="font-size:9pt;color:#555;margin:0">이 물건으로 채워 줄 수 있는 것</p><div class="lk">${d.lack.map(l => `<span>${esc(l)}</span>`).join('') || '<span>—</span>'}</div></div></div>
+  <div class="must">권리관계(소유권·근저당·임차권 등)는 반드시 등기부등본으로 확인하십시오. 이 시트는 영업 참고 자료이며 권리를 보증하지 않습니다.</div>
+  <p class="note">담당 ${esc(d.agent || '—')} · 실명·개인 연락처는 싣지 않습니다(이니셜·지역만) · 사진 ${PH.filter(Boolean).length}/5</p></div>`;
+}
+let CUR = null;
+function fitPv(){ const pv = $('#pv'), p = pv.querySelector('.paper'); if (!p) return; const s = pv.clientWidth / p.offsetWidth; p.style.transform = `scale(${s})`; pv.style.height = Math.ceil(p.offsetHeight * s) + 'px'; }
+$('#runBtn').onclick = () => {
+  if (!$('#title').value.trim()){ $('#title').classList.add('miss'); return toast('제목을 넣어 주세요'); } $('#title').classList.remove('miss');
+  CUR = data(); $('#pv').innerHTML = sheet(CUR); setTimeout(fitPv, 30);
+  $('#guard').textContent = (GUARD.length ? '개인정보 가드: ' + [...new Set(GUARD)].join(' · ') + '. ' : '') + `사진 ${PH.filter(Boolean).length}/5장 · A4 1장으로 인쇄됩니다.`;
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+};
+window.addEventListener('resize', fitPv);
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(sheet(CUR)); };
+$('#copyBtn').onclick = () => { if (!CUR) return; const d = CUR; copyOut(`[KTS 더매물] ${d.title}\n${d.kind} · ${d.loc} · ${d.area}㎡ · 희망가 ${d.price ? won(d.price) : '-'}\n교환 희망: ${d.want}\n` + d.pt.map((p, i) => `${i + 1}) ${p}`).join('\n') + `\n※ 권리관계는 등기부등본 확인`, '요약 문구를 복사했습니다'); };
+$('#made').value = todayS();
+</script>
+</body></html>

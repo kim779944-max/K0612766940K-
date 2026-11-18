@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CS 문의 분류 + 모범 답안 1초 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:12px;font-weight:800;border-radius:9px;padding:6px 9px;background:#0B1530;border:1px solid var(--line2)}
+.tag b{color:var(--or2);margin-left:4px}
+.hist .item{cursor:pointer}
+.hist .meta{font-size:10.5px;color:var(--sub);display:flex;gap:6px;align-items:center}
+.hist .a{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+</style></head>
+<body><div id="app">
+<!--@@TOP CS 문의 분류 · 모범 답안@@-->
+<main>
+<section class="hero">
+ <h1>문의 글을 붙여 넣으면<br><em>유형·감정·3문장 답안</em>이 바로</h1>
+ <p>배송·교환/환불·결제·품질·일정을 자동으로 나누고, 사과 → 사실 확인 → 다음 행동과 처리 기한 순서로 답안을 만듭니다. 보상·환불 금액은 약속하지 않고 <b>[금액]</b> 빈칸으로 남깁니다.</p>
+</section>
+
+<section class="card">
+ <h2><span class="n">1</span>문의 붙여넣기</h2>
+ <p class="sub">예시 문의 5개 중 하나를 눌러 먼저 보세요.</p>
+ <div class="chips" id="samples"></div>
+ <label class="lb">고객 문의 원문</label>
+ <textarea id="inq" rows="6" maxlength="3000" placeholder="메일·게시판·톡으로 받은 문의를 그대로 붙여 넣으세요"></textarea>
+ <div class="g2">
+  <div><label class="lb">우리 상호</label><input id="shop" maxlength="30" placeholder="예) 미사마켓"></div>
+  <div><label class="lb">담당자 이름<i>선택</i></label><input id="staff" maxlength="12" placeholder="예) 김담당"></div>
+ </div>
+ <label class="lb">답변 톤</label>
+ <div class="chips" id="tone"><button data-t="polite" class="on">정중</button><button data-t="brief">간결</button><button data-t="warm">친근</button></div>
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">분류하고 답안 만들기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>분류 결과와 모범 답안</h2>
+ <div class="tags" id="tags"></div>
+ <h3>모범 답안 (3문장)</h3>
+ <textarea id="ans" rows="7"></textarea>
+ <p class="kv" id="ansInfo">칸에서 바로 고친 뒤 복사하세요. [금액]·[날짜] 빈칸은 확인 후 직접 채웁니다. 이 화면은 답장을 보내지 않습니다.</p>
+ <div class="row"><button class="btn pri sm" id="copyBtn">답안 복사</button><button class="btn sec sm" id="saveBtn">이력에 저장</button><button class="btn sec sm" id="printBtn">인쇄</button></div>
+ <details class="rule"><summary>분류 규칙 보기</summary><div id="ruleTxt" class="kv"></div></details>
+</section>
+
+<section class="card hist">
+ <h2><span class="n">3</span>답변 이력 <span class="pill d" id="hCnt">0/20</span></h2>
+ <p class="sub">최근 20건까지 이 기기에만 보관합니다. 누르면 다시 불러옵니다.</p>
+ <div id="hist"></div>
+ <div class="row"><button class="btn sec sm" id="hCsv">이력 CSV 저장</button><button class="btn sec sm" id="hDel">이력 지우기</button></div>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const SAMPLES = [
+ ['배송 지연', '안녕하세요 저는 박지현입니다. 주문번호 20261112-0458 로 지난주 목요일에 주문했는데 아직도 배송이 안 왔어요. 송장번호도 안 뜨고 언제 오는지 몇 번을 물어봐도 답이 없네요. 너무 화가 납니다. 이번 주 토요일에 꼭 써야 하는 물건이에요.'],
+ ['교환·환불', '주문번호 A2611-3302 주문자 이민수입니다. 사이즈가 커서 교환하거나 환불하고 싶은데 반품 택배는 어떻게 보내나요? 포장은 뜯지 않았습니다.'],
+ ['결제 오류', '어제 카드로 결제했는데 같은 금액이 두 번 결제됐어요. 카드 문자도 두 번 왔습니다. 주문번호는 ORD-778120 입니다. 한 건 취소 부탁드립니다. - 최하늘'],
+ ['품질 불량', '받은 텀블러 뚜껑이 처음부터 금이 가 있었어요. 사진 첨부합니다. 실망이네요. 주문번호 20261115-1120, 정다은'],
+ ['칭찬·일정', '김담당님 덕분에 행사 잘 마쳤습니다 감사합니다! 다음 달 둘째 주에도 같은 구성으로 예약하고 싶은데 날짜 변경 가능할까요? 한유진 드림']
+];
+const TYPES = [
+ {k:'배송', w:['배송','택배','도착','송장','출고','언제 오','안 왔','안왔','배달','운송장'], due:'오늘 오후 6시까지', fact:'택배사 운송장과 출고 기록', act:'정확한 도착 예정일을 확인해'},
+ {k:'교환·환불', w:['교환','환불','반품','반송','사이즈','취소하고','돌려'], due:'영업일 기준 1일 이내', fact:'주문 내역과 상품 상태', act:'교환·환불 절차와 회수 방법을 정리해'},
+ {k:'결제', w:['결제','카드','입금','이중','두 번','두번','영수증','계산서','승인','청구'], due:'영업일 기준 1일 이내', fact:'결제 승인 내역', act:'중복·오류 결제 건을 확인해'},
+ {k:'품질', w:['불량','파손','고장','금이','깨','냄새','하자','찢어','작동','흠집','이상'], due:'영업일 기준 2일 이내', fact:'보내 주신 사진과 출고 검수 기록', act:'교환 또는 처리 방법을 정해'},
+ {k:'일정', w:['예약','일정','날짜','변경','방문','시간','다음 달','다음달','연기'], due:'내일 오후 6시까지', fact:'가능한 일정', act:'가능한 날짜 후보를 정리해'}
+];
+const NEG = ['화가','화나','짜증','실망','최악','어이','몇 번','몇번','너무하','불친절','답이 없','황당','불만','언제까지'];
+const POS = ['감사','고맙','좋아','만족','최고','친절','덕분','잘 받','훌륭'];
+const LSH = 'kts_csreply_hist_v1', LSS = 'kts_csreply_shop_v1';
+let TONE = 'polite', CUR = null;
+$('#samples').innerHTML = SAMPLES.map((s, i) => `<button data-i="${i}"${i === 0 ? ' id="sampleBtn"' : ''}>${s[0]}</button>`).join('');
+function classify(t){
+  const sc = TYPES.map(T => ({T, n:T.w.reduce((a, w) => a + (t.indexOf(w) >= 0 ? 1 : 0), 0)}));
+  sc.sort((a, b) => b.n - a.n);
+  return sc[0].n ? sc[0].T : {k:'기타', due:'영업일 기준 1일 이내', fact:'문의하신 내용', act:'담당 부서에서 확인해'};
+}
+function emotion(t){
+  const n = NEG.filter(w => t.indexOf(w) >= 0).length, p = POS.filter(w => t.indexOf(w) >= 0).length;
+  if (n > p) return {k:'불만', c:'hi', deg: n >= 2 ? '높음' : '보통'};
+  if (p > n) return {k:'칭찬', c:'ok', deg:''};
+  return {k:'중립', c:'lo', deg:''};
+}
+function extract(t){
+  let order = '';
+  const m1 = /주문\s*번호\s*(?:는|은)?\s*[:：]?\s*([A-Za-z0-9][A-Za-z0-9-]{4,})/.exec(t) || /\b((?:ORD|A|NO)[-]?[A-Za-z0-9-]{4,})\b/.exec(t) || /\b(\d{8}-\d{3,5})\b/.exec(t);
+  if (m1) order = m1[1];
+  let name = '';
+  const NM = '([가-힣]{2,4})';
+  const pats = [new RegExp('저는\\s*' + NM + '(?:입니다|이에요|예요|이고|고)'), new RegExp('주문자\\s*[:：]?\\s*' + NM), new RegExp('이름\\s*[:：]?\\s*' + NM),
+    new RegExp(NM + '\\s*(?:드림|올림)'), new RegExp('[-–]\\s*' + NM + '\\s*$'), new RegExp('[,，]\\s*' + NM + '\\s*$'), new RegExp(NM + '입니다')];
+  for (const p of pats){ const m = p.exec(t.trim()); if (m && !/^(안녕|주문|감사|고객|문의)/.test(m[1])){ name = m[1].replace(/(입니다|이에요)$/, ''); break; } }
+  if (/입$/.test(name) && t.indexOf(name + '니다') >= 0) name = name.slice(0, -1);
+  return {name, order};
+}
+const eul = w => { const c = w.charCodeAt(w.length - 1); return w + ((c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28) ? '을' : '를'); };
+function compose(c){
+  const {T, E, X, shop, staff} = c;
+  const who = X.name ? X.name + ' 고객님' : '고객님';
+  const ord = X.order ? `주문번호 ${X.order} 건의 ` : '';
+  const sig = `${shop || '저희 매장'}${staff ? ' ' + staff : ''} 드림`;
+  const refund = T.k === '교환·환불' || T.k === '결제' ? ` 환불이 필요한 경우 금액 [금액]원은 확인 후 따로 안내드립니다.` : '';
+  const S = {
+   polite:[
+     E.k === '칭찬' ? `${who}, 따뜻한 말씀 진심으로 감사드립니다.` : `${who}, 불편을 드려 진심으로 죄송합니다.`,
+     `${ord}${eul(T.fact)} 지금 바로 확인하고 있습니다.`,
+     `${T.act} ${T.due} 다시 연락드리겠습니다.${refund}`],
+   brief:[
+     E.k === '칭찬' ? `${who}, 감사합니다.` : `${who}, 불편을 드려 죄송합니다.`,
+     `${ord}${eul(T.fact)} 확인 중입니다.`,
+     `${T.due} 결과를 안내드리겠습니다.${refund}`],
+   warm:[
+     E.k === '칭찬' ? `${who}, 이렇게 말씀해 주셔서 정말 힘이 납니다!` : `${who}, 많이 속상하셨죠. 정말 죄송해요.`,
+     `${ord}${T.fact}부터 바로 살펴보고 있어요.`,
+     `${T.act} ${T.due} 꼭 먼저 연락드릴게요.${refund}`]
+  }[TONE];
+  return S.join('\n') + '\n\n' + sig;
+}
+function run(){
+  const t = $('#inq').value.trim();
+  if (!t){ $('#inq').classList.add('miss'); return toast('문의 글을 붙여 넣어 주세요'); }
+  $('#inq').classList.remove('miss');
+  LS.set(LSS, {shop:$('#shop').value.trim(), staff:$('#staff').value.trim()});
+  const T = classify(t), E = emotion(t), X = extract(t);
+  CUR = {t, T, E, X, shop:$('#shop').value.trim(), staff:$('#staff').value.trim(), tone:TONE};
+  $('#tags').innerHTML = `<span class="tag">유형<b>${T.k}</b></span><span class="tag">감정 온도 <span class="pill ${E.c}">${E.k}${E.deg ? ' · ' + E.deg : ''}</span></span><span class="tag">고객<b>${esc(X.name || '(못 찾음)')}</b></span><span class="tag">주문번호<b>${esc(X.order || '(못 찾음)')}</b></span><span class="tag">처리 기한<b>${T.due}</b></span>`;
+  $('#ans').value = compose(CUR);
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+function hist(){ return LS.get(LSH, []); }
+function renderHist(){
+  const h = hist(); $('#hCnt').textContent = h.length + '/20';
+  $('#hist').innerHTML = h.map((x, i) => `<div class="item" data-i="${i}"><div class="meta"><span class="pill d">${x.type}</span><span class="pill ${x.emo === '불만' ? 'hi' : (x.emo === '칭찬' ? 'ok' : 'lo')}">${x.emo}</span>${esc(x.at.slice(5, 16).replace('T', ' '))} · ${esc(x.name || '고객')}</div><div class="a">${esc(x.ans)}</div></div>`).join('') || '<div class="empty">아직 저장한 답변이 없습니다</div>';
+}
+$('#samples').onclick = e => { const b = e.target.closest('button'); if (!b) return; $('#inq').value = SAMPLES[+b.dataset.i][1]; if (!$('#shop').value) $('#shop').value = '미사마켓'; toast('예시 문의를 넣었습니다'); };
+$('#tone').onclick = e => { const b = e.target.closest('button'); if (!b) return; TONE = b.dataset.t; $$('#tone button').forEach(x => x.classList.toggle('on', x === b)); if (CUR){ CUR.tone = TONE; $('#ans').value = compose(CUR); } };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => copyOut($('#ans').value, '답안을 복사했습니다');
+$('#saveBtn').onclick = () => { if (!CUR) return; const h = hist(); h.unshift({at:new Date().toISOString(), type:CUR.T.k, emo:CUR.E.k, name:CUR.X.name, order:CUR.X.order, tone:TONE, q:CUR.t.slice(0, 400), ans:$('#ans').value}); LS.set(LSH, h.slice(0, 20)); renderHist(); toast('이력에 저장했습니다 (최대 20건)'); };
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>고객 문의 답변</h1><p class="note">${todayS()} · 유형 ${CUR.T.k} · 감정 ${CUR.E.k} · 처리 기한 ${CUR.T.due}</p><h2>문의 원문</h2><p class="pre">${esc(CUR.t)}</p><h2>답변</h2><p class="pre">${esc($('#ans').value)}</p></div>`); };
+$('#hist').onclick = e => { const it = e.target.closest('.item'); if (!it) return; const x = hist()[+it.dataset.i]; $('#inq').value = x.q; $('#ans').value = x.ans; $('#result').classList.remove('hide'); toast('이력을 불러왔습니다'); };
+$('#hCsv').onclick = () => { const h = hist(); if (!h.length) return toast('이력이 없습니다'); saveCSV(`CS답변이력_${todayS()}.csv`, [['저장시각','유형','감정','고객','주문번호','톤','문의','답변']].concat(h.map(x => [x.at, x.type, x.emo, x.name, x.order, x.tone, x.q, x.ans]))); };
+$('#hDel').onclick = () => { LS.set(LSH, []); renderHist(); toast('이력을 지웠습니다'); };
+$('#ruleTxt').innerHTML = TYPES.map(T => `<b>${T.k}</b>: ${T.w.join(', ')} → 기한 ${T.due}`).join('<br>') + '<br><b>기타</b>: 위 단어가 없을 때<br><b>불만</b>: ' + NEG.join(', ') + '<br><b>칭찬</b>: ' + POS.join(', ') + '<br>보상·환불 금액은 절대 자동으로 쓰지 않고 [금액]으로 남깁니다.';
+const ss = LS.get(LSS, null); if (ss){ $('#shop').value = ss.shop || ''; $('#staff').value = ss.staff || ''; }
+renderHist();
+</script>
+</body></html>

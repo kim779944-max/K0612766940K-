@@ -1,0 +1,15 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+leads=20 grades A/B/C/D=9/5/2/4
+order: 김도윤:100A, 최민준:100A, 조예준:100A, 권시우:100A, 송다인:100A, 이서준:90A, 윤수아:90A, 임지민:90A, 서준우:85A, 장하준:75B, 오서윤:75B, 전하린:75B, 강서연:65B, 류건우:65B, 신채원:55C, 안주원:55C, 박하은:30D, 정지우:15D, 한도현:15D, 황지아:0D
+top1 why: +25 예산 명시 (300만원) | +20 시기 1개월 이내 (이번 달) | +15 담당자/대표 본인
+calls=10
+csv: {"name":"가망고객_점수_2026-11-18.csv","size":3376}
+copy head: 1. 김도윤 (100점·A) 010-0000-1001
+안녕하세요, 미사베이커리 김도윤 대표님 맞으시죠? 남겨 주신 홈페이지/인스타 광고 문의 건으로 연락드렸습니다. 말씀하신 이번 달 일정에 맞출 수 있는 방법을 먼저 정리해 왔습니다. 300만원 안에서 가능한 구성 두 가지를 2분만 설명
+print order: pages=2 bytes=107731 file=files\leadscore_order.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=6720 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

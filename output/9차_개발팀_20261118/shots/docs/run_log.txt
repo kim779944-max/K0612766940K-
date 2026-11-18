@@ -1,0 +1,15 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+biz: docs=6 miss=3 order=5 links=https://www.hometax.go.kr/ https://www.gov.kr/
+corp: docs=8 miss=3 order=6 links=https://www.startbiz.go.kr/ https://www.iros.go.kr/ https://www.wetax.go.kr/ https://www.hometax.go.kr/
+lease: docs=8 miss=3 order=6 links=https://www.iros.go.kr/ https://www.gov.kr/ https://rtms.molit.go.kr/
+loan: docs=10 miss=3 order=6 links=https://www.hometax.go.kr/ https://www.gov.kr/ https://www.semas.or.kr/ https://www.wetax.go.kr/
+close: docs=6 miss=3 order=6 links=https://www.hometax.go.kr/ https://www.gov.kr/ https://www.4insure.or.kr/
+persist after reload: 6개 중 2개 준비 완료 · 남은 4개
+copy head: [사업자 등록 제출서류 점검표 2026-11-18] | □ 사업자등록 신청서 — 홈택스 또는 관할 세무서 (신청 후 보통 3일 안팎(현장 확인 시 더 걸림) / 무료) | ■ 대표자 신분증 — 본인 지참 (바로 / —) | ■ 사업장 임대차계약서 사본 — 임대인과 작성한 계약서 (바로 / —)
+print biz: pages=1 bytes=64430 file=files\docs_biz.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=1997 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

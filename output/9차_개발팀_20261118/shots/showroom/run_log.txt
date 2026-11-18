@@ -1,0 +1,15 @@
+﻿index count: 19개 / products total=23
+new tiles: ["faqbot:tile=true,list=true","csreply:tile=true,list=true","leadscore:tile=true,list=true","kakaotalk:tile=true,list=true","weeksummary:tile=true,list=true","booking:tile=true,list=true","visitlog:tile=true,list=true","funnel3:tile=true,list=true","listing:tile=true,list=true","docs:tile=true,list=true"]
+broken images: []
+sw=390 errs=[]
+tap booking tile -> booking.html title=KTS 더예약 — 예약 장부 정리 + 노쇼 방지 문구 · KTS 원클릭
+detail faqbot: h1="FAQ 챗봇 설정 생성기" open=faqbot.html brokenImg=[] sw=390 errs=[]
+detail csreply: h1="CS 문의 분류·모범 답안" open=csreply.html brokenImg=[] sw=390 errs=[]
+detail leadscore: h1="가망 고객 스코어링" open=leadscore.html brokenImg=[] sw=390 errs=[]
+detail kakaotalk: h1="카톡 채널 응대 시나리오" open=kakaotalk.html brokenImg=[] sw=390 errs=[]
+detail weeksummary: h1="주간 개선 요약 리포트" open=weeksummary.html brokenImg=[] sw=390 errs=[]
+detail booking: h1="KTS 더예약" open=booking.html brokenImg=[] sw=390 errs=[]
+detail visitlog: h1="KTS 더방문" open=visitlog.html brokenImg=[] sw=390 errs=[]
+detail funnel3: h1="KTS 더퍼널" open=funnel3.html brokenImg=[] sw=390 errs=[]
+detail listing: h1="KTS 더매물" open=listing.html brokenImg=[] sw=390 errs=[]
+detail docs: h1="KTS 더제출" open=docs.html brokenImg=[] sw=390 errs=[]

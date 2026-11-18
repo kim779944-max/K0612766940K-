@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>24시간 FAQ 챗봇 설정 생성기 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.fld textarea{min-height:44px}
+.flt{display:flex;gap:6px;margin-top:8px}
+.flt button{flex:1;font-size:12px;font-weight:800;border:1px solid var(--line2);border-radius:9px;padding:8px 4px;background:var(--card2);color:#DCE6F2}
+.flt button.on{background:var(--or);color:var(--on);border-color:var(--or)}
+.item .meta{display:flex;gap:6px;align-items:center;margin-bottom:4px;font-size:10.5px;color:var(--sub)}
+.jsonbox{font-family:Consolas,Menlo,monospace;font-size:11px;max-height:220px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+</style></head>
+<body><div id="app">
+<!--@@TOP FAQ 챗봇 설정 생성기@@-->
+<main>
+<section class="hero">
+ <h1>매장 정보만 넣으면<br><em>손님 질문 40개와 답변</em>이 나옵니다</h1>
+ <p>영업시간·주차·배달·예약·환불을 넣으면 카카오톡 채널·홈페이지·인스타 DM에 붙일 FAQ 설정을 만듭니다. 답변은 <b>넣은 내용만</b> 씁니다. 빈 칸은 매장 문의로 안내합니다. AI 없이 동작합니다.</p>
+</section>
+
+<section class="card" id="inputCard">
+ <h2><span class="n">1</span>매장 정보</h2>
+ <p class="sub">처음이면 예시 매장을 눌러 모양을 먼저 보세요. 모르는 칸은 비워 두셔도 됩니다.</p>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 매장 넣기</button><button class="btn sec sm" id="clearBtn">모두 지우기</button></div>
+ <div class="g2">
+  <div><label class="lb">상호</label><input id="f_name" maxlength="30" placeholder="예) 미사 한상차림"></div>
+  <div><label class="lb">대표 전화</label><input id="f_tel" maxlength="20" inputmode="tel" placeholder="031-000-0000"></div>
+ </div>
+ <div id="fields"></div>
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">질문 40개 · 답변 만들기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>FAQ 40문항</h2>
+ <div class="stat"><div><b id="sAll">0</b><span>전체 질문</span></div><div><b id="sOk">0</b><span>입력값으로 답변</span></div><div><b id="sFb">0</b><span>매장 문의 안내</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">설정 JSON 복사</button><button class="btn sec sm" id="csvBtn">CSV 저장</button><button class="btn sec sm" id="printBtn">인쇄 · PDF</button></div>
+ <div class="flt" id="flt"><button class="on" data-f="all">전체</button><button data-f="ok">답변 있음</button><button data-f="fb">매장 문의</button></div>
+ <div id="list"></div>
+ <h3>손님처럼 물어보기 (규칙 시험)</h3>
+ <div class="row"><input id="testQ" placeholder="예) 주차 돼요?"><button class="btn sec sm" id="testBtn" style="flex:0 0 74px">물어보기</button></div>
+ <div class="out hide" id="testA"></div>
+ <h3>설정 JSON (카톡 채널·홈페이지·DM 공통)</h3>
+ <div class="out jsonbox" id="jsonOut"></div>
+ <p class="kv">카카오톡 채널 관리자센터의 자동응답·키워드 답변, 홈페이지 FAQ, 인스타 DM 빠른 답장에 질문/답변을 그대로 옮겨 붙이세요. 이 화면은 어디에도 직접 올리거나 보내지 않습니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const F = [
+ {k:'hours', lb:'영업시간', ph:'매일 11:00~21:00 (브레이크 15:00~17:00)', pre:'영업시간 안내드립니다.', q:['영업시간이 어떻게 되나요?','몇 시에 문 열어요?','몇 시까지 해요?','브레이크 타임 있나요?']},
+ {k:'closed', lb:'휴무일', ph:'매주 월요일 · 명절 당일', pre:'휴무일 안내드립니다.', q:['쉬는 날이 언제예요?','주말에도 영업하나요?','공휴일에 문 여나요?']},
+ {k:'addr', lb:'주소 · 찾아오는 길', ph:'경기 하남시 미사강변대로 100, 1층 (미사역 3번 출구 도보 5분)', pre:'매장 위치 안내드립니다.', q:['매장 주소가 어디예요?','지하철역에서 어떻게 가요?','찾아가는 길 알려 주세요']},
+ {k:'parking', lb:'주차', ph:'건물 지하 주차장 1시간 무료 (영수증 제시)', pre:'주차 안내드립니다.', q:['주차 되나요?','주차비 무료인가요?','주차장이 어디 있어요?']},
+ {k:'delivery', lb:'배달', ph:'배달앱(배민·쿠팡이츠) 주문 가능, 반경 3km, 최소 주문 15,000원', pre:'배달 안내드립니다.', q:['배달 되나요?','배달 가능 지역이 어디까지예요?','배달 최소 주문 금액이 있나요?','배달비는 얼마예요?']},
+ {k:'takeout', lb:'포장', ph:'포장 주문 시 1,000원 할인, 전화 주문 후 20분 뒤 방문', pre:'포장 안내드립니다.', q:['포장 되나요?','포장 할인 있어요?']},
+ {k:'reserve', lb:'예약', ph:'전화 예약만 가능 · 4인 이상은 하루 전까지', pre:'예약 안내드립니다.', q:['예약 되나요?','예약은 어떻게 해요?','당일 예약 가능한가요?','예약 취소는 어떻게 하나요?']},
+ {k:'refund', lb:'환불 · 교환 · 취소', ph:'조리 시작 전 취소는 전액 환불, 조리 후에는 취소 불가', pre:'환불·취소 기준 안내드립니다.', q:['환불 되나요?','주문 취소하고 싶어요','음식에 문제가 있으면 어떻게 하나요?']},
+ {k:'pay', lb:'결제 수단', ph:'카드 · 현금 · 제로페이 · 하남사랑상품권', pre:'결제 수단 안내드립니다.', q:['카드 결제 되나요?','지역화폐(상품권) 쓸 수 있나요?','현금영수증 되나요?']},
+ {k:'price', lb:'대표 메뉴 · 가격', ph:'김치찌개 9,000원 / 제육볶음 10,000원 / 공기밥 1,000원', pre:'메뉴와 가격 안내드립니다.', q:['메뉴판 보여 주세요','가격이 얼마예요?','대표 메뉴가 뭐예요?','1인분 주문 되나요?']},
+ {k:'group', lb:'단체 · 좌석', ph:'최대 24석, 단체룸 1개(10명)', pre:'좌석·단체 안내드립니다.', q:['단체 손님 받나요?','룸(방)이 있나요?']},
+ {k:'pet', lb:'반려동물', ph:'(예: 테라스석만 동반 가능)', pre:'반려동물 동반 안내드립니다.', q:['반려동물 데려가도 되나요?','강아지 동반 되나요?']},
+ {k:'wifi', lb:'와이파이 · 편의', ph:'와이파이 있음 (비밀번호는 매장 안내문)', pre:'편의시설 안내드립니다.', q:['와이파이 있나요?']},
+ {k:'event', lb:'이벤트 · 할인', ph:'(예: 리뷰 작성 시 음료 1개)', pre:'진행 중인 이벤트 안내드립니다.', q:['지금 하는 이벤트 있나요?','할인 쿠폰 있나요?']}
+];
+const KW = {hours:['영업','몇 시','몇시','오픈','문 열','마감','브레이크','시간'], closed:['쉬는','휴무','주말','공휴일','명절','일요일','월요일'],
+ addr:['주소','위치','어디','찾아','역에서','길'], parking:['주차'], delivery:['배달','배민','쿠팡'], takeout:['포장','테이크'],
+ reserve:['예약'], refund:['환불','취소','교환','문제','반품'], pay:['카드','결제','현금','상품권','지역화폐','제로페이','영수증'],
+ price:['메뉴','가격','얼마','대표','1인분','값'], group:['단체','룸','방','좌석','인원'], pet:['반려','강아지','고양이','애견'], wifi:['와이파이','wifi','콘센트','충전'], event:['이벤트','할인','쿠폰']};
+const SAMPLE = {name:'미사 한상차림', tel:'031-000-0000', hours:'매일 11:00~21:00 (브레이크 15:00~17:00, 라스트오더 20:30)', closed:'매주 월요일 · 설·추석 당일',
+ addr:'경기 하남시 미사강변대로 100, 1층 (미사역 3번 출구 도보 5분)', parking:'건물 지하 주차장 1시간 무료 (계산 시 차량번호 말씀)',
+ delivery:'배달앱(배민·쿠팡이츠) 주문 가능, 반경 3km, 최소 주문 15,000원, 배달비는 앱 표시 기준', takeout:'포장 주문 시 1,000원 할인, 전화 주문 후 20분 뒤 방문',
+ reserve:'전화 예약만 가능 · 4인 이상은 하루 전까지 · 취소는 방문 2시간 전까지 전화', refund:'조리 시작 전 취소는 전액 환불, 조리 후에는 취소 불가. 음식에 문제가 있으면 바로 직원에게 말씀해 주세요',
+ pay:'카드 · 현금 · 제로페이 · 하남사랑상품권 (현금영수증 발행)', price:'김치찌개 9,000원 / 제육볶음 10,000원 / 고등어구이 11,000원 / 공기밥 1,000원',
+ group:'최대 24석, 단체룸 1개(10명까지)', pet:'', wifi:'와이파이 있음 (비밀번호는 테이블 안내문)', event:''};
+const LSK = 'kts_faqbot_v1';
+function fieldsHtml(){ return F.map(f => `<div class="fld"><label class="lb">${f.lb}<i>비우면 "매장 문의" 안내</i></label><textarea id="f_${f.k}" rows="2" maxlength="300" placeholder="${esc(f.ph)}"></textarea></div>`).join(''); }
+$('#fields').innerHTML = fieldsHtml();
+const val = k => ($('#f_' + k).value || '').trim();
+function getAll(){ const o = {name:val('name'), tel:val('tel')}; F.forEach(f => o[f.k] = val(f.k)); return o; }
+function setAll(o){ $('#f_name').value = o.name || ''; $('#f_tel').value = o.tel || ''; F.forEach(f => $('#f_' + f.k).value = o[f.k] || ''); }
+function fallback(o){ return `정확한 안내를 위해 매장으로 문의 부탁드립니다 (전화${o.tel ? ' ' + o.tel : ''})`; }
+function build(o){
+  const faq = []; let id = 0;
+  F.forEach(f => f.q.forEach(q => {
+    const v = o[f.k]; id++;
+    faq.push({id, field:f.k, label:f.lb, q, answered:!!v, a: v ? `${f.pre} ${v}` : fallback(o)});
+  }));
+  return faq;
+}
+function config(o, faq){
+  return {format:'KTS-FAQBOT-1', made:todayS(), store:{name:o.name, tel:o.tel},
+    rule:{source:'매장 입력값만 사용 (가격·환불·영업시간 추측 금지)', fallback:fallback(o)},
+    channels:{kakao_channel:'자동응답/키워드 답변에 q→a 등록', homepage:'FAQ 목록', instagram_dm:'빠른 답장'},
+    keywords:Object.fromEntries(F.map(f => [f.k, KW[f.k]])),
+    faq:faq.map(x => ({id:x.id, q:x.q, a:x.a, field:x.field, answered:x.answered}))};
+}
+let CUR = null, FLT = 'all';
+function renderList(){
+  const L = CUR.faq.filter(x => FLT === 'all' || (FLT === 'ok' ? x.answered : !x.answered));
+  $('#list').innerHTML = L.map(x => `<div class="item${x.answered ? '' : ' warn'}"><div class="meta"><span class="pill ${x.answered ? 'ok' : 'no'}">${x.answered ? '입력값 답변' : '매장 문의'}</span>${esc(x.label)} · Q${x.id}</div><div class="q">${esc(x.q)}</div><div class="a">${esc(x.a)}</div></div>`).join('') || '<div class="empty">해당 질문이 없습니다</div>';
+}
+function run(){
+  const o = getAll();
+  if (!o.name){ $('#f_name').classList.add('miss'); toast('상호를 넣어 주세요'); $('#f_name').focus(); return; }
+  $('#f_name').classList.remove('miss');
+  LS.set(LSK, o);
+  const faq = build(o); CUR = {o, faq, cfg:config(o, faq)};
+  $('#sAll').textContent = faq.length; $('#sOk').textContent = faq.filter(x => x.answered).length; $('#sFb').textContent = faq.filter(x => !x.answered).length;
+  $('#jsonOut').textContent = JSON.stringify(CUR.cfg, null, 1);
+  renderList(); $('#result').classList.remove('hide');
+  $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+  toast('질문 ' + faq.length + '개를 만들었습니다');
+}
+function answer(q){
+  if (!CUR) return '';
+  const s = q.replace(/\s+/g, ' ');
+  let best = null, bs = 0;
+  F.forEach(f => { const sc = KW[f.k].reduce((n, w) => n + (s.toLowerCase().indexOf(w) >= 0 ? w.length : 0), 0); if (sc > bs){ bs = sc; best = f; } });
+  if (!best) return fallback(CUR.o);
+  const v = CUR.o[best.k]; return v ? `${best.pre} ${v}` : fallback(CUR.o);
+}
+$('#sampleBtn').onclick = () => { setAll(SAMPLE); toast('예시 매장을 넣었습니다. [질문 40개 · 답변 만들기]를 누르세요'); };
+$('#clearBtn').onclick = () => { setAll({}); toast('모두 지웠습니다'); };
+$('#runBtn').onclick = run;
+$('#flt').onclick = e => { const b = e.target.closest('button'); if (!b) return; FLT = b.dataset.f; $$('#flt button').forEach(x => x.classList.toggle('on', x === b)); renderList(); };
+$('#copyBtn').onclick = () => CUR && copyOut(JSON.stringify(CUR.cfg, null, 1), '설정 JSON을 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`FAQ_${CUR.o.name}_${todayS()}.csv`, [['번호','분류','질문','답변','답변 근거']].concat(CUR.faq.map(x => [x.id, x.label, x.q, x.a, x.answered ? '매장 입력값' : '입력 없음 → 매장 문의'])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>${esc(CUR.o.name)} 자주 묻는 질문 (FAQ ${CUR.faq.length}문항)</h1><p class="note">작성일 ${todayS()} · 답변은 매장 입력값만 사용 · 입력이 없는 질문은 "${esc(fallback(CUR.o))}"</p>
+ <table><colgroup><col style="width:8%"><col style="width:14%"><col style="width:30%"><col></colgroup><tr><th>번호</th><th>분류</th><th>질문</th><th>답변</th></tr>${CUR.faq.map(x => `<tr><td>${x.id}</td><td>${esc(x.label)}</td><td>${esc(x.q)}</td><td>${esc(x.a)}</td></tr>`).join('')}</table></div>`); };
+$('#testBtn').onclick = () => { const q = $('#testQ').value.trim(); if (!q) return toast('질문을 적어 주세요'); if (!CUR) return toast('먼저 [만들기]를 눌러 주세요'); $('#testA').classList.remove('hide'); $('#testA').textContent = 'Q. ' + q + '\nA. ' + answer(q); };
+const saved = LS.get(LSK, null); if (saved) setAll(saved);
+</script>
+</body></html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>가망 고객 스코어링 분류기 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+:root{--bg:#0A1128;--card:#111B36;--card2:#16223F;--line:#24314F;--line2:#2E4370;--ink:#ECEFF4;--sub:#93A0B4;
+ --or:#FF6B00;--or2:#FFA24D;--on:#0A1128;--red:#FF5A5A;--green:#35C48A;--yel:#FFC24D}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Roboto,sans-serif;
+ background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5;letter-spacing:-.2px;word-break:keep-all;overflow-wrap:break-word}
+#app{max-width:460px;margin:0 auto;overflow-x:hidden;min-height:100vh;
+ background:radial-gradient(120% 40% at 50% -6%,rgba(255,107,0,.10) 0%,rgba(255,107,0,0) 62%),var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;letter-spacing:-.2px}
+input,select,textarea{font:inherit;color:var(--ink);background:#0B1530;border:1px solid var(--line2);border-radius:10px;padding:10px 11px;width:100%;font-size:14px;min-width:0}
+textarea{resize:vertical;line-height:1.5}
+input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;accent-color:#FF6B00;padding:0}
+input[type=file]{font-size:12px;padding:7px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--or2)}
+input.miss,textarea.miss{border-color:var(--red)}
+a{color:var(--or2)}
+header.top{position:sticky;top:0;z-index:40;background:rgba(10,17,40,.97);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:8px;padding:10px 14px 6px}
+.brand{display:flex;align-items:center;gap:7px;font-size:15.5px;font-weight:900;color:#fff;letter-spacing:-.6px;min-width:0}
+.brand .mark{flex:0 0 24px;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,var(--or2),var(--or));color:var(--on);font-size:12px;font-weight:900}
+.brand span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp{flex:1}
+.home{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:999px;padding:5px 10px;text-decoration:none;white-space:nowrap}
+.privacy{font-size:11px;color:var(--sub);padding:0 14px 8px;display:flex;align-items:center;gap:6px}
+.privacy::before{content:"";flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+main{padding:6px 14px 40px}
+.hero h1{font-size:21px;line-height:1.32;font-weight:900;letter-spacing:-.8px;margin-top:10px}
+.hero h1 em{font-style:normal;color:var(--or)}
+.hero p{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 12px;margin-top:12px}
+.card h2{font-size:14.5px;font-weight:900;color:#fff;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.card h2 .n{flex:0 0 20px;width:20px;height:20px;border-radius:6px;background:var(--or);color:var(--on);font-size:11px;font-weight:900;display:grid;place-items:center}
+.card h3{font-size:13px;font-weight:900;color:var(--or2);margin:12px 0 5px}
+.sub{font-size:11.5px;color:var(--sub);margin-top:4px;line-height:1.55}
+label.lb{display:block;font-size:11.5px;font-weight:800;color:#C6D0DF;margin:10px 0 4px}
+label.lb i{font-style:normal;color:var(--sub);font-weight:700;margin-left:4px;font-size:10.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.g2>*{min-width:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border-radius:12px;padding:13px 12px;font-size:14.5px;font-weight:900;text-decoration:none;text-align:center;line-height:1.3}
+.btn.pri{color:var(--on);background:linear-gradient(145deg,var(--or2),var(--or));box-shadow:0 8px 22px rgba(255,107,0,.28)}
+.btn.sec{color:#E6EDF7;background:var(--card2);border:1px solid var(--line2)}
+.btn.sm{padding:9px 6px;font-size:12.5px;border-radius:10px}
+.row{display:flex;gap:7px;margin-top:9px}.row>*{flex:1;min-width:0}
+.chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.chips button{font-size:12px;font-weight:800;color:#DCE6F2;border:1px solid var(--line2);border-radius:999px;padding:7px 11px;background:var(--card2)}
+.chips button.on{background:var(--or);border-color:var(--or);color:var(--on)}
+.pill{display:inline-block;font-size:10.5px;font-weight:900;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.pill.a,.pill.hi{background:var(--red);color:#fff}.pill.b,.pill.md{background:var(--yel);color:#1a1200}.pill.c,.pill.lo{background:#3B82F6;color:#fff}.pill.d,.pill.no{background:#3A4766;color:#DCE6F2}.pill.ok{background:var(--green);color:#062014}
+.item{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:7px}
+.item .q{font-size:13px;font-weight:800;color:#fff}
+.item .a{font-size:12.5px;color:#D3DBE7;margin-top:4px;line-height:1.55}
+.item.warn{border-color:rgba(255,90,90,.55)}
+.kv{font-size:11px;color:var(--sub);line-height:1.55;margin-top:6px}
+.out{white-space:pre-wrap;font-size:13px;line-height:1.6;background:#0B1530;border:1px dashed var(--or2);border-radius:10px;padding:10px;margin-top:8px;color:#E3E9F2}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.stat div{background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;min-width:0}
+.stat b{display:block;font-size:18px;font-weight:900;color:#fff}
+.stat span{font-size:10.5px;color:var(--sub)}
+table.t{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed;font-size:12px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.t th{color:var(--sub);font-size:11px;font-weight:800}
+.fixnote{font-size:11.5px;line-height:1.55;color:#FFD7B8;background:rgba(255,107,0,.10);border:1px solid rgba(255,107,0,.45);border-radius:10px;padding:8px 10px;margin-top:10px}
+details.rule{margin-top:8px;background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
+details.rule summary{font-weight:800;color:var(--or2);cursor:pointer}
+.hide{display:none!important}
+.empty{font-size:12px;color:var(--sub);text-align:center;padding:12px 6px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:#1E2C4D;border:1px solid var(--or);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:10px 14px;z-index:90;width:max-content;max-width:340px;text-align:center;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{font-size:10.5px;color:#6E7F99;text-align:center;margin-top:16px;line-height:1.6}
+#printArea{display:none}
+.paper{background:#fff;color:#111;font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:10.5pt;line-height:1.5;letter-spacing:-.1px}
+.paper h1{font-size:16pt;margin-bottom:4px}.paper h2{font-size:12pt;margin:11px 0 5px;border-left:4px solid #FF6B00;padding-left:7px}
+.paper table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0}
+.paper th,.paper td{border:1px solid #444;padding:4px 6px;text-align:left;vertical-align:top;font-size:9.5pt;overflow-wrap:anywhere;word-break:keep-all}
+.paper th{background:#F1F3F7}
+.paper .note{font-size:9pt;color:#444;margin-top:8px}
+.paper .pre{white-space:pre-wrap}
+@media print{
+ @page{size:A4;margin:12mm}
+ html,body{background:#fff!important;min-height:0!important}
+ body>*:not(#printArea){display:none!important}
+ #printArea{display:block!important}
+}
+#csv{font-family:Consolas,Menlo,monospace;font-size:11.5px;white-space:pre-wrap}
+.lead .top{display:flex;align-items:center;gap:8px}
+.lead .sc{flex:0 0 46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:18px;font-weight:900;background:#16223F;border:1px solid var(--line2)}
+.lead .nm{flex:1;min-width:0}
+.lead .nm b{display:block;font-size:13.5px;color:#fff}
+.lead .nm span{display:block;font-size:11px;color:var(--sub)}
+.lead ul{margin:7px 0 0 16px;font-size:12px;color:#D3DBE7;line-height:1.55}
+.bar{height:5px;border-radius:5px;background:#22335A;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--or),var(--or2))}
+.rk{font-size:11px;font-weight:900;color:var(--or2);flex:0 0 auto}
+</style></head>
+<body><div id="app">
+<header class="top">
+ <div class="hd"><div class="brand"><span class="mark">K</span><span class="t">가망 고객 스코어링</span></div><span class="sp"></span><a class="home" href="index.html">원클릭 쇼룸</a></div>
+ <div class="privacy">입력하신 내용은 이 기기 안에서만 처리됩니다</div>
+</header>
+<main>
+<section class="hero">
+ <h1>설문·문의를 넣으면<br><em>누구에게 먼저 전화할지</em> 나옵니다</h1>
+ <p>구매 의향 점수(0~100) · 등급 A/B/C/D · 근거 3줄 · 연락 순서 · 상위 10명 전화 멘트까지. 점수 규칙은 고정이고 화면에 공개합니다.</p>
+</section>
+
+<section class="card">
+ <h2><span class="n">1</span>응답 넣기</h2>
+ <p class="sub">엑셀·구글시트에서 복사해 붙여 넣으세요(쉼표·탭 모두 됨). 첫 줄 제목: 이름, 회사, 직책, 연락처, 예산, 시기, 요청항목, 과거문의</p>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">샘플 20건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">CSV 붙여넣기</label>
+ <textarea id="csv" rows="7" spellcheck="false"></textarea>
+ <details class="rule" id="addBox"><summary>폼으로 1명 추가</summary>
+  <div class="g2">
+   <div><label class="lb">이름</label><input id="a_name"></div><div><label class="lb">회사</label><input id="a_co"></div>
+   <div><label class="lb">직책</label><input id="a_role" placeholder="대표·담당자"></div><div><label class="lb">연락처</label><input id="a_tel" inputmode="tel"></div>
+   <div><label class="lb">예산</label><input id="a_bud" placeholder="300만원"></div><div><label class="lb">시기</label><input id="a_when" placeholder="이번 달"></div>
+   <div><label class="lb">요청항목</label><input id="a_req" placeholder="홈페이지/광고"></div><div><label class="lb">과거문의</label><input id="a_past" placeholder="있음/없음"></div>
+  </div>
+  <div class="row"><button class="btn sec sm" id="addBtn">목록에 추가</button></div>
+ </details>
+ <details class="rule"><summary>점수 규칙 보기 (합계 100점)</summary>
+  <table class="t"><colgroup><col style="width:62%"><col></colgroup>
+   <tr><td>예산 명시 (금액이 적혀 있음)</td><td>+25</td></tr><tr><td>시기 1개월 이내 (즉시·이번 주·이번 달·2주 내·날짜 31일 이내)</td><td>+20</td></tr>
+   <tr><td>담당자 / 대표 본인 (대표·사장·원장·담당·팀장·실장·이사·본인)</td><td>+15</td></tr><tr><td>연락처 유효 (휴대폰·일반전화·이메일 형식)</td><td>+15</td></tr>
+   <tr><td>요청 항목 2개 이상 (/ , · + 로 구분)</td><td>+15</td></tr><tr><td>과거 문의 이력 (있음·Y·예·n회)</td><td>+10</td></tr></table>
+  <p class="kv">등급: A 80점 이상 · B 60~79 · C 40~59 · D 40 미만</p>
+ </details>
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">점수 매기고 순서 정하기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>우선 연락 순서</h2>
+ <div class="stat" style="grid-template-columns:repeat(4,1fr)"><div><b id="gA">0</b><span>A등급</span></div><div><b id="gB">0</b><span>B등급</span></div><div><b id="gC">0</b><span>C등급</span></div><div><b id="gD">0</b><span>D등급</span></div></div>
+ <div class="row"><button class="btn pri sm" id="csvBtn">CSV 저장</button><button class="btn sec sm" id="copyBtn">멘트 10개 복사</button><button class="btn sec sm" id="printBtn">인쇄</button></div>
+ <table class="t" id="order"></table>
+ <h3>고객별 점수와 근거</h3>
+ <div id="leads"></div>
+ <h3>상위 10명 전화 멘트</h3>
+ <div id="calls"></div>
+ <p class="kv">전화·문자는 이 화면에서 걸거나 보내지 않습니다. 멘트를 보고 직접 연락하세요.</p>
+</section>
+<section class="card qa" id="inq">
+ <h2><span class="n">?</span>60초 문의</h2>
+ <p class="sub">우리 매장에 맞게 고쳐 쓰고 싶으시면 이름·연락처·문의 한 줄만 남겨 주세요. 담당자가 확인한 뒤 연락드립니다.</p>
+ <div class="row"><a class="btn sec" id="inqLink" href="../misa-1116/form.html" target="_blank" rel="noopener">60초 문의 폼 열기 (이름 · 연락처 · 문의)</a></div>
+ <p class="kv">KTS 60초 접수 폼을 그대로 씁니다. 이 화면에서 만든 작업 내용은 폼으로 넘어가지 않습니다.</p>
+</section>
+<p class="foot">KTS 원클릭 · 서버 0 · 외부 발송 0 · 모든 처리는 이 기기 안에서만 합니다<br><a href="index.html">원클릭 쇼룸으로</a></p>
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/* ===== KTS 원클릭 9차 공통 도우미 (복사·저장·인쇄·기기 저장·개인정보 가림) ===== */
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+let _tt; function toast(m){ const e = $('#toast'); e.textContent = m; e.classList.add('on'); clearTimeout(_tt); _tt = setTimeout(() => e.classList.remove('on'), 2400); }
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(e){}
+  try{ const a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); const ok = document.execCommand('copy'); a.remove(); return ok; }catch(e){ return false; }
+}
+function copyOut(t, msg){ window.__lastCopy = t; copyText(t).then(ok => toast(ok ? (msg || '복사했습니다') : '복사하지 못했습니다. 글자를 길게 눌러 직접 복사해 주세요')); }
+function download(name, text, mime){ window.__lastDownload = {name:name, size:text.length}; const b = new Blob([text], {type:mime || 'text/plain;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+const toCSV = rows => rows.map(r => r.map(c => { c = String(c == null ? '' : c); return /[",\r\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(',')).join('\r\n');
+function saveCSV(name, rows){ download(name, '﻿' + toCSV(rows), 'text/csv;charset=utf-8'); toast('CSV 파일을 저장했습니다 (엑셀에서 열림)'); }
+function printDoc(html){ $('#printArea').innerHTML = html; setTimeout(() => window.print(), 60); }
+const LS = { get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} } };
+const pad2 = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayS = () => ymd(new Date());
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const parseD = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const WK = ['일', '월', '화', '수', '목', '금', '토'];
+const korD = d => d ? `${d.getMonth() + 1}월 ${d.getDate()}일(${WK[d.getDay()]})` : '';
+/* CSV 붙여넣기 읽기 (따옴표·쉼표·탭 지원) */
+function parseCSV(text){
+  text = String(text || '').replace(/^﻿/, '');
+  const sep = (text.split('\n')[0].indexOf('\t') >= 0) ? '\t' : ',';
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){ if (c === '"'){ if (text[i + 1] === '"'){ cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === sep){ row.push(cur.trim()); cur = ''; }
+    else if (c === '\n'){ row.push(cur.trim()); rows.push(row); row = []; cur = ''; }
+    else if (c !== '\r') cur += c;
+  }
+  if (cur !== '' || row.length){ row.push(cur.trim()); rows.push(row); }
+  return rows.filter(r => r.some(x => x !== ''));
+}
+/* 개인정보 가림: 휴대폰·일반전화·이메일 */
+function maskPII(s){
+  return String(s || '')
+    .replace(/([\w.+-]{1,64})@([\w-]+(?:\.[\w-]+)+)/g, (m, u, d) => u.slice(0, 2) + '***@' + d)
+    .replace(/(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/g, (m, a, b, c) => a + '-****-' + c)
+    .replace(/(0[2-6]\d?)[-.\s](\d{3,4})[-.\s](\d{4})/g, (m, a, b, c) => a + '-****-' + c);
+}
+/* 받침에 맞춘 조사: jo('주문','을를') → 주문을 */
+const jo = (w, p) => { w = String(w); const c = w.charCodeAt(w.length - 1); const has = c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; return w + (has ? p[0] : p[1]); };
+const PHONE_RE = /(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/;
+/* ===== 공통 도우미 끝 ===== */
+const SAMPLE = `이름,회사,직책,연락처,예산,시기,요청항목,과거문의
+김도윤,미사베이커리,대표,010-0000-1001,300만원,이번 달,홈페이지/인스타 광고,있음
+이서준,하남치과,실장,031-000-1002,500만원,2주 내,블로그 관리/영상 제작/리뷰 관리,없음
+박하은,강동필라테스,원장,010-0000-1003,,3개월 후,인스타 광고,없음
+최민준,위례공인중개,대표,010-0000-1004,월 50만원,즉시,블로그 관리/네이버 플레이스,2회
+정지우,풍산정육점,직원,010-0000-1005,미정,미정,전단지,없음
+강서연,미사키즈카페,대표,minji.kang@example.com,200만원,다음 달,홈페이지,있음
+조예준,감일세무회계,팀장,02-000-1007,1000만원,이번 주,홈페이지/영상 제작/광고 운영,있음
+윤수아,덕풍동꽃집,사장,010-0000-567,50만원,이번 달,인스타 광고/스마트스토어,없음
+장하준,미사한의원,원장,010-0000-1009,,즉시,블로그 관리/리뷰 관리,있음
+임지민,하남수학학원,원장,010-0000-1010,150만원,1개월 내,전단지/블로그 관리,없음
+한도현,신장동카센터,,010-0000-1011,,내년,홈페이지,없음
+오서윤,망월동네일,대표,010-0000-1012,30만원,2주 내,인스타 광고,없음
+서준우,미사고기집,매니저,010-0000-1013,100만원,이번 달,배달앱 관리/리뷰 관리,1회
+신채원,창우동요가,본인,010-0000-1014,,미정,인스타 광고/블로그 관리,있음
+권시우,하남인테리어,대표,010-0000-1015,2000만원,3주 내,홈페이지/영상 제작/블로그 관리,있음
+황지아,미사안경원,직원,,,미정,전단지,없음
+안주원,덕풍시장떡집,사장,010-0000-1017,20만원,6개월 후,스마트스토어,없음
+송다인,위례피부과,마케팅 담당,010-0000-1018,월 300만원,즉시,광고 운영/영상 제작,2회
+류건우,감북동카페,대표,010-0000-1019,,다음 주,인스타 광고/메뉴판 디자인,없음
+전하린,풍산동애견미용,원장,010-0000-1020,80만원,이번 달,네이버 플레이스,없음`;
+const COLS = ['이름','회사','직책','연락처','예산','시기','요청항목','과거문의'];
+const RULES = [
+ ['bud', 25, '예산 명시', r => /\d/.test(r.예산) && !/미정|모름|없음/.test(r.예산)],
+ ['when', 20, '시기 1개월 이내', r => soon(r.시기)],
+ ['role', 15, '담당자/대표 본인', r => /대표|사장|원장|본인|담당|팀장|실장|이사/.test(r.직책)],
+ ['tel', 15, '연락처 유효', r => validTel(r.연락처)],
+ ['req', 15, '요청 항목 2개 이상', r => reqN(r.요청항목) >= 2],
+ ['past', 10, '과거 문의 이력', r => /^(y|yes|예|있음|o|재문의)$/i.test(r.과거문의.trim()) || /[1-9]\s*회/.test(r.과거문의)]
+];
+function soon(s){
+  s = (s || '').replace(/\s+/g, '');
+  if (!s) return false;
+  if (/즉시|바로|당장|금주|이번주|이번달|금월|다음주|한달|1개월|일개월/.test(s)) return true;
+  let m = /(\d+)주(내|안|이내)/.exec(s); if (m) return +m[1] <= 4;
+  m = /(\d+)일(내|안|이내)/.exec(s); if (m) return +m[1] <= 31;
+  m = /(\d{4})[-.](\d{1,2})[-.](\d{1,2})/.exec(s); if (m){ const d = new Date(+m[1], +m[2] - 1, +m[3]), n = (d - new Date()) / 864e5; return n >= -1 && n <= 31; }
+  return false;
+}
+function validTel(s){ s = (s || '').trim(); if (/^[\w.+-]+@[\w-]+(\.[\w-]+)+$/.test(s)) return true; const d = s.replace(/[^\d]/g, ''); return /^01[016789]\d{7,8}$/.test(d) || /^0[2-6]\d{7,9}$/.test(d); }
+const reqN = s => (s || '').split(/[\/,·+;]| 및 /).map(x => x.trim()).filter(Boolean).length;
+const grade = n => n >= 80 ? 'A' : n >= 60 ? 'B' : n >= 40 ? 'C' : 'D';
+function rows(){
+  const R = parseCSV($('#csv').value); if (!R.length) return [];
+  let head = COLS, body = R;
+  if (R[0].some(c => COLS.indexOf(c) >= 0)){ head = R[0]; body = R.slice(1); }
+  return body.map((r, i) => { const o = {_i:i}; COLS.forEach(c => { const j = head.indexOf(c); o[c] = (j >= 0 ? r[j] : r[COLS.indexOf(c)]) || ''; }); return o; }).filter(o => o.이름 || o.회사);
+}
+function score(o){
+  const hit = RULES.map(([k, p, lb, f]) => ({k, p, lb, ok:!!f(o)}));
+  o.score = hit.reduce((a, h) => a + (h.ok ? h.p : 0), 0); o.grade = grade(o.score);
+  const got = hit.filter(h => h.ok).sort((a, b) => b.p - a.p), miss = hit.filter(h => !h.ok).sort((a, b) => b.p - a.p);
+  const why = got.slice(0, 2).map(h => `+${h.p} ${h.lb}` + detail(o, h.k));
+  miss.slice(0, 3 - why.length).forEach(h => why.push(`0 ${h.lb} 아님` + detail(o, h.k, true)));
+  while (why.length < 3 && got[why.length]) why.push(`+${got[why.length].p} ${got[why.length].lb}`);
+  o.why = why.slice(0, 3); return o;
+}
+function detail(o, k, miss){
+  const v = {bud:o.예산, when:o.시기, role:o.직책, tel:o.연락처, req:o.요청항목, past:o.과거문의}[k];
+  return v ? ` (${v})` : (miss ? ' (빈칸)' : '');
+}
+function callScript(o){
+  const nm = o.이름 + (o.직책 ? ' ' + o.직책 : '') + '님';
+  const req = o.요청항목 || '문의하신 내용';
+  const t1 = `안녕하세요, ${o.회사 ? o.회사 + ' ' : ''}${nm} 맞으시죠? 남겨 주신 ${req} 문의 건으로 연락드렸습니다.`;
+  const t2 = soon(o.시기) ? `말씀하신 ${o.시기} 일정에 맞출 수 있는 방법을 먼저 정리해 왔습니다.` : `진행 시기를 정하시는 데 도움이 될 자료를 먼저 정리해 왔습니다.`;
+  const t3 = RULES[0][3](o) ? `${o.예산} 안에서 가능한 구성 두 가지를 2분만 설명드려도 될까요?` : `대략 생각하시는 예산이 있으시면 그 안에서 가능한 구성을 2분만 설명드려도 될까요?`;
+  return t1 + ' ' + t2 + ' ' + t3;
+}
+let CUR = [];
+function run(){
+  const L = rows();
+  if (!L.length){ $('#csv').classList.add('miss'); return toast('응답을 붙여 넣어 주세요'); }
+  $('#csv').classList.remove('miss');
+  CUR = L.map(score).sort((a, b) => b.score - a.score || a._i - b._i);
+  ['A','B','C','D'].forEach(g => $('#g' + g).textContent = CUR.filter(o => o.grade === g).length);
+  $('#order').innerHTML = '<colgroup><col style="width:9%"><col style="width:27%"><col><col style="width:15%"><col style="width:13%"></colgroup><tr><th>순서</th><th>이름</th><th>회사</th><th>점수</th><th>등급</th></tr>' +
+    CUR.map((o, i) => `<tr><td>${i + 1}</td><td>${esc(o.이름)}</td><td>${esc(o.회사)}</td><td><b>${o.score}</b></td><td><span class="pill ${o.grade.toLowerCase()}">${o.grade}</span></td></tr>`).join('');
+  $('#leads').innerHTML = CUR.map((o, i) => `<div class="item lead"><div class="top"><span class="rk">${i + 1}위</span><div class="sc">${o.score}</div><div class="nm"><b>${esc(o.이름)} <span class="pill ${o.grade.toLowerCase()}">${o.grade}</span></b><span>${esc([o.회사, o.직책, maskPII(o.연락처)].filter(Boolean).join(' · '))}</span></div></div><div class="bar"><i style="width:${o.score}%"></i></div><ul>${o.why.map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>`).join('');
+  $('#calls').innerHTML = CUR.slice(0, 10).map((o, i) => `<div class="item"><div class="q">${i + 1}. ${esc(o.이름)} (${o.score}점 · ${o.grade})</div><div class="a">${esc(callScript(o))}</div></div>`).join('');
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+  toast(CUR.length + '명 점수를 매겼습니다');
+}
+$('#sampleBtn').onclick = () => { $('#csv').value = SAMPLE; toast('샘플 20건을 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#csv').value = ''; };
+$('#addBtn').onclick = () => {
+  const v = ['a_name','a_co','a_role','a_tel','a_bud','a_when','a_req','a_past'].map(id => $('#' + id).value.trim());
+  if (!v[0]) return toast('이름을 넣어 주세요');
+  let t = $('#csv').value.trim(); if (!t) t = COLS.join(',');
+  $('#csv').value = t + '\n' + toCSV([v]); ['a_name','a_co','a_role','a_tel','a_bud','a_when','a_req','a_past'].forEach(id => $('#' + id).value = ''); toast('목록에 추가했습니다');
+};
+$('#runBtn').onclick = run;
+$('#csvBtn').onclick = () => CUR.length && saveCSV(`가망고객_점수_${todayS()}.csv`, [['순서','이름','회사','직책','연락처','점수','등급','근거1','근거2','근거3','전화 멘트']].concat(CUR.map((o, i) => [i + 1, o.이름, o.회사, o.직책, o.연락처, o.score, o.grade, o.why[0], o.why[1], o.why[2], i < 10 ? callScript(o) : ''])));
+$('#copyBtn').onclick = () => CUR.length && copyOut(CUR.slice(0, 10).map((o, i) => `${i + 1}. ${o.이름} (${o.score}점·${o.grade}) ${o.연락처}\n${callScript(o)}`).join('\n\n'), '상위 10명 멘트를 복사했습니다');
+$('#printBtn').onclick = () => { if (!CUR.length) return; printDoc(`<div class="paper"><h1>가망 고객 우선 연락표</h1><p class="note">${todayS()} · ${CUR.length}명 · 점수 규칙: 예산 25 · 시기 20 · 담당/대표 15 · 연락처 15 · 요청 2개+ 15 · 과거문의 10</p>
+<table><colgroup><col style="width:6%"><col style="width:12%"><col style="width:17%"><col style="width:17%"><col style="width:8%"><col style="width:7%"><col></colgroup><tr><th>순</th><th>이름</th><th>회사</th><th>연락처</th><th>점수</th><th>등급</th><th>근거</th></tr>${CUR.map((o, i) => `<tr><td>${i + 1}</td><td>${esc(o.이름)}</td><td>${esc(o.회사)}</td><td>${esc(o.연락처)}</td><td>${o.score}</td><td>${o.grade}</td><td>${o.why.map(esc).join('<br>')}</td></tr>`).join('')}</table></div>`); };
+</script>
+</body></html>

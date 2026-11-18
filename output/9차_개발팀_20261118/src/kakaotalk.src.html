@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>카카오톡 채널 1차 응대 시나리오 생성기 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.sec{background:#0B1530;border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:9px}
+.sec .hh{display:flex;align-items:center;gap:8px}
+.sec .hh b{flex:1;font-size:13px;color:var(--or2)}
+.sec .hh button{flex:0 0 auto;font-size:11.5px;font-weight:800;border:1px solid var(--line2);border-radius:8px;padding:5px 9px;background:var(--card2)}
+.bub{white-space:pre-wrap;font-size:12.5px;line-height:1.6;background:#FEE500;color:#191600;border-radius:4px 14px 14px 14px;padding:9px 11px;margin-top:7px}
+.cus{white-space:pre-wrap;font-size:12px;line-height:1.5;background:#2A3A5E;color:#fff;border-radius:14px 4px 14px 14px;padding:7px 10px;margin:7px 0 0 auto;width:fit-content;max-width:85%}
+</style></head>
+<body><div id="app">
+<!--@@TOP 카톡 채널 1차 응대 시나리오@@-->
+<main>
+<section class="hero">
+ <h1>업종만 고르면<br><em>카톡 채널 응대 문구 세트</em> 완성</h1>
+ <p>첫 인사 · 자주 묻는 5가지 · 예약/주문 접수 흐름 · 사람에게 넘기는 멘트 · 야간 자동응답. 카카오 정책에 맞춰 <b>자동 발송·자동 예약 확정 문구는 만들지 않고</b> 안내·접수까지만 씁니다.</p>
+</section>
+
+<section class="card">
+ <h2><span class="n">1</span>업종과 매장 정보</h2>
+ <label class="lb">업종 프리셋</label>
+ <div class="chips" id="preset"></div>
+ <div class="g2">
+  <div><label class="lb">상호</label><input id="name" maxlength="30"></div>
+  <div><label class="lb">전화</label><input id="tel" maxlength="20" inputmode="tel"></div>
+ </div>
+ <label class="lb">영업시간</label><input id="hours" maxlength="80">
+ <label class="lb">대표 상품·서비스 3개</label>
+ <div class="g2" style="grid-template-columns:1fr 1fr 1fr"><input id="p1" maxlength="20"><input id="p2" maxlength="20"><input id="p3" maxlength="20"></div>
+ <label class="lb">카카오톡 채널 주소<i>pf.kakao.com 만</i></label><input id="kakao" maxlength="80" placeholder="https://pf.kakao.com/_xxxx">
+ <label class="lb">홈페이지<i>선택</i></label><input id="home" maxlength="100" placeholder="https://">
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">응대 시나리오 만들기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>응대 시나리오</h2>
+ <div class="row"><button class="btn pri sm" id="copyBtn">전체 복사</button><button class="btn sec sm" id="printBtn">인쇄 · PDF</button></div>
+ <div id="secs"></div>
+ <div class="fixnote">카카오톡 채널 관리자센터의 [자동응답]·[채팅방 메뉴]에 직접 붙여 넣으세요. 이 화면은 메시지를 보내거나 예약을 확정하지 않습니다. 광고성 메시지를 보내려면 친구 동의·(광고) 표기 등 카카오 정책을 따로 지켜야 합니다.</div>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const P = {
+ food:{lb:'음식점', name:'미사 한상차림', tel:'031-000-0000', hours:'매일 11:00~21:00 (브레이크 15:00~17:00)', p:['김치찌개 정식','제육볶음','점심 특선'], act:'예약·포장 주문', unit:'방문',
+  faq:[['영업시간이 어떻게 되나요?','H'],['주차 되나요?','주차 가능 여부와 무료 시간은 매장 안내문 기준으로 상담원이 확인해 드립니다.'],['포장 주문 되나요?','포장 주문은 원하시는 메뉴와 방문 시간을 남겨 주시면 접수해 드립니다. 확정은 매장 확인 후 안내드립니다.'],['단체 예약 되나요?','인원·날짜·시간을 남겨 주시면 좌석 가능 여부를 확인해 연락드립니다.'],['대표 메뉴가 뭐예요?','M']],
+  flow:['날짜와 시간','인원(어른·아이)','메뉴 또는 포장 여부','성함과 연락처'] },
+ hair:{lb:'미용실', name:'하남 살롱 드 헤어', tel:'031-000-0001', hours:'화~일 10:00~20:00 (월요일 휴무)', p:['커트','펌','염색'], act:'시술 예약', unit:'시술',
+  faq:[['예약 없이 가도 되나요?','당일 빈 시간이 있으면 가능하지만, 예약 손님이 먼저입니다. 원하시는 시간을 남겨 주시면 확인해 드립니다.'],['가격이 얼마예요?','시술 가격은 머리 길이·상태에 따라 달라 상담원이 사진을 보고 안내해 드립니다.'],['디자이너 지정할 수 있나요?','원하시는 디자이너를 적어 주시면 그분 일정으로 확인해 드립니다.'],['시술 시간은 얼마나 걸려요?','M'],['영업시간이 어떻게 되나요?','H']],
+  flow:['원하시는 시술','희망 날짜와 시간','디자이너 지정 여부','성함과 연락처'] },
+ academy:{lb:'학원', name:'미사 수학교실', tel:'031-000-0002', hours:'월~금 14:00~22:00 · 토 10:00~17:00', p:['초등 사고력','중등 내신','고등 수능'], act:'상담·체험 수업 신청', unit:'상담',
+  faq:[['수강료가 얼마예요?','수강료는 학년·반 구성에 따라 달라 상담 때 안내해 드립니다.'],['체험 수업 있나요?','체험 수업 신청을 남겨 주시면 가능한 날짜를 확인해 연락드립니다.'],['반 편성은 어떻게 하나요?','레벨 테스트 후 반을 안내해 드립니다.'],['어떤 과정이 있나요?','M'],['상담 시간이 언제예요?','H']],
+  flow:['학생 학년','관심 과정','희망 상담 날짜·시간','보호자 성함과 연락처'] },
+ clinic:{lb:'병의원', name:'미사 바른의원', tel:'031-000-0003', hours:'평일 09:00~18:30 · 토 09:00~13:00 (점심 13:00~14:00)', p:['일반 진료','건강검진','예방접종'], act:'진료 예약 문의', unit:'진료',
+  faq:[['진료 시간이 어떻게 되나요?','H'],['예약 안 하고 가도 되나요?','예약 없이도 접수 순서대로 진료받으실 수 있습니다. 대기 시간은 상황에 따라 다릅니다.'],['어떤 진료를 하나요?','M'],['검진 준비물이 있나요?','검진 종류에 따라 금식 등 준비 사항이 달라 상담원이 안내해 드립니다.'],['주차 되나요?','주차 가능 여부는 상담원이 확인해 드립니다.']],
+  flow:['원하시는 진료','희망 날짜와 시간','처음 방문 여부','성함과 연락처'],
+  extra:'증상에 대한 진단·처방 상담은 채팅으로 하지 않습니다. 급한 증상은 119 또는 가까운 응급실을 이용해 주세요.' },
+ shop:{lb:'쇼핑몰', name:'미사마켓', tel:'031-000-0004', hours:'상담 평일 10:00~17:00 (점심 12:00~13:00)', p:['수제 그래놀라','견과 선물세트','정기배송'], act:'주문·교환 문의', unit:'주문',
+  faq:[['배송은 얼마나 걸려요?','출고 후 보통 1~2일 걸립니다. 정확한 위치는 주문번호를 남겨 주시면 확인해 드립니다.'],['교환·환불 되나요?','주문번호와 사유를 남겨 주시면 기준에 맞춰 처리 방법을 안내해 드립니다.'],['선물 포장 되나요?','주문 메모에 적어 주시면 확인해 드립니다.'],['어떤 상품이 있나요?','M'],['상담 시간이 언제예요?','H']],
+  flow:['주문번호(있으면)','문의 종류(주문·배송·교환)','상품명과 수량','성함과 연락처'] }
+};
+let PK = 'food';
+$('#preset').innerHTML = Object.entries(P).map(([k, v], i) => `<button data-k="${k}"${i === 0 ? ' class="on" id="sampleBtn"' : ''}>${v.lb}</button>`).join('');
+function fill(k){ const v = P[k]; PK = k; $('#name').value = v.name; $('#tel').value = v.tel; $('#hours').value = v.hours; [1, 2, 3].forEach(i => $('#p' + i).value = v.p[i - 1]); $$('#preset button').forEach(b => b.classList.toggle('on', b.dataset.k === k)); }
+function okLink(u, kakao){ u = (u || '').trim(); if (!u) return ''; if (kakao) return /^https:\/\/pf\.kakao\.com\/[\w-]+\/?$/.test(u) ? u : null; return /^https?:\/\/[\w.-]+\.[a-z]{2,}(\/[\w\-./?=&%#]*)?$/i.test(u) ? u : null; }
+let CUR = null;
+function build(){
+  const v = P[PK], o = {name:$('#name').value.trim(), tel:$('#tel').value.trim(), hours:$('#hours').value.trim(), p:[1, 2, 3].map(i => $('#p' + i).value.trim()).filter(Boolean)};
+  const kakao = okLink($('#kakao').value, true), home = okLink($('#home').value, false);
+  if (kakao === null){ $('#kakao').classList.add('miss'); toast('카카오톡 채널 주소는 https://pf.kakao.com/ 으로 시작해야 합니다'); return null; }
+  if (home === null){ $('#home').classList.add('miss'); toast('홈페이지 주소를 확인해 주세요 (https://…)'); return null; }
+  $('#kakao').classList.remove('miss'); $('#home').classList.remove('miss');
+  if (!o.name){ $('#name').classList.add('miss'); toast('상호를 넣어 주세요'); return null; } $('#name').classList.remove('miss');
+  const prod = o.p.join(' · ') || '대표 상품';
+  const links = [kakao && `카카오톡 채널: ${kakao}`, home && `홈페이지: ${home}`].filter(Boolean).join('\n');
+  const ans = a => a === 'H' ? `${o.name} ${v.lb === '병의원' ? '진료' : '영업'}시간은 ${o.hours || '매장 안내 기준'}입니다.` : (a === 'M' ? `${o.name}의 대표 ${v.unit === '진료' ? '진료' : (v.unit === '상담' ? '과정' : '상품')}은 ${prod}입니다. 자세한 내용은 상담원이 안내해 드립니다.` : a);
+  const S = [];
+  S.push({t:'① 첫 인사', msgs:[`안녕하세요, ${o.name}입니다 :)\n궁금하신 점이나 ${v.act} 내용을 남겨 주시면 순서대로 답변드립니다.\n\n아래 메뉴에서 골라 주세요.\n1. 자주 묻는 질문\n2. ${v.act}\n3. 상담원 연결\n\n${o.hours ? '운영 시간: ' + o.hours : ''}${links ? '\n' + links : ''}`]});
+  S.push({t:'② 자주 묻는 5가지', qa:v.faq.map(([q, a]) => [q, ans(a)])});
+  S.push({t:'③ ' + v.act + ' 접수 흐름', msgs:[
+    `${jo(v.act, "을를")} 도와드릴게요. 아래 ${v.flow.length}가지를 한 번에 적어 주세요.\n` + v.flow.map((f, i) => `${i + 1}) ${f}`).join('\n'),
+    `남겨 주신 내용으로 접수했습니다.\n담당자가 가능 여부를 확인한 뒤 ${o.hours ? '운영 시간 안에' : '순서대로'} 다시 안내드립니다.\n※ 아직 확정이 아닙니다. 확정 안내를 받으신 뒤에 ${v.unit === '주문' ? '주문이 진행' : '예약이 확정'}됩니다.`]});
+  S.push({t:'④ 사람에게 넘기는 순간', msgs:[
+    `이 부분은 담당자가 직접 확인해 드리는 게 정확합니다. 지금 상담원에게 연결해 드릴게요. 잠시만 기다려 주세요.`,
+    `상담원 연결 기준: 불만·환불 요청 / 가격 흥정·견적 / 3번 이상 같은 질문 / ${v.lb === '병의원' ? '증상·진단 질문' : '정해진 답이 없는 질문'} / 손님이 "사람"·"상담원"을 찾을 때`,
+    `상담원이 바로 답하기 어려우면: 지금 문의가 많아 답변이 늦어지고 있습니다. 급하시면 매장으로 전화 주세요${o.tel ? " (" + o.tel + ")" : ""}.`]});
+  S.push({t:'⑤ 야간 자동응답', msgs:[`지금은 운영 시간이 아닙니다.\n${o.hours ? '운영 시간: ' + o.hours + '\n' : ''}남겨 주신 메시지는 다음 운영 시간에 순서대로 확인해 답변드립니다.\n${jo(v.act, '은는')} 내용을 남겨 주시면 접수 후 확인 안내를 드립니다(확정은 확인 후).${v.extra ? '\n' + v.extra : ''}`]});
+  return {o, v, S};
+}
+function secText(s){ return s.t + '\n' + (s.qa ? s.qa.map(([q, a]) => `Q. ${q}\nA. ${a}`).join('\n\n') : s.msgs.join('\n\n')); }
+function render(){
+  $('#secs').innerHTML = CUR.S.map((s, i) => `<div class="sec"><div class="hh"><b>${esc(s.t)}</b><button data-i="${i}">복사</button></div>${s.qa ? s.qa.map(([q, a]) => `<div class="cus">${esc(q)}</div><div class="bub">${esc(a)}</div>`).join('') : s.msgs.map(m => `<div class="bub">${esc(m)}</div>`).join('')}</div>`).join('');
+}
+$('#preset').onclick = e => { const b = e.target.closest('button'); if (!b) return; fill(b.dataset.k); toast(P[b.dataset.k].lb + ' 예시를 넣었습니다'); };
+$('#runBtn').onclick = () => { const c = build(); if (!c) return; CUR = c; render(); $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); };
+$('#secs').onclick = e => { const b = e.target.closest('button[data-i]'); if (!b) return; copyOut(secText(CUR.S[+b.dataset.i]), CUR.S[+b.dataset.i].t + ' 문구를 복사했습니다'); };
+$('#copyBtn').onclick = () => CUR && copyOut(`[${CUR.o.name} 카카오톡 채널 응대 시나리오]\n\n` + CUR.S.map(secText).join('\n\n────────\n\n'), '전체 시나리오를 복사했습니다');
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>${esc(CUR.o.name)} 카카오톡 채널 응대 시나리오</h1><p class="note">${todayS()} · 업종 ${CUR.v.lb} · 자동 발송·자동 확정 문구 없음(안내·접수까지만)</p>${CUR.S.map(s => `<h2>${esc(s.t)}</h2>` + (s.qa ? `<table><colgroup><col style="width:32%"><col></colgroup>${s.qa.map(([q, a]) => `<tr><th>${esc(q)}</th><td>${esc(a)}</td></tr>`).join('')}</table>` : s.msgs.map(m => `<p class="pre" style="border:1px solid #bbb;border-radius:6px;padding:6px 8px;margin:4px 0">${esc(m)}</p>`).join(''))).join('')}</div>`); };
+</script>
+</body></html>

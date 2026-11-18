@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CS 문의 분류 + 모범 답안 1초 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+:root{--bg:#0A1128;--card:#111B36;--card2:#16223F;--line:#24314F;--line2:#2E4370;--ink:#ECEFF4;--sub:#93A0B4;
+ --or:#FF6B00;--or2:#FFA24D;--on:#0A1128;--red:#FF5A5A;--green:#35C48A;--yel:#FFC24D}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Roboto,sans-serif;
+ background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5;letter-spacing:-.2px;word-break:keep-all;overflow-wrap:break-word}
+#app{max-width:460px;margin:0 auto;overflow-x:hidden;min-height:100vh;
+ background:radial-gradient(120% 40% at 50% -6%,rgba(255,107,0,.10) 0%,rgba(255,107,0,0) 62%),var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;letter-spacing:-.2px}
+input,select,textarea{font:inherit;color:var(--ink);background:#0B1530;border:1px solid var(--line2);border-radius:10px;padding:10px 11px;width:100%;font-size:14px;min-width:0}
+textarea{resize:vertical;line-height:1.5}
+input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;accent-color:#FF6B00;padding:0}
+input[type=file]{font-size:12px;padding:7px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--or2)}
+input.miss,textarea.miss{border-color:var(--red)}
+a{color:var(--or2)}
+header.top{position:sticky;top:0;z-index:40;background:rgba(10,17,40,.97);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:8px;padding:10px 14px 6px}
+.brand{display:flex;align-items:center;gap:7px;font-size:15.5px;font-weight:900;color:#fff;letter-spacing:-.6px;min-width:0}
+.brand .mark{flex:0 0 24px;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,var(--or2),var(--or));color:var(--on);font-size:12px;font-weight:900}
+.brand span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp{flex:1}
+.home{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:999px;padding:5px 10px;text-decoration:none;white-space:nowrap}
+.privacy{font-size:11px;color:var(--sub);padding:0 14px 8px;display:flex;align-items:center;gap:6px}
+.privacy::before{content:"";flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+main{padding:6px 14px 40px}
+.hero h1{font-size:21px;line-height:1.32;font-weight:900;letter-spacing:-.8px;margin-top:10px}
+.hero h1 em{font-style:normal;color:var(--or)}
+.hero p{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 12px;margin-top:12px}
+.card h2{font-size:14.5px;font-weight:900;color:#fff;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.card h2 .n{flex:0 0 20px;width:20px;height:20px;border-radius:6px;background:var(--or);color:var(--on);font-size:11px;font-weight:900;display:grid;place-items:center}
+.card h3{font-size:13px;font-weight:900;color:var(--or2);margin:12px 0 5px}
+.sub{font-size:11.5px;color:var(--sub);margin-top:4px;line-height:1.55}
+label.lb{display:block;font-size:11.5px;font-weight:800;color:#C6D0DF;margin:10px 0 4px}
+label.lb i{font-style:normal;color:var(--sub);font-weight:700;margin-left:4px;font-size:10.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.g2>*{min-width:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border-radius:12px;padding:13px 12px;font-size:14.5px;font-weight:900;text-decoration:none;text-align:center;line-height:1.3}
+.btn.pri{color:var(--on);background:linear-gradient(145deg,var(--or2),var(--or));box-shadow:0 8px 22px rgba(255,107,0,.28)}
+.btn.sec{color:#E6EDF7;background:var(--card2);border:1px solid var(--line2)}
+.btn.sm{padding:9px 6px;font-size:12.5px;border-radius:10px}
+.row{display:flex;gap:7px;margin-top:9px}.row>*{flex:1;min-width:0}
+.chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.chips button{font-size:12px;font-weight:800;color:#DCE6F2;border:1px solid var(--line2);border-radius:999px;padding:7px 11px;background:var(--card2)}
+.chips button.on{background:var(--or);border-color:var(--or);color:var(--on)}
+.pill{display:inline-block;font-size:10.5px;font-weight:900;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.pill.a,.pill.hi{background:var(--red);color:#fff}.pill.b,.pill.md{background:var(--yel);color:#1a1200}.pill.c,.pill.lo{background:#3B82F6;color:#fff}.pill.d,.pill.no{background:#3A4766;color:#DCE6F2}.pill.ok{background:var(--green);color:#062014}
+.item{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:7px}
+.item .q{font-size:13px;font-weight:800;color:#fff}
+.item .a{font-size:12.5px;color:#D3DBE7;margin-top:4px;line-height:1.55}
+.item.warn{border-color:rgba(255,90,90,.55)}
+.kv{font-size:11px;color:var(--sub);line-height:1.55;margin-top:6px}
+.out{white-space:pre-wrap;font-size:13px;line-height:1.6;background:#0B1530;border:1px dashed var(--or2);border-radius:10px;padding:10px;margin-top:8px;color:#E3E9F2}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.stat div{background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;min-width:0}
+.stat b{display:block;font-size:18px;font-weight:900;color:#fff}
+.stat span{font-size:10.5px;color:var(--sub)}
+table.t{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed;font-size:12px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.t th{color:var(--sub);font-size:11px;font-weight:800}
+.fixnote{font-size:11.5px;line-height:1.55;color:#FFD7B8;background:rgba(255,107,0,.10);border:1px solid rgba(255,107,0,.45);border-radius:10px;padding:8px 10px;margin-top:10px}
+details.rule{margin-top:8px;background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
+details.rule summary{font-weight:800;color:var(--or2);cursor:pointer}
+.hide{display:none!important}
+.empty{font-size:12px;color:var(--sub);text-align:center;padding:12px 6px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:#1E2C4D;border:1px solid var(--or);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:10px 14px;z-index:90;width:max-content;max-width:340px;text-align:center;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{font-size:10.5px;color:#6E7F99;text-align:center;margin-top:16px;line-height:1.6}
+#printArea{display:none}
+.paper{background:#fff;color:#111;font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:10.5pt;line-height:1.5;letter-spacing:-.1px}
+.paper h1{font-size:16pt;margin-bottom:4px}.paper h2{font-size:12pt;margin:11px 0 5px;border-left:4px solid #FF6B00;padding-left:7px}
+.paper table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0}
+.paper th,.paper td{border:1px solid #444;padding:4px 6px;text-align:left;vertical-align:top;font-size:9.5pt;overflow-wrap:anywhere;word-break:keep-all}
+.paper th{background:#F1F3F7}
+.paper .note{font-size:9pt;color:#444;margin-top:8px}
+.paper .pre{white-space:pre-wrap}
+@media print{
+ @page{size:A4;margin:12mm}
+ html,body{background:#fff!important;min-height:0!important}
+ body>*:not(#printArea){display:none!important}
+ #printArea{display:block!important}
+}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:12px;font-weight:800;border-radius:9px;padding:6px 9px;background:#0B1530;border:1px solid var(--line2)}
+.tag b{color:var(--or2);margin-left:4px}
+.hist .item{cursor:pointer}
+.hist .meta{font-size:10.5px;color:var(--sub);display:flex;gap:6px;align-items:center}
+.hist .a{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+</style></head>
+<body><div id="app">
+<header class="top">
+ <div class="hd"><div class="brand"><span class="mark">K</span><span class="t">CS 문의 분류 · 모범 답안</span></div><span class="sp"></span><a class="home" href="index.html">원클릭 쇼룸</a></div>
+ <div class="privacy">입력하신 내용은 이 기기 안에서만 처리됩니다</div>
+</header>
+<main>
+<section class="hero">
+ <h1>문의 글을 붙여 넣으면<br><em>유형·감정·3문장 답안</em>이 바로</h1>
+ <p>배송·교환/환불·결제·품질·일정을 자동으로 나누고, 사과 → 사실 확인 → 다음 행동과 처리 기한 순서로 답안을 만듭니다. 보상·환불 금액은 약속하지 않고 <b>[금액]</b> 빈칸으로 남깁니다.</p>
+</section>
+
+<section class="card">
+ <h2><span class="n">1</span>문의 붙여넣기</h2>
+ <p class="sub">예시 문의 5개 중 하나를 눌러 먼저 보세요.</p>
+ <div class="chips" id="samples"></div>
+ <label class="lb">고객 문의 원문</label>
+ <textarea id="inq" rows="6" maxlength="3000" placeholder="메일·게시판·톡으로 받은 문의를 그대로 붙여 넣으세요"></textarea>
+ <div class="g2">
+  <div><label class="lb">우리 상호</label><input id="shop" maxlength="30" placeholder="예) 미사마켓"></div>
+  <div><label class="lb">담당자 이름<i>선택</i></label><input id="staff" maxlength="12" placeholder="예) 김담당"></div>
+ </div>
+ <label class="lb">답변 톤</label>
+ <div class="chips" id="tone"><button data-t="polite" class="on">정중</button><button data-t="brief">간결</button><button data-t="warm">친근</button></div>
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">분류하고 답안 만들기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>분류 결과와 모범 답안</h2>
+ <div class="tags" id="tags"></div>
+ <h3>모범 답안 (3문장)</h3>
+ <textarea id="ans" rows="7"></textarea>
+ <p class="kv" id="ansInfo">칸에서 바로 고친 뒤 복사하세요. [금액]·[날짜] 빈칸은 확인 후 직접 채웁니다. 이 화면은 답장을 보내지 않습니다.</p>
+ <div class="row"><button class="btn pri sm" id="copyBtn">답안 복사</button><button class="btn sec sm" id="saveBtn">이력에 저장</button><button class="btn sec sm" id="printBtn">인쇄</button></div>
+ <details class="rule"><summary>분류 규칙 보기</summary><div id="ruleTxt" class="kv"></div></details>
+</section>
+
+<section class="card hist">
+ <h2><span class="n">3</span>답변 이력 <span class="pill d" id="hCnt">0/20</span></h2>
+ <p class="sub">최근 20건까지 이 기기에만 보관합니다. 누르면 다시 불러옵니다.</p>
+ <div id="hist"></div>
+ <div class="row"><button class="btn sec sm" id="hCsv">이력 CSV 저장</button><button class="btn sec sm" id="hDel">이력 지우기</button></div>
+</section>
+<section class="card qa" id="inq">
+ <h2><span class="n">?</span>60초 문의</h2>
+ <p class="sub">우리 매장에 맞게 고쳐 쓰고 싶으시면 이름·연락처·문의 한 줄만 남겨 주세요. 담당자가 확인한 뒤 연락드립니다.</p>
+ <div class="row"><a class="btn sec" id="inqLink" href="../misa-1116/form.html" target="_blank" rel="noopener">60초 문의 폼 열기 (이름 · 연락처 · 문의)</a></div>
+ <p class="kv">KTS 60초 접수 폼을 그대로 씁니다. 이 화면에서 만든 작업 내용은 폼으로 넘어가지 않습니다.</p>
+</section>
+<p class="foot">KTS 원클릭 · 서버 0 · 외부 발송 0 · 모든 처리는 이 기기 안에서만 합니다<br><a href="index.html">원클릭 쇼룸으로</a></p>
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/* ===== KTS 원클릭 9차 공통 도우미 (복사·저장·인쇄·기기 저장·개인정보 가림) ===== */
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+let _tt; function toast(m){ const e = $('#toast'); e.textContent = m; e.classList.add('on'); clearTimeout(_tt); _tt = setTimeout(() => e.classList.remove('on'), 2400); }
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(e){}
+  try{ const a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); const ok = document.execCommand('copy'); a.remove(); return ok; }catch(e){ return false; }
+}
+function copyOut(t, msg){ window.__lastCopy = t; copyText(t).then(ok => toast(ok ? (msg || '복사했습니다') : '복사하지 못했습니다. 글자를 길게 눌러 직접 복사해 주세요')); }
+function download(name, text, mime){ window.__lastDownload = {name:name, size:text.length}; const b = new Blob([text], {type:mime || 'text/plain;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+const toCSV = rows => rows.map(r => r.map(c => { c = String(c == null ? '' : c); return /[",\r\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(',')).join('\r\n');
+function saveCSV(name, rows){ download(name, '﻿' + toCSV(rows), 'text/csv;charset=utf-8'); toast('CSV 파일을 저장했습니다 (엑셀에서 열림)'); }
+function printDoc(html){ $('#printArea').innerHTML = html; setTimeout(() => window.print(), 60); }
+const LS = { get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} } };
+const pad2 = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayS = () => ymd(new Date());
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const parseD = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const WK = ['일', '월', '화', '수', '목', '금', '토'];
+const korD = d => d ? `${d.getMonth() + 1}월 ${d.getDate()}일(${WK[d.getDay()]})` : '';
+/* CSV 붙여넣기 읽기 (따옴표·쉼표·탭 지원) */
+function parseCSV(text){
+  text = String(text || '').replace(/^﻿/, '');
+  const sep = (text.split('\n')[0].indexOf('\t') >= 0) ? '\t' : ',';
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){ if (c === '"'){ if (text[i + 1] === '"'){ cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === sep){ row.push(cur.trim()); cur = ''; }
+    else if (c === '\n'){ row.push(cur.trim()); rows.push(row); row = []; cur = ''; }
+    else if (c !== '\r') cur += c;
+  }
+  if (cur !== '' || row.length){ row.push(cur.trim()); rows.push(row); }
+  return rows.filter(r => r.some(x => x !== ''));
+}
+/* 개인정보 가림: 휴대폰·일반전화·이메일 */
+function maskPII(s){
+  return String(s || '')
+    .replace(/([\w.+-]{1,64})@([\w-]+(?:\.[\w-]+)+)/g, (m, u, d) => u.slice(0, 2) + '***@' + d)
+    .replace(/(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/g, (m, a, b, c) => a + '-****-' + c)
+    .replace(/(0[2-6]\d?)[-.\s](\d{3,4})[-.\s](\d{4})/g, (m, a, b, c) => a + '-****-' + c);
+}
+/* 받침에 맞춘 조사: jo('주문','을를') → 주문을 */
+const jo = (w, p) => { w = String(w); const c = w.charCodeAt(w.length - 1); const has = c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; return w + (has ? p[0] : p[1]); };
+const PHONE_RE = /(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/;
+/* ===== 공통 도우미 끝 ===== */
+const SAMPLES = [
+ ['배송 지연', '안녕하세요 저는 박지현입니다. 주문번호 20261112-0458 로 지난주 목요일에 주문했는데 아직도 배송이 안 왔어요. 송장번호도 안 뜨고 언제 오는지 몇 번을 물어봐도 답이 없네요. 너무 화가 납니다. 이번 주 토요일에 꼭 써야 하는 물건이에요.'],
+ ['교환·환불', '주문번호 A2611-3302 주문자 이민수입니다. 사이즈가 커서 교환하거나 환불하고 싶은데 반품 택배는 어떻게 보내나요? 포장은 뜯지 않았습니다.'],
+ ['결제 오류', '어제 카드로 결제했는데 같은 금액이 두 번 결제됐어요. 카드 문자도 두 번 왔습니다. 주문번호는 ORD-778120 입니다. 한 건 취소 부탁드립니다. - 최하늘'],
+ ['품질 불량', '받은 텀블러 뚜껑이 처음부터 금이 가 있었어요. 사진 첨부합니다. 실망이네요. 주문번호 20261115-1120, 정다은'],
+ ['칭찬·일정', '김담당님 덕분에 행사 잘 마쳤습니다 감사합니다! 다음 달 둘째 주에도 같은 구성으로 예약하고 싶은데 날짜 변경 가능할까요? 한유진 드림']
+];
+const TYPES = [
+ {k:'배송', w:['배송','택배','도착','송장','출고','언제 오','안 왔','안왔','배달','운송장'], due:'오늘 오후 6시까지', fact:'택배사 운송장과 출고 기록', act:'정확한 도착 예정일을 확인해'},
+ {k:'교환·환불', w:['교환','환불','반품','반송','사이즈','취소하고','돌려'], due:'영업일 기준 1일 이내', fact:'주문 내역과 상품 상태', act:'교환·환불 절차와 회수 방법을 정리해'},
+ {k:'결제', w:['결제','카드','입금','이중','두 번','두번','영수증','계산서','승인','청구'], due:'영업일 기준 1일 이내', fact:'결제 승인 내역', act:'중복·오류 결제 건을 확인해'},
+ {k:'품질', w:['불량','파손','고장','금이','깨','냄새','하자','찢어','작동','흠집','이상'], due:'영업일 기준 2일 이내', fact:'보내 주신 사진과 출고 검수 기록', act:'교환 또는 처리 방법을 정해'},
+ {k:'일정', w:['예약','일정','날짜','변경','방문','시간','다음 달','다음달','연기'], due:'내일 오후 6시까지', fact:'가능한 일정', act:'가능한 날짜 후보를 정리해'}
+];
+const NEG = ['화가','화나','짜증','실망','최악','어이','몇 번','몇번','너무하','불친절','답이 없','황당','불만','언제까지'];
+const POS = ['감사','고맙','좋아','만족','최고','친절','덕분','잘 받','훌륭'];
+const LSH = 'kts_csreply_hist_v1', LSS = 'kts_csreply_shop_v1';
+let TONE = 'polite', CUR = null;
+$('#samples').innerHTML = SAMPLES.map((s, i) => `<button data-i="${i}"${i === 0 ? ' id="sampleBtn"' : ''}>${s[0]}</button>`).join('');
+function classify(t){
+  const sc = TYPES.map(T => ({T, n:T.w.reduce((a, w) => a + (t.indexOf(w) >= 0 ? 1 : 0), 0)}));
+  sc.sort((a, b) => b.n - a.n);
+  return sc[0].n ? sc[0].T : {k:'기타', due:'영업일 기준 1일 이내', fact:'문의하신 내용', act:'담당 부서에서 확인해'};
+}
+function emotion(t){
+  const n = NEG.filter(w => t.indexOf(w) >= 0).length, p = POS.filter(w => t.indexOf(w) >= 0).length;
+  if (n > p) return {k:'불만', c:'hi', deg: n >= 2 ? '높음' : '보통'};
+  if (p > n) return {k:'칭찬', c:'ok', deg:''};
+  return {k:'중립', c:'lo', deg:''};
+}
+function extract(t){
+  let order = '';
+  const m1 = /주문\s*번호\s*(?:는|은)?\s*[:：]?\s*([A-Za-z0-9][A-Za-z0-9-]{4,})/.exec(t) || /\b((?:ORD|A|NO)[-]?[A-Za-z0-9-]{4,})\b/.exec(t) || /\b(\d{8}-\d{3,5})\b/.exec(t);
+  if (m1) order = m1[1];
+  let name = '';
+  const NM = '([가-힣]{2,4})';
+  const pats = [new RegExp('저는\\s*' + NM + '(?:입니다|이에요|예요|이고|고)'), new RegExp('주문자\\s*[:：]?\\s*' + NM), new RegExp('이름\\s*[:：]?\\s*' + NM),
+    new RegExp(NM + '\\s*(?:드림|올림)'), new RegExp('[-–]\\s*' + NM + '\\s*$'), new RegExp('[,，]\\s*' + NM + '\\s*$'), new RegExp(NM + '입니다')];
+  for (const p of pats){ const m = p.exec(t.trim()); if (m && !/^(안녕|주문|감사|고객|문의)/.test(m[1])){ name = m[1].replace(/(입니다|이에요)$/, ''); break; } }
+  if (/입$/.test(name) && t.indexOf(name + '니다') >= 0) name = name.slice(0, -1);
+  return {name, order};
+}
+const eul = w => { const c = w.charCodeAt(w.length - 1); return w + ((c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28) ? '을' : '를'); };
+function compose(c){
+  const {T, E, X, shop, staff} = c;
+  const who = X.name ? X.name + ' 고객님' : '고객님';
+  const ord = X.order ? `주문번호 ${X.order} 건의 ` : '';
+  const sig = `${shop || '저희 매장'}${staff ? ' ' + staff : ''} 드림`;
+  const refund = T.k === '교환·환불' || T.k === '결제' ? ` 환불이 필요한 경우 금액 [금액]원은 확인 후 따로 안내드립니다.` : '';
+  const S = {
+   polite:[
+     E.k === '칭찬' ? `${who}, 따뜻한 말씀 진심으로 감사드립니다.` : `${who}, 불편을 드려 진심으로 죄송합니다.`,
+     `${ord}${eul(T.fact)} 지금 바로 확인하고 있습니다.`,
+     `${T.act} ${T.due} 다시 연락드리겠습니다.${refund}`],
+   brief:[
+     E.k === '칭찬' ? `${who}, 감사합니다.` : `${who}, 불편을 드려 죄송합니다.`,
+     `${ord}${eul(T.fact)} 확인 중입니다.`,
+     `${T.due} 결과를 안내드리겠습니다.${refund}`],
+   warm:[
+     E.k === '칭찬' ? `${who}, 이렇게 말씀해 주셔서 정말 힘이 납니다!` : `${who}, 많이 속상하셨죠. 정말 죄송해요.`,
+     `${ord}${T.fact}부터 바로 살펴보고 있어요.`,
+     `${T.act} ${T.due} 꼭 먼저 연락드릴게요.${refund}`]
+  }[TONE];
+  return S.join('\n') + '\n\n' + sig;
+}
+function run(){
+  const t = $('#inq').value.trim();
+  if (!t){ $('#inq').classList.add('miss'); return toast('문의 글을 붙여 넣어 주세요'); }
+  $('#inq').classList.remove('miss');
+  LS.set(LSS, {shop:$('#shop').value.trim(), staff:$('#staff').value.trim()});
+  const T = classify(t), E = emotion(t), X = extract(t);
+  CUR = {t, T, E, X, shop:$('#shop').value.trim(), staff:$('#staff').value.trim(), tone:TONE};
+  $('#tags').innerHTML = `<span class="tag">유형<b>${T.k}</b></span><span class="tag">감정 온도 <span class="pill ${E.c}">${E.k}${E.deg ? ' · ' + E.deg : ''}</span></span><span class="tag">고객<b>${esc(X.name || '(못 찾음)')}</b></span><span class="tag">주문번호<b>${esc(X.order || '(못 찾음)')}</b></span><span class="tag">처리 기한<b>${T.due}</b></span>`;
+  $('#ans').value = compose(CUR);
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+function hist(){ return LS.get(LSH, []); }
+function renderHist(){
+  const h = hist(); $('#hCnt').textContent = h.length + '/20';
+  $('#hist').innerHTML = h.map((x, i) => `<div class="item" data-i="${i}"><div class="meta"><span class="pill d">${x.type}</span><span class="pill ${x.emo === '불만' ? 'hi' : (x.emo === '칭찬' ? 'ok' : 'lo')}">${x.emo}</span>${esc(x.at.slice(5, 16).replace('T', ' '))} · ${esc(x.name || '고객')}</div><div class="a">${esc(x.ans)}</div></div>`).join('') || '<div class="empty">아직 저장한 답변이 없습니다</div>';
+}
+$('#samples').onclick = e => { const b = e.target.closest('button'); if (!b) return; $('#inq').value = SAMPLES[+b.dataset.i][1]; if (!$('#shop').value) $('#shop').value = '미사마켓'; toast('예시 문의를 넣었습니다'); };
+$('#tone').onclick = e => { const b = e.target.closest('button'); if (!b) return; TONE = b.dataset.t; $$('#tone button').forEach(x => x.classList.toggle('on', x === b)); if (CUR){ CUR.tone = TONE; $('#ans').value = compose(CUR); } };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => copyOut($('#ans').value, '답안을 복사했습니다');
+$('#saveBtn').onclick = () => { if (!CUR) return; const h = hist(); h.unshift({at:new Date().toISOString(), type:CUR.T.k, emo:CUR.E.k, name:CUR.X.name, order:CUR.X.order, tone:TONE, q:CUR.t.slice(0, 400), ans:$('#ans').value}); LS.set(LSH, h.slice(0, 20)); renderHist(); toast('이력에 저장했습니다 (최대 20건)'); };
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>고객 문의 답변</h1><p class="note">${todayS()} · 유형 ${CUR.T.k} · 감정 ${CUR.E.k} · 처리 기한 ${CUR.T.due}</p><h2>문의 원문</h2><p class="pre">${esc(CUR.t)}</p><h2>답변</h2><p class="pre">${esc($('#ans').value)}</p></div>`); };
+$('#hist').onclick = e => { const it = e.target.closest('.item'); if (!it) return; const x = hist()[+it.dataset.i]; $('#inq').value = x.q; $('#ans').value = x.ans; $('#result').classList.remove('hide'); toast('이력을 불러왔습니다'); };
+$('#hCsv').onclick = () => { const h = hist(); if (!h.length) return toast('이력이 없습니다'); saveCSV(`CS답변이력_${todayS()}.csv`, [['저장시각','유형','감정','고객','주문번호','톤','문의','답변']].concat(h.map(x => [x.at, x.type, x.emo, x.name, x.order, x.tone, x.q, x.ans]))); };
+$('#hDel').onclick = () => { LS.set(LSH, []); renderHist(); toast('이력을 지웠습니다'); };
+$('#ruleTxt').innerHTML = TYPES.map(T => `<b>${T.k}</b>: ${T.w.join(', ')} → 기한 ${T.due}`).join('<br>') + '<br><b>기타</b>: 위 단어가 없을 때<br><b>불만</b>: ' + NEG.join(', ') + '<br><b>칭찬</b>: ' + POS.join(', ') + '<br>보상·환불 금액은 절대 자동으로 쓰지 않고 [금액]으로 남깁니다.';
+const ss = LS.get(LSS, null); if (ss){ $('#shop').value = ss.shop || ''; $('#staff').value = ss.staff || ''; }
+renderHist();
+</script>
+</body></html>

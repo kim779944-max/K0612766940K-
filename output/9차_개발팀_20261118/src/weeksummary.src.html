@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>주간 개선 요약 리포트 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.rk{display:flex;gap:8px;align-items:flex-start}
+.rk .no{flex:0 0 24px;height:24px;border-radius:7px;background:var(--red);color:#fff;font-weight:900;font-size:12px;display:grid;place-items:center}
+.rk.pos .no{background:var(--green);color:#062014}
+.rk .bd{flex:1;min-width:0}
+.rk .bd b{font-size:13.5px;color:#fff}
+.rk .bd b span{font-size:11px;color:var(--or2);margin-left:6px}
+blockquote{margin:5px 0 0;padding:5px 8px;border-left:3px solid var(--line2);background:rgba(255,255,255,.03);font-size:12px;color:#C9D2DF;line-height:1.5}
+blockquote small{color:var(--sub);margin-right:5px}
+.act{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.act input{font-size:12.5px;padding:7px 8px}
+</style></head>
+<body><div id="app">
+<!--@@TOP 주간 개선 요약 리포트@@-->
+<main>
+<section class="hero">
+ <h1>한 주치 리뷰·설문을 붙여 넣으면<br><em>반복 불만 TOP5</em>와 개선 액션</h1>
+ <p>원문 인용은 요약과 섞지 않고 그대로 보여 줍니다(증거 보존). 전화번호·이메일은 자동으로 가립니다.</p>
+</section>
+
+<section class="card">
+ <h2><span class="n">1</span>이번 주 텍스트</h2>
+ <p class="sub">리뷰·설문·문의를 한 줄에 하나씩 붙여 넣으세요.</p>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">샘플 30줄 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <div class="g2"><div><label class="lb">매장·서비스 이름</label><input id="shop" maxlength="30"></div><div><label class="lb">기간</label><input id="period" maxlength="30"></div></div>
+ <label class="lb">텍스트 (줄 단위)</label>
+ <textarea id="txt" rows="9" maxlength="20000"></textarea>
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">주간 요약 만들기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>주간 개선 요약</h2>
+ <div class="stat"><div><b id="sN">0</b><span>분석한 줄</span></div><div><b id="sNeg">0</b><span>불만 언급</span></div><div><b id="sMask">0</b><span>가린 개인정보</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">리포트 복사</button><button class="btn sec sm" id="csvBtn">CSV 저장</button><button class="btn sec sm" id="printBtn">인쇄</button></div>
+ <h3>반복 불만 TOP5</h3><div id="neg"></div>
+ <h3>좋은 점 TOP3</h3><div id="pos"></div>
+ <h3>이번 주 개선 액션 3개</h3><div id="acts"></div>
+ <h3>다음 주 확인 지표</h3><div class="out" id="metric"></div>
+ <p class="kv">요약 문장은 정해진 규칙(주제 단어 사전)으로 만듭니다. 인용 원문은 개인정보만 가리고 글자 하나 바꾸지 않습니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const SAMPLE = `점심에 30분 넘게 기다렸어요. 대기 시간이 너무 길어요
+김치찌개 맛있어요! 다음에 또 올게요
+직원분이 불친절했어요. 물 달라고 두 번 말했는데 안 줬어요
+주차 자리가 없어서 한참 돌았어요
+가격이 좀 비싼 편이에요. 공기밥 따로 받는 건 아쉽네요
+음식은 맛있는데 너무 오래 기다렸어요
+화장실이 깨끗하지 않았어요
+사장님이 친절하시고 반찬도 푸짐해요
+배달이 1시간 걸려서 다 식었어요. 010-0000-5566 으로 연락 주세요
+예약했는데 자리가 준비 안 돼 있었어요
+반찬 리필이 빨라서 좋았어요
+대기 줄이 길어서 그냥 돌아갔어요
+제육볶음이 너무 짰어요
+직원 응대가 별로였어요. 계산할 때 무표정
+가성비 좋아요. 양도 넉넉해요
+주차장이 좁아서 불편했어요
+테이블이 끈적거리고 위생이 아쉬웠어요
+점심 피크에 주문이 너무 늦게 나왔어요
+맛있고 깨끗해서 만족합니다
+포장 주문했는데 국물이 새서 왔어요
+가격 대비 양이 적었어요
+아이랑 갔는데 친절하게 챙겨 주셔서 감사했어요
+기다리는 동안 안내가 없어서 답답했어요
+배달 포장이 꼼꼼해서 좋았어요
+주문 누락이 있었어요. 계란말이가 안 나왔어요
+가게가 시끄러워서 대화가 힘들었어요
+리뷰 이벤트 문의는 kim.review@example.com 으로 답 주세요
+주차 2시간 무료라서 편했어요
+매운 정도 조절해 주셔서 좋았어요
+대기 시간 안내 문자라도 있으면 좋겠어요`;
+const TOP = [
+ {k:'대기·속도', w:['기다','대기','웨이팅','줄이','오래','늦게 나','느려','늦어','걸려서','1시간'], act:'점심 피크(11:30~13:00) 대기 손님에게 예상 대기 시간을 안내하고, 미리 주문을 받는다', m:'점심 피크 평균 대기 시간(분) · 대기 중 돌아간 손님 수'},
+ {k:'응대·친절', w:['친절','응대','직원','무표정','안내','챙겨','태도'], act:'주문·계산 응대 멘트 3줄을 정해 전 직원이 같은 말로 응대한다', m:'리뷰 중 "불친절" 언급 수'},
+ {k:'맛·음식', w:['맛','짜','싱거','식었','매운','국물','반찬','음식'], act:'간이 짜다는 메뉴의 소스 계량을 정해 표준 조리표에 적는다', m:'"짜다·식었다" 언급 수'},
+ {k:'가격·양', w:['가격','비싼','비싸','가성비','양이','양도','양 ','적었','푸짐','넉넉','공기밥'], act:'가격 대비 양 불만이 나온 메뉴의 구성(밥·반찬)을 다시 본다', m:'"가격·양" 불만 언급 수'},
+ {k:'청결·위생', w:['깨끗','청결','위생','화장실','끈적','더럽','냄새'], act:'화장실·테이블 청소 점검표(2시간마다)를 붙이고 담당을 정한다', m:'점검표 체크 누락 횟수'},
+ {k:'주차', w:['주차'], act:'주차 가능 대수·무료 시간을 입구·지도 정보·카톡 채널에 똑같이 적는다', m:'"주차" 불만 언급 수'},
+ {k:'배달·포장', w:['배달','포장','새서','샜'], act:'국물 메뉴 포장에 밀봉 스티커·이중 비닐을 쓰고 출고 전 확인한다', m:'배달·포장 불만 건수'},
+ {k:'예약·주문', w:['예약','주문 누락','누락','안 나왔','준비 안'], act:'예약·주문표를 출력해 주방·홀이 같은 목록으로 확인한다', m:'주문 누락·예약 착오 건수'},
+ {k:'소음·분위기', w:['시끄','소음','분위기','음악'], act:'저녁 시간 음악 볼륨과 단체석 배치를 조정한다', m:'"시끄럽다" 언급 수'},
+ {k:'이벤트·기타', w:['이벤트','쿠폰','문의'], act:'이벤트 안내 문구를 매장·채널에 같은 내용으로 고정한다', m:'이벤트 관련 문의 수'}
+];
+const NEG = ['불친절','기다렸','오래','너무 길','길어','늦게','늦어','식었','짰','짜','비싼','비싸','아쉽','아쉬','불편','별로','없어서','없었','안 줬','안 돼','안 나왔','누락','새서','적었','시끄','답답','힘들','깨끗하지 않','끈적','돌아갔','무표정','걸려서','실망','최악'];
+const POS = ['맛있','친절하','좋아','좋았','좋겠','만족','감사','푸짐','넉넉','빨라','편했','꼼꼼','깨끗해','또 올'];
+const isWish = s => /있으면 좋겠|면 좋겠/.test(s);
+function senti(c){
+  let n = 0, p = 0, t = c;
+  NEG.forEach(w => { if (t.indexOf(w) >= 0){ n++; t = t.split(w).join(' '); } });
+  POS.forEach(w => { if (t.indexOf(w) >= 0) p++; });
+  if (isWish(c)) return 'neg';
+  return n > p ? 'neg' : (p > n ? 'pos' : 'neu');
+}
+const topicsOf = c => TOP.filter(T => T.w.some(w => c.indexOf(w) >= 0)).map(T => T.k);
+function analyze(text){
+  let masked = 0;
+  const lines = text.split(/\r?\n/).map(s => s.trim()).filter(Boolean).map((raw, i) => {
+    const m = maskPII(raw); if (m !== raw) masked++;
+    const clauses = m.split(/(?:는데|지만|은데|[.!?~]+\s*)/).map(s => s.trim()).filter(Boolean);
+    const parts = clauses.map(c => ({c, s:senti(c), t:topicsOf(c)}));
+    return {no:i + 1, text:m, parts};
+  });
+  const cnt = s => { const o = {}; lines.forEach(L => { const seen = {}; L.parts.filter(p => p.s === s).forEach(p => p.t.forEach(k => { if (!seen[k]){ seen[k] = 1; (o[k] = o[k] || []).push(L); } })); }); return Object.entries(o).sort((a, b) => b[1].length - a[1].length || TOP.findIndex(T => T.k === a[0]) - TOP.findIndex(T => T.k === b[0])); };
+  return {lines, masked, neg:cnt('neg'), pos:cnt('pos')};
+}
+const lineSenti = L => L.parts.some(p => p.s === 'neg') ? '불만' : (L.parts.some(p => p.s === 'pos') ? '좋음' : '중립');
+let CUR = null;
+function run(){
+  const t = $('#txt').value.trim(); if (!t){ $('#txt').classList.add('miss'); return toast('텍스트를 붙여 넣어 주세요'); } $('#txt').classList.remove('miss');
+  const R = analyze(t); CUR = R; R.shop = $('#shop').value.trim(); R.period = $('#period').value.trim();
+  $('#sN').textContent = R.lines.length; $('#sNeg').textContent = R.lines.filter(L => lineSenti(L) === '불만').length; $('#sMask').textContent = R.masked;
+  const q = L => `<blockquote><small>${L.no}번 줄</small>${esc(L.text)}</blockquote>`;
+  $('#neg').innerHTML = R.neg.slice(0, 5).map(([k, L], i) => `<div class="item rk"><span class="no">${i + 1}</span><div class="bd"><b>${k}<span>${L.length}건</span></b>${L.slice(0, 2).map(q).join('')}</div></div>`).join('') || '<div class="empty">불만 언급이 없습니다</div>';
+  $('#pos').innerHTML = R.pos.slice(0, 3).map(([k, L], i) => `<div class="item rk pos"><span class="no">${i + 1}</span><div class="bd"><b>${k}<span>${L.length}건</span></b>${L.slice(0, 2).map(q).join('')}</div></div>`).join('') || '<div class="empty">좋은 점 언급이 없습니다</div>';
+  R.acts = R.neg.slice(0, 3).map(([k]) => ({k, a:TOP.find(T => T.k === k).act}));
+  $('#acts').innerHTML = R.acts.map((x, i) => `<div class="item"><div class="q">${i + 1}. [${x.k}] ${esc(x.a)}</div><div class="act"><input data-a="${i}" data-f="who" placeholder="담당: ____"><input data-a="${i}" data-f="due" placeholder="기한: ____"></div></div>`).join('');
+  R.metric = R.neg.length ? TOP.find(T => T.k === R.neg[0][0]).m : '이번 주 불만 언급 수';
+  $('#metric').textContent = R.metric + (R.neg.length ? `\n(이번 주: "${R.neg[0][0]}" 불만 ${R.neg[0][1].length}건 → 다음 주 같은 방법으로 다시 세어 비교)` : '');
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+function actVal(i, f){ const e = document.querySelector(`#acts input[data-a="${i}"][data-f="${f}"]`); return (e && e.value.trim()) || '____'; }
+function reportText(){
+  const R = CUR; let s = `[주간 개선 요약] ${R.shop || ''} ${R.period || ''}\n분석 ${R.lines.length}줄 · 불만 언급 ${R.lines.filter(L => lineSenti(L) === '불만').length}줄\n\n■ 반복 불만 TOP5\n`;
+  R.neg.slice(0, 5).forEach(([k, L], i) => { s += `${i + 1}. ${k} (${L.length}건)\n` + L.slice(0, 2).map(x => `   원문(${x.no}번): "${x.text}"`).join('\n') + '\n'; });
+  s += '\n■ 좋은 점 TOP3\n'; R.pos.slice(0, 3).forEach(([k, L], i) => { s += `${i + 1}. ${k} (${L.length}건)\n   원문(${L[0].no}번): "${L[0].text}"\n`; });
+  s += '\n■ 이번 주 개선 액션\n'; R.acts.forEach((x, i) => { s += `${i + 1}. [${x.k}] ${x.a}\n   담당: ${actVal(i, 'who')} / 기한: ${actVal(i, 'due')}\n`; });
+  s += `\n■ 다음 주 확인 지표\n${R.metric}`; return s;
+}
+$('#sampleBtn').onclick = () => { $('#txt').value = SAMPLE; $('#shop').value = $('#shop').value || '미사 한상차림'; const d = new Date(); $('#period').value = $('#period').value || `${ymd(addDays(d, -6))} ~ ${ymd(d)}`; toast('샘플 30줄을 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#txt').value = ''; };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(reportText(), '리포트를 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`주간요약_${todayS()}.csv`, [['줄','원문(개인정보 가림)','감정','불만 주제','좋은 점 주제']].concat(CUR.lines.map(L => [L.no, L.text, lineSenti(L), [...new Set(L.parts.filter(p => p.s === 'neg').flatMap(p => p.t))].join('/'), [...new Set(L.parts.filter(p => p.s === 'pos').flatMap(p => p.t))].join('/')])));
+$('#printBtn').onclick = () => { if (!CUR) return; const R = CUR; printDoc(`<div class="paper"><h1>주간 개선 요약 리포트</h1><p class="note">${esc(R.shop)} · ${esc(R.period)} · 분석 ${R.lines.length}줄 · 개인정보 가림 ${R.masked}건</p>
+<h2>반복 불만 TOP5</h2><table><colgroup><col style="width:6%"><col style="width:18%"><col style="width:9%"><col></colgroup><tr><th>순</th><th>주제</th><th>건수</th><th>원문 인용(그대로)</th></tr>${R.neg.slice(0, 5).map(([k, L], i) => `<tr><td>${i + 1}</td><td>${k}</td><td>${L.length}</td><td>${L.slice(0, 2).map(x => `(${x.no}번) "${esc(x.text)}"`).join('<br>')}</td></tr>`).join('')}</table>
+<h2>좋은 점 TOP3</h2><table><colgroup><col style="width:6%"><col style="width:18%"><col style="width:9%"><col></colgroup>${R.pos.slice(0, 3).map(([k, L], i) => `<tr><td>${i + 1}</td><td>${k}</td><td>${L.length}</td><td>(${L[0].no}번) "${esc(L[0].text)}"</td></tr>`).join('')}</table>
+<h2>이번 주 개선 액션</h2><table><colgroup><col style="width:6%"><col><col style="width:16%"><col style="width:16%"></colgroup><tr><th>순</th><th>액션</th><th>담당</th><th>기한</th></tr>${R.acts.map((x, i) => `<tr><td>${i + 1}</td><td>[${x.k}] ${esc(x.a)}</td><td>${esc(actVal(i, 'who'))}</td><td>${esc(actVal(i, 'due'))}</td></tr>`).join('')}</table>
+<h2>다음 주 확인 지표</h2><p>${esc(R.metric)}</p></div>`); };
+</script>
+</body></html>

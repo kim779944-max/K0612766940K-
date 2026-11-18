@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더퍼널 — 3단 문자 퍼널 문구 세트 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.stopbar{font-size:12px;font-weight:800;line-height:1.5;color:#fff;background:#7A1F1F;border:1px solid var(--red);border-radius:10px;padding:8px 10px;margin-top:10px}
+.stage{background:#0B1530;border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:10px}
+.stage .hh{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.stage .hh b{font-size:13.5px;color:var(--or2)}
+.stage .hh .when{font-size:11px;color:var(--sub);flex:1}
+.stage textarea{margin-top:7px;font-size:13px;min-height:150px;overflow:hidden;resize:none}
+.meter{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;font-size:11.5px;color:#C6D0DF}
+.meter span{background:#16223F;border:1px solid var(--line2);border-radius:8px;padding:3px 7px}
+.meter .bad{border-color:var(--red);color:#FFC9C9}
+.chk{font-size:11px;margin-top:5px;color:var(--green)}
+.chk.no{color:var(--red)}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더퍼널 · 3단 문자 문구@@-->
+<main>
+<section class="hero">
+ <h1>혜택 하나로<br><em>첫 안내 · 3일 뒤 · 마지막</em> 문자 3통</h1>
+ <p>모든 문구에 <b>(광고)</b> · <b>전송자</b> · <b>무료수신거부</b>를 자동으로 넣고, 글자 수(바이트)와 예상 요금을 보여 줍니다.</p>
+ <div class="stopbar">이 화면은 문자를 보내지 않습니다. 복사해서 대표님이 승인한 뒤 직접 발송하세요.</div>
+</section>
+
+<section class="card">
+ <h2><span class="n">1</span>업종 · 상호 · 혜택</h2>
+ <div class="chips" id="ind"><button data-k="food" id="sampleBtn">음식점</button><button data-k="beauty">미용·뷰티</button><button data-k="edu">학원</button><button data-k="shop">쇼핑몰</button><button data-k="etc">기타 서비스</button></div>
+ <div class="g2">
+  <div><label class="lb">상호</label><input id="name" maxlength="20"></div>
+  <div><label class="lb">전송자 연락처</label><input id="tel" maxlength="20" inputmode="tel"></div>
+ </div>
+ <label class="lb">혜택</label><input id="benefit" maxlength="40" placeholder="예) 평일 점심 2인 이상 음료 무료">
+ <div class="g2">
+  <div><label class="lb">혜택 마감일</label><input id="until" type="date"></div>
+  <div><label class="lb">무료수신거부 번호</label><input id="optout" maxlength="20" placeholder="080-000-0000"></div>
+ </div>
+ <div class="g2">
+  <div><label class="lb">1차 발송일</label><input id="start" type="date"></div>
+  <div><label class="lb">받는 사람 수</label><input id="cnt" inputmode="numeric" value="100"></div>
+ </div>
+ <div class="g2">
+  <div><label class="lb">단문(SMS) 건당<i>원</i></label><input id="pS" inputmode="decimal" value="20"></div>
+  <div><label class="lb">장문(LMS) 건당<i>원</i></label><input id="pL" inputmode="decimal" value="50"></div>
+ </div>
+ <p class="kv">요금은 쓰시는 문자 발송 서비스(통신사·발송 업체)마다 다릅니다. 내 요금을 넣으면 그 값으로 계산합니다.</p>
+</section>
+
+<button class="btn pri" id="runBtn" style="margin-top:14px">3단 문구 만들기</button>
+
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>3단 문자 문구</h2>
+ <div class="stat"><div><b id="tBytes">0</b><span>3통 합계 바이트</span></div><div><b id="tCost">0</b><span>예상 요금(원)</span></div><div><b id="tOk">0/3</b><span>광고 표기 확인</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">3통 모두 복사</button><button class="btn sec sm" id="printBtn">인쇄 · 승인용</button></div>
+ <div id="stages"></div>
+ <div class="fixnote">· 오후 9시~다음 날 오전 8시에는 광고 문자를 보내려면 따로 받은 야간 수신 동의가 있어야 합니다.<br>· 수신 동의를 받은 고객에게만 보내세요.<br>· 문구는 칸에서 바로 고칠 수 있고, 고쳐도 (광고)·전송자·수신거부가 남아 있는지 다시 확인합니다.</div>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const IND = {
+ food:{name:'미사 한상차림', tel:'031-000-0000', benefit:'평일 점심 2인 이상 식사 시 음료 무료', hi:'든든한 한 끼', act:'방문하실 때 이 문자를 보여 주세요', d:14},
+ beauty:{name:'하남 살롱 드 헤어', tel:'031-000-0001', benefit:'첫 방문 커트 20% 할인', hi:'달라진 계절, 새 머리', act:'예약 시 "문자 보고 왔어요"라고 말씀해 주세요', d:21},
+ edu:{name:'미사 수학교실', tel:'031-000-0002', benefit:'겨울방학 체험 수업 1회 무료', hi:'방학 전에 실력 점검', act:'전화로 체험 수업 날짜를 잡아 주세요', d:21},
+ shop:{name:'미사마켓', tel:'031-000-0004', benefit:'전 상품 무료배송 + 10% 쿠폰', hi:'연말 선물 준비', act:'주문 시 쿠폰 코드 MISA10을 넣어 주세요', d:10},
+ etc:{name:'KTS 홈케어', tel:'031-000-0005', benefit:'에어컨 분해 청소 1만 원 할인', hi:'미리 하는 관리', act:'전화로 원하시는 날짜를 남겨 주세요', d:30}
+};
+let IK = 'food';
+const bytes = s => { let n = 0; for (const ch of s){ const c = ch.codePointAt(0); n += c < 128 ? 1 : 2; } return n; };
+const hasAll = s => ({ad:/^\(광고\)/.test(s.trim()), sender:/전송자/.test(s), optout:/수신거부/.test(s)});
+function fill(k){ const v = IND[k]; IK = k; $('#name').value = v.name; $('#tel').value = v.tel; $('#benefit').value = v.benefit; $('#optout').value = $('#optout').value || '080-000-0000';
+  const t = new Date(); $('#start').value = ymd(t); $('#until').value = ymd(addDays(t, v.d)); $$('#ind button').forEach(b => b.classList.toggle('on', b.dataset.k === k)); }
+function texts(){
+  const v = IND[IK], nm = $('#name').value.trim(), tel = $('#tel').value.trim(), bf = $('#benefit').value.trim(), oo = $('#optout').value.trim();
+  const until = parseD($('#until').value), st = parseD($('#start').value) || new Date();
+  const u = until ? korD(until) : '[마감일]';
+  const foot = `\n\n전송자: ${nm} ${tel}\n무료수신거부 ${oo || '[080 번호]'}`;
+  const d2 = addDays(st, 3), d3 = until ? addDays(until, -1) : addDays(st, 7);
+  return [
+   {t:'1차 · 첫 안내', when:korD(st), body:`(광고)[${nm}]\n${v.hi}, ${nm}에서 안내드립니다.\n${bf} (${u}까지)\n${v.act}.\n문의 ${tel}` + foot},
+   {t:'2차 · 3일 뒤 리마인드', when:korD(d2), body:`(광고)[${nm}]\n지난번 안내드린 혜택, 아직 쓰실 수 있습니다.\n${bf}\n${u}까지입니다. ${v.act}.` + foot},
+   {t:'3차 · 마지막 안내', when:korD(d3 < d2 ? d2 : d3), body:`(광고)[${nm}]\n마지막 안내입니다. ${bf} 혜택이 ${u}에 끝납니다.\n이번 안내 뒤로는 같은 혜택 문자를 다시 보내지 않습니다.\n문의 ${tel}` + foot}
+  ];
+}
+let CUR = null;
+const fit = ta => { ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 2) + "px"; };
+function meter(i){
+  const ta = document.querySelector(`#stages textarea[data-i="${i}"]`); fit(ta); const s = ta.value, b = bytes(s), kind = b <= 90 ? 'SMS(단문)' : (b <= 2000 ? 'LMS(장문)' : '초과'), cnt = +$('#cnt').value || 0;
+  const price = b <= 90 ? +$('#pS').value || 0 : +$('#pL').value || 0, h = hasAll(s);
+  CUR[i].body = s; CUR[i].b = b; CUR[i].kind = kind; CUR[i].cost = Math.round(price * cnt); CUR[i].ok = h.ad && h.sender && h.optout;
+  document.querySelector(`#m${i}`).innerHTML = `<span>${s.length}자</span><span class="${b > 2000 ? 'bad' : ''}">${b}바이트 · ${kind}</span><span>건당 ${price}원 × ${cnt}명 = ${CUR[i].cost.toLocaleString()}원</span>`;
+  const c = document.querySelector(`#c${i}`); c.className = 'chk' + (CUR[i].ok ? '' : ' no');
+  c.textContent = CUR[i].ok ? '확인: (광고) 맨 앞 · 전송자 · 무료수신거부 모두 있음' : '빠짐: ' + [!h.ad && '(광고) 맨 앞', !h.sender && '전송자', !h.optout && '수신거부'].filter(Boolean).join(', ');
+  $('#tBytes').textContent = CUR.reduce((a, x) => a + (x.b || 0), 0); $('#tCost').textContent = CUR.reduce((a, x) => a + (x.cost || 0), 0).toLocaleString(); $('#tOk').textContent = CUR.filter(x => x.ok).length + '/3';
+}
+function run(){
+  const miss = ['name', 'tel', 'benefit'].filter(id => !$('#' + id).value.trim());
+  ['name', 'tel', 'benefit'].forEach(id => $('#' + id).classList.toggle('miss', miss.indexOf(id) >= 0));
+  if (miss.length) return toast('빨간 칸을 채워 주세요');
+  CUR = texts();
+  $('#stages').innerHTML = CUR.map((x, i) => `<div class="stage"><div class="hh"><b>${x.t}</b><span class="when">보낼 날: ${x.when}</span><button class="btn sec sm" style="width:auto" data-c="${i}">복사</button></div><textarea data-i="${i}" rows="7">${esc(x.body)}</textarea><div class="meter" id="m${i}"></div><div class="chk" id="c${i}"></div></div>`).join('');
+  $("#result").classList.remove("hide"); CUR.forEach((x, i) => meter(i));
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+$('#ind').onclick = e => { const b = e.target.closest('button'); if (!b) return; fill(b.dataset.k); toast(b.textContent + ' 예시를 넣었습니다'); };
+$('#runBtn').onclick = run;
+$('#stages').addEventListener('input', e => { const t = e.target.closest('textarea[data-i]'); if (t) meter(+t.dataset.i); });
+['cnt', 'pS', 'pL'].forEach(id => $('#' + id).addEventListener('input', () => CUR && CUR.forEach((x, i) => meter(i))));
+$('#stages').onclick = e => { const b = e.target.closest('button[data-c]'); if (!b) return; const x = CUR[+b.dataset.c]; if (!x.ok) return toast('(광고)·전송자·수신거부가 빠져 있어 복사하지 않았습니다'); copyOut(x.body, x.t + ' 문구를 복사했습니다 — 승인 후 직접 발송'); };
+$('#copyBtn').onclick = () => { if (!CUR) return; if (CUR.some(x => !x.ok)) return toast('빠진 표기가 있는 문구가 있습니다'); copyOut(CUR.map(x => `■ ${x.t} (보낼 날 ${x.when})\n${x.body}`).join('\n\n'), '3통을 모두 복사했습니다 — 승인 후 직접 발송'); };
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>3단 문자 퍼널 승인용</h1><p class="note">${todayS()} · ${esc($('#name').value)} · 받는 사람 ${esc($('#cnt').value)}명 · 이 문서는 발송 전 승인용입니다</p>
+<table><colgroup><col style="width:17%"><col><col style="width:20%"></colgroup><tr><th>단계 · 날짜</th><th>문구</th><th>길이 · 요금</th></tr>${CUR.map(x => `<tr><td>${x.t}<br>${x.when}</td><td class="pre">${esc(x.body)}</td><td>${x.b}바이트<br>${x.kind}<br>${x.cost.toLocaleString()}원</td></tr>`).join('')}</table>
+<p class="note">승인자: ____________ (서명) &nbsp; 승인일: ____________ &nbsp; 야간(21~08시) 발송 시 별도 동의 필요</p></div>`); };
+</script>
+</body></html>

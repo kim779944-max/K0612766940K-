@@ -80,6 +80,8 @@ Get-ChildItem "$env:USERPROFILE" -Directory -Recurse -Depth 3 -Filter 'app_viewe
   Select-Object -First 3 -ExpandProperty FullName
 ```
 
+> **옆 저장소에 쓰기가 막히면(권한·도구 제한)**: 실행기는 `K0612766940K-` 폴더에서 돌기 때문에 `oneclick`이 옆 폴더입니다. 그 폴더에 쓰기가 거부되면 추측으로 밀지 말고, 같은 내용을 `K0612766940K-\output\oneclick_patch_20261120\` 에 **패치 파일(`*.patch` 또는 완성된 수정본 + 적용 명령)** 로 만들어 남기고, 막힌 오류 원문을 결과 보고서 ⑧에 적으세요. 그 경우에도 과업 1(b)처럼 **텍스트만 고치는 항목은 패치로 완결**해 둡니다(나중에 지니 쪽에서 적용 1회).
+
 ---
 
 ## 2. 과업 1 — 실서비스 `oneclick` 저장소 수리 3건 (최우선)

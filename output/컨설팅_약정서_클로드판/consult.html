@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>부동산 컨설팅 전속 거래 약정서</title>
+<style>
+/* 부동산 컨설팅 전속 거래 약정서 — 표준 빈 양식 (화면·인쇄 공용)
+   · 판형 A4 210×297mm, 인쇄 100% = 화면 (@page margin 0)
+   · 서체: 이 PC 기본 한글 서체(맑은 고딕)만 — 웹폰트·CDN·외부 요청 없음
+   · 4색 테마: CSS 변수 한 벌(라벨 셀·머리줄·괘선 색만 바뀜, 글자 위치는 동일) */
+:root{
+  --lb-bg:#EAF3FB; --lb-ink:#123B63; --line:#5A6B7C; --hd-bg:#D6E8F8; --rule:#123B63;   /* sky(기본) */
+  --ink:#111111; --dots:#AAB4BE;
+  --fs:11pt; --lh:1.75; --pgap:3.6px;
+  --tfs:10.5pt; --tlh:1.38; --tpv:2px; --tph:5.4px;
+  --bw:0.6pt; --bwo:1.2pt;
+}
+body[data-theme="mono"] {--lb-bg:#FFFFFF;--lb-ink:#111111;--line:#111111;--hd-bg:#F2F2F2;--rule:#111111}
+body[data-theme="sky"]  {--lb-bg:#EAF3FB;--lb-ink:#123B63;--line:#5A6B7C;--hd-bg:#D6E8F8;--rule:#123B63}
+body[data-theme="green"]{--lb-bg:#EDF7E7;--lb-ink:#2C5E1A;--line:#5B6B54;--hd-bg:#DCEED2;--rule:#2C5E1A}
+body[data-theme="gray"] {--lb-bg:#EFEFEF;--lb-ink:#333333;--line:#7A7A7A;--hd-bg:#E2E2E2;--rule:#333333}
+
+@page{size:A4;margin:0}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:#E9EDF1;color:var(--ink);font-family:"Malgun Gothic","맑은 고딕",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+
+/* ---------- 화면 도구줄(인쇄·캡처에는 안 나옴) ---------- */
+.bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-bottom:1px solid #D5DCE3;font-size:14px}
+.bar b{font-size:14px;margin-right:auto;color:#1B2A3A}
+.chip{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid #C9D2DB;background:#fff;color:#334;cursor:pointer}
+.chip i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;border:1px solid rgba(0,0,0,.25)}
+.chip.on{border-color:#123B63;box-shadow:0 0 0 1px #123B63 inset;font-weight:700}
+.prt{font:inherit;font-size:13px;padding:6px 14px;border-radius:8px;border:0;background:#123B63;color:#fff;cursor:pointer}
+
+/* ---------- 종이 ---------- */
+.sheets{padding:16px 0 24px}
+.page{width:210mm;height:297mm;margin:0 auto 16px;padding:18mm 20mm 16mm;background:#fff;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.18);
+  font-size:var(--fs);line-height:var(--lh);word-break:keep-all;overflow-wrap:break-word}
+.page p{margin:0 0 var(--pgap)}
+h1{margin:0;padding:0 0 2.2mm;text-align:center;font-size:23pt;line-height:1.3;font-weight:700;letter-spacing:-0.6pt;border-bottom:2.4pt solid var(--rule)}
+.lead{margin-top:2.8mm !important}
+h2{margin:2.4mm 0 1.2mm;font-size:11.5pt;line-height:1.45;font-weight:700;letter-spacing:-0.2pt;break-after:avoid}
+.page h1 + .lead + h2{margin-top:3.4mm}
+.txt{text-wrap:pretty}
+.item{padding-left:1.25em;text-indent:-1.25em;text-wrap:pretty}
+.sub{padding-left:1.25em;white-space:pre-wrap}
+.dots{color:var(--dots);letter-spacing:0.4em}
+.nw{white-space:nowrap}
+.b{display:inline-block;white-space:pre}
+.w-12{min-width:4.2em}.w-y{min-width:3.6em}.w-m{min-width:2.6em}.w-30{min-width:12em}.w-24{min-width:9.5em}.w-6{min-width:2.4em}.w-dy{min-width:3.2em}
+
+/* ---------- 표 ---------- */
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:var(--tfs);line-height:var(--tlh);border:var(--bwo) solid var(--line)}
+th,td{border:var(--bw) solid var(--line);padding:var(--tpv) var(--tph);vertical-align:middle;font-weight:400}
+th.lb{background:var(--lb-bg);color:var(--lb-ink);font-weight:700;text-align:center;letter-spacing:-0.2pt}
+th.hd{background:var(--hd-bg);color:var(--lb-ink);font-weight:700;text-align:center;letter-spacing:0.2pt}
+td{background:#fff}
+.t1 td,.t1 th,.t2 td,.t2 th{height:6.4mm}
+.t1 th.hd,.t2 th.hd{height:6.4mm}
+.t2 th.lb{text-align:left;padding-left:4mm}
+.stack table + table{margin-top:calc(-1 * var(--bwo))}
+.t3 td,.t3 th,.t4 td,.t4 th{height:7.6mm}
+.amt{white-space:pre}
+.t4 td{text-align:center}
+.t4 td.amt{text-align:left;padding-left:5mm}
+.t3 td.amt{padding-left:5mm}
+.t4 th.lb{text-align:left;padding-left:4mm}
+.t5 td{height:56mm}
+.t5 th.vl{writing-mode:horizontal-tb}
+.notes{margin-top:4.2mm}
+.notes p{margin:0 0 1.4mm;text-wrap:pretty}
+.notes .ind{padding-left:1.9em}
+.date{text-align:center;white-space:pre;margin:5mm 0 4.4mm !important;font-size:11.5pt;letter-spacing:0.6pt}
+.t6 td{height:34mm;vertical-align:top;padding:4mm 6mm 3mm}
+.t6 th.hd{height:9.4mm}
+.t6 p{margin:0 !important;line-height:1.75}
+.t6 .gapline{height:14mm}
+.t6 .in{text-align:right;padding-right:2mm}
+.t6 .in span{display:inline-block;white-space:pre}
+
+/* ---------- 좁은 화면: 종이를 통째로 줄여 보여 줌(배치는 그대로) ---------- */
+@media screen and (max-width:840px){
+  .sheets{padding:10px 0 16px}
+  .page{margin:0 auto 10px}
+}
+
+/* ---------- 인쇄 ---------- */
+@media print{
+  body{background:#fff}
+  .bar{display:none}
+  .sheets{padding:0;zoom:1 !important}
+  .page{margin:0;box-shadow:none;break-after:page;page-break-after:always}
+  .page:last-child{break-after:auto;page-break-after:auto}
+}
+/* 캡처 모드(?cap=1): 도구줄 숨김, 종이 사이 여백 고정 */
+body.cap{background:#fff}
+body.cap .bar{display:none}
+body.cap .sheets{padding:0}
+body.cap .page{box-shadow:none;margin:0 0 40px}
+</style>
+</head>
+<body data-theme="sky">
+<div class="bar">
+  <b>부동산 컨설팅 전속 거래 약정서</b>
+  <button class="chip" data-t="mono"><i style="background:#F2F2F2"></i>흑백</button>
+  <button class="chip on" data-t="sky"><i style="background:#D6E8F8"></i>하늘색</button>
+  <button class="chip" data-t="green"><i style="background:#DCEED2"></i>연두색</button>
+  <button class="chip" data-t="gray"><i style="background:#E2E2E2"></i>회색</button>
+  <button class="prt" id="prt">인쇄 · PDF</button>
+</div>
+
+<div class="sheets" id="sheets">
+<!-- ======================= 1쪽 ======================= -->
+<section class="page" id="p1">
+  <h1 data-p>부동산 컨설팅 전속 거래 약정서</h1>
+  <p class="lead" data-p>의뢰인(갑)과 피의뢰인(을)은 상호 협의 하에 아래 표시 목적 부동산의 컨설팅 및 거래 업무를 진행함에 있어 다음과 같이 전속 거래 약정서를 체결한다.</p>
+
+  <h2 data-p>제1조 (계약 당사자)</h2>
+  <table class="t1">
+    <colgroup><col style="width:16%"><col style="width:33%"><col style="width:21%"><col style="width:30%"></colgroup>
+    <tr><th class="hd" colspan="4" data-p>갑 (의뢰인)</th></tr>
+    <tr><th class="lb" data-p>성명(상호)</th><td data-f="a_name"></td><th class="lb" data-p>주민(법인)등록번호</th><td data-f="a_rrn"></td></tr>
+    <tr><th class="lb" data-p>주소</th><td colspan="3" data-f="a_addr"></td></tr>
+    <tr><th class="lb" data-p>연락처</th><td data-f="a_tel"></td><th class="lb" data-p>서명 또는 인</th><td data-f="a_sign"></td></tr>
+    <tr><th class="hd" colspan="4" data-p>을 (피의뢰인)</th></tr>
+    <tr><th class="lb" data-p>성명(상호)</th><td data-f="b_name"></td><th class="lb" data-p>주민(법인)등록번호</th><td data-f="b_rrn"></td></tr>
+    <tr><th class="lb" data-p>주소</th><td colspan="3" data-f="b_addr"></td></tr>
+    <tr><th class="lb" data-p>연락처</th><td data-f="b_tel"></td><th class="lb" data-p>서명 또는 인</th><td data-f="b_sign"></td></tr>
+  </table>
+
+  <h2 data-p>제2조 (피의뢰인의 의무)</h2>
+  <p class="txt" data-p>피의뢰인(을)은 의뢰인(갑)으로부터 물건을 의뢰받음에 따라 목적 부동산의 입지 및 상권분석, <span class="nw">가치･감정평가</span>, 권리관계, 운영효과분석, <span class="nw">금융･조세</span> 검토, 각종 서류 발급 등 포괄적인 컨설팅 업무를 수행하며, 의뢰 목적을 효율적으로 달성하여 목적 부동산이 최유효 이용 상태가 되도록 한다.</p>
+
+  <h2 data-p>제3조 (의뢰 목적물의 표시 및 거래 조건)</h2>
+  <table class="t2">
+    <colgroup><col style="width:30%"><col style="width:70%"></colgroup>
+    <tr><th class="hd" colspan="2" data-p>의뢰 목적물의 표시 및 거래 조건</th></tr>
+    <tr><th class="lb" data-p>대상물의 표시</th><td data-f="o_target"></td></tr>
+    <tr><th class="lb" data-p>계약(의뢰) 기간</th><td data-f="o_term"></td></tr>
+    <tr><th class="lb" data-p>보증금(매매가)</th><td data-f="o_deposit"></td></tr>
+    <tr><th class="lb" data-p>월 차임</th><td data-f="o_rent"></td></tr>
+    <tr><th class="lb" data-p>목적물의 범위 및 주요 조건</th><td data-f="o_scope"></td></tr>
+    <tr><th class="lb" data-p>비고(기타 조건)</th><td data-f="o_note"></td></tr>
+  </table>
+
+  <h2 data-p>제4조 (컨설팅 전속거래의 진행과 약정기간)</h2>
+  <p class="item" data-p>① 현 임차인의 권리계약 및 시설 권리 이전 보장에 관한 사항은 아래와 같이 협의하여 기재한다.</p>
+  <p class="sub" data-p>내용 : <span class="dots" data-f="o_lease_note">･･････････････････････････････</span>  (협의 시 기재)</p>
+  <p class="item" data-p>② 전속 약정기간은 원칙적으로 계약일로부터 (<span class="b w-12" data-f="o_months">            </span>)개월로 하며, 기간 만료 전 별도 서면 통보가 없을 시 상호 협의 하에 연장할 수 있다. 다만, 기간을 정하는 경우 아래와 같다.</p>
+  <p class="sub" data-p>기간 :<span class="b w-y" data-f="t_from_y">          </span>년<span class="b w-m" data-f="t_from_m">        </span>월<span class="b w-m" data-f="t_from_d">        </span>일  부터<span class="b w-y" data-f="t_to_y">          </span>년<span class="b w-m" data-f="t_to_m">        </span>월<span class="b w-m" data-f="t_to_d">        </span>일  까지</p>
+
+  <h2 data-p>제5조 (의뢰인의 의무)</h2>
+  <p class="txt" data-p>의뢰인(갑)은 약정 기간 동안 피의뢰인(을)이 컨설팅 및 중개 활동을 원만하게 수행할 수 있도록 적극 협조하며, 필요한 제반 서류를 신속히 제공하고, 전속 거래 약정기간 내에 동일 건을 타인에게 누설하거나 이중으로 의뢰하지 아니한다.</p>
+</section>
+
+<!-- ======================= 2쪽 ======================= -->
+<section class="page" id="p2">
+  <h2 data-p style="margin-top:0">제6조 (대상물의 상태 및 컨설팅 용역 이행)</h2>
+  <p class="txt" data-p>대상물의 <span class="nw">거래･임대</span> 특수성과 권리금 등 조정 사항을 고려하여, 일반 중개수수료 외의 컨설팅 및 용역 비용은 아래 특약사항과 같이 약정한다.</p>
+
+  <h2 data-p>제7조 (비밀유지 의무)</h2>
+  <p class="txt" data-p>양 당사자는 본 약정과 관련하여 알게 된 상대방의 신상, 거래 조건 및 사업 기밀을 준수하며, <span class="nw">신속･정확하게</span> 업무를 처리한다.</p>
+
+  <h2 data-p>특약사항 (컨설팅･용역 약정금액 및 지급 시기)</h2>
+  <div class="stack">
+  <table class="t3">
+    <colgroup><col style="width:24%"><col style="width:76%"></colgroup>
+    <tr><th class="hd" colspan="2" data-p>총 컨설팅 용역비용</th></tr>
+    <tr><th class="lb" data-p>금액</th><td class="amt" data-p>금<span class="b w-30" data-f="f_total">                              </span>원정      (VAT 별도)</td></tr>
+  </table>
+  <table class="t4">
+    <colgroup><col style="width:34%"><col style="width:22%"><col style="width:44%"></colgroup>
+    <tr><th class="hd" data-p>지급 구분</th><th class="hd" data-p>비율</th><th class="hd" data-p>금액</th></tr>
+    <tr><th class="lb" data-p>① 약정 시</th><td class="amt" data-p>(<span class="b w-6" data-f="f_r1">      </span>)%</td><td class="amt" data-p>금<span class="b w-24" data-f="f_m1">                        </span>원정</td></tr>
+    <tr><th class="lb" data-p>② 권리계약 시</th><td class="amt" data-p>(<span class="b w-6" data-f="f_r2">      </span>)%</td><td class="amt" data-p>금<span class="b w-24" data-f="f_m2">                        </span>원정</td></tr>
+    <tr><th class="lb" data-p>③ 본계약(임대･매매) 시</th><td class="amt" data-p>(<span class="b w-6" data-f="f_r3">      </span>)%</td><td class="amt" data-p>금<span class="b w-24" data-f="f_m3">                        </span>원정</td></tr>
+    <tr><th class="lb" data-p>④ 잔금 시</th><td class="amt" data-p>(<span class="b w-6" data-f="f_r4">      </span>)%</td><td class="amt" data-p>금<span class="b w-24" data-f="f_m4">                        </span>원정</td></tr>
+  </table>
+  <table class="t5">
+    <colgroup><col style="width:24%"><col style="width:76%"></colgroup>
+    <tr><th class="lb vl" data-p>기타 특약사항</th><td data-f="f_etc"></td></tr>
+  </table>
+  </div>
+
+  <div class="notes">
+    <p data-p>단, 권리관계 등의 차액 조정 시 쌍방 합의로 컨설팅 비용과 상계할 수 있다.</p>
+    <p class="ind" data-p>본 약정서에 정하지 아니한 사항은 민법, 공인중개사법 및 부동산 거래 관행에 따른다.</p>
+    <p data-p>위 모든 사항을 <span class="nw">인지･숙지하고</span> 신의성실로 이행할 것을 약정하며, 각 1통씩 <span class="nw">서명･날인하여</span> 보관한다.</p>
+  </div>
+  <p class="date" data-p>20<span class="b w-dy" data-f="date_y">      </span>년<span class="b w-m" data-f="date_m">        </span>월<span class="b w-m" data-f="date_d">        </span>일</p>
+
+  <table class="t6">
+    <colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+    <tr><th class="hd" data-p>갑 (의뢰인)</th><th class="hd" data-p>을 (피의뢰인)</th></tr>
+    <tr>
+      <td><p data-p data-n="s_a_name">성 명 :</p><p class="gapline"></p><p class="in" data-p><span data-n="s_a_in">( 인 )</span></p></td>
+      <td><p data-p data-n="s_b_name">상호･성명 :</p><p class="gapline"></p><p class="in" data-p><span data-n="s_b_in">( 인 )</span></p></td>
+    </tr>
+  </table>
+</section>
+</div>
+
+<script>
+(function(){
+  var T = ['mono','sky','green','gray'];
+  function setTheme(t){
+    if (T.indexOf(t) < 0) t = 'sky';
+    document.body.setAttribute('data-theme', t);
+    var cs = document.querySelectorAll('.chip');
+    for (var i = 0; i < cs.length; i++) cs[i].classList.toggle('on', cs[i].getAttribute('data-t') === t);
+  }
+  window.setTheme = setTheme;
+  var q = location.search;
+  var m = /[?&]theme=(\w+)/.exec(q); setTheme(m ? m[1] : 'sky');
+  if (/[?&]cap=1/.test(q)) document.body.classList.add('cap');
+  document.querySelector('.bar').addEventListener('click', function(e){
+    var b = e.target.closest('.chip'); if (b) setTheme(b.getAttribute('data-t'));
+  });
+  document.getElementById('prt').onclick = function(){ window.print(); };
+  /* 좁은 화면: 종이(210mm) 전체를 화면 폭에 맞춰 통째로 축소 — 줄바꿈·배치는 인쇄와 동일 */
+  function fit(){
+    var s = document.getElementById('sheets');
+    if (document.body.classList.contains('cap')) { s.style.zoom = ''; return; }
+    var pw = document.getElementById('p1').offsetWidth;          /* 210mm ≈ 794px */
+    var aw = document.documentElement.clientWidth - 12;
+    s.style.zoom = aw < pw ? (aw / pw).toFixed(4) : '';
+  }
+  window.addEventListener('resize', fit); fit();
+})();
+</script>
+</body>
+</html>

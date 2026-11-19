@@ -1,0 +1,96 @@
+diff --git a/contract/index.html b/contract/index.html
+index c6e5501..06d6e20 100644
+--- a/contract/index.html
++++ b/contract/index.html
+@@ -176,6 +176,7 @@ label.lb i{font-style:normal;color:#7C8DA6;font-weight:700;margin-left:4px;font-
+ <div id="toast"></div>
+ <div id="printArea"></div>
+ <script src="forms.js"></script>
++<script src="forms_consult.js"></script>
+ <script>
+ /* ===================== 더계약서 (표준계약서 원본 사진식) ===================== */
+ const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+@@ -243,8 +244,8 @@ let BG = null, BG_SRC = null;
+ const bgW = () => BG ? (BG.naturalWidth || BG.width) : 1489;
+ const bgH = () => BG ? (BG.naturalHeight || BG.height) : 2105;
+ /* 화면의 종이 사진이 지금 고른 양식과 반드시 같도록 — 바뀌었으면 먼저 불러온다 */
+-async function ensureBg(){
+-  const src = curForm().bg;
++async function ensureBg(pg){
++  const cf = curForm(), src = (cf.pages && pg) ? cf.pages[pg - 1].bg : cf.bg;
+   if (BG && BG_SRC === src) return;
+   BG = await loadUrlImg(src); BG_SRC = src;
+ }
+@@ -403,8 +404,8 @@ function wrapText(g, text, maxW){
+   });
+   return out;
+ }
+-async function composite(maxW){
+-  await ensureBg();
++async function composite(maxW, pg){
++  await ensureBg(pg);
+   const W = bgW(), H = bgH();
+   const s = maxW ? Math.min(2, maxW / W) : Math.max(1.6, 297 / 25.4 * 96 / W);
+   const cv = document.createElement('canvas'); cv.width = Math.round(W * s); cv.height = Math.round(H * s);
+@@ -414,6 +415,7 @@ async function composite(maxW){
+   const fs0 = curForm().fields.filter(f => f.type !== 'sign').map(f => f.h / 100 * cv.height).sort((a, b) => a - b);
+   const FS0 = Math.min((fs0[fs0.length >> 1] || 40) * 0.55, cv.width * 0.035);
+   for (const f of curForm().fields){
++    if (f.page && f.page !== (pg || 1)) continue;
+     const v = getV(f.id); if (v == null || v === '') continue;
+     const x = f.x / 100 * cv.width, y = f.y / 100 * cv.height, w = f.w / 100 * cv.width, h = f.h / 100 * cv.height;
+     if (f.type === 'sign'){
+@@ -450,13 +452,20 @@ async function composite(maxW){
+   }
+   return cv;
+ }
++/* 여러 쪽 양식(pages)은 쪽마다 한 장씩 — 한 쪽짜리는 지금과 같음 */
++async function compositeAll(maxW){
++  const cf = curForm(); if (!cf.pages) return [await composite(maxW)];
++  const out = []; for (let i = 1; i <= cf.pages.length; i++) out.push(await composite(maxW, i));
++  return out;
++}
+ let PVT = null;
+ async function renderPreview(){
+   clearTimeout(PVT);
+   PVT = setTimeout(async () => {
+-    const c = await composite(1200);
+-    const pv = $('#pvCv'); pv.width = c.width; pv.height = c.height;
+-    pv.getContext('2d').drawImage(c, 0, 0);
++    const cs = await compositeAll(1200), gap = 16;
++    const pv = $('#pvCv'); pv.width = cs[0].width; pv.height = cs.reduce((a, c) => a + c.height, 0) + gap * (cs.length - 1);
++    const pg = pv.getContext('2d'); pg.fillStyle = '#E9EDF1'; pg.fillRect(0, 0, pv.width, pv.height);
++    let yy = 0; cs.forEach(c => { pg.drawImage(c, 0, yy); yy += c.height + gap; });
+     renderMiss();
+   }, 60);
+ }
+@@ -480,9 +489,8 @@ async function doPrint(){
+   const n = +S.cp || 1;
+   busyOn('인쇄할 종이를 만드는 중…');
+   try{
+-    const c = await composite();
+-    const url = c.toDataURL('image/jpeg', 0.94);
+-    $('#printArea').innerHTML = Array.from({length:n}, () => '<img src="' + url + '" alt="">').join('');
++    const urls = (await compositeAll()).map(c => c.toDataURL('image/jpeg', 0.94));
++    $('#printArea').innerHTML = Array.from({length:n}, () => urls.map(u => '<img src="' + u + '" alt="">').join('')).join('');
+     busyOff();
+     setTimeout(() => window.print(), 260);
+     $('#outInfo').innerHTML = `<span class="dot"></span>A4 ${n}부 인쇄 준비 — 인쇄 대화상자에서 [PDF로 저장]을 고르면 PDF가 됩니다.`;
+@@ -491,10 +499,13 @@ async function doPrint(){
+ async function doPng(){
+   busyOn('사진으로 만드는 중…');
+   try{
+-    const c = await composite();
+-    const nm = (curForm().name || '계약서').replace(/\s/g, '') + '_' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '.png';
+-    const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = nm;
+-    document.body.appendChild(a); a.click(); setTimeout(() => { a.remove(); }, 1200);
++    const cs = await compositeAll();
++    let nm = '';
++    cs.forEach((c, i) => {
++      nm = (curForm().name || '계약서').replace(/\s/g, '') + '_' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + (cs.length > 1 ? '_' + (i + 1) : '') + '.png';
++      const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = nm;
++      document.body.appendChild(a); a.click(); setTimeout(() => { a.remove(); }, 1200);
++    });
+     busyOff(); toast('사진으로 저장했습니다');
+     $('#outInfo').innerHTML = `<span class="dot"></span>${escH(nm)} 저장 — 더뷰(<a href="../viewer.html">viewer.html</a>)로 열어 확인할 수 있습니다.`;
+   }catch(e){ busyOff(); toast('저장하지 못했습니다'); }

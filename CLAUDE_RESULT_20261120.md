@@ -164,3 +164,5 @@
    - 실서비스 `viewer.html`의 html2canvas CDN 지연 로드(이미지 저장 때만)는 그대로 둠
 
 남은 것: 더뷰 v1.4 APK 빌드·서명 검증(app_viewer·JDK 17·build-tools 34 있는 PC 필요, 동기화본은 output/app_viewer_v14) · 100선 5종 쇼룸 등록(대표님 시연 후 apply.ps1)
+
+> 과업 4(약정서 조판) 결과는 CLAUDE_RESULT_20261120_CONSULT.md 참조 (2026-11-20 추가).

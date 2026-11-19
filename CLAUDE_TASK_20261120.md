@@ -388,6 +388,8 @@ output/컨설팅_약정서_클로드판/
   consult.html                 ← 화면·인쇄 공용 원본(테마 4종 전환 포함)
   tpl_consult_p1_sky.png       ← A4 배경 1489×2105 · 8장(p1/p2 × mono·sky·green·gray)
   tpl_consult_p2_sky.png
+  tpl_consult_p1.png          ← 테마 없는 기본(하늘색) 사본 — forms.js bg가 가리킬 이름
+  tpl_consult_p2.png
   컨설팅_약정서_sky.pdf        ← 2쪽 인쇄용 · 4개(테마별)
   390_sky.png                  ← 390px 미리보기 캡처 4장(테마별 폰 화면 1장)
   forms_consult.js             ← 더계약서 forms.js 호환 객체(2페이지 구조) — 실서비스에 넣지 않음
@@ -435,6 +437,7 @@ CSS 변수 한 벌로 4종을 전환합니다(미리보기·인쇄가 같은 값
 ### (3) 뽑을 것 — 화면·인쇄·이미지 3벌
 
 1. **PNG 배경 8장**: `tpl_consult_p1_{mono,sky,green,gray}.png` · `tpl_consult_p2_{...}.png` — 정확히 1489×2105, 배경 흰색, 표·글씨가 인쇄 그대로.
+   그리고 테마 없는 이름 **`tpl_consult_p1.png` · `tpl_consult_p2.png`** 를 하나 더 둡니다 — 기본(하늘색) 사본입니다. 더계약서 `forms.js`의 `bg`는 테마 접미사 없는 이 두 이름을 가리키게 하고, 테마가 바뀔 때 `_sky`·`_mono`·`_green`·`_gray`로 갈아끼우는 것으로 정리하세요.
 2. **PDF 4개**: `컨설팅_약정서_{mono,sky,green,gray}.pdf` — **정확히 2쪽**, 아래 잘림 0.
 3. **390px 미리보기 4장**: `390_{mono,sky,green,gray}.png` — 폰에서 열었을 때 가로 넘침 0, 글자 겹침 0, 표가 찌그러지지 않음(가로 스크롤이 필요하면 그 사실을 적고 스크롤 컨테이너로 감싸기).
 
@@ -486,6 +489,9 @@ CSS 변수 한 벌로 4종을 전환합니다(미리보기·인쇄가 같은 값
 8. **막힌 것** — 원문 오류 그대로(없으면 `없음`)
 9. **다음 회차 인수인계 3줄**
 10. 마지막 줄: **`남은 것: …`**
+
+> 결과는 `CLAUDE_RESULT_20261120_CONSULT.md`에 씁니다. 그리고 `CLAUDE_RESULT_20261120.md` **맨 끝에 한 줄**만 덧붙입니다 —
+> `> 과업 4(약정서 조판) 결과는 CLAUDE_RESULT_20261120_CONSULT.md 참조 (2026-11-20 추가).`
 
 ---
 

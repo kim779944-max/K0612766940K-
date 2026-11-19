@@ -133,7 +133,7 @@
 | 저장소 | 손대기 전 HEAD | 이번 커밋 |
 |---|---|---|
 | `oneclick` | `ca90721d440d92ef30c59ca169aed344bb2bb336` (pull 직후. pull 전 로컬은 `a329c4e`) | `b664d30adca5fe28af3624a63be480d3e17c6c64` — push 완료 (`ca90721..b664d30`) |
-| `K0612766940K-` | `b50b7c938fdb17ff4a8a757101c7fef881ff74cc` | 이 보고서가 들어간 커밋 — 해시는 바로 다음 커밋에서 아래 줄에 기록 |
+| `K0612766940K-` | `b50b7c938fdb17ff4a8a757101c7fef881ff74cc` | `8ae38496bd67443711f71edf9eb918c2e6366e43` — push 완료 (`b50b7c9..8ae3849`). 이 해시 기록은 다음 커밋 1건으로 추가 |
 
 - 되돌리기: `git -C oneclick revert b664d30`
 - 이 PC는 git 사용자 정보가 비어 있어서, 저장소 기존 작성자(`KTS 원클릭` / `지니`)를 이번 커밋에만 `-c user.name/-c user.email`로 지정했습니다. `git config`는 바꾸지 않았습니다.
@@ -163,4 +163,4 @@
    - 100선 5종 쇼룸 등록: 관문 6 통과 후 `apply.ps1`
    - 실서비스 `viewer.html`의 html2canvas CDN 지연 로드(이미지 저장 때만)는 그대로 둠
 
-남은 것: 더뷰 v1.4 APK 빌드·서명 검증(app_viewer·JDK 17·build-tools 34 있는 PC 필요, 동기화본은 output/app_viewer_v14) · 100선 5종 쇼룸 등록(대표님 시연 후 apply.ps1) · K0612766940K- 커밋 해시 기록
+남은 것: 더뷰 v1.4 APK 빌드·서명 검증(app_viewer·JDK 17·build-tools 34 있는 PC 필요, 동기화본은 output/app_viewer_v14) · 100선 5종 쇼룸 등록(대표님 시연 후 apply.ps1)

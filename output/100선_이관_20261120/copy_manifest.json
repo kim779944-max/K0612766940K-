@@ -1,0 +1,12 @@
+[
+ { "from": "oneclick/swapcheck.html", "to": "swapcheck.html" },
+ { "from": "oneclick/shots/ic_swapcheck.png", "to": "shots/ic_swapcheck.png" },
+ { "from": "oneclick/rights1p.html", "to": "rights1p.html" },
+ { "from": "oneclick/shots/ic_rights1p.png", "to": "shots/ic_rights1p.png" },
+ { "from": "oneclick/balju.html", "to": "balju.html" },
+ { "from": "oneclick/shots/ic_balju.png", "to": "shots/ic_balju.png" },
+ { "from": "oneclick/ledger.html", "to": "ledger.html" },
+ { "from": "oneclick/shots/ic_ledger.png", "to": "shots/ic_ledger.png" },
+ { "from": "oneclick/tagmaker.html", "to": "tagmaker.html" },
+ { "from": "oneclick/shots/ic_tagmaker.png", "to": "shots/ic_tagmaker.png" }
+]

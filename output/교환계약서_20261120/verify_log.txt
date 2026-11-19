@@ -1,0 +1,21 @@
+﻿문구[tax]: {"href":"https://autooneclick.com/#reserve","text":"사전예약 / 현재 지역 무료 세팅 사전예약 중 / 업종·연락처 10초 / →","banner":[12,378,51],"iLines":1,"iEmpty":false,"sw":390,"errs":[]}
+문구[contract]: {"href":"https://autooneclick.com/#reserve","text":"사전예약 / 현재 지역 무료 세팅 사전예약 중 / 업종·연락처 10초 / →","banner":[12,378,51],"iLines":1,"iEmpty":false,"sw":390,"errs":[]}
+문구[organizer]: {"href":"https://autooneclick.com/#reserve","text":"사전예약 / 현재 지역 무료 세팅 사전예약 중 / 업종·연락처 10초 / →","banner":[12,378,51],"iLines":1,"iEmpty":false,"sw":390,"errs":[]}
+문구[sign]: {"href":"https://autooneclick.com/#reserve","text":"사전예약 / 현재 지역 무료 세팅 사전예약 중 / 업종·연락처 10초 / →","banner":[12,378,51],"iLines":1,"iEmpty":false,"sw":390,"errs":[]}
+contract errs on load: []
+① 쇼룸 목록 버튼: ["부동산 교환계약서(당사자용)"] / curForm().name=부동산 교환계약서(당사자용)
+특약 6줄: {"canvas":[2382,3368],"lines":6,"first":[1271.9,1299.4],"last":[1470,1497.5],"pitch":39.6,"glyphH":28.5,"textMinX":117.5,"labelX":116.6,"boxBottom":1717,"sentenceTop":1731,"signA_left":1176.9,"signB_left":1176.9,"toast":""}
+특약 12줄: {"canvas":[2382,3368],"lines":12,"first":[1271.9,1297.5],"last":[1678.8,1704.5],"pitch":37,"glyphH":26.6,"textMinX":117.5,"labelX":116.6,"boxBottom":1717,"sentenceTop":1731,"signA_left":1176.9,"signB_left":1176.9,"toast":""}
+인쇄 12줄: pdfPages=1 print() calls=1 printArea imgs=1 file=after_print_12줄.pdf
+특약 40줄_경고: {"canvas":[2382,3368],"lines":31,"first":[1271.3,1281.3],"last":[1707,1717],"pitch":14.5,"glyphH":11,"textMinX":117.5,"labelX":116.6,"boxBottom":1717,"sentenceTop":1731,"signA_left":1176.9,"signB_left":1176.9,"toast":"특약이 너무 깁니다 — 줄이거나 글자를 줄여 주세요"}
+미리보기 단계: {"steps":[1,2,3,4],"pv":true,"pvSize":[1200,1696],"titles":[],"sw":390}
+contract errs end: []
+8종 비교 sale:부동산 매매계약서: before=2382x3368:6387e663 after=2382x3368:6387e663 same=True
+8종 비교 power:등기 위임장: before=2382x3368:620859f7 after=2382x3368:620859f7 same=True
+8종 비교 house:주택 임대차계약서: before=2382x3368:ba859233 after=2382x3368:ba859233 same=True
+8종 비교 shop:상가건물 임대차계약서: before=2382x3368:ded5b952 after=2382x3368:ded5b952 same=True
+8종 비교 labor:표준 근로계약서: before=2382x3368:20ca4f94 after=2382x3368:20ca4f94 same=True
+8종 비교 loan:차용증 (금전소비대차): before=2382x3368:7547ee96 after=2382x3368:7547ee96 same=True
+8종 비교 service:업무위탁(용역)계약서: before=2382x3368:ad978f73 after=2382x3368:ad978f73 same=True
+8종 비교 partner:동업계약서: before=2382x3368:cdad5779 after=2382x3368:cdad5779 same=True
+8종 비교 합계: 8/8 동일

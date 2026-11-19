@@ -1,0 +1,10 @@
+﻿title: 더뷰 v1.4 — KTS 만능 뷰어 (한글·엑셀·워드·PDF·사진)
+load errors: ["LOAD hwp.js","LOAD pdf.worker.min.js","LOAD pdf.min.js"]
+requests (resource timing, non-file): []
+cdnjs in <script src>/<link>: []
+390 sw(home): 390
+open xlsx: {"kind":"html","pages":1,"meta":"4KB · 엑셀 · 13행 × 9열 · 병합 18개","outText":"출장비 지출결의서 결의 제목 11월 영업팀 경비 담당 팀장 대표 작성자 김민수 / 영업팀 작성일 2026년 11월 18일 출장지 부산 해운대 출장 기간 2026-","sw":390,"errs":[]}
+open hwpx: {"kind":"html","pages":1,"meta":"9KB · 한글(hwpx) · 9행 × 5열 · 병합 9개","outText":"부동산 매매계약서 매도인과 매수인은 아래 부동산에 대하여 다음 내용으로 매매계약을 맺는다. 1. 부동산의 표시 소재지 서울특별시 송파구 올림픽로 300 (지번 잠","sw":390,"errs":[]}
+open img: {"kind":"img","pages":1,"meta":"303KB · 사진","outText":"1 / 1","sw":390,"errs":[]}
+open pdf: {"kind":"frame","pages":1,"meta":"1038KB · PDF","outText":"","sw":390,"errs":[]}
+open hwp(더미): {"kind":"frame","pages":1,"meta":"1038KB · PDF","outText":"파일을 여는 중 문제가 생겼습니다: 구형 한글(.hwp) 읽기 모듈(hwp.js)을 불러오지 못했습니다","sw":390,"errs":[]}

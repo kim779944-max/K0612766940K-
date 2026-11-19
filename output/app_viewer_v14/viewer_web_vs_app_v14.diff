@@ -1,0 +1,38 @@
+diff --git a/oneclick/viewer.html b/K0612766940K-/output/app_viewer_v14/assets/viewer.html
+index 79d9ba2..47e5c19 100644
+--- a/oneclick/viewer.html
++++ b/K0612766940K-/output/app_viewer_v14/assets/viewer.html
+@@ -1,7 +1,6 @@
+ <!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
+-<script src="master.js"></script>
+ <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+-<title>더뷰 — KTS 만능 뷰어 (한글·엑셀·워드·PDF·사진)</title>
++<title>더뷰 v1.4 — KTS 만능 뷰어 (한글·엑셀·워드·PDF·사진)</title>
+ <meta name="theme-color" content="#0A1128">
+ <link rel="manifest" href="manifest.webmanifest">
+ <style>
+@@ -287,10 +286,12 @@ table.xl td.b{font-weight:900}
+   <a href="https://autooneclick.com/?from=viewer-banner" rel="noopener">신청</a>
+ </div>
+ 
+-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" onerror="window.pdfjsLib=undefined"></script>
++<script src="hwp.js"></script>
++<script src="pdf.worker.min.js"></script>
++<script src="pdf.min.js"></script>
+ <script>
+ if (typeof pdfjsLib !== 'undefined'){
+-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
++  pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js';
+ }
+ const out = document.getElementById('out'), docEl = document.getElementById('doc');
+ /* ---------- ZIP 리더 (xlsx / hwpx 공통, 파일 → 메모리에서만) ---------- */
+@@ -1082,7 +1083,8 @@ async function showFile(file){
+     } else if (/\.(csv|txt)$/.test(name)){
+       r = openText(await file.text(), name);
+     } else if (/\.hwp$/.test(name)){
+-      r = {kind: 'notice', note: '구형 한글'};          /* 1:1 인화 불가 — 깨뜨리지 않고 안내만 */
++      if (typeof KTS_HWP === 'undefined' || !KTS_HWP.parseHwp) throw new Error('구형 한글(.hwp) 읽기 모듈(hwp.js)을 불러오지 못했습니다');
++      r = await KTS_HWP.parseHwp(await file.arrayBuffer());
+     } else {
+       r = {kind: 'html', html: '<div class="hw"><p>지원하지 않는 형식입니다. 한글(.hwp/.hwpx)·엑셀(.xlsx)·워드(.docx)·PDF·사진·텍스트를 지원합니다.</p></div>', note: ''}
+     }

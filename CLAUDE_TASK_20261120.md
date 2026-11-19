@@ -298,11 +298,18 @@ Get-FileHash KTS_더뷰_v1.4_debug.apk -Algorithm SHA256
 - 쇼룸 타일은 이 저장소에서 **`products.js`만 채우면 자동으로 생깁니다**(`index.html`이 `window.PRODUCTS`를 읽어 그림). NIGHT 때처럼 `index.html`에 타일 한 줄을 손으로 넣지 마세요.
 - 새 캡처는 `output\100선_이관_20261120\390\{slug}.png`에도 1장씩 둡니다.
 
+**이관할 때 반드시 걸리는 것 1가지 — 문의 카드 링크**
+
+NIGHT에서 만든 상품 하단 문의 카드는 `../misa-1116/form.html`을 가리킵니다. 그 폴더는 **`K0612766940K-` 저장소에만 있고 실서비스 `oneclick` 저장소에는 없습니다**(확인 완료). 그대로 옮기면 문의 링크가 404가 됩니다.
+
+→ `apply.ps1`과 `README.md`에 이관 시 함께 바꿀 1줄을 명시하세요: 문의 카드 링크를 실서비스에 있는 경로로 바꾼다(`https://autooneclick.com/#reserve` 사전예약, 또는 `sign/`처럼 기존 상품이 쓰는 방식). 상품 5개 각각에서 그 문자열이 몇 곳 나오는지 세어 `선별_5종.md`에 적고, 검수표 '문의 폼' 칸은 **바꾼 뒤 살아 있는 링크**를 기준으로 판정합니다.
+
 ### 완료 판정
 
 - [ ] 7개 파일 존재, 5종 모두 캡처 파일이 실제로 있다
 - [ ] `products_추가분.js` 구문 오류 0 (`node --check` 가능하면 그것으로, 없으면 브라우저 콘솔에서 `eval` 없이 문법 검사)
 - [ ] `copy_manifest.json`의 10개 `from` 경로가 **전부 실재**(PowerShell `Test-Path` 10/10)
+- [ ] 문의 카드 `../misa-1116/form.html` → 실서비스 경로로 바꾸는 1줄이 `apply.ps1`·`README.md`에 적혀 있다(5종 각 몇 곳인지 숫자로)
 - [ ] 검수표 5행 모두 값이 채워져 있고 FAIL 0
 - [ ] `oneclick` 저장소 `git status` — **이 과업 때문에 바뀐 파일 0개**
 - [ ] README만 읽고 사람이 3단계로 이관할 수 있다

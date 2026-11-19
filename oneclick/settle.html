@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더배달 — 채널별 매출·수수료 분석 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+:root{--bg:#0A1128;--card:#111B36;--card2:#16223F;--line:#24314F;--line2:#2E4370;--ink:#ECEFF4;--sub:#93A0B4;
+ --or:#FF6B00;--or2:#FFA24D;--on:#0A1128;--red:#FF5A5A;--green:#35C48A;--yel:#FFC24D}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Roboto,sans-serif;
+ background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5;letter-spacing:-.2px;word-break:keep-all;overflow-wrap:break-word}
+#app{max-width:460px;margin:0 auto;overflow-x:hidden;min-height:100vh;
+ background:radial-gradient(120% 40% at 50% -6%,rgba(255,107,0,.10) 0%,rgba(255,107,0,0) 62%),var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;letter-spacing:-.2px}
+input,select,textarea{font:inherit;color:var(--ink);background:#0B1530;border:1px solid var(--line2);border-radius:10px;padding:10px 11px;width:100%;font-size:14px;min-width:0}
+textarea{resize:vertical;line-height:1.5}
+input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;accent-color:#FF6B00;padding:0}
+input[type=file]{font-size:12px;padding:7px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--or2)}
+input.miss,textarea.miss{border-color:var(--red)}
+a{color:var(--or2)}
+header.top{position:sticky;top:0;z-index:40;background:rgba(10,17,40,.97);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:8px;padding:10px 14px 6px}
+.brand{display:flex;align-items:center;gap:7px;font-size:15.5px;font-weight:900;color:#fff;letter-spacing:-.6px;min-width:0}
+.brand .mark{flex:0 0 24px;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,var(--or2),var(--or));color:var(--on);font-size:12px;font-weight:900}
+.brand span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp{flex:1}
+.home{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:999px;padding:5px 10px;text-decoration:none;white-space:nowrap}
+.privacy{font-size:11px;color:var(--sub);padding:0 14px 8px;display:flex;align-items:center;gap:6px}
+.privacy::before{content:"";flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+main{padding:6px 14px 40px}
+.hero h1{font-size:21px;line-height:1.32;font-weight:900;letter-spacing:-.8px;margin-top:10px}
+.hero h1 em{font-style:normal;color:var(--or)}
+.hero p{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 12px;margin-top:12px}
+.card h2{font-size:14.5px;font-weight:900;color:#fff;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.card h2 .n{flex:0 0 20px;width:20px;height:20px;border-radius:6px;background:var(--or);color:var(--on);font-size:11px;font-weight:900;display:grid;place-items:center}
+.card h3{font-size:13px;font-weight:900;color:var(--or2);margin:12px 0 5px}
+.sub{font-size:11.5px;color:var(--sub);margin-top:4px;line-height:1.55}
+label.lb{display:block;font-size:11.5px;font-weight:800;color:#C6D0DF;margin:10px 0 4px}
+label.lb i{font-style:normal;color:var(--sub);font-weight:700;margin-left:4px;font-size:10.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.g2>*{min-width:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border-radius:12px;padding:13px 12px;font-size:14.5px;font-weight:900;text-decoration:none;text-align:center;line-height:1.3}
+.btn.pri{color:var(--on);background:linear-gradient(145deg,var(--or2),var(--or));box-shadow:0 8px 22px rgba(255,107,0,.28)}
+.btn.sec{color:#E6EDF7;background:var(--card2);border:1px solid var(--line2)}
+.btn.sm{padding:9px 6px;font-size:12.5px;border-radius:10px}
+.row{display:flex;gap:7px;margin-top:9px}.row>*{flex:1;min-width:0}
+.chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.chips button{font-size:12px;font-weight:800;color:#DCE6F2;border:1px solid var(--line2);border-radius:999px;padding:7px 11px;background:var(--card2)}
+.chips button.on{background:var(--or);border-color:var(--or);color:var(--on)}
+.pill{display:inline-block;font-size:10.5px;font-weight:900;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.pill.a,.pill.hi{background:var(--red);color:#fff}.pill.b,.pill.md{background:var(--yel);color:#1a1200}.pill.c,.pill.lo{background:#3B82F6;color:#fff}.pill.d,.pill.no{background:#3A4766;color:#DCE6F2}.pill.ok{background:var(--green);color:#062014}
+.item{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:7px}
+.item .q{font-size:13px;font-weight:800;color:#fff}
+.item .a{font-size:12.5px;color:#D3DBE7;margin-top:4px;line-height:1.55}
+.item.warn{border-color:rgba(255,90,90,.55)}
+.kv{font-size:11px;color:var(--sub);line-height:1.55;margin-top:6px}
+.out{white-space:pre-wrap;font-size:13px;line-height:1.6;background:#0B1530;border:1px dashed var(--or2);border-radius:10px;padding:10px;margin-top:8px;color:#E3E9F2}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.stat div{background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;min-width:0}
+.stat b{display:block;font-size:18px;font-weight:900;color:#fff}
+.stat span{font-size:10.5px;color:var(--sub)}
+table.t{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed;font-size:12px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.t th{color:var(--sub);font-size:11px;font-weight:800}
+.fixnote{font-size:11.5px;line-height:1.55;color:#FFD7B8;background:rgba(255,107,0,.10);border:1px solid rgba(255,107,0,.45);border-radius:10px;padding:8px 10px;margin-top:10px}
+details.rule{margin-top:8px;background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
+details.rule summary{font-weight:800;color:var(--or2);cursor:pointer}
+.hide{display:none!important}
+.empty{font-size:12px;color:var(--sub);text-align:center;padding:12px 6px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:#1E2C4D;border:1px solid var(--or);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:10px 14px;z-index:90;width:max-content;max-width:340px;text-align:center;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{font-size:10.5px;color:#6E7F99;text-align:center;margin-top:16px;line-height:1.6}
+#printArea{display:none}
+.paper{background:#fff;color:#111;font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:10.5pt;line-height:1.5;letter-spacing:-.1px}
+.paper h1{font-size:16pt;margin-bottom:4px}.paper h2{font-size:12pt;margin:11px 0 5px;border-left:4px solid #FF6B00;padding-left:7px}
+.paper table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0}
+.paper th,.paper td{border:1px solid #444;padding:4px 6px;text-align:left;vertical-align:top;font-size:9.5pt;overflow-wrap:anywhere;word-break:keep-all}
+.paper th{background:#F1F3F7}
+.paper .note{font-size:9pt;color:#444;margin-top:8px}
+.paper .pre{white-space:pre-wrap}
+@media print{
+ @page{size:A4;margin:12mm}
+ html,body{background:#fff!important;min-height:0!important}
+ body>*:not(#printArea){display:none!important}
+ #printArea{display:block!important}
+}
+.ch{background:#0B1530;border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px}
+.ch .h{display:flex;align-items:baseline;gap:7px}
+.ch .h .rk{flex:0 0 22px;height:22px;border-radius:7px;background:var(--or);color:var(--on);font-weight:900;font-size:12px;display:grid;place-items:center}
+.ch .h b{flex:1;min-width:0;color:#fff;font-size:13.5px}
+.ch .h span{font-size:16px;font-weight:900;color:var(--green)}
+.ch table{width:100%;margin-top:5px;font-size:12px;border-collapse:collapse}
+.ch td{padding:2px 0;color:#D3DBE7}.ch td:last-child{text-align:right;font-weight:800}
+.neg{color:var(--red)!important}
+</style></head>
+<body><div id="app">
+<header class="top">
+ <div class="hd"><div class="brand"><span class="mark">K</span><span class="t">KTS 더배달</span></div><span class="sp"></span><a class="home" href="index.html">원클릭 쇼룸</a></div>
+ <div class="privacy">입력하신 내용은 이 기기 안에서만 처리됩니다</div>
+</header>
+<main>
+<section class="hero">
+ <h1>배달앱·카드 정산서를 붙여 넣으면<br><em>채널별 실수령률</em>과 손익</h1>
+ <p>채널별 매출·수수료율·실수령액을 표로 정리하고 실수령률 순위를 매깁니다. 광고비를 넣으면 채널별 손익까지 계산합니다. 수수료가 비어 있으면 추정하지 않고 "확인"으로 둡니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>정산 내역 · 광고비</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 3채널 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">정산 내역 <i>채널, 일자, 매출, 수수료, 정산액</i></label>
+ <textarea id="rows" rows="10" maxlength="40000"></textarea>
+ <label class="lb">광고비 (선택) <i>채널, 광고비</i></label>
+ <textarea id="ads" rows="3" maxlength="2000"></textarea>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">채널별 분석</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">채널별 정산 분석</span></h2>
+ <div class="stat"><div><b id="sSales">0</b><span>총 매출(원)</span></div><div><b id="sNet">0</b><span>총 실수령(원)</span></div><div><b id="sRate">-</b><span>실수령률</span></div></div>
+ <div class="row"><button class="btn pri sm" id="csvBtn">CSV 저장</button><button class="btn sec sm" id="printBtn">인쇄</button><button class="btn sec sm" id="copyBtn">요약 복사</button></div>
+ <h3>실수령률 순위</h3><div id="chs"></div>
+ <h3>월 합계</h3><div id="months"></div>
+ <div id="chk"></div>
+ <p class="kv">수수료율 = 수수료 ÷ 매출 · 실수령률 = 정산액 ÷ 매출 · 채널 손익 = 정산액 − 광고비. 수수료 칸이 빈 줄은 수수료율 계산에서 빼고 "확인"으로 표시합니다(업계 평균으로 채우지 않음).</p>
+</section>
+<section class="card qa" id="inq">
+ <h2><span class="n">?</span>60초 문의</h2>
+ <p class="sub">우리 매장에 맞게 고쳐 쓰고 싶으시면 이름·연락처·문의 한 줄만 남겨 주세요. 담당자가 확인한 뒤 연락드립니다.</p>
+ <div class="row"><a class="btn sec" id="inqLink" href="../misa-1116/form.html" target="_blank" rel="noopener">60초 문의 폼 열기 (이름 · 연락처 · 문의)</a></div>
+ <p class="kv">KTS 60초 접수 폼을 그대로 씁니다. 이 화면에서 만든 작업 내용은 폼으로 넘어가지 않습니다.</p>
+</section>
+<p class="foot">KTS 원클릭 · 서버 0 · 외부 발송 0 · 모든 처리는 이 기기 안에서만 합니다<br><a href="index.html">원클릭 쇼룸으로</a></p>
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/* ===== KTS 원클릭 공통 도우미 (9차 재사용 · 11차 확장) (복사·저장·인쇄·기기 저장·개인정보 가림) ===== */
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+let _tt; function toast(m){ const e = $('#toast'); e.textContent = m; e.classList.add('on'); clearTimeout(_tt); _tt = setTimeout(() => e.classList.remove('on'), 2400); }
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(e){}
+  try{ const a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); const ok = document.execCommand('copy'); a.remove(); return ok; }catch(e){ return false; }
+}
+function copyOut(t, msg){ window.__lastCopy = t; copyText(t).then(ok => toast(ok ? (msg || '복사했습니다') : '복사하지 못했습니다. 글자를 길게 눌러 직접 복사해 주세요')); }
+function download(name, text, mime){ window.__lastDownload = {name:name, size:text.length}; const b = new Blob([text], {type:mime || 'text/plain;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+const toCSV = rows => rows.map(r => r.map(c => { c = String(c == null ? '' : c); return /[",\r\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(',')).join('\r\n');
+function saveCSV(name, rows){ download(name, '﻿' + toCSV(rows), 'text/csv;charset=utf-8'); toast('CSV 파일을 저장했습니다 (엑셀에서 열림)'); }
+function printDoc(html){ $('#printArea').innerHTML = html; setTimeout(() => window.print(), 60); }
+const LS = { get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} } };
+const pad2 = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayS = () => ymd(new Date());
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const parseD = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const WK = ['일', '월', '화', '수', '목', '금', '토'];
+const korD = d => d ? `${d.getMonth() + 1}월 ${d.getDate()}일(${WK[d.getDay()]})` : '';
+/* CSV 붙여넣기 읽기 (따옴표·쉼표·탭 지원) */
+function parseCSV(text){
+  text = String(text || '').replace(/^﻿/, '');
+  const sep = (text.split('\n')[0].indexOf('\t') >= 0) ? '\t' : ',';
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){ if (c === '"'){ if (text[i + 1] === '"'){ cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === sep){ row.push(cur.trim()); cur = ''; }
+    else if (c === '\n'){ row.push(cur.trim()); rows.push(row); row = []; cur = ''; }
+    else if (c !== '\r') cur += c;
+  }
+  if (cur !== '' || row.length){ row.push(cur.trim()); rows.push(row); }
+  return rows.filter(r => r.some(x => x !== ''));
+}
+/* 개인정보 가림: 휴대폰·일반전화·이메일 */
+function maskPII(s){
+  return String(s || '')
+    .replace(/([\w.+-]{1,64})@([\w-]+(?:\.[\w-]+)+)/g, (m, u, d) => u.slice(0, 2) + '***@' + d)
+    .replace(/(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/g, (m, a, b, c) => a + '-****-' + c)
+    .replace(/(0[2-6]\d?)[-.\s](\d{3,4})[-.\s](\d{4})/g, (m, a, b, c) => a + '-****-' + c);
+}
+/* 받침에 맞춘 조사: jo('주문','을를') → 주문을 */
+const jo = (w, p) => { w = String(w); const c = w.charCodeAt(w.length - 1); const has = c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; return w + (has ? p[0] : p[1]); };
+const PHONE_RE = /(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/;
+/* ===== 공통 도우미 끝 ===== */
+/* ===== 11차 추가 도우미 ===== */
+const num = s => { if (s == null) return NaN; s = String(s).replace(/[,\s원₩$]/g, ''); if (s === '') return NaN; return Number(s); };
+const won = n => (isFinite(n) ? Math.round(n).toLocaleString('ko-KR') : '-');
+const fx2 = n => (isFinite(n) ? (Math.round(n * 100) / 100).toFixed(2) : '-');
+const pct = (n, d) => (isFinite(n) ? (n * 100).toFixed(d == null ? 1 : d) + '%' : '-');
+const daysBetween = (a, b) => Math.round((b - a) / 86400000);
+function icsFile(name, events){
+  const st = d => `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}`;
+  const stamp = new Date(); const ds = st(stamp) + 'T' + pad2(stamp.getHours()) + pad2(stamp.getMinutes()) + '00';
+  const e = s => String(s).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+  const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//KTS OneClick//KO', 'CALSCALE:GREGORIAN'];
+  events.forEach((v, i) => { L.push('BEGIN:VEVENT', `UID:kts-${st(v.date)}-${i}-${Math.random().toString(36).slice(2, 8)}@oneclick`, `DTSTAMP:${ds}`, `DTSTART;VALUE=DATE:${st(v.date)}`, `DTEND;VALUE=DATE:${st(addDays(v.date, 1))}`, `SUMMARY:${e(v.title)}`, `DESCRIPTION:${e(v.desc || '')}`, 'END:VEVENT'); });
+  L.push('END:VCALENDAR'); download(name, L.join('\r\n'), 'text/calendar;charset=utf-8'); return events.length;
+}
+const utf8Bytes = s => new TextEncoder().encode(String(s)).length;
+const maskTel4 = s => { const d = String(s || '').replace(/\D/g, ''); return d.length >= 4 ? '***-****-' + d.slice(-4) : (s ? '****' : ''); };
+/* ===== 11차 추가 끝 ===== */
+function sample(){
+  const L = ['채널, 일자, 매출, 수수료, 정산액']; const t = new Date(); const y = t.getFullYear(), m = t.getMonth();
+  const M = [[y, m - 2], [y, m - 1]] /* 지난 2개월(끝난 달) */.map(([a, b]) => new Date(a, b, 1));
+  M.forEach((mm, mi) => [5, 12, 19, 26].forEach((d, wi) => { const dd = ymd(new Date(mm.getFullYear(), mm.getMonth(), d)); const k = mi * 4 + wi;
+    const a = 820000 + k * 23000, b = 540000 + k * 17000, c = 1300000 + k * 31000;
+    L.push(`배달앱A, ${dd}, ${a}, ${Math.round(a * 0.168)}, ${a - Math.round(a * 0.168)}`);
+    L.push(`배달앱B, ${dd}, ${b}, ${k === 6 ? '' : Math.round(b * 0.214)}, ${b - Math.round(b * 0.214)}`);
+    L.push(`카드매출, ${dd}, ${c}, ${Math.round(c * 0.011)}, ${c - Math.round(c * 0.011)}`); }));
+  return L.join('\n');
+}
+let CUR = null;
+function run(){
+  const rows = parseCSV($('#rows').value).filter(r => r[0] && r[0] !== '채널'); if (!rows.length){ $('#rows').classList.add('miss'); return toast('정산 내역을 붙여 넣어 주세요'); } $('#rows').classList.remove('miss');
+  const ads = {}; parseCSV($('#ads').value).forEach(r => { if (r[0] && isFinite(num(r[1]))) ads[r[0]] = (ads[r[0]] || 0) + num(r[1]); });
+  const R = rows.map(r => ({ch:r[0], d:r[1] || '', sales:num(r[2]), fee:num(r[3]), net:num(r[4])}));
+  const C = {}; R.forEach(r => { const c = C[r.ch] = C[r.ch] || {ch:r.ch, sales:0, feeSales:0, fee:0, net:0, netSales:0, n:0, miss:[]}; c.n++; if (isFinite(r.sales)) c.sales += r.sales;
+    if (isFinite(r.fee) && isFinite(r.sales)){ c.fee += r.fee; c.feeSales += r.sales; } else c.miss.push(`${r.d} 수수료 없음`);
+    if (isFinite(r.net) && isFinite(r.sales)){ c.net += r.net; c.netSales += r.sales; } else c.miss.push(`${r.d} 정산액 없음`); });
+  const chs = Object.values(C).map(c => Object.assign(c, {feeRate:c.feeSales ? c.fee / c.feeSales : NaN, netRate:c.netSales ? c.net / c.netSales : NaN, ad:ads[c.ch], pl:isFinite(ads[c.ch]) ? c.net - ads[c.ch] : NaN})).sort((a, b) => (b.netRate || 0) - (a.netRate || 0));
+  const months = {}; R.forEach(r => { const k = (r.d || '').slice(0, 7) || '날짜 없음'; const o = months[k] = months[k] || {}; const c = o[r.ch] = o[r.ch] || {sales:0, net:0}; if (isFinite(r.sales)) c.sales += r.sales; if (isFinite(r.net)) c.net += r.net; });
+  CUR = {chs, months, n:R.length, ads}; render();
+}
+function render(){
+  const R = CUR; const S = R.chs.reduce((a, c) => a + c.sales, 0), N = R.chs.reduce((a, c) => a + c.net, 0), NS = R.chs.reduce((a, c) => a + c.netSales, 0);
+  $('#sSales').textContent = won(S); $('#sNet').textContent = won(N); $('#sRate').textContent = NS ? pct(N / NS) : '-';
+  $('#rTitle').textContent = `채널별 정산 분석 · ${R.n}줄`;
+  $('#chs').innerHTML = R.chs.map((c, i) => `<div class="ch"><div class="h"><span class="rk">${i + 1}</span><b>${esc(c.ch)}</b><span>${pct(c.netRate)}</span></div><table>
+   <tr><td>매출 (${c.n}건)</td><td>${won(c.sales)}원</td></tr>
+   <tr><td>수수료 · 수수료율</td><td>${c.miss.some(x => /수수료/.test(x)) ? '<span class="pill b">확인</span> ' : ''}${won(c.fee)}원 · ${pct(c.feeRate)}${c.miss.some(x => /수수료/.test(x)) ? ' (빈 줄 제외)' : ''}</td></tr>
+   <tr><td>실수령(정산액)</td><td>${won(c.net)}원</td></tr>
+   <tr><td>광고비</td><td>${isFinite(c.ad) ? won(c.ad) + '원' : '미입력'}</td></tr>
+   <tr><td>채널 손익 (정산 − 광고)</td><td class="${c.pl < 0 ? 'neg' : ''}">${isFinite(c.pl) ? won(c.pl) + '원 · 매출 대비 ' + pct(c.pl / c.sales) : '광고비 입력 시 계산'}</td></tr></table></div>`).join('');
+  const ks = Object.keys(R.months).sort(), chn = R.chs.map(c => c.ch);
+  $('#months').innerHTML = `<table class="t"><tr><th>월</th>${chn.map(c => `<th>${esc(c)}</th>`).join('')}<th>합계</th></tr>${ks.map(k => `<tr><td>${k}</td>${chn.map(c => `<td>${won((R.months[k][c] || {}).sales || 0)}</td>`).join('')}<td>${won(chn.reduce((a, c) => a + ((R.months[k][c] || {}).sales || 0), 0))}</td></tr>`).join('')}</table><p class="kv">표 안 숫자는 매출(원)입니다.</p>`;
+  const miss = R.chs.flatMap(c => c.miss.map(x => c.ch + ' ' + x));
+  $('#chk').innerHTML = miss.length ? `<div class="item warn"><div class="q">확인 필요 ${miss.length}줄</div><div class="a">${miss.map(esc).join('<br>')}<br>정산서 원본에서 수수료를 확인해 넣어 주세요. 추정값으로 채우지 않았습니다.</div></div>` : '';
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+$('#sampleBtn').onclick = () => { $('#rows').value = sample(); $('#ads').value = '배달앱A, 450000\n배달앱B, 380000\n카드매출, 0'; toast('예시 3채널을 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#rows').value = ''; $('#ads').value = ''; };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(`[채널별 정산 요약]\n` + CUR.chs.map((c, i) => `${i + 1}. ${c.ch}: 매출 ${won(c.sales)} · 수수료율 ${pct(c.feeRate)} · 실수령률 ${pct(c.netRate)} · 손익 ${isFinite(c.pl) ? won(c.pl) : '광고비 미입력'}${c.miss.length ? ' (확인 ' + c.miss.length + ')' : ''}`).join('\n'), '요약을 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`채널정산_${todayS()}.csv`, [['순위','채널','건수','매출','수수료','수수료율','정산액','실수령률','광고비','채널 손익','확인']].concat(CUR.chs.map((c, i) => [i + 1, c.ch, c.n, c.sales, c.fee, isFinite(c.feeRate) ? (c.feeRate * 100).toFixed(1) + '%' : '확인', c.net, isFinite(c.netRate) ? (c.netRate * 100).toFixed(1) + '%' : '', isFinite(c.ad) ? c.ad : '', isFinite(c.pl) ? c.pl : '', c.miss.join(' / ')])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>채널별 매출 · 수수료 분석</h1><p class="note">${todayS()} · ${CUR.n}줄 · 입력값 기준 (수수료 빈 줄은 "확인")</p><table><tr><th>순위</th><th>채널</th><th>매출</th><th>수수료율</th><th>정산액</th><th>실수령률</th><th>광고비</th><th>손익</th></tr>${CUR.chs.map((c, i) => `<tr><td>${i + 1}</td><td>${esc(c.ch)}</td><td>${won(c.sales)}</td><td>${pct(c.feeRate)}${c.miss.length ? ' 확인' : ''}</td><td>${won(c.net)}</td><td>${pct(c.netRate)}</td><td>${isFinite(c.ad) ? won(c.ad) : '-'}</td><td>${isFinite(c.pl) ? won(c.pl) : '-'}</td></tr>`).join('')}</table>${$('#months').innerHTML.replace('class="t"', '')}</div>`); };
+</script>
+</body></html>

@@ -1,0 +1,18 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+counts: n=30 risk=11 due=7 top=10
+top10: 오세훈(hi,15회,114/45일), 배수빈(hi,12회,18/10일), 심가은(hi,11회,79/45일), 김민수(hi,8회,11/7일), 권나래(hi,7회,21/14일), 강도윤(hi,5회,93/45일), 문준서(hi,5회,70/30일), 안소희(hi,4회,77/30일), 전태윤(hi,4회,21/10일), 고은비(hi,3회,51/21일)
+cycle basis sample: 강도윤: 45일 = (2026-08-17 − 2026-02-18) ÷ 4 | 조수아: 30일 = 기본 주기 | 윤서준: 10일 = (2026-11-10 − 2026-09-01) ÷ 7
+phone masked on screen: raw 010-0000- visible=false masked sample=***-****-1000
+3 messages: 0: ok=true 179바이트 LMS | 1: ok=true 174바이트 LMS | 2: ok=true 169바이트 LMS
+copy blocked without (광고): (광고)·전송자·수신거부가 빠져 복사할 수 없습니다
+copy: (광고) 미사 한상차림 ⏎ #{이름}님, 요즘 뜸하셔서 쿠폰 하나 챙겨 드려요. ⏎ 음료 1잔 서비스 ⏎ 이번 달 말까지 매장에서 이 문자를 보여 주세요. ⏎ 전송자: 미사 한상차림 ⏎ 무료수신거부 080-000-0000
+csv: {"name":"단골관리_2026-11-18.csv","size":1369}
+print print: pages=1 bytes=68583 file=files\dangol_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=4537 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

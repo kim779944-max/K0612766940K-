@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더원가 — 메뉴 원가율·권장 판매가 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.mn{background:#0B1530;border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px}
+.mn .h{display:flex;align-items:baseline;gap:6px}
+.mn .h b{flex:1;min-width:0;color:#fff;font-size:13.5px}
+.mn .h .rt{font-size:16px;font-weight:900}
+.mn .rt.hi{color:var(--red)}.mn .rt.ok{color:var(--green)}.mn .rt.md{color:var(--yel)}
+.mn .m{font-size:11.5px;color:var(--sub);margin-top:3px;line-height:1.55}
+.p3{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:6px}
+.p3 div{background:var(--card2);border:1px solid var(--line2);border-radius:9px;padding:6px 4px;text-align:center;font-size:11px;color:var(--sub)}
+.p3 div b{display:block;font-size:13.5px;color:#fff}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더원가@@-->
+<main>
+<section class="hero">
+ <h1>재료 단가표와 사용량을 넣으면<br><em>메뉴 원가율</em>과 권장 판매가 3안</h1>
+ <p>g↔kg, ml↔L는 자동으로 환산하고, 개·봉·모 같은 단위는 그대로 맞춥니다. 인건비·임대료·배달수수료는 입력했을 때만 반영합니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>단가표 · 메뉴</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 8메뉴 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">재료 단가표 <i>재료, 구매 수량, 단위, 가격</i></label>
+ <textarea id="ing" rows="7" maxlength="10000"></textarea>
+ <label class="lb">메뉴별 사용량 <i>"김치찌개(9000원): 김치 200g, 돼지고기 150g"</i></label>
+ <textarea id="menu" rows="7" maxlength="10000"></textarea>
+ <div class="g2"><div><label class="lb">기타 비용(그릇당 원)<i>선택 · 인건비·임대 등</i></label><input id="extra" inputmode="numeric" placeholder="비우면 반영 안 함"></div><div><label class="lb">배달 수수료(%)<i>선택</i></label><input id="dfee" inputmode="decimal" placeholder="비우면 반영 안 함"></div></div>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">원가율 계산</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>메뉴 원가표</h2>
+ <div class="stat"><div><b id="sN">0</b><span>메뉴</span></div><div><b id="sAvg">-</b><span>평균 원가율</span></div><div><b id="sHi">0</b><span>35% 초과</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">메뉴판 인쇄</button><button class="btn sec sm" id="csvBtn">CSV 저장</button><button class="btn sec sm" id="copyBtn">복사</button></div>
+ <div class="row"><button class="btn sec sm" id="upBtn">재료 +10% 일괄 재계산</button><button class="btn sec sm" id="resetBtn">원래 단가로</button></div>
+ <p class="kv" id="info"></p>
+ <div id="list"></div>
+ <div id="warn"></div>
+ <p class="fixnote">권장 판매가 = 원가 ÷ 목표 원가율(30/33/35%)을 100원 단위로 올림. 입력하지 않은 비용(인건비·임대료·배달수수료)은 넣지 않습니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const S_ING = `김치, 10, kg, 38000
+돼지고기 앞다리, 1, kg, 13500
+두부, 1, 모, 1500
+대파, 1, kg, 4500
+양파, 15, kg, 18000
+쌀, 20, kg, 62000
+계란, 30, 개, 7800
+소고기 불고기용, 1, kg, 32000
+고추장, 3, kg, 14000
+식용유, 1.8, L, 6900
+어묵, 1, kg, 8000
+떡, 1, kg, 4800
+소면, 3, kg, 9000
+멸치육수, 1, L, 1200
+애호박, 1, 개, 1500
+감자, 10, kg, 25000
+당근, 1, kg, 3500
+카레가루, 1, kg, 9500`;
+const S_MENU = `김치찌개(9000원): 김치 200g, 돼지고기 앞다리 120g, 두부 0.5모, 대파 20g, 양파 50g, 쌀 150g
+제육볶음(10000원): 돼지고기 앞다리 200g, 고추장 40g, 양파 80g, 대파 20g, 식용유 15ml, 쌀 150g
+된장찌개(8000원): 두부 0.5모, 애호박 0.3개, 감자 60g, 양파 40g, 대파 15g, 쌀 150g
+불고기 덮밥(11000원): 소고기 불고기용 150g, 양파 60g, 대파 15g, 쌀 180g
+계란말이(7000원): 계란 4개, 대파 20g, 당근 20g, 식용유 10ml
+떡볶이(6000원): 떡 250g, 어묵 80g, 고추장 50g, 대파 20g
+잔치국수(7000원): 소면 120g, 멸치육수 400ml, 애호박 0.2개, 계란 1개, 당근 15g
+카레라이스(8500원): 카레가루 30g, 감자 100g, 당근 40g, 양파 60g, 돼지고기 앞다리 60g, 쌀 180g`;
+const UNIT = {g:['w', 1], kg:['w', 1000], ml:['v', 1], l:['v', 1000]};
+const unitOf = u => { u = String(u || '').trim(); const k = u.toLowerCase(); return UNIT[k] ? {dim:UNIT[k][0], f:UNIT[k][1], u} : {dim:'c:' + u, f:1, u}; };
+let BASE = null, MULT = 1, CUR = null;
+function parseIng(){ const o = {}; parseCSV($('#ing').value).forEach(r => { const q = num(r[1]), p = num(r[3]); if (!r[0] || !isFinite(q) || !isFinite(p)) return; const U = unitOf(r[2]); o[r[0].trim()] = {qty:q * U.f, dim:U.dim, unit:r[2], price:p}; }); return o; }
+function parseMenu(){ return $('#menu').value.split(/\r?\n/).map(l => l.trim()).filter(Boolean).map(l => { const i = l.indexOf(':'); if (i < 0) return null; const head = l.slice(0, i).trim(); const m = /^(.+?)\s*\(([\d,]+)\s*원?\)$/.exec(head);
+  return {name:m ? m[1].trim() : head, cur:m ? num(m[2]) : NaN, uses:l.slice(i + 1).split(/[,，]/).map(s => s.trim()).filter(Boolean).map(s => { const mm = /^(.+?)\s*([\d.]+)\s*([a-zA-Z가-힣]*)$/.exec(s); return mm ? {n:mm[1].trim(), q:+mm[2], u:mm[3] || '개'} : {n:s, q:NaN, u:''}; })}; }).filter(Boolean); }
+function calc(){
+  const ING = parseIng(), M = parseMenu(); if (!M.length){ $('#menu').classList.add('miss'); toast('메뉴별 사용량을 적어 주세요'); return null; } $('#menu').classList.remove('miss');
+  const extra = num($('#extra').value), dfee = num($('#dfee').value);
+  const out = M.map(m => { const lines = m.uses.map(u => { const I = ING[u.n]; if (!I) return {n:u.n, cost:NaN, why:'단가표에 없음 → 확인'}; const U = unitOf(u.u); if (U.dim !== I.dim) return {n:u.n, cost:NaN, why:`단위 다름(${u.u} vs ${I.unit}) → 확인`}; const c = I.price * MULT / I.qty * u.q * U.f; return {n:u.n, cost:c, why:`${u.q}${u.u} × ${won(I.price * MULT)}원/${I.qty / (I.dim === 'w' || I.dim === 'v' ? unitOf(I.unit).f : 1)}${I.unit}`}; });
+    const food = lines.reduce((a, l) => a + (isFinite(l.cost) ? l.cost : 0), 0); const bad = lines.filter(l => !isFinite(l.cost));
+    const cost = food + (isFinite(extra) ? extra : 0) + (isFinite(dfee) && isFinite(m.cur) ? m.cur * dfee / 100 : 0);
+    const rec = [0.30, 0.33, 0.35].map(r => Math.ceil(cost / r / 100) * 100);
+    return {name:m.name, cur:m.cur, food, cost, lines, bad, rate:isFinite(m.cur) ? cost / m.cur : NaN, margin:isFinite(m.cur) ? m.cur - cost : NaN, rec}; });
+  return {out, extra, dfee};
+}
+function run(){ const R = calc(); if (!R) return; CUR = R; render(); }
+function render(){
+  const R = CUR, O = R.out, rated = O.filter(o => isFinite(o.rate));
+  $('#sN').textContent = O.length; $('#sAvg').textContent = rated.length ? pct(rated.reduce((a, o) => a + o.rate, 0) / rated.length) : '-'; $('#sHi').textContent = rated.filter(o => o.rate > 0.35).length;
+  $('#info').textContent = (MULT !== 1 ? `재료 단가 ×${MULT.toFixed(2)} 적용 중 (인상 시뮬레이션) · ` : '') + (isFinite(R.extra) ? `기타 비용 그릇당 ${won(R.extra)}원 반영 · ` : '기타 비용 미입력 → 반영 안 함 · ') + (isFinite(R.dfee) ? `배달 수수료 ${R.dfee}% 반영` : '배달 수수료 미입력 → 반영 안 함');
+  $('#list').innerHTML = O.map(o => { const cls = !isFinite(o.rate) ? '' : (o.rate > 0.35 ? 'hi' : (o.rate > 0.30 ? 'md' : 'ok'));
+    return `<div class="mn"><div class="h"><b>${esc(o.name)}</b><span class="rt ${cls}">${isFinite(o.rate) ? pct(o.rate) : '판매가 없음'}</span></div>
+    <div class="m">판매가 ${isFinite(o.cur) ? won(o.cur) + '원' : '-'} · 원가 ${won(o.cost)}원 (재료 ${won(o.food)}원) · 마진 ${isFinite(o.margin) ? won(o.margin) + '원' : '-'}${o.bad.length ? `<br><span style="color:var(--red)">확인: ${o.bad.map(b => esc(b.n) + ' ' + esc(b.why)).join(', ')}</span>` : ''}</div>
+    <div class="p3">${o.rec.map((p, i) => `<div>원가율 ${[30, 33, 35][i]}%<b>${won(p)}원</b></div>`).join('')}</div></div>`; }).join('');
+  $('#warn').innerHTML = O.some(o => o.bad.length) ? '<div class="item warn"><div class="a">"확인" 표시 재료는 원가에서 빠졌습니다. 단가표의 이름·단위를 맞추면 다시 계산됩니다.</div></div>' : '';
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+$('#sampleBtn').onclick = () => { $('#ing').value = S_ING; $('#menu').value = S_MENU; MULT = 1; toast('예시 8메뉴를 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#ing').value = ''; $('#menu').value = ''; };
+$('#runBtn').onclick = () => { MULT = 1; run(); };
+$('#upBtn').onclick = () => { if (!CUR) return; BASE = BASE || CUR; MULT = Math.round(MULT * 1.1 * 10000) / 10000; run(); toast(`재료 단가 ×${MULT.toFixed(2)}로 다시 계산했습니다`); };
+$('#resetBtn').onclick = () => { MULT = 1; run(); };
+$('#copyBtn').onclick = () => CUR && copyOut(`[메뉴 원가표]${MULT !== 1 ? ` 재료 ×${MULT.toFixed(2)}` : ''}\n` + CUR.out.map(o => `${o.name}: 판매가 ${isFinite(o.cur) ? won(o.cur) : '-'} / 원가 ${won(o.cost)} / 원가율 ${pct(o.rate)} / 권장 ${o.rec.map(won).join('·')}`).join('\n'), '원가표를 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`메뉴원가_${todayS()}.csv`, [['메뉴','현재 판매가','재료 원가','총 원가','원가율','마진','권장가 30%','권장가 33%','권장가 35%','확인 필요 재료','재료 단가 배수']].concat(CUR.out.map(o => [o.name, isFinite(o.cur) ? o.cur : '', Math.round(o.food), Math.round(o.cost), isFinite(o.rate) ? Math.round(o.rate * 1000) / 10 + '%' : '', isFinite(o.margin) ? Math.round(o.margin) : '', ...o.rec, o.bad.map(b => b.n).join('/'), MULT])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>메뉴판 · 원가 기준표</h1><p class="note">${todayS()} · ${esc($('#info').textContent)}</p><table><colgroup><col><col style="width:13%"><col style="width:12%"><col style="width:10%"><col style="width:13%"><col style="width:13%"><col style="width:13%"></colgroup><tr><th>메뉴</th><th>현재가</th><th>원가</th><th>원가율</th><th>권장 30%</th><th>권장 33%</th><th>권장 35%</th></tr>${CUR.out.map(o => `<tr><td>${esc(o.name)}${o.bad.length ? ' [확인]' : ''}</td><td>${isFinite(o.cur) ? won(o.cur) : '-'}</td><td>${won(o.cost)}</td><td>${pct(o.rate)}</td>${o.rec.map(p => `<td>${won(p)}</td>`).join('')}</tr>`).join('')}</table></div>`); };
+</script>
+</body></html>

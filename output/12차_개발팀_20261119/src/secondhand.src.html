@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더당근 — 중고 판매글 1초 작성 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.tl{display:flex;gap:6px;align-items:center;background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 9px;margin-top:6px;font-size:13px;color:#fff}
+.tl span{flex:1;min-width:0}.tl button{flex:0 0 auto;font-size:11.5px;font-weight:800;border:1px solid var(--line2);border-radius:8px;padding:5px 9px;background:var(--card2)}
+.cl{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:#D3DBE7;margin-top:6px;line-height:1.45}
+.cl b{flex:0 0 auto;font-size:11px;border-radius:6px;padding:1px 6px;margin-top:1px}
+.cl b.y{background:var(--green);color:#062014}.cl b.n{background:var(--yel);color:#1a1200}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더당근@@-->
+<main>
+<section class="hero">
+ <h1>물건 상태·하자·가격만 넣으면<br><em>중고 판매글</em> 1초 완성</h1>
+ <p>제목 5개(지역명 넣기 선택), 본문 3단(상태·거래 방식·주의), 넣은 구매가·사용 기간으로 만든 가격 근거 문장, 끌올용 문구 3종, "미리 알려 주면 좋은 것" 점검표를 만듭니다.</p>
+ <p class="fixnote">하자를 미화하지 않습니다(넣은 하자는 본문에 반드시 그대로). 시세·적정가를 조회하거나 추정하지 않습니다.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>물건 정보</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 1: 태블릿</button><button class="btn sec sm" data-e="1">예시 2: 원목 식탁</button></div>
+ <div class="g2"><div><label class="lb">물건</label><input id="item" maxlength="40"></div><div><label class="lb">모델·크기 <i>선택</i></label><input id="model" maxlength="40"></div></div>
+ <div class="g2"><div><label class="lb">상태</label><select id="cond"><option>미개봉</option><option>거의 새것</option><option>사용감 적음</option><option>사용감 있음</option><option>사용감 많음</option></select></div><div><label class="lb">구매 시기</label><input id="bm" type="month"></div></div>
+ <label class="lb">하자 <i>한 줄에 하나 · 없으면 비우기</i></label><textarea id="def" rows="3" maxlength="1000"></textarea>
+ <div class="g2"><div><label class="lb">구매가 (원)</label><input id="bp" inputmode="numeric"></div><div><label class="lb">희망가 (원)</label><input id="price" inputmode="numeric"></div></div>
+ <div class="g2"><div><label class="lb">거래 방식</label><select id="trade"><option>직거래</option><option>택배</option><option>직거래 · 택배</option></select></div><div><label class="lb">가격 제안</label><select id="nego"><option>받아요</option><option>안 받아요</option></select></div></div>
+ <div class="g2"><div><label class="lb">거래 장소</label><input id="place" maxlength="40"></div><div><label class="lb">동네 이름</label><input id="region" maxlength="20"></div></div>
+ <label class="lb">구성품 <i>쉼표로</i></label><input id="parts" maxlength="120">
+ <label class="lb" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="useReg" checked> 제목에 동네 이름 넣기</label>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">판매글 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">판매글</span></h2>
+ <div id="warn"></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">제목 1 + 본문 복사</button><button class="btn sec sm" id="bodyBtn">본문만 복사</button></div>
+ <h3>제목 5개</h3><div id="titles"></div>
+ <h3>본문 (3단)</h3><div class="out" id="body"></div>
+ <h3>가격 근거 문장</h3><div class="out" id="why"></div>
+ <h3>끌올용 문구 3종</h3><div id="ups"></div>
+ <h3>이런 점은 미리 알려 주세요</h3><div id="cl"></div>
+ <p class="fixnote">시세·적정가를 조회하거나 추정하지 않습니다. 가격 근거는 넣은 구매가·구매 시기로만 만듭니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const EX = [
+ {item:'아이패드 에어 5세대', model:'와이파이 64GB 스페이스 그레이', cond:'사용감 적음', bm:'2024-03', def:'왼쪽 위 모서리 찍힘 1곳 (사진 3번)\n배터리 성능 87%', bp:'929000', price:'520000', trade:'직거래 · 택배', nego:'받아요', place:'미사역 2번 출구', region:'미사동', parts:'충전 케이블, 박스, 케이스'},
+ {item:'원목 6인 식탁', model:'1800 × 900', cond:'사용감 있음', bm:'2022-05', def:'상판 컵 자국 2곳\n의자 다리 살짝 티 안 나는 긁힘', bp:'780000', price:'250000', trade:'직거래', nego:'안 받아요', place:'풍산동 아파트 1층 (직접 가져가셔야 함)', region:'풍산동', parts:'의자 4개'}];
+const IDS = ['item', 'model', 'cond', 'bm', 'def', 'bp', 'price', 'trade', 'nego', 'place', 'region', 'parts'];
+const SOFT = ['티 안 나', '티 안나', '거의 없', '살짝', '미세한', '미세하', '신경 안 쓰', '거의 새', '사용에 지장 없'];
+const ELEC = /폰|패드|노트북|태블릿|워치|이어폰|에어팟|갤럭시|카메라|모니터|게임기|스위치/;
+let CUR = null;
+function months(bm){ const m = /^(\d{4})-(\d{2})$/.exec(bm || ''); if (!m) return NaN; const n = new Date(); return (n.getFullYear() - +m[1]) * 12 + (n.getMonth() + 1 - +m[2]); }
+function run(){
+  const v = {}; IDS.forEach(k => v[k] = $('#' + k).value.trim()); v.useReg = $('#useReg').checked;
+  if (!v.item){ $('#item').classList.add('miss'); return toast('물건 이름을 넣어 주세요'); } $('#item').classList.remove('miss');
+  const D = v.def.split('\n').map(s => s.trim()).filter(Boolean), P = v.parts.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+  const bp = num(v.bp), pr = num(v.price), mo = months(v.bm), name = v.item + (v.model ? ' ' + v.model : '');
+  const W = [];
+  if (!D.length && /사용감 있음|사용감 많음/.test(v.cond)) W.push(['하자 칸이 비어 있습니다', `상태가 "${v.cond}"인데 하자가 없나요? 작은 흠집·변색도 적어 두면 거래 뒤 다툼이 줄어듭니다.`]);
+  if (D.length && /미개봉|거의 새것/.test(v.cond)) W.push(['상태 표기 확인', `상태를 "${v.cond}"로 골랐는데 하자가 ${D.length}건 있습니다. 상태를 한 단계 낮추는 것을 생각해 보세요.`]);
+  D.forEach(d => SOFT.filter(w => d.includes(w)).forEach(w => W.push(['하자를 줄여 말하는 표현', `"${d}" — "${w}"는 사는 사람이 다르게 볼 수 있습니다. 크기·위치를 숫자로 적어 보세요.`])));
+  if (!isFinite(pr)) W.push(['희망가가 없습니다', '희망가를 넣어야 제목·가격 근거가 완성됩니다.']);
+  const reg = v.useReg && v.region ? `[${v.region}] ` : '';
+  const T = [`${reg}${name} 팝니다`, `${reg}${v.item} ${v.cond}${P.length ? ' · 구성품 ' + P.length + '가지' : ''}`, `${v.trade.includes('직거래') && v.place ? `(${v.region || v.place.split(' ')[0]} 직거래) ` : reg}${v.item}${isFinite(pr) ? ' ' + won(pr) + '원' : ''}`, `${reg}${v.item}${isFinite(pr) ? ' ' + won(pr) + '원' : ''} (가격 제안 ${v.nego})`, `${reg}${v.item} ${D.length ? '하자 ' + D.length + '건 미리 알려 드려요' : v.cond}`];
+  const age = isFinite(mo) ? `${v.bm.slice(0, 4)}년 ${+v.bm.slice(5)}월 구매 (약 ${mo}개월 사용)` : '구매 시기 미입력';
+  const body = `1. 상태\n${name} · ${v.cond} · ${age}\n` + (D.length ? '하자:\n' + D.map(d => '- ' + d).join('\n') : '제가 확인한 하자는 없습니다. 사진으로 상태를 확인해 주세요.') + (P.length ? `\n구성품: ${P.join(', ')}` : '') +
+    `\n\n2. 거래 방식\n${v.trade}${v.place ? ' · ' + v.place : ''}\n가격 ${isFinite(pr) ? won(pr) + '원' : '[희망가]'} · 가격 제안 ${v.nego}` + (v.trade.includes('택배') ? '\n택배비는 채팅으로 정해요.' : '') +
+    `\n\n3. 주의\n사진과 위 하자 내용을 확인하신 뒤 연락 주세요. 받아 보신 뒤 위에 적은 하자로는 환불이 어렵습니다.\n약속 시간이 바뀌면 미리 알려 주세요.`;
+  const why = isFinite(bp) && isFinite(pr) ? `${isFinite(mo) ? `${v.bm.slice(0, 4)}년 ${+v.bm.slice(5)}월에 사서 약 ${mo}개월 썼고` : '구매 시기는 적지 않았고'} 구매가는 ${won(bp)}원이었습니다. 희망가 ${won(pr)}원은 구매가의 ${Math.round(pr / bp * 100)}%입니다${D.length ? ` (하자 ${D.length}건 반영)` : ''}.` : '구매가와 희망가를 넣으면, 넣은 숫자로만 근거 문장을 만듭니다(시세 추정 없음).';
+  const ups = [`아직 판매 중이에요 · ${v.item}${isFinite(pr) ? ' ' + won(pr) + '원' : ''}`, `${v.trade.includes('직거래') ? (v.place ? v.place + ' 직거래 가능해요' : '직거래 가능해요') : '택배 거래 가능해요'} · ${v.item}`, `${D.length ? '하자 미리 적어 두었어요' : v.cond} · ${P.length ? '구성품 ' + P.join(', ') : v.item} · 편하게 물어보세요`];
+  const CL = [['하자를 모두 적었나요', D.length > 0 || /미개봉/.test(v.cond)], ['구매 시기를 적었나요', isFinite(mo)], ['구성품(박스·충전기 등)을 적었나요', P.length > 0], ['박스 유무를 밝혔나요', /박스/.test(v.parts + v.def)], ['거래 장소·방식을 정했나요', !!v.place || v.trade === '택배'], ['흡연·반려동물 환경을 밝혔나요 (해당하면 본문에 직접 추가)', false]];
+  if (ELEC.test(v.item + v.model)) CL.push(['배터리 상태·초기화 여부를 적었나요', /배터리/.test(v.def + v.parts)]);
+  const inBody = D.every(d => body.includes(d));
+  CUR = {v, D, T, body, why, ups, CL, W, inBody}; render();
+}
+function render(){
+  const C = CUR; $('#rTitle').textContent = `${C.v.item} 판매글 · 하자 ${C.D.length}건 ${C.inBody ? '본문 포함' : '누락'}`;
+  $('#warn').innerHTML = C.W.map(w => `<div class="item warn"><div class="q">${esc(w[0])}</div><div class="a">${esc(w[1])}</div></div>`).join('') + (C.D.length ? `<p class="kv">넣은 하자 ${C.D.length}건이 본문에 ${C.inBody ? '모두 그대로 들어갔습니다' : '빠졌습니다'}.</p>` : '');
+  $('#titles').innerHTML = C.T.map((t, i) => `<div class="tl"><span>${i + 1}. ${esc(t)}</span><button data-t="${i}">복사</button></div>`).join('');
+  $$('[data-t]').forEach(b => b.onclick = () => copyOut(C.T[+b.dataset.t], '제목을 복사했습니다'));
+  $('#body').textContent = C.body; $('#why').textContent = C.why;
+  $('#ups').innerHTML = C.ups.map((t, i) => `<div class="tl"><span>${esc(t)}</span><button data-u="${i}">복사</button></div>`).join('');
+  $$('[data-u]').forEach(b => b.onclick = () => copyOut(C.ups[+b.dataset.u], '끌올 문구를 복사했습니다'));
+  $('#cl').innerHTML = C.CL.map(([t, ok]) => `<div class="cl"><b class="${ok ? 'y' : 'n'}">${ok ? '적음' : '확인'}</b><span>${esc(t)}</span></div>`).join('');
+  $('#result').classList.remove('hide');
+}
+function load(i){ IDS.forEach(k => $('#' + k).value = EX[i][k]); toast(`예시 ${i + 1}을 넣었습니다 (가상의 물건)`); }
+$('#sampleBtn').onclick = () => load(0); $$('[data-e]').forEach(b => b.onclick = () => load(+b.dataset.e));
+$('#runBtn').onclick = () => { run(); if (CUR){ $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); } };
+$('#copyBtn').onclick = () => CUR && copyOut(CUR.T[0] + '\n\n' + CUR.body + '\n\n' + CUR.why, '제목과 본문을 복사했습니다');
+$('#bodyBtn').onclick = () => CUR && copyOut(CUR.body, '본문을 복사했습니다');
+</script>
+</body></html>

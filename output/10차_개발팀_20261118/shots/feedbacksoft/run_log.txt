@@ -1,0 +1,17 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+bans: 너는·넌·니가:너는 | 항상·맨날·매번·늘:맨날 | 인격 지칭:성의가 없 | 강조 과장:진짜
+normal tone: [관찰] 지각한다. 이번 달에만 4번 늦었고 지난 화요일엔 25분 늦었다. 준비가 부족해 보였습니다. ⏎ [영향] 그래서 오픈 준비를 내가 혼자 했다. ⏎ [요청] 출근 시간 좀 지켜 주세요. ⏎ [격려] [격려: 원문에 장점이 없어 비워 둡니다 — 직접 확인한 장점이 있을 때만 적으세요]
+facts kept (4번·25분): true
+no invented praise (ex1 격려 placeholder): [격려: 원문에 장점이 없어 비워 둡니다 — 직접 확인
+5 examples: 1:bans=4,격려=빈칸 2:bans=3,격려=원문 3:bans=3,격려=빈칸 4:bans=3,격려=빈칸 5:bans=2,격려=원문
+history saved: 6 (max 20)
+copy: 223자
+print print: pages=1 bytes=63320 file=files\feedbacksoft_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2723 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

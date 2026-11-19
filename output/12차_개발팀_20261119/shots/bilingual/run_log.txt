@@ -1,0 +1,17 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+pairs: rows=12 ko=12 en=10
+missing: 제9조, 제11조
+number mismatch: 제4조 한글에만 2026-12-31 / 영문에만 2026-12-30
+term check: 제8조 "해제" → 용어집 "Rescission"가 영문에 없음
+highlight: 2026년 12월 31일 / December 30, 2026
+glossary editable: term flags after edit=0
+csv: {"name":"한영대조_2026-11-19.csv","size":2457}
+print print: pages=2 bytes=84356 file=files\bilingual_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=3529 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

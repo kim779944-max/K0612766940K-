@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더발주 — 입고·재고 + 부족 품목 발주서 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.st2{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.st2 b{color:#fff}.st2 .q{text-align:right;font-weight:900;color:var(--or2)}
+.st2.low .q{color:var(--red)}
+.st2 small{grid-column:1/3;color:var(--sub);font-size:11px}
+.up{color:var(--red);font-weight:800}.dn{color:var(--green);font-weight:800}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더발주@@-->
+<main>
+<section class="hero">
+ <h1>거래명세서를 붙여 넣으면<br><em>재고 계산</em>과 부족 품목 발주서</h1>
+ <p>입고 장부를 만들고 재고(기존 + 입고 − 사용)를 계산해 안전재고 미만 품목을 발주서 한 장으로 뽑습니다. 단가 변동은 표시만 하고 자동으로 바꾸지 않습니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>명세서 · 재고 · 사용량</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 명세서 2건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">거래명세서·영수증 <i>"거래처: ○○" "일자: 2026-11-17" 다음 줄부터 "품목 수량단위 단가"</i></label>
+ <textarea id="slip" rows="9" maxlength="20000"></textarea>
+ <label class="lb">기존 재고 <i>품목, 현재고, 단위, 안전재고, 거래처, 기준단가</i></label>
+ <textarea id="stock" rows="6" maxlength="10000"></textarea>
+ <label class="lb">이번 기간 사용량 <i>품목, 사용량</i></label>
+ <textarea id="use" rows="4" maxlength="5000"></textarea>
+ <label class="lb">발주 요청일</label><input id="reqDate" type="date">
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">재고 계산 · 발주서 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>재고 · 발주</h2>
+ <div class="stat"><div><b id="sIn">0</b><span>입고 줄</span></div><div><b id="sItems">0</b><span>품목</span></div><div><b id="sLow">0</b><span>부족 품목</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">발주서 인쇄</button><button class="btn sec sm" id="csvBtn">CSV 저장</button><button class="btn sec sm" id="copyBtn">발주 복사</button></div>
+ <h3>부족 품목 → 발주 수량</h3><div id="low"></div>
+ <h3>입고 장부</h3><div id="inbook"></div>
+ <h3>전체 재고</h3><div id="all"></div>
+ <p class="kv">재고 = 기존 재고 + 입고 − 사용. 발주 수량 = 안전재고 × 2 − 재고 (목표 재고 = 안전재고의 2배). 단위가 다르면 계산하지 않고 "확인"으로 둡니다. 단가 변동은 기준단가 대비 표시만 합니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const S_SLIP = `거래처: 미사청과
+일자: 2026-11-16
+양파 20kg 1,250
+대파 5kg 4,800
+감자 10kg 2,600
+애호박 10개 1,500
+청양고추 2kg 9,000
+
+거래처: 하남정육
+일자: 2026-11-17
+돼지고기 앞다리 10kg 13,500
+소고기 불고기용 5kg 32,000
+닭 8마리 6,500
+계란 2판 7,800`;
+const S_STOCK = `품목, 현재고, 단위, 안전재고, 거래처, 기준단가
+양파, 5, kg, 15, 미사청과, 1200
+대파, 1, kg, 3, 미사청과, 4500
+감자, 4, kg, 10, 미사청과, 2500
+애호박, 2, 개, 6, 미사청과, 1500
+청양고추, 0.5, kg, 1, 미사청과, 9000
+당근, 6, kg, 5, 미사청과, 3500
+돼지고기 앞다리, 3, kg, 8, 하남정육, 13500
+소고기 불고기용, 2, kg, 4, 하남정육, 31000
+닭, 4, 마리, 6, 하남정육, 6500
+계란, 30, 개, 60, 하남정육, 260
+두부, 6, 모, 10, 미사두부, 1500`;
+const S_USE = `양파, 12
+대파, 3
+감자, 7
+애호박, 5
+돼지고기 앞다리, 5
+소고기 불고기용, 3
+닭, 5
+계란, 40
+두부, 3
+당근, 1`;
+const NUMU = /^(.+?)\s+([\d.]+)\s*([a-zA-Z가-힣]+)\s+([\d,]+)\s*원?$/;
+function parseSlips(t){
+  const out = []; let vendor = '', date = '';
+  t.split(/\r?\n/).forEach(l => { l = l.trim(); if (!l) return; let m;
+    if ((m = /^거래처\s*[:：]\s*(.+)$/.exec(l))){ vendor = m[1].trim(); return; }
+    if ((m = /^일자\s*[:：]\s*(.+)$/.exec(l))){ date = m[1].trim(); return; }
+    if ((m = NUMU.exec(l))) out.push({vendor, date, name:m[1].trim(), qty:+m[2], unit:m[3], price:num(m[4]), raw:l}); else out.push({vendor, date, raw:l, bad:true}); });
+  return out;
+}
+const UNIT = {kg:['w', 1000], g:['w', 1], l:['v', 1000], ml:['v', 1]};
+const conv = (q, from, to) => { if (from === to) return q; const A = UNIT[from.toLowerCase()], B = UNIT[to.toLowerCase()]; if (A && B && A[0] === B[0]) return q * A[1] / B[1]; return NaN; };
+let CUR = null;
+function run(){
+  const slips = parseSlips($('#slip').value); const rows = parseCSV($('#stock').value).filter(r => r[0] && r[0] !== '품목');
+  if (!rows.length && !slips.length){ $('#slip').classList.add('miss'); return toast('명세서나 재고를 넣어 주세요'); } $('#slip').classList.remove('miss');
+  const S = {}; rows.forEach(r => S[r[0]] = {name:r[0], cur:num(r[1]) || 0, unit:r[2] || '개', safe:num(r[3]), vendor:r[4] || '', base:num(r[5]), inQ:0, useQ:0, chk:[], newPrice:NaN});
+  slips.filter(s => !s.bad).forEach(s => { const it = S[s.name] = S[s.name] || {name:s.name, cur:0, unit:s.unit, safe:NaN, vendor:s.vendor, base:NaN, inQ:0, useQ:0, chk:[], newPrice:NaN, fresh:true};
+    const q = conv(s.qty, s.unit, it.unit); if (!isFinite(q)){ it.chk.push(`입고 단위 ${s.unit} ≠ 재고 단위 ${it.unit}`); s.chk = true; } else { it.inQ += q; s.conv = q; }
+    const unitPrice = isFinite(q) && q ? s.price * s.qty / q : NaN; if (isFinite(unitPrice)) it.newPrice = unitPrice; if (!it.vendor) it.vendor = s.vendor; });
+  parseCSV($('#use').value).forEach(r => { if (S[r[0]]) S[r[0]].useQ += num(r[1]) || 0; });
+  const items = Object.values(S).map(it => { const stock = it.chk.length ? NaN : it.cur + it.inQ - it.useQ; const low = isFinite(it.safe) && isFinite(stock) && stock < it.safe; const order = low ? Math.ceil(it.safe * 2 - stock) : 0;
+    const pd = isFinite(it.base) && isFinite(it.newPrice) && Math.abs(it.newPrice - it.base) >= 1 ? (it.newPrice - it.base) / it.base : 0; return Object.assign(it, {stock, low, order, pd}); });
+  CUR = {slips, items, req:$('#reqDate').value || ymd(addDays(new Date(), 1))}; render();
+}
+const fq = n => isFinite(n) ? (Math.round(n * 100) / 100).toLocaleString('ko-KR') : '확인';
+function render(){
+  const R = CUR, low = R.items.filter(i => i.low);
+  $('#sIn').textContent = R.slips.filter(s => !s.bad).length; $('#sItems').textContent = R.items.length; $('#sLow').textContent = low.length;
+  const pdt = i => i.pd ? ` · 단가 <span class="${i.pd > 0 ? 'up' : 'dn'}">${i.pd > 0 ? '▲' : '▼'}${pct(Math.abs(i.pd))}</span>(기준 ${won(i.base)} → 이번 ${won(i.newPrice)}, 표시만)` : '';
+  $('#low').innerHTML = low.length ? low.map(i => `<div class="st2 low"><b>${esc(i.name)}</b><span class="q">${fq(i.order)}${esc(i.unit)} 발주</span><small>재고 ${fq(i.stock)}${esc(i.unit)} &lt; 안전재고 ${fq(i.safe)} · ${esc(i.vendor || '거래처 확인')}${pdt(i)}</small></div>`).join('') : '<div class="empty">부족 품목이 없습니다</div>';
+  $('#inbook').innerHTML = `<table class="t"><colgroup><col style="width:22%"><col><col style="width:20%"><col style="width:20%"></colgroup><tr><th>일자</th><th>품목</th><th>수량</th><th>단가</th></tr>${R.slips.map(s => s.bad ? `<tr><td colspan="4" style="color:var(--red)">못 읽은 줄: ${esc(s.raw)}</td></tr>` : `<tr><td>${esc(s.date.slice(5))}<br><span style="color:var(--sub)">${esc(s.vendor)}</span></td><td>${esc(s.name)}${s.chk ? ' <span class="pill b">확인</span>' : ''}</td><td>${s.qty}${esc(s.unit)}</td><td>${won(s.price)}</td></tr>`).join('')}</table>`;
+  $('#all').innerHTML = R.items.map(i => `<div class="st2 ${i.low ? 'low' : ''}"><b>${esc(i.name)}${i.chk.length ? ' <span class="pill b">확인</span>' : ''}</b><span class="q">${fq(i.stock)}${esc(i.unit)}</span><small>기존 ${fq(i.cur)} + 입고 ${fq(i.inQ)} − 사용 ${fq(i.useQ)} · 안전 ${isFinite(i.safe) ? fq(i.safe) : '미입력'}${i.chk.length ? ' · ' + esc(i.chk.join(', ')) : ''}${pdt(i)}</small></div>`).join('');
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+const orderText = () => { const g = {}; CUR.items.filter(i => i.low).forEach(i => (g[i.vendor || '거래처 확인'] = g[i.vendor || '거래처 확인'] || []).push(i)); return Object.keys(g).map(v => `[발주] ${v} · 요청일 ${CUR.req}\n` + g[v].map(i => `- ${i.name} ${fq(i.order)}${i.unit}`).join('\n')).join('\n\n'); };
+$('#sampleBtn').onclick = () => { $('#slip').value = S_SLIP; $('#stock').value = S_STOCK; $('#use').value = S_USE; $('#reqDate').value = ymd(addDays(new Date(), 1)); toast('예시 명세서 2건을 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#slip').value = ''; $('#stock').value = ''; $('#use').value = ''; };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(orderText(), '발주 내용을 복사했습니다 (전송은 직접)');
+$('#csvBtn').onclick = () => CUR && saveCSV(`재고발주_${todayS()}.csv`, [['품목','단위','기존','입고','사용','재고','안전재고','부족','발주 수량','거래처','기준단가','이번 단가','단가 변동','확인']].concat(CUR.items.map(i => [i.name, i.unit, i.cur, i.inQ, i.useQ, isFinite(i.stock) ? Math.round(i.stock * 100) / 100 : '확인', isFinite(i.safe) ? i.safe : '', i.low ? 'Y' : '', i.order || '', i.vendor, isFinite(i.base) ? i.base : '', isFinite(i.newPrice) ? Math.round(i.newPrice) : '', i.pd ? (i.pd * 100).toFixed(1) + '%' : '', i.chk.join(' / ')])));
+$('#printBtn').onclick = () => { if (!CUR) return; const g = {}; CUR.items.filter(i => i.low).forEach(i => (g[i.vendor || '거래처 확인'] = g[i.vendor || '거래처 확인'] || []).push(i));
+  printDoc(`<div class="paper"><h1>발 주 서</h1><p class="note">작성일 ${todayS()} · 납품 요청일 ${CUR.req}</p>${Object.keys(g).map(v => `<h2>거래처: ${esc(v)}</h2><table><colgroup><col style="width:6%"><col><col style="width:16%"><col style="width:10%"><col style="width:26%"></colgroup><tr><th>#</th><th>품목</th><th>수량</th><th>단위</th><th>비고</th></tr>${g[v].map((i, n) => `<tr><td>${n + 1}</td><td>${esc(i.name)}</td><td>${fq(i.order)}</td><td>${esc(i.unit)}</td><td>${i.pd ? '최근 단가 ' + (i.pd > 0 ? '▲' : '▼') + pct(Math.abs(i.pd)) : ''}</td></tr>`).join('')}</table>`).join('')}<p class="note">발주처 확인 · 담당: ________ (서명)</p></div>`); };
+$('#reqDate').value = ymd(addDays(new Date(), 1));
+</script>
+</body></html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>운동 기록 → 주간 성과·다음 주 루틴 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.prow{display:grid;grid-template-columns:44px 1fr 74px;gap:6px;align-items:center;font-size:12px;margin-top:6px}
+.prow b{color:#fff}.prow .v{text-align:right;color:var(--or2);font-weight:900}
+.pbar{height:9px;border-radius:5px;background:var(--line);overflow:hidden}.pbar i{display:block;height:100%;background:var(--or)}
+.warn{font-size:12px;color:#FFD7D7;background:rgba(255,90,90,.12);border:1px solid rgba(255,90,90,.5);border-radius:9px;padding:7px 9px;margin-top:6px}
+.up{color:var(--green);font-weight:900}.down{color:var(--red);font-weight:900}
+</style></head>
+<body><div id="app">
+<!--@@TOP 운동 기록 → 주간 성과@@-->
+<main>
+<section class="hero">
+ <h1>운동 기록을 붙여 넣으면<br><em>주간 볼륨·부위 균형</em>과 다음 주 루틴</h1>
+ <p>볼륨(무게×횟수×세트)·빈도·부위 균형을 계산하고, 지난주와 비교해 다음 주 루틴을 제안합니다. 무게 증량은 5% 이내로만 제안하고 근거를 보여 줍니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>운동 기록</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 2주치 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">한 줄에 1개 <i>근력: 날짜, 운동, 무게kg, 횟수, 세트 · 유산소: 날짜, 운동, 30분, 5km</i></label>
+ <textarea id="log" rows="10" maxlength="12000"></textarea>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">주간 성과 보기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="wkTitle">이번 주 성과</span></h2>
+ <div class="stat"><div><b id="sVol">0</b><span>볼륨(kg)</span></div><div><b id="sDays">0</b><span>운동한 날</span></div><div><b id="sDiff">-</b><span>지난주 대비</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">기록표 인쇄</button><button class="btn sec sm" id="copyBtn">루틴 복사</button></div>
+ <h3>부위 균형 (볼륨 비중)</h3><div id="parts"></div>
+ <div id="warns"></div>
+ <h3>다음 주 루틴 제안</h3><div id="plan"></div>
+ <h3>주간 비교</h3><div id="weeks"></div>
+ <p class="fixnote">통증·부상은 전문가 상담. 이 화면은 기록 정리용이며 의료·부상 조언을 하지 않습니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const PART = [['가슴',['벤치','체스트','푸시업','팔굽','딥스','플라이']],['등',['데드','로우','랫풀','풀업','턱걸이','풀다운']],['하체',['스쿼트','런지','레그','카프','힙쓰러스트']],['어깨',['숄더','프레스 어깨','레터럴','사이드레','오버헤드']],['팔',['컬','트라이셉','킥백','푸시다운']],['코어',['플랭크','크런치','레그레이즈','싯업']],['유산소',['러닝','걷기','자전거','사이클','수영','줄넘기','로잉','트레드밀']]];
+const partOf = n => { for (const [p, ws] of PART) if (ws.some(w => n.indexOf(w) >= 0)) return p; return '기타'; };
+function sampleText(){
+  const mon = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
+  const w2 = mon(addDays(new Date(), -7)), w1 = addDays(w2, -7); /* 지난 2주(끝난 주) */ const L = [];
+  const add = (base, off, s) => L.push(ymd(addDays(base, off)) + ', ' + s);
+  [[w1, 60, 70, 50, 40, 20], [w2, 62.5, 75, 52.5, 42.5, 22.5]].forEach(([b, bp, sq, row, sh, cu], wi) => {
+    add(b, 0, `벤치프레스, ${bp}, 8, 4`); add(b, 0, `덤벨플라이, 12, 12, 3`); add(b, 0, `트라이셉스 푸시다운, ${cu}, 12, 3`);
+    add(b, 1, `스쿼트, ${sq}, 8, 4`); add(b, 1, `레그프레스, ${sq + 40}, 10, 3`);
+    add(b, 2, `러닝, ${wi ? 35 : 30}분, ${wi ? 5.5 : 5}km`);
+    add(b, 3, `바벨로우, ${row}, 8, 4`); add(b, 3, `랫풀다운, ${row - 5}, 10, 3`); add(b, 3, `바벨컬, ${cu}, 10, 3`);
+    if (wi) { add(b, 4, `벤치프레스, ${bp}, 8, 4`); add(b, 4, `인클라인 벤치프레스, 50, 8, 3`); add(b, 5, `딥스, 0, 10, 3`); }
+    else { add(b, 4, `오버헤드 숄더프레스, ${sh}, 8, 3`); add(b, 4, `사이드레터럴, 8, 15, 3`); add(b, 5, `플랭크, 0, 60, 3`); }
+  });
+  return L.join('\n');
+}
+const weekKey = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return ymd(x); };
+let CUR = null;
+function parse(t){
+  return t.split(/\r?\n/).map(l => l.trim()).filter(Boolean).map(l => { const f = l.split(/[,，\t]/).map(x => x.trim()); const d = parseD(f[0]); if (!d || !f[1]) return {bad:l};
+    const name = f[1], part = partOf(name);
+    if (/분/.test(f[2] || '')) return {d, name, part:'유산소', min:num(f[2].replace('분', '')), km:num((f[3] || '').replace(/km/i, '')), vol:0};
+    const w = num((f[2] || '').replace(/kg/i, '')), r = num(f[3]), s = num(f[4]);
+    if (!isFinite(r) || !isFinite(s)) return {bad:l};
+    return {d, name, part, w:isFinite(w) ? w : 0, r, s, vol:(isFinite(w) ? w : 0) * r * s};
+  });
+}
+function run(){
+  const rows = parse($('#log').value); const ok = rows.filter(r => !r.bad);
+  if (!ok.length){ $('#log').classList.add('miss'); return toast('운동 기록을 적어 주세요'); } $('#log').classList.remove('miss');
+  const W = {}; ok.forEach(r => (W[weekKey(r.d)] = W[weekKey(r.d)] || []).push(r)); const keys = Object.keys(W).sort();
+  const sumW = k => { const L = W[k] || []; const parts = {}; L.forEach(r => { if (r.part !== '유산소') parts[r.part] = (parts[r.part] || 0) + r.vol; }); return {vol:L.reduce((a, r) => a + r.vol, 0), days:new Set(L.map(r => ymd(r.d))).size, parts, cardio:L.filter(r => r.part === '유산소').reduce((a, r) => a + (r.min || 0), 0), km:L.filter(r => r.part === '유산소').reduce((a, r) => a + (isFinite(r.km) ? r.km : 0), 0), L}; };
+  const cur = sumW(keys[keys.length - 1]), prev = keys.length > 1 ? sumW(keys[keys.length - 2]) : null;
+  const warns = [];
+  const tot = Object.values(cur.parts).reduce((a, b) => a + b, 0);
+  Object.entries(cur.parts).forEach(([p, v]) => { if (tot && v / tot > 0.4) warns.push(`${p} 몰림: 이번 주 근력 볼륨의 ${pct(v / tot, 0)} — 다음 주에는 다른 부위 비중을 늘리세요`); });
+  ['가슴', '등', '하체', '어깨'].forEach(p => { if (!cur.parts[p]) warns.push(`${p} 운동이 이번 주에 없습니다 — 다음 주 루틴에 넣었습니다`); });
+  const byDay = {}; cur.L.forEach(r => { if (r.part !== '유산소') (byDay[ymd(r.d)] = byDay[ymd(r.d)] || new Set()).add(r.part); });
+  const dk = Object.keys(byDay).sort(); for (let i = 1; i < dk.length; i++){ if (daysBetween(parseD(dk[i - 1]), parseD(dk[i])) === 1){ const same = [...byDay[dk[i]]].filter(p => byDay[dk[i - 1]].has(p)); if (same.length) warns.push(`${dk[i - 1].slice(5)}·${dk[i].slice(5)} 이틀 연속 ${same.join('·')} — 같은 부위는 하루 이상 쉬어 가세요`); } }
+  if (prev && prev.vol && cur.vol / prev.vol > 1.2) warns.push(`과훈련 주의: 볼륨이 지난주보다 ${pct(cur.vol / prev.vol - 1, 0)} 늘었습니다(20% 초과) — 다음 주는 무게를 올리지 않습니다`);
+  const over = prev && prev.vol && cur.vol / prev.vol > 1.2;
+  // 다음 주 무게 제안: 운동별 이번 주 최고 무게 기준, 지난주보다 같거나 늘었으면 +2.5%(0.5kg 단위 내림, 5% 이내), 과훈련이면 유지
+  const ex = {}; cur.L.filter(r => r.part !== '유산소').forEach(r => { const e = ex[r.name] = ex[r.name] || {name:r.name, part:r.part, w:0, r:r.r, s:r.s}; if (r.w >= e.w){ e.w = r.w; e.r = r.r; e.s = r.s; } });
+  const pw = {}; if (prev) prev.L.forEach(r => { pw[r.name] = Math.max(pw[r.name] || 0, r.w || 0); });
+  const plan = Object.values(ex).map(e => { let nw = e.w, why;
+    if (!e.w){ why = '맨몸 운동 → 횟수 +1~2회만'; }
+    else if (over){ why = '이번 주 볼륨 20% 초과 증가 → 무게 유지'; }
+    else if (pw[e.name] != null && e.w < pw[e.name]){ why = `지난주(${pw[e.name]}kg)보다 낮음 → 지난주 무게로 회복`; nw = Math.min(pw[e.name], Math.floor(e.w * 1.05 * 2) / 2); }
+    else { const c = Math.floor(e.w * 1.025 * 2) / 2; nw = c > e.w ? c : e.w; why = nw > e.w ? `이번 주 ${e.w}kg × ${e.r}회 × ${e.s}세트 완료 → +${pct(nw / e.w - 1, 1)} (0.5kg 단위, 5% 이내)` : `+2.5%가 0.5kg 미만 → 무게 유지, 횟수 +1회`; }
+    return Object.assign(e, {nw, why}); });
+  ['가슴', '등', '하체', '어깨'].filter(p => !cur.parts[p]).forEach(p => plan.push({name:{가슴:'푸시업',등:'랫풀다운',하체:'스쿼트',어깨:'오버헤드 숄더프레스'}[p] + ' (추가)', part:p, w:0, nw:0, add:true, r:10, s:3, why:'이번 주 빠진 부위 → 가벼운 무게로 3세트부터'}));
+  // 요일 배치: 같은 부위가 이틀 연속 오지 않게 월(가슴·팔) / 화(하체·코어) / 목(등·어깨·기타) / 토(유산소)
+  const groups = [['가슴', '팔'], ['하체', '코어'], ['등', '어깨', '기타']];
+  const sched = [['월', 0], ['화', 1], ['목', 2]].map(([day, i]) => ({day, items:plan.filter(p => groups[i].includes(p.part))}));
+  if (cur.cardio) sched.push({day:'토', items:[], cardio:`유산소 ${cur.cardio}분 (이번 주와 같게)`});
+  CUR = {keys, W, cur, prev, warns, plan, sched, bad:rows.filter(r => r.bad).length, tot};
+  render();
+}
+function render(){
+  const R = CUR, c = R.cur, p = R.prev;
+  $('#wkTitle').textContent = `${R.keys[R.keys.length - 1]} 주간 성과`;
+  $('#sVol').textContent = won(c.vol); $('#sDays').textContent = c.days + '일';
+  $('#sDiff').innerHTML = p && p.vol ? `<span class="${c.vol >= p.vol ? 'up' : 'down'}">${c.vol >= p.vol ? '+' : ''}${pct(c.vol / p.vol - 1, 0)}</span>` : '-';
+  const parts = ['가슴', '등', '하체', '어깨', '팔', '코어', '기타'].filter(x => c.parts[x] || ['가슴', '등', '하체', '어깨'].includes(x));
+  $('#parts').innerHTML = parts.map(x => { const v = c.parts[x] || 0, r = R.tot ? v / R.tot : 0; return `<div class="prow"><b>${x}</b><div class="pbar"><i style="width:${Math.round(r * 100)}%"></i></div><span class="v">${pct(r, 0)}</span></div>`; }).join('') + `<p class="kv">유산소 ${c.cardio}분 · ${Math.round(c.km * 10) / 10}km (볼륨에서 제외)${R.bad ? ` · 못 읽은 줄 ${R.bad}개` : ''}</p>`;
+  $('#warns').innerHTML = R.warns.map(w => `<div class="warn">⚠ ${esc(w)}</div>`).join('');
+  $('#plan').innerHTML = R.sched.map(d => `<div class="item"><div class="q">${d.day}요일 ${d.items.length ? '· ' + [...new Set(d.items.map(i => i.part))].join('·') : ''}</div><div class="a">${d.items.map(i => `${esc(i.name)} ${i.nw ? i.nw + 'kg' : (i.add ? '가벼운 무게' : '맨몸')} × ${i.r}회 × ${i.s}세트<br><span style="color:var(--sub);font-size:11px">근거: ${esc(i.why)}</span>`).join('<br>')}${d.cardio ? (d.items.length ? '<br>' : '') + esc(d.cardio) : ''}</div></div>`).join('');
+  $('#weeks').innerHTML = `<table class="t"><tr><th>주 시작</th><th>볼륨(kg)</th><th>운동일</th><th>유산소</th></tr>${R.keys.map(k => { const L = R.W[k]; const v = L.reduce((a, r) => a + r.vol, 0); return `<tr><td>${k.slice(5)}</td><td>${won(v)}</td><td>${new Set(L.map(r => ymd(r.d))).size}일</td><td>${L.filter(r => r.part === '유산소').reduce((a, r) => a + (r.min || 0), 0)}분</td></tr>`; }).join('')}</table>`;
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+const planText = () => `[다음 주 루틴]\n` + CUR.sched.map(d => `${d.day}: ` + d.items.map(i => `${i.name} ${i.nw ? i.nw + 'kg' : (i.add ? '가벼운 무게' : '맨몸')}×${i.r}×${i.s}`).join(', ') + (d.cardio ? (d.items.length ? ', ' : '') + d.cardio : '')).join('\n') + (CUR.warns.length ? '\n\n주의: ' + CUR.warns.join(' / ') : '') + '\n※ 통증·부상은 전문가 상담';
+$('#sampleBtn').onclick = () => { $('#log').value = sampleText(); toast('예시 2주치를 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#log').value = ''; };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(planText(), '다음 주 루틴을 복사했습니다');
+$('#printBtn').onclick = () => { if (!CUR) return; const L = CUR.cur.L; printDoc(`<div class="paper"><h1>주간 운동 기록표</h1><p class="note">${esc($('#wkTitle').textContent)} · 볼륨 ${won(CUR.cur.vol)}kg · ${CUR.cur.days}일</p>
+ <table><colgroup><col style="width:14%"><col><col style="width:11%"><col style="width:16%"><col style="width:16%"></colgroup><tr><th>날짜</th><th>운동</th><th>부위</th><th>무게×횟수×세트</th><th>볼륨/시간</th></tr>${L.map(r => `<tr><td>${ymd(r.d).slice(5)}</td><td>${esc(r.name)}</td><td>${r.part}</td><td>${r.part === '유산소' ? '-' : `${r.w}×${r.r}×${r.s}`}</td><td>${r.part === '유산소' ? `${r.min}분 ${isFinite(r.km) ? r.km + 'km' : ''}` : won(r.vol)}</td></tr>`).join('')}</table>
+ <h2>다음 주 루틴</h2><p class="pre">${esc(planText())}</p></div>`); };
+</script>
+</body></html>

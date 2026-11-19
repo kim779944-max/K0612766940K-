@@ -1,0 +1,15 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+order: D 월196.7 4년9440 평당4.41 | B 월258.0 4년12384 평당7.33 | C 월385.0 4년18480 평당15.00 | A 월498.3 4년23920 평당14.87
+hand check A: 498.333 vs 498.333
+cards: D:fee B:left C:ppy,park A:rent,dep,key / asks=7
+rate edit: A tot@6%=506.67
+csv: {"name":"임대비교_2026-11-19.csv","size":371}
+print print: pages=1 bytes=83614 file=files\leaseccompare_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=3054 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

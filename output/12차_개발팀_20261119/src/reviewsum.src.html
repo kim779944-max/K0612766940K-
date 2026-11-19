@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더리뷰 — 리뷰 100개 → 장점·불만 요약 + 개선 액션 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.ax{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:9px 10px;margin-top:7px}
+.ax .h{display:flex;gap:6px;align-items:baseline}.ax .h b{flex:1;font-size:13.5px;color:#fff}.ax .h span{font-size:12px;font-weight:900}
+.ax q{display:block;font-size:12px;color:#D3DBE7;margin-top:4px;line-height:1.5;quotes:none;border-left:3px solid var(--line2);padding-left:7px}
+.dist{display:flex;align-items:center;gap:6px;font-size:12px;margin-top:4px}.dist i{font-style:normal;flex:0 0 30px;color:#C6D0DF}
+.dist .tr{flex:1;height:10px;border-radius:5px;background:#1B2846;overflow:hidden}.dist .tr u{display:block;height:100%;background:var(--yel)}
+.dist em{font-style:normal;flex:0 0 30px;text-align:right;font-weight:900}
+.act{font-size:12.5px;color:#FFD7B8;margin-top:6px;line-height:1.55}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더리뷰@@-->
+<main>
+<section class="hero">
+ <h1>리뷰를 한꺼번에 붙여 넣으면<br><em>장점 5 · 불만 5 · 할 일</em></h1>
+ <p>리뷰를 줄 단위로 넣으면 긍정·부정을 나누고(감성 사전 공개), 맛·양·배달 같은 항목별로 장점 Top 5와 불만 Top 5를 원문 인용 3개씩과 함께 보여 주고, 불만을 할 일 문장으로 바꿉니다. 답글 템플릿 3종도 만듭니다.</p>
+ <p class="fixnote">리뷰 원문을 바꾸지 않고 그대로 인용합니다. 리뷰에 없는 불만을 만들지 않습니다.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>리뷰</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 60건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">한 줄에 리뷰 1개 · 별점은 앞에 "5|" 또는 "★★★★★" (없어도 됨)</label>
+ <textarea id="rv" rows="10" maxlength="120000"></textarea>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">리뷰 요약하기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">요약</span></h2>
+ <div class="stat"><div><b id="sPos" style="color:var(--green)">0</b><span>긍정</span></div><div><b id="sNeg" style="color:var(--red)">0</b><span>부정</span></div><div><b id="sMid">0</b><span>중립·섞임</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">인쇄</button><button class="btn sec sm" id="csvBtn">CSV</button><button class="btn sec sm" id="copyBtn">액션 복사</button></div>
+ <div id="distW"><h3>별점 분포</h3><div id="dist"></div></div>
+ <h3>장점 Top 5</h3><div id="pros"></div>
+ <h3>불만 Top 5</h3><div id="cons"></div>
+ <h3>개선 액션 리스트</h3><div id="acts"></div>
+ <h3>답글 템플릿 3종</h3><div id="reps"></div>
+ <details class="rule"><summary>감성 사전 · 항목 사전 (공개)</summary><div class="kv" id="rules"></div></details>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const SAMPLE = `5|제육 도시락 진짜 맛있어요. 양도 푸짐해서 점심 든든했습니다.
+5|배달이 빨리 왔고 밥이 따뜻했어요. 재주문 의사 있습니다.
+4|맛있는데 조금 짜요. 그래도 반찬 구성이 좋아요.
+5|사장님 친절하시고 요청사항 꼼꼼히 봐 주셨어요.
+2|배달이 1시간 넘게 걸려서 다 식어서 왔어요.
+5|가성비 최고예요. 이 가격에 반찬 다섯 가지면 만족합니다.
+4|불고기 맛있어요. 다만 밥이 조금 적었어요.
+1|국물이 다 샜어요. 포장 좀 신경 써 주세요.
+5|깔끔하고 정갈해요. 회사 동료들도 다 맛있다고 했어요.
+5|양 넉넉하고 맛도 좋아요. 또 시킬게요.
+3|맛은 평범했어요. 배달은 빨랐어요.
+5|따뜻하게 잘 왔어요. 계란말이 최고.
+2|너무 짜서 반 남겼어요.
+5|반찬이 신선하고 맛있어요.
+4|양이 많아서 좋아요. 배달 시간은 조금 늦었어요.
+5|요청사항대로 맵기 조절해 주셔서 감사해요. 맛있습니다.
+1|머리카락이 나왔어요. 위생 신경 써 주세요.
+5|가격 대비 구성이 좋아요. 추천합니다.
+4|맛있어요. 근데 용기가 좀 작아서 반찬이 섞였어요.
+5|점심마다 시켜 먹어요. 항상 맛있고 빨리 와요.
+3|양은 많은데 간이 싱거웠어요.
+5|제육 맛집 인정합니다. 불맛이 살아 있어요.
+2|배달이 늦고 밥이 미지근했어요.
+5|친절한 메모 감사해요. 맛도 최고예요.
+4|든든하게 잘 먹었습니다. 국은 조금 식었어요.
+5|정말 푸짐하고 맛있어요.
+5|매번 만족합니다. 재주문 10번째예요.
+2|가격이 올랐는데 양은 줄었어요. 아쉽습니다.
+5|깔끔한 맛이에요. 반찬이 다 맛있어요.
+4|빨리 왔어요. 맛도 괜찮아요.
+1|주문한 메뉴가 누락됐어요. 전화했는데 응대가 별로였어요.
+5|따뜻하고 맛있어요. 포장도 깔끔해요.
+5|양 많고 맛있어요. 가성비 좋아요.
+3|무난해요. 조금 비싼 편이에요.
+5|돈까스 바삭하고 맛있어요.
+2|돈까스가 눅눅했어요. 배달이 늦어서 그런 것 같아요.
+5|사장님이 서비스로 음료 주셨어요. 친절하세요.
+4|맛있어요. 다만 김치가 너무 짜요.
+5|회사 단체 주문했는데 다들 만족했어요.
+5|밥이 따뜻하고 반찬이 신선해요.
+2|국물이 흘러서 봉투가 다 젖었어요.
+5|빠른 배달 감사합니다. 맛있게 먹었어요.
+4|양념이 맛있어요. 밥 양은 조금 적어요.
+5|정갈하고 깔끔해요. 추천합니다.
+5|최고예요. 또 시킬게요.
+3|맛은 괜찮은데 배달이 늦었어요.
+5|양도 많고 반찬도 맛있어요.
+1|다 식어서 왔고 너무 짰어요. 다시는 안 시킬 것 같아요.
+5|가성비 좋고 맛있어요.
+4|맛있어요. 포장 용기가 튼튼해서 좋아요.
+5|친절하시고 빨리 와요.
+2|밥이 차갑고 반찬이 적었어요.
+5|불고기 덮밥 맛있어요. 재주문합니다.
+5|따뜻하게 잘 받았습니다. 감사합니다.
+4|전체적으로 만족해요. 조금 비싸요.
+5|든든하고 맛있어요.
+3|평범해요. 양은 넉넉해요.
+5|매운 제육 최고예요. 맵기 딱 좋아요.
+2|요청사항을 안 봐 주셨어요. 젓가락이 빠졌어요.
+5|깔끔하고 맛있어요. 또 시킬게요.`;
+const POS = ['맛있', '맛도 좋', '좋아요', '좋고', '좋습니다', '최고', '푸짐', '넉넉', '많아', '많고', '빨리', '빠른', '빨랐', '따뜻', '친절', '깔끔', '정갈', '만족', '추천', '재주문', '또 시킬', '든든', '신선', '가성비 좋', '바삭', '튼튼', '감사', '괜찮', '딱 좋', '인정', '살아 있', '무난'];
+const NEG = ['별로', '아쉽', '늦', '걸려서', '식어', '식었', '차갑', '미지근', '짜요', '짜서', '짰어', '짜다', '싱거', '적었', '적어요', '줄었', '비싸', '비싼', '샜', '흘러', '머리카락', '이물질', '불친절', '실망', '다시는', '안 시킬', '누락', '빠졌', '눅눅', '질기', '섞였', '안 봐', '평범', '작아서', '젖었'];
+const ASP = {맛:['맛', '짜', '짰', '싱거', '간이', '양념', '불맛', '바삭', '눅눅', '맵기'], 양:['양이', '양도', '양은', '밥 양', '푸짐', '넉넉', '많', '적었', '적어', '줄었', '반찬이 적'], 배달:['배달', '늦', '빨리', '빠른', '빨랐', '걸려', '도착', '빨리 와'], 포장:['포장', '샜', '흘러', '용기', '봉투', '섞였', '젖었'], 가격:['가격', '가성비', '비싸', '비싼', '저렴'], 온도:['따뜻', '식어', '식었', '차갑', '미지근'], 위생:['머리카락', '이물질', '위생'], 응대:['친절', '응대', '사장님', '요청사항', '메모', '서비스', '누락', '빠졌'], 신선도:['신선', '정갈', '깔끔']};
+const ACT = {맛:c => `간 불만 ${c.n}건 (짜다 ${c.salty} · 싱겁다 ${c.bland} · 그 밖 ${c.n - c.salty - c.bland}) — 메뉴별 양념 계량표를 정하고, 짜다는 말이 나온 메뉴부터 맛을 다시 봅니다.`,
+ 양:c => `양 불만 ${c.n}건 — 메뉴별 정량(밥·반찬 g)을 정해 담는 사람이 바뀌어도 같게 합니다.`,
+ 배달:c => `배달 지연 불만 ${c.n}건 — 불만이 나온 주문의 시간대를 확인하고, 몰리는 시간에는 예상 시간을 길게 안내합니다.`,
+ 포장:c => `포장 불만 ${c.n}건 — 국물 용기 뚜껑 실링·랩을 추가하고, 반찬이 섞이지 않게 칸 용기를 점검합니다.`,
+ 가격:c => `가격 불만 ${c.n}건 — 가격에 맞는 구성(반찬 수·양)을 메뉴 설명에 적어 기대를 맞춥니다.`,
+ 온도:c => `식어서 도착 불만 ${c.n}건 — 보온 가방을 쓰고, 국물·밥을 마지막에 담는 순서로 바꿉니다.`,
+ 위생:c => `위생 불만 ${c.n}건 — 즉시 사과·환불 기준을 정하고, 조리 전 위생모·장갑 확인표를 둡니다.`,
+ 응대:c => `응대·요청사항 불만 ${c.n}건 — 포장 직전 "요청사항·구성품(수저 등) 확인" 단계를 넣습니다.`,
+ 신선도:c => `신선도 불만 ${c.n}건 — 반찬 조리 시각을 기록하고 당일 소진 기준을 정합니다.`};
+function sents(t){ return t.split(/(?<=[.!?。])\s+|(?<=요)\s+(?=[가-힣])|(?<=[는은]데)\s+|,\s*/).map(s => s.trim()).filter(s => s.length > 1); }
+function pol(s){ const n = NEG.filter(w => s.includes(w)).length, p = POS.filter(w => s.includes(w) && !(w === '좋아요' && /안 좋/.test(s))).length; return p - n; }
+let CUR = null;
+function run(){
+  const R = $('#rv').value.split('\n').map(l => l.trim()).filter(Boolean).map((l, i) => { let star = null, t = l; let m = /^([1-5])\s*[|｜:]\s*(.*)$/.exec(l); if (m){ star = +m[1]; t = m[2]; } else if ((m = /^(★+)\s*(.*)$/.exec(l))){ star = m[1].length; t = m[2]; }
+    const S = sents(t).map(s => ({s, p:pol(s), a:Object.keys(ASP).filter(a => ASP[a].some(w => s.includes(w)))}));
+    const sc = S.reduce((a, x) => a + Math.sign(x.p), 0); const hasP = S.some(x => x.p > 0), hasN = S.some(x => x.p < 0);
+    const sent = hasP && hasN ? '섞임' : sc > 0 ? '긍정' : sc < 0 ? '부정' : (star ? (star >= 4 ? '긍정' : star <= 2 ? '부정' : '중립') : '중립');
+    return {i, raw:l, t, star, S, sent}; });
+  if (!R.length){ $('#rv').classList.add('miss'); return toast('리뷰를 한 줄에 하나씩 넣어 주세요'); } $('#rv').classList.remove('miss');
+  const agg = sign => Object.keys(ASP).map(a => { const hits = R.flatMap(r => r.S.filter(x => x.a.includes(a) && Math.sign(x.p) === sign).map(x => ({s:x.s, r}))); return {a, n:hits.length, q:hits.slice(0, 3), salty:hits.filter(h => /짜|짰/.test(h.s)).length, bland:hits.filter(h => /싱거/.test(h.s)).length}; }).filter(x => x.n).sort((x, y) => y.n - x.n);
+  const pros = agg(1).slice(0, 5), cons = agg(-1).slice(0, 5);
+  const dist = [5, 4, 3, 2, 1].map(s => ({s, n:R.filter(r => r.star === s).length})), hasStar = R.some(r => r.star);
+  const avg = hasStar ? R.filter(r => r.star).reduce((a, r) => a + r.star, 0) / R.filter(r => r.star).length : NaN;
+  const P = pros[0] ? pros[0].a : '음식', N = cons[0] ? cons[0].a : '';
+  const reps = [['칭찬 답글', `소중한 리뷰 감사합니다. 특히 ${jo(P, '을를')} 좋게 봐 주셔서 힘이 납니다. 다음에도 같은 맛과 정성으로 준비하겠습니다.`],
+   ['불만 사과 답글', N ? `불편을 드려 정말 죄송합니다. 말씀하신 ${N} 부분은 [실제로 바꾼 내용을 적으세요] 하였습니다. 다음 주문 때 꼭 다시 확인하겠습니다.` : '불편을 드려 죄송합니다. [불편 내용과 바꾼 점을 적으세요]'],
+   ['보통 · 재주문 유도 답글', `주문해 주셔서 감사합니다. 남겨 주신 의견은 메뉴를 다듬는 데 꼭 반영하겠습니다. 다음에 더 만족하실 수 있게 준비해 두겠습니다.`]];
+  CUR = {R, pros, cons, dist, hasStar, avg, reps}; render();
+}
+function render(){
+  const C = CUR, cnt = s => C.R.filter(r => r.sent === s).length;
+  $('#rTitle').textContent = `리뷰 ${C.R.length}건 요약${C.hasStar ? ' · 평균 ★' + C.avg.toFixed(2) : ''}`;
+  $('#sPos').textContent = cnt('긍정'); $('#sNeg').textContent = cnt('부정'); $('#sMid').textContent = cnt('중립') + cnt('섞임');
+  $('#distW').classList.toggle('hide', !C.hasStar);
+  const mx = Math.max(1, ...C.dist.map(d => d.n)); $('#dist').innerHTML = C.dist.map(d => `<div class="dist"><i>★${d.s}</i><span class="tr"><u style="width:${d.n / mx * 100}%"></u></span><em>${d.n}</em></div>`).join('');
+  const blk = (L, col) => L.length ? L.map((x, i) => `<div class="ax"><div class="h"><b>${i + 1}. ${x.a}</b><span style="color:${col}">${x.n}회 언급</span></div>${x.q.map(q => `<q>"${esc(q.s)}"${q.r.star ? ' <span class="kv">★' + q.r.star + '</span>' : ''}</q>`).join('')}</div>`).join('') : '<p class="empty">없음</p>';
+  $('#pros').innerHTML = blk(C.pros, 'var(--green)'); $('#cons').innerHTML = blk(C.cons, 'var(--red)');
+  $('#acts').innerHTML = C.cons.length ? C.cons.map((c, i) => `<div class="act">${i + 1}. ${esc(ACT[c.a](c))}</div>`).join('') : '<p class="empty">불만 언급이 없어 할 일이 없습니다</p>';
+  $('#reps').innerHTML = C.reps.map(([n, t], i) => `<div class="item"><div class="q">${n} <button class="btn sec sm" style="display:inline-flex;width:auto;padding:4px 10px;margin-left:6px" data-r="${i}">복사</button></div><div class="a">${esc(t)}</div></div>`).join('');
+  $$('[data-r]').forEach(b => b.onclick = () => copyOut(C.reps[+b.dataset.r][1], '답글을 복사했습니다'));
+  $('#rules').innerHTML = `<b>긍정 낱말</b>: ${POS.join(', ')}<br><b>부정 낱말</b>: ${NEG.join(', ')}<br>${Object.keys(ASP).map(a => `<b>${a}</b>: ${ASP[a].join(', ')}`).join('<br>')}<br>문장마다 긍정 수 − 부정 수로 +/− 를 정하고, 리뷰 안에 +와 −가 함께 있으면 "섞임". 낱말이 없으면 별점(4~5 긍정, 1~2 부정)으로 정합니다. 장점·불만 = 그 항목 낱말이 들어간 +/− 문장 수. 인용은 원문 문장 그대로 3개까지.`;
+  $('#result').classList.remove('hide');
+}
+const acts = () => CUR.cons.map((c, i) => `${i + 1}. ${ACT[c.a](c)}`).join('\n');
+$('#sampleBtn').onclick = () => { $('#rv').value = SAMPLE; toast('예시 리뷰 60건을 넣었습니다 (가상의 도시락집)'); };
+$('#clearBtn').onclick = () => { $('#rv').value = ''; };
+$('#runBtn').onclick = () => { run(); if (CUR){ $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); } };
+$('#copyBtn').onclick = () => CUR && copyOut(`[리뷰 개선 액션 ${todayS()} · 리뷰 ${CUR.R.length}건]\n` + (acts() || '불만 언급 없음'), '액션 리스트를 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`리뷰요약_${todayS()}.csv`, [['번호','별점','리뷰 원문','판정','항목(+)','항목(−)']].concat(CUR.R.map(r => [r.i + 1, r.star || '', r.t, r.sent, uniq(r.S.filter(x => x.p > 0).flatMap(x => x.a)).join(' '), uniq(r.S.filter(x => x.p < 0).flatMap(x => x.a)).join(' ')])));
+$('#printBtn').onclick = () => { if (!CUR) return; const L = (A) => A.map((x, i) => `<p style="margin-top:2mm"><b>${i + 1}. ${x.a} (${x.n}회)</b><br>${x.q.map(q => '"' + esc(q.s) + '"').join('<br>')}</p>`).join('') || '<p>없음</p>';
+  printDoc(`<div class="paper"><h1>리뷰 요약 · ${CUR.R.length}건</h1><p class="note">${todayS()} · 긍정 ${$('#sPos').textContent} · 부정 ${$('#sNeg').textContent} · 중립/섞임 ${$('#sMid').textContent}${CUR.hasStar ? ' · 평균 ★' + CUR.avg.toFixed(2) + ' · ' + CUR.dist.map(d => '★' + d.s + ' ' + d.n).join(' / ') : ''}</p><h2>장점 Top 5</h2>${L(CUR.pros)}<h2>불만 Top 5</h2>${L(CUR.cons)}<h2>개선 액션</h2><div class="pre">${esc(acts())}</div><h2>답글 템플릿</h2>${CUR.reps.map(r => `<p><b>${r[0]}</b>: ${esc(r[1])}</p>`).join('')}</div>`); };
+</script>
+</body></html>

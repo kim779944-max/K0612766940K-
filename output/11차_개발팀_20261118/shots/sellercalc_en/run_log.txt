@@ -1,0 +1,19 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+ex1 amazon: profit=10.5417 margin=42.2% BE=12.13 target=17.46 krw=Per unit ≈ ₩14,547 · Per order (1 units) $10.54 ≈ ₩14,547 · at FX 1380 KRW/USD (your input)
+hand check ex1 (10.5417): true
+3 price points: −10%$22.49$8.49 · 37.8% | Current$24.99$10.54 · 42.2% | +10%$27.49$12.59 · 45.8%
+loss warning: ⚠ Loss: you lose $1.75 on every unit at $10.00. Raise the price above $12.13 or cut costs. / after reset loss box empty=true
+ex2 shopee: profit=6.25 margin=48.5% BE=5.63 order(2)=12.50 note=Shopee: commission, transaction and serv
+rates editable (not hardcoded): ref after edit=0.08
+fixed line: Estimates only — verify current rates in Seller Central / Shopee Seller Centre.
+csv: {"name":"margin_amazon_2026-11-18.csv","size":513}
+english UI: en / Calculate profit / ?60-second inquiry
+print print: pages=1 bytes=55378 file=files\sellercalc_en_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2197 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

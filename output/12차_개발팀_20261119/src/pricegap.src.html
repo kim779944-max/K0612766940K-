@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더시세 — 실거래가 비교표 · 호가 괴리율 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.big{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.big div{background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:9px;text-align:center}
+.big b{display:block;font-size:20px;font-weight:900;color:var(--or2)}.big span{font-size:10.5px;color:var(--sub)}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더시세@@-->
+<main>
+<section class="hero">
+ <h1>실거래 목록을 붙여 넣으면<br><em>평당가 · 호가 괴리율</em></h1>
+ <p>실거래 평균·중앙값·최근 3건 추세, 호가 괴리율(호가 ÷ 실거래 중앙값 − 1), 공시지가 대비 배율을 계산합니다. 중앙값에서 40% 넘게 벗어난 거래는 이상치로 따로 빼고 이유를 보여 줍니다.</p>
+ <p class="fixnote">실거래가를 조회하지 않습니다. 실시간 조회가 아니며 입력 자료 기준입니다.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>자료</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 24건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">실거래 <i>주소(동·호), 면적(㎡ 또는 평), 거래일, 금액(만원 또는 "9억 2000")</i></label>
+ <textarea id="rows" rows="8" maxlength="40000"></textarea>
+ <div class="g2"><div><label class="lb">매물 호가 <i>만원</i></label><input id="ask" placeholder="예: 10억 2000"></div><div><label class="lb">매물 면적</label><input id="askA" placeholder="예: 84.9㎡"></div></div>
+ <div class="g2"><div><label class="lb">공시지가·공시가격 <i>원/㎡</i></label><input id="pub" inputmode="numeric" placeholder="선택"></div><div><label class="lb">또는 공시 총액 <i>만원</i></label><input id="pubT" placeholder="선택"></div></div>
+ <div class="g2"><div><label class="lb">정렬</label><select id="sort"><option value="date">거래일 최근 순</option><option value="ppy">평당가 높은 순</option><option value="amt">금액 높은 순</option></select></div><div><label class="lb">이상치 기준 <i>±%</i></label><input id="outP" inputmode="numeric" value="40"></div></div>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">시세 비교표 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">시세 비교</span></h2>
+ <div class="big"><div><b id="bGap">-</b><span>호가 괴리율</span></div><div><b id="bPub">-</b><span>공시 대비 배율</span></div></div>
+ <div class="stat"><div><b id="sMed">-</b><span>중앙값 평당가(만원)</span></div><div><b id="sAvg">-</b><span>평균 평당가(만원)</span></div><div><b id="sN">0</b><span>표본(이상치 제외)</span></div></div>
+ <div id="warn"></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">A4 1장 인쇄</button><button class="btn sec sm" id="csvBtn">CSV</button><button class="btn sec sm" id="copyBtn">요약 복사</button></div>
+ <h3>최근 3건 추세</h3><div id="trend"></div>
+ <h3>비교표</h3><div id="tbl"></div>
+ <h3>이상치 (계산에서 뺌)</h3><div id="out"></div>
+ <p class="kv">1평 = 3.3058㎡ · 평당가 = 금액 ÷ 평 · 괴리율 = 호가 평당가 ÷ 실거래 중앙값 평당가 − 1 · 공시 배율 = 호가(원/㎡) ÷ 공시(원/㎡) 또는 호가 ÷ 공시 총액</p>
+ <p class="fixnote">실시간 조회가 아니며 입력 자료 기준입니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+/*@@DATA realty.js@@*/
+function sample(){ const L = ['주소, 면적, 거래일, 금액']; const base = new Date(); let k = 0;
+  for (let i = 0; i < 24; i++){ const d = addDays(base, -(i * 13 + 5)); const big = i % 3 !== 2; const a = big ? 84.9 : 59.9; let p = big ? 92000 - i * 260 + (i % 4) * 700 : 68000 - i * 180 + (i % 5) * 500;
+    if (i === 7) p = 41000; if (i === 15) p = 151000; L.push(`예시아파트 ${101 + (i % 6)}동 ${(i % 15) + 3}층, ${a}㎡, ${ymd(d)}, ${p}`); }
+  return L.join('\n'); }
+let CUR = null;
+function run(){
+  const R = parseCSV($('#rows').value).filter(r => r.length >= 4 && !/^주소$/.test(r[0])).map(r => { const a = areaOf(r[1]), v = manOf(r[3]), d = parseD(r[2]); return {addr:r[0], a, v, d, ds:r[2], ppy:a && isFinite(v) ? v / a.py : NaN}; });
+  const bad = R.filter(r => !isFinite(r.ppy)), ok = R.filter(r => isFinite(r.ppy));
+  if (!ok.length){ $('#rows').classList.add('miss'); return toast('실거래를 한 줄에 한 건씩 넣어 주세요'); } $('#rows').classList.remove('miss');
+  const lim = (parseFloat($('#outP').value) || 40) / 100, med0 = median(ok.map(r => r.ppy));
+  ok.forEach(r => { r.dev = r.ppy / med0 - 1; r.out = Math.abs(r.dev) > lim; });
+  const S = ok.filter(r => !r.out), med = median(S.map(r => r.ppy)), avg = S.reduce((a, r) => a + r.ppy, 0) / (S.length || 1);
+  const recent = S.filter(r => r.d).sort((a, b) => b.d - a.d).slice(0, 3);
+  const askV = manOf($('#ask').value), askA = areaOf($('#askA').value), askPpy = isFinite(askV) && askA ? askV / askA.py : NaN;
+  const pub = num($('#pub').value), pubT = manOf($('#pubT').value);
+  const pubX = isFinite(askV) && askA && isFinite(pub) ? (askV * 10000 / askA.m2) / pub : isFinite(askV) && isFinite(pubT) ? askV / pubT : NaN;
+  CUR = {ok, S, bad, med, med0, avg, recent, askV, askA, askPpy, gap:askPpy / med - 1, pubX, lim}; render();
+}
+function render(){
+  const C = CUR; $('#rTitle').textContent = `시세 비교 · 실거래 ${C.ok.length}건`;
+  $('#bGap').textContent = isFinite(C.gap) ? (C.gap > 0 ? '+' : '') + pct(C.gap) : '호가 입력 시'; $('#bGap').style.color = C.gap > 0.1 ? 'var(--red)' : C.gap < -0.05 ? 'var(--green)' : 'var(--or2)';
+  $('#bPub').textContent = isFinite(C.pubX) ? C.pubX.toFixed(2) + '배' : '공시 입력 시';
+  $('#sMed').textContent = won(C.med); $('#sAvg').textContent = won(C.avg); $('#sN').textContent = C.S.length;
+  $('#warn').innerHTML = (C.S.length < 3 ? '<div class="item warn"><div class="q">표본 부족 — 참고만</div><div class="a">이상치를 뺀 거래가 3건 미만입니다. 같은 단지·같은 면적 거래를 더 넣어 주세요.</div></div>' : '') + (C.bad.length ? `<div class="item warn"><div class="a">면적·금액을 읽지 못한 줄 ${C.bad.length}건은 뺐습니다.</div></div>` : '');
+  $('#trend').innerHTML = C.recent.length ? `<table class="t"><tr><th>거래일</th><th>주소</th><th style="text-align:right">평당가</th><th style="text-align:right">중앙값 대비</th></tr>${C.recent.map(r => `<tr><td>${esc(r.ds)}</td><td>${esc(r.addr)}</td><td style="text-align:right">${won(r.ppy)}</td><td style="text-align:right">${(r.ppy / C.med - 1 > 0 ? '+' : '') + pct(r.ppy / C.med - 1)}</td></tr>`).join('')}</table><p class="kv">최근 3건 평균 평당가 ${won(C.recent.reduce((a, r) => a + r.ppy, 0) / C.recent.length)}만원 (중앙값 ${won(C.med)}만원)</p>` : '<p class="empty">날짜가 있는 거래가 없습니다</p>';
+  const so = $('#sort').value, L = C.S.slice().sort((a, b) => so === 'ppy' ? b.ppy - a.ppy : so === 'amt' ? b.v - a.v : (b.d || 0) - (a.d || 0));
+  $('#tbl').innerHTML = `<table class="t"><tr><th style="width:34%">주소</th><th>면적</th><th>거래일</th><th style="text-align:right">금액</th><th style="text-align:right">평당가</th></tr>${L.map(r => `<tr><td>${esc(r.addr)}</td><td>${r.a.m2.toFixed(1)}㎡<br>${r.a.py.toFixed(1)}평</td><td>${esc(r.ds)}</td><td style="text-align:right">${manTxt(r.v)}</td><td style="text-align:right">${won(r.ppy)}</td></tr>`).join('')}</table>`;
+  const O = C.ok.filter(r => r.out);
+  $('#out').innerHTML = O.length ? O.map(r => `<div class="item warn"><div class="q">${esc(r.addr)} · ${esc(r.ds)} · ${manTxt(r.v)}</div><div class="a">평당가 ${won(r.ppy)}만원 — 중앙값보다 ${r.dev > 0 ? '+' : ''}${pct(r.dev)} (기준 ±${Math.round(C.lim * 100)}% 밖). 특수 거래(가족 간·지분·입력 오류) 여부 확인</div></div>`).join('') : '<p class="empty">이상치 없음</p>';
+  $('#result').classList.remove('hide');
+}
+$('#sampleBtn').onclick = () => { $('#rows').value = sample(); $('#ask').value = '10억 2000'; $('#askA').value = '84.9㎡'; $('#pub').value = '6800000'; toast('예시 24건을 넣었습니다 (가상의 단지)'); };
+$('#clearBtn').onclick = () => { $('#rows').value = ''; };
+$('#runBtn').onclick = () => { run(); if (CUR){ $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); } }; $('#sort').onchange = () => CUR && render();
+const sumTxt = () => `[시세 비교 요약] 실거래 ${CUR.ok.length}건(이상치 ${CUR.ok.length - CUR.S.length}건 제외)\n중앙값 평당가 ${won(CUR.med)}만원 · 평균 ${won(CUR.avg)}만원\n호가 ${isFinite(CUR.askV) ? manTxt(CUR.askV) : '-'} → 평당 ${won(CUR.askPpy)}만원 · 괴리율 ${isFinite(CUR.gap) ? (CUR.gap > 0 ? '+' : '') + pct(CUR.gap) : '-'} · 공시 대비 ${isFinite(CUR.pubX) ? CUR.pubX.toFixed(2) + '배' : '-'}\n※ 실시간 조회가 아니며 입력 자료 기준입니다.`;
+$('#copyBtn').onclick = () => CUR && copyOut(sumTxt(), '요약을 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`시세비교_${todayS()}.csv`, [['주소','㎡','평','거래일','금액(만원)','평당가(만원)','중앙값 대비','이상치']].concat(CUR.ok.map(r => [r.addr, r.a.m2.toFixed(1), r.a.py.toFixed(1), r.ds, r.v, Math.round(r.ppy), (r.dev * 100).toFixed(1) + '%', r.out ? 'Y' : ''])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>실거래 시세 비교표</h1><p class="note">${todayS()} · 입력 자료 기준 · 이상치 기준 ±${Math.round(CUR.lim * 100)}%</p><p class="pre">${esc(sumTxt())}</p><h2>비교표</h2>${$('#tbl').innerHTML.replace('class="t"', 'style="font-size:8.4pt"')}<h2>이상치</h2><p style="font-size:9pt">${CUR.ok.filter(r => r.out).map(r => esc(r.addr) + ' ' + esc(r.ds) + ' ' + manTxt(r.v) + ' (' + pct(r.dev) + ')').join('<br>') || '없음'}</p></div>`); };
+</script>
+</body></html>

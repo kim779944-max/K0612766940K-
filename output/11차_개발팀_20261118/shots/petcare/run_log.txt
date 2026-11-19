@@ -1,0 +1,18 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+profiles: dog:콩이 items=8, cat:나비 items=6, plant:몬스테라 items=5
+schedule: 콩이: 종합 예방접종(추가 접종)→2027-01-22, 광견병 예방접종→2026-12-23, 심장사상충 예방→2026-11-23, 외부 기생충 예방→2026-11-13(지남), 내부 기생충 예방→2026-11-28, 목욕→2026-11-21, 미용·털 정리→2026-11-10(지남), 건강검진→2027-05-02 || 나비: 종합 예방접종(추가 접종)→2026-12-03, 외부 기생충 예방→2026-11-28, 내부 기생충 예방→2026-11-08(지남), 발톱 정리→2026-11-22, 빗질·털 관리→2026-11-20, 건강검진→2026-11-10(지남) || 몬스테라: 물 주기→2026-11-19, 비료→2026-11-08(지남), 잎 닦기·해충 확인→2026-11-23, 분갈이→2026-10-14(지남), 가지치기→2027-05-02
+basis shown: 주기 365일 · 마지막 2026-01-22 · 근거: 성견 일반 권장: 연 1회 추가 접종 | 주기 365일 · 마지막 2025-12-23 · 근거: 일반 권장: 연 1회 | 주기 30일 · 마지막 2026-10-24 · 근거: 일반 권장: 매월 1회
+stat: month=14 due=6
+ics: {"name":"케어일정_2026-11-18.ics","size":13545} events=57
+ics text sample: BEGIN:VCALENDAR | VERSION:2.0 | PRODID:-//KTS OneClick//KO | CALSCALE:GREGORIAN | BEGIN:VEVENT | UID:kts-20270122-0-lyem88@oneclick | DTSTAMP:20261118T232200 | DTSTART;VALUE=DATE:20270122 | DTEND;VALUE=DATE:20270123 | SUMMARY:[콩이] 종합 예방접종(추가 접종) | DESCRIPTION:성견 일반 권장: 연 1회 추가 접종 · 일반 권장 주기이며 아이 상태에
+no drug/dose words: false
+persist profiles: 3
+print print: pages=1 bytes=56829 file=files\petcare_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2835 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

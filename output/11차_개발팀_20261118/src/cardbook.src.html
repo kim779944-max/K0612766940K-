@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>카드 문자 → 가계부 자동 분류·결산 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.tx{display:grid;grid-template-columns:1fr auto;gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.tx .m{color:#fff;font-weight:800;min-width:0;overflow-wrap:anywhere}
+.tx .a{color:var(--or2);font-weight:900;text-align:right}
+.tx .d{color:var(--sub);font-size:11px;grid-column:1/2}
+.tx select{grid-column:2/3;font-size:11.5px;padding:4px 6px;width:auto;border-radius:8px}
+.bar{height:8px;border-radius:4px;background:var(--or);margin-top:3px}
+.brow{font-size:12px;margin-top:7px}
+.brow .h{display:flex;justify-content:space-between;color:#fff;font-weight:800}
+.brow .h span{color:var(--sub);font-weight:700}
+.brow.over .h b{color:var(--red)}
+</style></head>
+<body><div id="app">
+<!--@@TOP 카드 문자 → 가계부@@-->
+<main>
+<section class="hero">
+ <h1>카드 승인 문자를 붙여 넣으면<br><em>업종별 가계부</em>와 월 결산</h1>
+ <p>금액·가맹점·일시·카드를 읽어 9개 업종으로 나누고, 고정비와 변동비를 구분합니다. 카드번호는 끝 4자리만 남깁니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>카드 문자 · 내역</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 30건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">승인 문자·내역 <i>한 줄에 1건 · 여러 줄 붙여넣기</i></label>
+ <textarea id="sms" rows="9" maxlength="40000"></textarea>
+ <label class="lb">월 예산 (선택) <i>"식비 400000, 쇼핑 200000"</i></label>
+ <input id="budget" maxlength="300">
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">분류하고 결산하기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>가계부 결산</h2>
+ <div class="stat"><div><b id="sN">0</b><span>읽은 건수</span></div><div><b id="sSum">0</b><span>합계(원)</span></div><div><b id="sFix">0</b><span>고정비(원)</span></div></div>
+ <div class="row"><button class="btn pri sm" id="csvBtn">CSV 저장</button><button class="btn sec sm" id="printBtn">인쇄</button><button class="btn sec sm" id="copyBtn">요약 복사</button></div>
+ <p class="kv" id="parseInfo"></p>
+ <h3>월별 · 업종 비중</h3><div id="months"></div>
+ <h3>고정비 vs 변동비</h3><div id="fixvar"></div>
+ <h3>내역 <span style="font-weight:400;color:var(--sub);font-size:11px">업종을 바꾸면 같은 가맹점은 다음부터 그 업종으로 분류됩니다</span></h3><div id="txs"></div>
+ <details class="rule"><summary>분류 규칙표 (공개)</summary><div id="rules"></div></details>
+ <p class="fixnote">정리 보조이며 신고 금액은 장부·증빙으로 확인하세요.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const SAMPLE = `[Web발신] 신한카드(1234)승인 홍*동 4,500원 일시불 10/02 08:12 스타벅스미사역점
+[Web발신] KB국민카드1234승인 홍*동 12,800원 일시불 10/02 12:31 김밥천국미사점
+[Web발신] 신한카드(1234)승인 홍*동 55,000원 일시불 10/05 09:00 SKT통신요금
+[Web발신] 현대카드 5678 승인 홍*동 17,000원 일시불 10/07 00:01 넷플릭스
+[Web발신] 신한카드(1234)승인 홍*동 650,000원 일시불 10/10 10:00 미사관리비
+[Web발신] KB국민카드1234승인 홍*동 38,700원 일시불 10/12 18:40 이마트하남점
+[Web발신] 신한카드(1234)승인 홍*동 1,450원 일시불 10/13 07:58 서울교통공사
+[Web발신] 현대카드 5678 승인 홍*동 23,000원 일시불 10/15 14:10 하남연세의원
+[Web발신] 우리카드 9012 승인 홍*동 120,000원 일시불 10/17 16:00 미사수학학원
+[Web발신] 신한카드(1234)승인 홍*동 89,000원 3개월 10/20 21:15 쿠팡
+[Web발신] 현대카드 5678 승인 홍*동 14,900원 일시불 10/21 00:01 유튜브프리미엄
+[Web발신] KB국민카드1234승인 홍*동 64,000원 일시불 10/25 19:20 GS칼텍스하남
+[Web발신] 신한카드(1234)승인 홍*동 27,000원 일시불 10/28 13:05 올리브영미사점
+[Web발신] 신한카드(1234)승인 홍*동 4,500원 일시불 11/01 08:15 스타벅스미사역점
+[Web발신] KB국민카드1234승인 홍*동 9,000원 일시불 11/02 12:20 백반집
+[Web발신] 신한카드(1234)승인 홍*동 55,000원 일시불 11/05 09:00 SKT통신요금
+[Web발신] 현대카드 5678 승인 홍*동 17,000원 일시불 11/07 00:01 넷플릭스
+[Web발신] 신한카드(1234)승인 홍*동 650,000원 일시불 11/10 10:00 미사관리비
+[Web발신] KB국민카드1234승인 홍*동 41,200원 일시불 11/09 17:44 홈플러스하남점
+[Web발신] 신한카드(1234)승인 홍*동 1,450원 일시불 11/10 08:01 서울교통공사
+[Web발신] 우리카드 9012 승인 홍*동 120,000원 일시불 11/12 16:00 미사수학학원
+[Web발신] 현대카드 5678 승인 홍*동 14,900원 일시불 11/13 00:01 유튜브프리미엄
+[Web발신] KB국민카드1234승인 홍*동 18,000원 일시불 11/13 19:02 배달의민족
+[Web발신] 신한카드(1234)승인 홍*동 32,500원 일시불 11/14 11:30 다이소미사점
+[Web발신] 현대카드 5678 승인 홍*동 7,800원 일시불 11/14 15:10 온누리약국
+[Web발신] 신한카드(1234)승인 홍*동 12,300원 일시불 11/15 22:40 카카오T택시
+[Web발신] KB국민카드1234승인 홍*동 150,000원 일시불 11/16 14:00 미사동꽃집
+[Web발신] 신한카드(1234)취소 홍*동 89,000원 11/16 10:12 쿠팡
+카드 1234-56**-****-7890 승인 33,000원 11/17 19:30 교보문고
+[Web발신] KB국민카드1234승인 홍*동 6,900원 일시불 11/17 12:10 GS25미사점`;
+/* 업종 규칙표: 가맹점 이름에 이 단어가 들어 있으면 그 업종 (위에서부터 먼저 맞는 것) */
+const RULES = [
+ ['구독', ['넷플릭스','유튜브프리미엄','유튜브 프리미엄','멜론','디즈니','왓챠','티빙','쿠팡와우','스포티파이','애플','구독']],
+ ['통신', ['SKT','KT ','KT통신','LGU','LG유플러스','통신요금','알뜰폰']],
+ ['주거', ['관리비','월세','전기','가스','수도','도시가스','한전']],
+ ['의료', ['의원','병원','약국','치과','한의원','안과','이비인후과']],
+ ['교육', ['학원','교습','문고','서점','도서','인강','클래스']],
+ ['교통', ['교통공사','버스','택시','카카오T','주유','칼텍스','SK에너지','S-OIL','현대오일','코레일','KTX','주차','하이패스','티머니']],
+ ['식비', ['스타벅스','커피','카페','김밥','백반','식당','치킨','피자','배달의민족','요기요','쿠팡이츠','베이커리','파리바게뜨','이마트','홈플러스','롯데마트','마트','GS25','CU','세븐일레븐','편의점','국밥','분식']],
+ ['쇼핑', ['쿠팡','올리브영','다이소','무신사','11번가','G마켓','옥션','네이버페이','백화점','아울렛','쇼핑']]
+];
+const CATS = ['식비','교통','통신','주거','의료','교육','쇼핑','구독','기타'];
+const FIXED_CATS = ['통신','주거','구독'];
+const RECUR_CATS = ['교육','기타']; /* 같은 금액 반복을 고정비로 보는 업종(식비·교통·쇼핑은 반복돼도 변동비) */
+const learn = () => LS.get('kts_cardbook_learn_v1', {});
+function classify(m){ const L = learn(); if (L[m]) return {c:L[m], why:'직접 지정(학습)'}; for (const [c, ws] of RULES){ const w = ws.find(w => m.toUpperCase().indexOf(w.toUpperCase()) >= 0); if (w) return {c, why:`"${w}" 포함`}; } return {c:'기타', why:'규칙에 없음 → 기타(직접 바꿀 수 있음)'}; }
+function maskCard(s){ return s.replace(/\b(\d{4})[-\s]?(\d{2}[\d*]{2})[-\s]?([\d*]{4})[-\s]?(\d{4})\b/g, (m, a, b, c, d) => '****-****-****-' + d); }
+function parseLine(raw, yr){
+  const line = maskCard(raw.trim()); if (!line) return null;
+  const am = /([\d,]+)\s*원/.exec(line); if (!am) return {raw:line, fail:'금액 없음'};
+  const amount = num(am[1]) * (/취소/.test(line) ? -1 : 1);
+  const dm = /(\d{1,2})\/(\d{1,2})(?:\s+(\d{1,2}):(\d{2}))?/.exec(line);
+  if (!dm) return {raw:line, fail:'날짜 없음'};
+  const mo = +dm[1], dy = +dm[2]; const date = `${yr}-${pad2(mo)}-${pad2(dy)}`; const time = dm[3] ? `${pad2(dm[3])}:${dm[4]}` : '';
+  const cm = /([가-힣A-Z]+카드)/.exec(line); const card = cm ? cm[1] : '카드';
+  const l4 = /카드\s*\(?(\d{4})\)?|(\d{4})\s*승인|-(\d{4})\b/.exec(line); const last4 = l4 ? (l4[1] || l4[2] || l4[3]) : '';
+  let after = line.slice(dm.index + dm[0].length).trim();
+  if (!after){ after = line.replace(/\[Web발신\]/g, '').replace(cm ? cm[0] : '', '').replace(am[0], '').replace(dm[0], '').replace(/승인|취소|일시불|\d+개월|홍\*동|[()\d-]/g, '').trim(); }
+  const merchant = after.replace(/\s+/g, ' ').trim() || '(가맹점 확인)';
+  return {raw:line, amount, date, time, card, last4, merchant, inst:/(\d+)개월/.test(line) ? RegExp.$1 + '개월' : '일시불', cancel:amount < 0};
+}
+let CUR = null;
+function run(){
+  const t = $('#sms').value.trim(); if (!t){ $('#sms').classList.add('miss'); return toast('카드 문자를 붙여 넣어 주세요'); } $('#sms').classList.remove('miss');
+  const yr = new Date().getFullYear(); const lines = t.split(/\r?\n/).filter(s => s.trim());
+  const rows = lines.map(l => parseLine(l, yr)).filter(Boolean); const ok = rows.filter(r => !r.fail), bad = rows.filter(r => r.fail);
+  ok.forEach(r => Object.assign(r, classify(r.merchant)));
+  // 고정비: 업종이 통신·주거·구독이거나, 같은 가맹점·같은 금액이 서로 다른 2개월 이상
+  const seen = {}; ok.filter(r => !r.cancel).forEach(r => { const k = r.merchant + '|' + Math.abs(r.amount); (seen[k] = seen[k] || new Set()).add(r.date.slice(0, 7)); });
+  ok.forEach(r => { r.fixed = FIXED_CATS.includes(r.c) || (!r.cancel && RECUR_CATS.includes(r.c) && seen[r.merchant + '|' + Math.abs(r.amount)].size >= 2); r.fixWhy = FIXED_CATS.includes(r.c) ? '업종(' + r.c + ')' : (r.fixed ? '매달 같은 금액' : ''); });
+  const budget = {}; $('#budget').value.split(/[,，]/).forEach(s => { const m = /^\s*([가-힣]+)\s*([\d,]+)/.exec(s); if (m && CATS.includes(m[1])) budget[m[1]] = num(m[2]); });
+  CUR = {rows:ok, bad, n:lines.length, budget}; render();
+}
+function render(){
+  const R = CUR, rows = R.rows; const sum = rows.reduce((a, r) => a + r.amount, 0), fix = rows.filter(r => r.fixed).reduce((a, r) => a + r.amount, 0);
+  $('#sN').textContent = `${rows.length}/${R.n}`; $('#sSum').textContent = won(sum); $('#sFix').textContent = won(fix);
+  $('#parseInfo').textContent = `추출 ${rows.length}/${R.n}건` + (R.bad.length ? ` · 못 읽은 줄 ${R.bad.length}: ` + R.bad.map(b => b.fail).join(', ') : ' · 모두 읽음') + ` · 취소 ${rows.filter(r => r.cancel).length}건은 마이너스로 반영 · 카드번호는 끝 4자리만 표시`;
+  const months = [...new Set(rows.map(r => r.date.slice(0, 7)))].sort();
+  $('#months').innerHTML = months.map(m => { const mr = rows.filter(r => r.date.slice(0, 7) === m); const tot = mr.reduce((a, r) => a + r.amount, 0);
+    const by = CATS.map(c => [c, mr.filter(r => r.c === c).reduce((a, r) => a + r.amount, 0)]).filter(x => x[1]).sort((a, b) => b[1] - a[1]);
+    return `<div class="item"><div class="q">${m.replace('-', '년 ')}월 · 합계 ${won(tot)}원 · ${mr.length}건</div>${by.map(([c, v]) => { const b = R.budget[c]; const over = b && v > b; return `<div class="brow ${over ? 'over' : ''}"><div class="h"><b>${c}${over ? ' · 예산 초과 ' + won(v - b) + '원' : ''}</b><span>${won(v)}원 · ${pct(v / tot, 0)}${b ? ' / 예산 ' + won(b) : ''}</span></div><div class="bar" style="width:${Math.max(2, Math.round(v / tot * 100))}%;${over ? 'background:var(--red)' : ''}"></div></div>`; }).join('')}</div>`; }).join('');
+  const fx = rows.filter(r => r.fixed), vr = rows.filter(r => !r.fixed);
+  $('#fixvar').innerHTML = `<div class="stat" style="grid-template-columns:1fr 1fr"><div><b>${won(fx.reduce((a, r) => a + r.amount, 0))}</b><span>고정비 ${fx.length}건</span></div><div><b>${won(vr.reduce((a, r) => a + r.amount, 0))}</b><span>변동비 ${vr.length}건</span></div></div><p class="kv">고정비 기준: 업종이 통신·주거·구독이거나, 교육·기타 업종에서 같은 가맹점·같은 금액이 2개월 이상 나온 결제(식비·교통·쇼핑은 반복돼도 변동비). 고정비 가맹점: ${[...new Set(fx.map(r => r.merchant))].map(esc).join(', ')}</p>`;
+  $('#txs').innerHTML = rows.map((r, i) => `<div class="tx"><span class="m">${esc(r.merchant)}${r.fixed ? ' <span class="pill c">고정</span>' : ''}${r.cancel ? ' <span class="pill d">취소</span>' : ''}</span><span class="a">${won(r.amount)}원</span><span class="d">${r.date} ${r.time} · ${esc(r.card)}${r.last4 ? ' ****' + r.last4 : ''} · ${r.inst} · ${esc(r.why)}</span><select data-i="${i}">${CATS.map(c => `<option ${c === r.c ? 'selected' : ''}>${c}</option>`).join('')}</select></div>`).join('');
+  $$('#txs select').forEach(s => s.onchange = () => { const r = CUR.rows[+s.dataset.i]; const L = learn(); L[r.merchant] = s.value; LS.set('kts_cardbook_learn_v1', L); CUR.rows.filter(x => x.merchant === r.merchant).forEach(x => { x.c = s.value; x.why = '직접 지정(학습)'; x.fixed = FIXED_CATS.includes(x.c) || x.fixed; }); toast(`"${r.merchant}" → ${s.value} (다음부터 자동)`); render(); });
+  $('#rules').innerHTML = RULES.map(([c, ws]) => `<div style="margin-top:5px"><b>${c}</b>: ${ws.map(esc).join(', ')}</div>`).join('') + '<div style="margin-top:5px"><b>기타</b>: 위에 없는 가맹점(화면에서 바꾸면 학습)</div>';
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+function summary(){ const rows = CUR.rows; const months = [...new Set(rows.map(r => r.date.slice(0, 7)))].sort();
+  return `[카드 가계부 결산]\n` + months.map(m => { const mr = rows.filter(r => r.date.slice(0, 7) === m); return `■ ${m} 합계 ${won(mr.reduce((a, r) => a + r.amount, 0))}원\n` + CATS.map(c => [c, mr.filter(r => r.c === c).reduce((a, r) => a + r.amount, 0)]).filter(x => x[1]).map(([c, v]) => `  ${c} ${won(v)}원`).join('\n'); }).join('\n') + `\n고정비 ${won(rows.filter(r => r.fixed).reduce((a, r) => a + r.amount, 0))}원 / 변동비 ${won(rows.filter(r => !r.fixed).reduce((a, r) => a + r.amount, 0))}원\n※ 정리 보조이며 신고 금액은 장부·증빙으로 확인하세요.`; }
+$('#sampleBtn').onclick = () => { $('#sms').value = SAMPLE; $('#budget').value = '식비 100000, 쇼핑 100000, 교통 60000'; toast('예시 30건을 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#sms').value = ''; };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(summary(), '결산 요약을 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`카드가계부_${todayS()}.csv`, [['일자','시간','가맹점','금액','업종','고정/변동','카드','끝4자리','할부','분류 근거']].concat(CUR.rows.map(r => [r.date, r.time, r.merchant, r.amount, r.c, r.fixed ? '고정' : '변동', r.card, r.last4, r.inst, r.why])));
+$('#printBtn').onclick = () => { if (!CUR) return; const rows = CUR.rows; const months = [...new Set(rows.map(r => r.date.slice(0, 7)))].sort();
+  printDoc(`<div class="paper"><h1>카드 가계부 결산</h1><p class="note">${todayS()} · ${rows.length}건 · 카드번호 끝 4자리만 표시</p>
+  <h2>월별 업종 합계</h2><table><tr><th>업종</th>${months.map(m => `<th>${m}</th>`).join('')}</tr>${CATS.map(c => `<tr><td>${c}</td>${months.map(m => `<td>${won(rows.filter(r => r.c === c && r.date.slice(0, 7) === m).reduce((a, r) => a + r.amount, 0))}</td>`).join('')}</tr>`).join('')}<tr><th>합계</th>${months.map(m => `<th>${won(rows.filter(r => r.date.slice(0, 7) === m).reduce((a, r) => a + r.amount, 0))}</th>`).join('')}</tr></table>
+  <h2>내역</h2><table style="font-size:8.5pt"><colgroup><col style="width:15%"><col><col style="width:15%"><col style="width:10%"><col style="width:9%"></colgroup><tr><th>일시</th><th>가맹점</th><th>금액</th><th>업종</th><th>구분</th></tr>${rows.map(r => `<tr><td style="padding:1px 4px">${r.date.slice(5)} ${r.time}</td><td style="padding:1px 4px">${esc(r.merchant)}</td><td style="padding:1px 4px">${won(r.amount)}</td><td style="padding:1px 4px">${r.c}</td><td style="padding:1px 4px">${r.fixed ? '고정' : '변동'}</td></tr>`).join('')}</table>
+  <p class="note">정리 보조이며 신고 금액은 장부·증빙으로 확인하세요.</p></div>`); };
+</script>
+</body></html>

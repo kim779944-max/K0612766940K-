@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더태그 — 마켓 등록용 제목·태그·검색어 30종 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.tt{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:9px 10px;margin-top:7px}
+.tt .h{display:flex;gap:6px;align-items:center;font-size:11.5px;color:var(--sub)}.tt .h b{color:var(--or2);font-size:12.5px}.tt .h span{flex:1}
+.tt .h button{font-size:11.5px;font-weight:800;border:1px solid var(--line2);border-radius:8px;padding:5px 9px;background:var(--card2)}
+.tt p{font-size:13px;color:#fff;margin-top:4px;line-height:1.5}
+.kw{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.kw button{font-size:12px;font-weight:700;color:#DCE6F2;border:1px solid var(--line2);border-radius:999px;padding:6px 10px;background:var(--card2)}
+.kw button i{font-style:normal;color:var(--sub);font-size:10px;margin-right:4px}
+.lim{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.lim>*{min-width:0}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더태그@@-->
+<main>
+<section class="hero">
+ <h1>상품 1개 정보로<br><em>마켓별 제목 + 검색어 30종</em></h1>
+ <p>상품명·핵심 특징·카테고리·타겟·사용 상황을 넣으면 쿠팡·스마트스토어·11번가·G마켓 제목(글자 수 확인)과 검색어 30종을 조합하고, 과장 표현·남의 상표·금지어를 빼고 알려 줍니다.</p>
+ <p class="fixnote">검색량을 조회하지 않습니다. 넣은 낱말을 조합하는 생성기입니다. 입력에 없는 인증·성능 표현은 만들지 않습니다.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>상품 정보</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 1: 텀블러</button><button class="btn sec sm" data-e="1">예시 2: 노즈워크 매트</button></div>
+ <div class="g2"><div><label class="lb">상품명</label><input id="pn" maxlength="60"></div><div><label class="lb">내 브랜드 <i>선택</i></label><input id="brand" maxlength="20"></div></div>
+ <label class="lb">핵심 특징 5개 <i>한 줄에 하나</i></label><textarea id="feat" rows="5" maxlength="1000"></textarea>
+ <div class="g2"><div><label class="lb">카테고리</label><input id="cat" maxlength="40"></div><div><label class="lb">타겟 <i>쉼표로</i></label><input id="tg" maxlength="60"></div></div>
+ <label class="lb">사용 상황 <i>쉼표로</i></label><input id="sit" maxlength="80">
+ <label class="lb">금지어 <i>선택 · 쉼표로</i></label><input id="ban" maxlength="200">
+ <label class="lb">제목 글자 수 한도 <i>참고 기본값 · 판매자센터 최신 규정으로 고치세요</i></label>
+ <div class="lim"><input id="lC" inputmode="numeric" value="50" aria-label="쿠팡"><input id="lS" inputmode="numeric" value="50" aria-label="스마트스토어"><input id="l11" inputmode="numeric" value="50" aria-label="11번가"><input id="lG" inputmode="numeric" value="50" aria-label="G마켓"></div>
+ <div class="lim kv"><span>쿠팡</span><span>스마트스토어</span><span>11번가</span><span>G마켓</span></div>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">제목 · 검색어 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">결과</span></h2>
+ <div id="warn"></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">검색어 30종 복사</button><button class="btn sec sm" id="csvBtn">CSV</button></div>
+ <h3>마켓별 제목</h3><div id="titles"></div>
+ <h3>검색어 30종 <span class="kv" style="font-weight:700">누르면 1개 복사</span></h3><div class="kw" id="kws"></div>
+ <details class="rule"><summary>조합 · 제거 규칙 (공개)</summary><div class="kv" id="rules"></div></details>
+ <p class="fixnote">검색량을 조회하지 않습니다(조합 생성기). 마켓 규정은 바뀔 수 있으니 등록 전 판매자센터에서 확인하세요.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const EX = [
+ {pn:'스테인리스 진공 텀블러 500ml', brand:'KTS리빙', feat:'이중 진공 단열 12시간 보온\n최고급 스테인리스 304\n스타벅스 스타일 디자인!\n원터치 뚜껑\n식기세척기 사용 가능', cat:'주방용품 > 텀블러', tg:'직장인, 대학생', sit:'출근길, 캠핑, 사무실', ban:''},
+ {pn:'강아지 노즈워크 매트', brand:'', feat:'분리세탁 가능\n미끄럼 방지 바닥\n6가지 놀이 패턴\n100% 스트레스 치료 효과\n접이식 보관', cat:'반려동물 > 장난감', tg:'실내견, 소형견', sit:'분리불안, 비 오는 날, 산책 못한 날', ban:'애견'}];
+const IDS = Object.keys(EX[0]);
+const HYPE = ['최고급', '최고', '최상급', '최상', '최저가', '1위', '넘버원', 'No.1', '100%', '완벽', '무조건', '기적', '특효', '치료', '완치', '영구', '세계 최초', '국내 최초', '유일', '보장', '즉효'];
+const TM = ['나이키', '아디다스', '샤넬', '구찌', '루이비통', '다이슨', '애플', '아이폰', '에어팟', '갤럭시', '스타벅스', '레고', '디즈니', '포켓몬', '산리오', '헬로키티', '노스페이스', '스탠리', '이케아', '몽클레어'];
+const SPECIAL = /[!★☆♥♡※~♪■□▶◀●◆＃#@$%^*|]/g;
+const split = s => String(s || '').split(/[,，\n]/).map(x => x.trim()).filter(Boolean);
+let CUR = null;
+function clean(phrase, where, W, ban){
+  let p = phrase;
+  ban.concat(HYPE).forEach(w => { if (w && p.includes(w)){ W.push([HYPE.includes(w) ? '과장 표현' : '금지어', w, where]); p = p.split(w).join(' '); } });
+  TM.forEach(w => { if (p.includes(w) && w !== CUR_BRAND){ W.push(['남의 상표', w, where]); p = p.split(w).join(' '); } });
+  if (/스타일|st$|풍$/.test(p) && W.some(x => x[0] === '남의 상표' && x[2] === where)) p = p.replace(/스타일|풍/g, ' ');
+  if ((p.match(SPECIAL) || []).length){ W.push(['특수문자', (phrase.match(SPECIAL) || []).join(''), where]); p = p.replace(SPECIAL, ' '); }
+  return p.replace(/\s+/g, ' ').trim();
+}
+let CUR_BRAND = '';
+const tokw = s => (String(s).match(/[가-힣A-Za-z0-9.]+/g) || []).filter(w => w.length >= 2 || /\d/.test(w));
+function fit(tokens, lim){ const out = []; for (const t of tokens){ const next = out.concat([t]).join(' '); if (next.length <= lim) out.push(t); } return out.join(' '); }
+function run(){
+  const v = {}; IDS.forEach(k => v[k] = $('#' + k).value.trim()); CUR_BRAND = v.brand;
+  if (!v.pn){ $('#pn').classList.add('miss'); return toast('상품명을 넣어 주세요'); } $('#pn').classList.remove('miss');
+  const W = [], ban = split(v.ban);
+  const pn = clean(v.pn, '상품명', W, ban), F = split(v.feat).map((f, i) => clean(f, `특징 ${i + 1}`, W, ban)).filter(Boolean);
+  const T = split(v.tg).map(x => clean(x, '타겟', W, ban)).filter(Boolean), S = split(v.sit).map(x => clean(x, '상황', W, ban)).filter(Boolean);
+  const catW = v.cat.split(/>|\/|,/).map(x => x.trim()).filter(Boolean);
+  const pnW = tokw(pn), noun = pnW.filter(w => !/\d/.test(w)).pop() || pnW.pop() || pn;
+  const size = pnW.filter(w => /\d/.test(w));
+  const fW = uniq(F.flatMap(tokw)).filter(w => w !== noun && !/^(가능|사용|디자인)$/.test(w));
+  const lim = {C:+$('#lC').value || 50, S:+$('#lS').value || 50, '11':+$('#l11').value || 50, G:+$('#lG').value || 50};
+  const br = v.brand ? [v.brand] : [];
+  const titles = [
+   ['쿠팡', lim.C, fit(br.concat([pn], F.slice(0, 2)), lim.C)],
+   ['스마트스토어', lim.S, fit([pn].concat(F.slice(0, 3), T.slice(0, 1).map(t => t + '용')), lim.S)],
+   ['11번가', lim['11'], fit([`[${catW[catW.length - 1] || noun}]`].concat(br, [pn], F.slice(0, 2)), lim['11'])],
+   ['G마켓', lim.G, fit(br.concat([pn], F.slice(0, 1), S.slice(0, 1).map(s => s + ' ' + noun), T.slice(0, 1)), lim.G)]];
+  const K = [], seen = new Set(), add = (...ws) => { const s = ws.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim(); const key = s.split(' ').sort().join(''); if (s && !seen.has(key) && K.length < 30 && s.length <= 25){ seen.add(key); K.push(s); } };
+  const G = [['속성', fW.map(f => [f, noun])], ['타겟', T.map(t => [t, noun])], ['상황', S.map(s => [s, noun])], ['카테고리', catW.map(c => c === noun ? [c] : [c, noun])], ['크기', size.map(z => [noun, z])],
+   ['타겟+속성', T.flatMap(t => fW.slice(0, 4).map(f => [t, f, noun]))], ['상황+속성', S.flatMap(s => fW.slice(0, 3).map(f => [s, f, noun]))], ['속성+속성', fW.slice(0, 5).flatMap((a, i) => fW.slice(i + 1, 5).map(b => [a, b, noun]))], ['선물', T.map(t => [t, noun, '선물'])]];
+  const KS = []; let guard = 0; while (K.length < 30 && guard++ < 50){ G.forEach(([g, list]) => { const it = list.shift(); if (it){ const n = K.length; add(...it); if (K.length > n) KS.push(g); } }); if (G.every(x => !x[1].length)) break; }
+  CUR = {v, W, titles, K, KS, noun}; render();
+}
+function render(){
+  const C = CUR; $('#rTitle').textContent = `${C.v.pn} · 제목 ${C.titles.length} · 검색어 ${C.K.length}`;
+  $('#warn').innerHTML = C.W.length ? `<div class="item warn"><div class="q">뺀 표현 ${C.W.length}건 (제목·검색어에 넣지 않음)</div><div class="a">${C.W.map(w => `${w[0]} "${esc(w[1])}" — ${esc(w[2])}`).join('<br>')}</div></div>` : '<p class="kv">과장 표현 · 남의 상표 · 금지어 없음</p>';
+  $('#titles').innerHTML = C.titles.map((t, i) => `<div class="tt"><div class="h"><b>${t[0]}</b><span>${t[2].length} / ${t[1]}자</span><button data-t="${i}">복사</button></div><p>${esc(t[2])}</p></div>`).join('');
+  $$('[data-t]').forEach(b => b.onclick = () => copyOut(C.titles[+b.dataset.t][2], `${C.titles[+b.dataset.t][0]} 제목을 복사했습니다`));
+  $('#kws').innerHTML = C.K.map((k, i) => `<button data-k="${i}"><i>${i + 1}</i>${esc(k)}</button>`).join('');
+  $$('[data-k]').forEach(b => b.onclick = () => copyOut(C.K[+b.dataset.k], '복사했습니다: ' + C.K[+b.dataset.k]));
+  $('#rules').innerHTML = `검색어 = 넣은 낱말끼리만 조합: 특징 낱말+상품, 타겟+상품, 상황+상품, 카테고리+상품, 상품+크기, 타겟+특징+상품, 상황+특징+상품, 특징 2개+상품, 타겟+상품+선물 순서로 돌아가며 30개까지. 같은 낱말 묶음은 1번만, 25자 넘으면 뺌.<br>제거: 과장 표현(${HYPE.join(', ')}), 남의 상표(${TM.join(', ')} — 내 브랜드 칸에 적은 것은 예외), 특수문자, 금지어 칸. 제목은 한도를 넘지 않게 뒤 낱말부터 뺍니다.`;
+  $('#result').classList.remove('hide');
+}
+function load(i){ IDS.forEach(k => $('#' + k).value = EX[i][k]); toast(`예시 ${i + 1}을 넣었습니다 (가상의 상품)`); }
+$('#sampleBtn').onclick = () => load(0); $$('[data-e]').forEach(b => b.onclick = () => load(+b.dataset.e));
+$('#runBtn').onclick = () => { run(); if (CUR){ $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); } };
+$('#copyBtn').onclick = () => CUR && copyOut(CUR.K.join(', '), '검색어 30종을 쉼표로 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`마켓태그_${todayS()}.csv`, [['구분','마켓/번호','내용','글자 수','한도/조합']].concat(CUR.titles.map(t => ['제목', t[0], t[2], t[2].length, t[1]]), CUR.K.map((k, i) => ['검색어', i + 1, k, k.length, CUR.KS[i] || '']), CUR.W.map(w => ['뺀 표현', w[0], w[1], '', w[2]])));
+</script>
+</body></html>

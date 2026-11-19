@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>동료 평가 → 부드러운 피드백 변환기 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+:root{--bg:#0A1128;--card:#111B36;--card2:#16223F;--line:#24314F;--line2:#2E4370;--ink:#ECEFF4;--sub:#93A0B4;
+ --or:#FF6B00;--or2:#FFA24D;--on:#0A1128;--red:#FF5A5A;--green:#35C48A;--yel:#FFC24D}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Roboto,sans-serif;
+ background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5;letter-spacing:-.2px;word-break:keep-all;overflow-wrap:break-word}
+#app{max-width:460px;margin:0 auto;overflow-x:hidden;min-height:100vh;
+ background:radial-gradient(120% 40% at 50% -6%,rgba(255,107,0,.10) 0%,rgba(255,107,0,0) 62%),var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;letter-spacing:-.2px}
+input,select,textarea{font:inherit;color:var(--ink);background:#0B1530;border:1px solid var(--line2);border-radius:10px;padding:10px 11px;width:100%;font-size:14px;min-width:0}
+textarea{resize:vertical;line-height:1.5}
+input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;accent-color:#FF6B00;padding:0}
+input[type=file]{font-size:12px;padding:7px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--or2)}
+input.miss,textarea.miss{border-color:var(--red)}
+a{color:var(--or2)}
+header.top{position:sticky;top:0;z-index:40;background:rgba(10,17,40,.97);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:8px;padding:10px 14px 6px}
+.brand{display:flex;align-items:center;gap:7px;font-size:15.5px;font-weight:900;color:#fff;letter-spacing:-.6px;min-width:0}
+.brand .mark{flex:0 0 24px;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,var(--or2),var(--or));color:var(--on);font-size:12px;font-weight:900}
+.brand span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp{flex:1}
+.home{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:999px;padding:5px 10px;text-decoration:none;white-space:nowrap}
+.privacy{font-size:11px;color:var(--sub);padding:0 14px 8px;display:flex;align-items:center;gap:6px}
+.privacy::before{content:"";flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+main{padding:6px 14px 40px}
+.hero h1{font-size:21px;line-height:1.32;font-weight:900;letter-spacing:-.8px;margin-top:10px}
+.hero h1 em{font-style:normal;color:var(--or)}
+.hero p{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 12px;margin-top:12px}
+.card h2{font-size:14.5px;font-weight:900;color:#fff;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.card h2 .n{flex:0 0 20px;width:20px;height:20px;border-radius:6px;background:var(--or);color:var(--on);font-size:11px;font-weight:900;display:grid;place-items:center}
+.card h3{font-size:13px;font-weight:900;color:var(--or2);margin:12px 0 5px}
+.sub{font-size:11.5px;color:var(--sub);margin-top:4px;line-height:1.55}
+label.lb{display:block;font-size:11.5px;font-weight:800;color:#C6D0DF;margin:10px 0 4px}
+label.lb i{font-style:normal;color:var(--sub);font-weight:700;margin-left:4px;font-size:10.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.g2>*{min-width:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border-radius:12px;padding:13px 12px;font-size:14.5px;font-weight:900;text-decoration:none;text-align:center;line-height:1.3}
+.btn.pri{color:var(--on);background:linear-gradient(145deg,var(--or2),var(--or));box-shadow:0 8px 22px rgba(255,107,0,.28)}
+.btn.sec{color:#E6EDF7;background:var(--card2);border:1px solid var(--line2)}
+.btn.sm{padding:9px 6px;font-size:12.5px;border-radius:10px}
+.row{display:flex;gap:7px;margin-top:9px}.row>*{flex:1;min-width:0}
+.chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.chips button{font-size:12px;font-weight:800;color:#DCE6F2;border:1px solid var(--line2);border-radius:999px;padding:7px 11px;background:var(--card2)}
+.chips button.on{background:var(--or);border-color:var(--or);color:var(--on)}
+.pill{display:inline-block;font-size:10.5px;font-weight:900;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.pill.a,.pill.hi{background:var(--red);color:#fff}.pill.b,.pill.md{background:var(--yel);color:#1a1200}.pill.c,.pill.lo{background:#3B82F6;color:#fff}.pill.d,.pill.no{background:#3A4766;color:#DCE6F2}.pill.ok{background:var(--green);color:#062014}
+.item{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:7px}
+.item .q{font-size:13px;font-weight:800;color:#fff}
+.item .a{font-size:12.5px;color:#D3DBE7;margin-top:4px;line-height:1.55}
+.item.warn{border-color:rgba(255,90,90,.55)}
+.kv{font-size:11px;color:var(--sub);line-height:1.55;margin-top:6px}
+.out{white-space:pre-wrap;font-size:13px;line-height:1.6;background:#0B1530;border:1px dashed var(--or2);border-radius:10px;padding:10px;margin-top:8px;color:#E3E9F2}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.stat div{background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;min-width:0}
+.stat b{display:block;font-size:18px;font-weight:900;color:#fff}
+.stat span{font-size:10.5px;color:var(--sub)}
+table.t{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed;font-size:12px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.t th{color:var(--sub);font-size:11px;font-weight:800}
+.fixnote{font-size:11.5px;line-height:1.55;color:#FFD7B8;background:rgba(255,107,0,.10);border:1px solid rgba(255,107,0,.45);border-radius:10px;padding:8px 10px;margin-top:10px}
+details.rule{margin-top:8px;background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
+details.rule summary{font-weight:800;color:var(--or2);cursor:pointer}
+.hide{display:none!important}
+.empty{font-size:12px;color:var(--sub);text-align:center;padding:12px 6px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:#1E2C4D;border:1px solid var(--or);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:10px 14px;z-index:90;width:max-content;max-width:340px;text-align:center;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{font-size:10.5px;color:#6E7F99;text-align:center;margin-top:16px;line-height:1.6}
+#printArea{display:none}
+.paper{background:#fff;color:#111;font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:10.5pt;line-height:1.5;letter-spacing:-.1px}
+.paper h1{font-size:16pt;margin-bottom:4px}.paper h2{font-size:12pt;margin:11px 0 5px;border-left:4px solid #FF6B00;padding-left:7px}
+.paper table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0}
+.paper th,.paper td{border:1px solid #444;padding:4px 6px;text-align:left;vertical-align:top;font-size:9.5pt;overflow-wrap:anywhere;word-break:keep-all}
+.paper th{background:#F1F3F7}
+.paper .note{font-size:9pt;color:#444;margin-top:8px}
+.paper .pre{white-space:pre-wrap}
+@media print{
+ @page{size:A4;margin:12mm}
+ html,body{background:#fff!important;min-height:0!important}
+ body>*:not(#printArea){display:none!important}
+ #printArea{display:block!important}
+}
+.tone{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:8px}
+.tone .h{display:flex;align-items:center;gap:6px}.tone .h b{flex:1;font-size:13px;color:#fff}
+.tone .h button{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:8px;padding:4px 9px}
+.st4{margin-top:6px;font-size:12.6px;line-height:1.6;color:#E3E9F2}.st4 span{display:inline-block;min-width:34px;font-size:10.5px;font-weight:900;color:var(--or2)}
+.ph{color:var(--yel)}
+mark{background:rgba(255,90,90,.25);color:#FFC9C9;border-radius:4px;padding:0 2px}
+</style></head>
+<body><div id="app">
+<header class="top">
+ <div class="hd"><div class="brand"><span class="mark">K</span><span class="t">피드백 부드럽게</span></div><span class="sp"></span><a class="home" href="index.html">원클릭 쇼룸</a></div>
+ <div class="privacy">입력하신 내용은 이 기기 안에서만 처리됩니다</div>
+</header>
+<main>
+<section class="hero">
+ <h1>거친 평가 메모를<br><em>관찰 → 영향 → 요청 → 격려</em>로</h1>
+ <p>사실(무엇을·언제·몇 번)은 그대로 두고, 사람을 탓하는 말을 행동을 말하는 문장으로 바꿉니다. 원문에 없는 칭찬·결론은 만들지 않습니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>원문 평가</h2>
+ <div class="chips" id="exC"><button id="sampleBtn">예시 1 지각</button><button data-e="1">예시 2 보고 누락</button><button data-e="2">예시 3 응대</button><button data-e="3">예시 4 팀장께</button><button data-e="4">예시 5 마감</button></div>
+ <label class="lb">원문 <i>거친 표현 그대로 적으세요 (증거로 보존됩니다)</i></label>
+ <textarea id="raw" rows="6" maxlength="3000"></textarea>
+ <div class="g2"><div><label class="lb">대상</label><select id="who"><option>동료</option><option>후배</option><option>팀장</option></select></div>
+ <div><label class="lb">상황</label><select id="sit"><option>일반</option><option>평가면담</option><option>상황 종료 후</option></select></div></div>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">부드럽게 다시 쓰기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>다듬은 피드백</h2>
+ <div class="row"><button class="btn pri sm" id="copyBtn">보통 톤 복사</button><button class="btn sec sm" id="printBtn">인쇄</button><button class="btn sec sm" id="csvBtn">이력 CSV</button></div>
+ <h3>면담 시작 멘트</h3><div class="out" id="open"></div>
+ <h3>피해야 할 표현 <span id="banN" class="pill a">0</span></h3><div id="ban"></div>
+ <div id="tones"></div>
+ <h3>원문 그대로 (증거 보존)</h3><div class="out" id="orig"></div>
+ <details class="rule"><summary>바꾸기 사전 (공개)</summary><div id="dict"></div></details>
+ <h3>최근 이력 <span class="kv" id="hN"></span></h3><div id="hist"></div>
+</section>
+<section class="card qa" id="inq">
+ <h2><span class="n">?</span>60초 문의</h2>
+ <p class="sub">우리 매장에 맞게 고쳐 쓰고 싶으시면 이름·연락처·문의 한 줄만 남겨 주세요. 담당자가 확인한 뒤 연락드립니다.</p>
+ <div class="row"><a class="btn sec" id="inqLink" href="../misa-1116/form.html" target="_blank" rel="noopener">60초 문의 폼 열기 (이름 · 연락처 · 문의)</a></div>
+ <p class="kv">KTS 60초 접수 폼을 그대로 씁니다. 이 화면에서 만든 작업 내용은 폼으로 넘어가지 않습니다.</p>
+</section>
+<p class="foot">KTS 원클릭 · 서버 0 · 외부 발송 0 · 모든 처리는 이 기기 안에서만 합니다<br><a href="index.html">원클릭 쇼룸으로</a></p>
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/* ===== KTS 원클릭 공통 도우미 (9차 재사용 · 11차 확장) (복사·저장·인쇄·기기 저장·개인정보 가림) ===== */
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+let _tt; function toast(m){ const e = $('#toast'); e.textContent = m; e.classList.add('on'); clearTimeout(_tt); _tt = setTimeout(() => e.classList.remove('on'), 2400); }
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(e){}
+  try{ const a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); const ok = document.execCommand('copy'); a.remove(); return ok; }catch(e){ return false; }
+}
+function copyOut(t, msg){ window.__lastCopy = t; copyText(t).then(ok => toast(ok ? (msg || '복사했습니다') : '복사하지 못했습니다. 글자를 길게 눌러 직접 복사해 주세요')); }
+function download(name, text, mime){ window.__lastDownload = {name:name, size:text.length}; const b = new Blob([text], {type:mime || 'text/plain;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+const toCSV = rows => rows.map(r => r.map(c => { c = String(c == null ? '' : c); return /[",\r\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(',')).join('\r\n');
+function saveCSV(name, rows){ download(name, '﻿' + toCSV(rows), 'text/csv;charset=utf-8'); toast('CSV 파일을 저장했습니다 (엑셀에서 열림)'); }
+function printDoc(html){ $('#printArea').innerHTML = html; setTimeout(() => window.print(), 60); }
+const LS = { get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} } };
+const pad2 = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayS = () => ymd(new Date());
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const parseD = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const WK = ['일', '월', '화', '수', '목', '금', '토'];
+const korD = d => d ? `${d.getMonth() + 1}월 ${d.getDate()}일(${WK[d.getDay()]})` : '';
+/* CSV 붙여넣기 읽기 (따옴표·쉼표·탭 지원) */
+function parseCSV(text){
+  text = String(text || '').replace(/^﻿/, '');
+  const sep = (text.split('\n')[0].indexOf('\t') >= 0) ? '\t' : ',';
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){ if (c === '"'){ if (text[i + 1] === '"'){ cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === sep){ row.push(cur.trim()); cur = ''; }
+    else if (c === '\n'){ row.push(cur.trim()); rows.push(row); row = []; cur = ''; }
+    else if (c !== '\r') cur += c;
+  }
+  if (cur !== '' || row.length){ row.push(cur.trim()); rows.push(row); }
+  return rows.filter(r => r.some(x => x !== ''));
+}
+/* 개인정보 가림: 휴대폰·일반전화·이메일 */
+function maskPII(s){
+  return String(s || '')
+    .replace(/([\w.+-]{1,64})@([\w-]+(?:\.[\w-]+)+)/g, (m, u, d) => u.slice(0, 2) + '***@' + d)
+    .replace(/(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/g, (m, a, b, c) => a + '-****-' + c)
+    .replace(/(0[2-6]\d?)[-.\s](\d{3,4})[-.\s](\d{4})/g, (m, a, b, c) => a + '-****-' + c);
+}
+/* 받침에 맞춘 조사: jo('주문','을를') → 주문을 */
+const jo = (w, p) => { w = String(w); const c = w.charCodeAt(w.length - 1); const has = c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; return w + (has ? p[0] : p[1]); };
+const PHONE_RE = /(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/;
+/* ===== 공통 도우미 끝 ===== */
+/* ===== 11차 추가 도우미 ===== */
+const num = s => { if (s == null) return NaN; s = String(s).replace(/[,\s원₩$]/g, ''); if (s === '') return NaN; return Number(s); };
+const won = n => (isFinite(n) ? Math.round(n).toLocaleString('ko-KR') : '-');
+const fx2 = n => (isFinite(n) ? (Math.round(n * 100) / 100).toFixed(2) : '-');
+const pct = (n, d) => (isFinite(n) ? (n * 100).toFixed(d == null ? 1 : d) + '%' : '-');
+const daysBetween = (a, b) => Math.round((b - a) / 86400000);
+function icsFile(name, events){
+  const st = d => `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}`;
+  const stamp = new Date(); const ds = st(stamp) + 'T' + pad2(stamp.getHours()) + pad2(stamp.getMinutes()) + '00';
+  const e = s => String(s).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+  const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//KTS OneClick//KO', 'CALSCALE:GREGORIAN'];
+  events.forEach((v, i) => { L.push('BEGIN:VEVENT', `UID:kts-${st(v.date)}-${i}-${Math.random().toString(36).slice(2, 8)}@oneclick`, `DTSTAMP:${ds}`, `DTSTART;VALUE=DATE:${st(v.date)}`, `DTEND;VALUE=DATE:${st(addDays(v.date, 1))}`, `SUMMARY:${e(v.title)}`, `DESCRIPTION:${e(v.desc || '')}`, 'END:VEVENT'); });
+  L.push('END:VCALENDAR'); download(name, L.join('\r\n'), 'text/calendar;charset=utf-8'); return events.length;
+}
+const utf8Bytes = s => new TextEncoder().encode(String(s)).length;
+const maskTel4 = s => { const d = String(s || '').replace(/\D/g, ''); return d.length >= 4 ? '***-****-' + d.slice(-4) : (s ? '****' : ''); };
+/* ===== 11차 추가 끝 ===== */
+/* ===== 10차 추가 도우미 (문장·숫자·인쇄) ===== */
+function splitSent(text){
+  const out = [];
+  String(text || '').replace(/\r/g, '').split('\n').forEach(line => {
+    line = line.trim(); if (!line) return;
+    const parts = line.match(/[^.!?。]+(?:[.!?。]+|$)/g) || [line];
+    let buf = '';
+    parts.forEach(p => { buf += p; if (/(다|요|함|음|임|됨|니다|까|오)[.!?。]\s*$|[!?]\s*$/.test(buf.trim()) || buf.length > 160){ out.push(buf.trim()); buf = ''; } });
+    if (buf.trim()) out.push(buf.trim());
+  });
+  return out.filter(s => s.replace(/[\s\d.,·\-]/g, '').length >= 2);
+}
+const STOP = new Set('그리고 그러나 하지만 또한 이번 해당 관련 대한 위한 통해 따라 경우 있습니다 합니다 했습니다 됩니다 있는 하는 것을 것은 것이 등을 등의 및 수 있다 한다 이를 이에 우리 저희 그 이 저 것 등 때 중 더 각 약 내 외'.split(' '));
+function words(s){
+  return (String(s).match(/[가-힣A-Za-z][가-힣A-Za-z0-9]+/g) || []).map(w => w.replace(/(으로|에서|에게|까지|부터|에는|과의|와의|이며|이고|하고|했다|한다|합니다|하는|되는|된다|입니다|이다|은|는|이|가|을|를|의|에|와|과|도|로|만)$/, '')).filter(w => w.length >= 2 && !STOP.has(w));
+}
+const uniq = a => [...new Set(a)];
+/* ===== 10차 추가 끝 ===== */
+const EXS = [
+ ['너는 맨날 지각한다. 이번 달에만 4번 늦었고 지난 화요일엔 25분 늦었다. 그래서 오픈 준비를 내가 혼자 했다. 진짜 성의가 없다. 출근 시간 좀 지켜라.', '동료', '일반'],
+ ['보고를 항상 빼먹는다. 11월 거래처 미팅 결과를 3일 뒤에야 공유했다. 그 바람에 견적을 다시 냈다. 생각이 없는 것 같다. 미팅 끝나면 당일에 공유해야 한다. 그래도 자료 정리는 꼼꼼하게 잘한다.', '후배', '평가면담'],
+ ['손님한테 말투가 너무 퉁명스럽다. 이번 주 불만 문의가 2건 들어왔다. 절대 그렇게 말하면 안 된다. 인사부터 먼저 했으면 좋겠다.', '동료', '상황 종료 후'],
+ ['팀장님은 항상 마감 전날에 일을 바꾼다. 지난주 금요일 오후 6시에 기획안 방향을 바꿔서 주말에 다시 만들었다. 너무 무책임하다. 변경은 최소 이틀 전에 알려 주셨으면 한다.', '팀장', '일반'],
+ ['마감을 두 번 넘겼다. 10월 정산표는 5일, 11월 재고표는 3일 늦었다. 회계팀이 결산을 미뤘다. 게으른 거 아니냐. 마감 하루 전에 진행 상황을 알려 줘야 한다. 그래도 고객 응대는 친절해서 고맙다.', '후배', '평가면담']];
+const DICT = [
+ [/성의가?\s*없(다|는|어|음)?/g, '준비가 부족해 보였습니다'], [/생각이\s*없(는|다|어)?(\s*것\s*같다)?/g, '확인 단계가 빠졌습니다'], [/무책임(하다|한|해)?/g, '책임 범위가 정리되지 않았습니다'],
+ [/게으른\s*(거|것)?\s*(아니냐|같다)?/g, '진행이 늦어졌습니다'], [/게으르(다|고)/g, '진행이 늦어졌습니다'], [/한심(하다|해)?/g, '아쉬운 결과였습니다'], [/답답(하다|해)?/g, '진행이 막혔습니다'],
+ [/멍청(하다|해)?/g, '실수가 있었습니다'], [/이기적(이다|인)?/g, '협업 공유가 부족했습니다'], [/눈치(가)?\s*없(다|어)?/g, '상황 공유가 부족했습니다'], [/퉁명스럽(다|게)/g, '짧게 들렸습니다'],
+ [/(진짜|너무|정말|완전)\s*/g, ''], [/(맨날|항상|매번|늘)\s*/g, ''], [/절대\s*/g, ''], [/(너는|넌|니가|네가)\s*/g, ''], [/(팀장님은)\s*/g, '']];
+const BANS = [['너는·넌·니가', /(너는|넌|니가|네가)/g], ['항상·맨날·매번·늘', /(항상|맨날|매번|늘\s)/g], ['절대', /절대/g], ['~같은·~것 같다', /(같은|것\s*같다|거\s*아니냐)/g],
+ ['인격 지칭', /(성의가?\s*없|생각이\s*없|무책임|게으르|게으른|한심|답답|멍청|이기적|눈치\s*없|퉁명)/g], ['강조 과장', /(진짜|너무|완전)/g]];
+const IMPACT = /(그래서|바람에|때문에|덕분에|결과|손해|불만|미뤘|다시\s*(냈|만들|했)|혼자)/, REQ = /(해야|하라|해라|지켜라|좀\s|했으면|바란|주셨으면|알려\s*줘야|먼저\s*했으면|필요)/, POS = /(잘한|잘하|좋았|고맙|감사|꼼꼼|친절|덕분)/;
+function soften(s){ let t = s; DICT.forEach(([r, v]) => t = t.replace(r, v)); return t.replace(/\s{2,}/g, ' ').replace(/^\s*[,.]\s*/, '').trim(); }
+function toReq(s, tone){ let t = soften(s).replace(/(을|를)?\s*(지켜라|해라|하라)\.?$/, (m, j) => (j || '') + ' 지켜 주세요').replace(/(해야\s*한다|해야\s*합니다)\.?$/, '해 주세요').replace(/(줘야\s*한다)\.?$/, '주세요').replace(/(했으면\s*좋겠다|했으면\s*한다)\.?$/, '해 주시면 좋겠습니다').replace(/(주셨으면\s*한다)\.?$/, '주시면 좋겠습니다').replace(/\.$/, '');
+  if (!/(주세요|좋겠습니다|습니다)$/.test(t)) t += '를 부탁드립니다';
+  return tone === 0 ? '혹시 가능하다면, ' + t + '.' : tone === 2 ? '앞으로는 ' + t.replace(/주시면 좋겠습니다$/, '주세요').replace(/부탁드립니다$/, '지켜 주세요') + '. 다음 확인 때 함께 보겠습니다.' : t + '.'; }
+const end = (s) => /[.!?]$/.test(s) ? s : s + '.';
+let CUR = null;
+function run(){
+  const raw = $('#raw').value.trim(); if (raw.length < 8){ $('#raw').classList.add('miss'); return toast('원문 평가를 적어 주세요'); } $('#raw').classList.remove('miss');
+  const who = $('#who').value, sit = $('#sit').value, S = splitSent(raw);
+  const req = S.filter(s => REQ.test(s)), pos = S.filter(s => POS.test(s) && !REQ.test(s)), imp = S.filter(s => IMPACT.test(s) && !req.includes(s) && !pos.includes(s));
+  const obs = S.filter(s => !req.includes(s) && !pos.includes(s) && !imp.includes(s));
+  const bans = []; BANS.forEach(([k, r]) => { const m = raw.match(r); if (m) bans.push([k, uniq(m.map(x => x.trim()))]); });
+  const hon = who === '후배' ? '' : '님';
+  const tones = ['부드럽게', '보통', '단호하게'].map((nm, ti) => {
+    const pre = ['함께 이야기 나누고 싶은 부분이 있어요. ', '', '분명히 짚고 넘어가야 할 부분이 있습니다. '][ti];
+    const O = obs.map(s => end(soften(s))).filter(Boolean), I = imp.map(s => end(soften(s))), Q = req.map(s => toReq(s, ti)), P = pos.map(s => end(soften(s)));
+    return {nm, parts:[['관찰', O.length ? pre + O.join(' ') : '[관찰: 언제·무엇을·몇 번 — 원문에 사실이 없어 비워 둡니다]'],
+      ['영향', I.length ? (ti === 0 ? '그 일로 ' : '') + I.join(' ') : '[영향: 이 행동으로 생긴 결과를 한 줄 적어 주세요]'],
+      ['요청', Q.length ? Q.join(' ') : '[요청: 앞으로 바라는 행동을 한 줄 적어 주세요]'],
+      ['격려', P.length ? P.join(' ') + (ti === 2 ? '' : ' 이 점은 계속 이어 가 주세요.') : '[격려: 원문에 장점이 없어 비워 둡니다 — 직접 확인한 장점이 있을 때만 적으세요]']]};
+  });
+  const open = {일반:`${who}${hon}, 잠깐 5분만 이야기 나눌 수 있을까요? 최근 있었던 일을 함께 정리해 보고 싶어서요.`, 평가면담:`이번 면담은 평가 결론이 아니라, 지난 기간에 있었던 일을 사실대로 같이 확인하는 자리입니다. ${who}${hon} 이야기도 꼭 듣고 싶어요.`, '상황 종료 후':`아까 일은 이제 정리됐으니, 다음에 같은 일이 없도록 차분하게 이야기 나눠 볼까요?`}[sit];
+  CUR = {raw, who, sit, bans, tones, open, at:new Date().toISOString().slice(0, 16).replace('T', ' ')};
+  const H = LS.get('kts_feedbacksoft_v1', []); H.unshift({at:CUR.at, who, sit, raw, out:toneText(1)}); LS.set('kts_feedbacksoft_v1', H.slice(0, 20));
+  render();
+}
+function toneText(i){ return CUR.tones[i].parts.map(p => `[${p[0]}] ${p[1]}`).join('\n'); }
+function render(){
+  const R = CUR; $('#open').textContent = R.open; $('#banN').textContent = R.bans.reduce((a, b) => a + b[1].length, 0);
+  $('#ban').innerHTML = R.bans.length ? R.bans.map(([k, v]) => `<div class="item warn"><div class="q">${esc(k)}</div><div class="a">${v.map(x => `<mark>${esc(x)}</mark>`).join(' ')}</div></div>`).join('') : '<p class="empty">피해야 할 표현이 없습니다</p>';
+  $('#tones').innerHTML = R.tones.map((t, i) => `<div class="tone"><div class="h"><b>${i + 1}. ${t.nm}</b><button data-t="${i}">복사</button></div>${t.parts.map(p => `<div class="st4"><span>${p[0]}</span>${/^\[/.test(p[1]) ? `<span class="ph">${esc(p[1])}</span>` : esc(p[1])}</div>`).join('')}</div>`).join('');
+  $$('[data-t]').forEach(b => b.onclick = () => copyOut(toneText(+b.dataset.t), CUR.tones[+b.dataset.t].nm + ' 톤을 복사했습니다'));
+  let o = esc(R.raw); BANS.forEach(([k, r]) => o = o.replace(new RegExp(r.source, 'g'), m => `<mark>${m}</mark>`)); $('#orig').innerHTML = o;
+  $('#dict').innerHTML = `<table class="t"><tr><th>원문 표현</th><th>바꾼 표현</th></tr>${DICT.map(([r, v]) => `<tr><td>${esc(r.source.replace(/\\s\*|\(|\)|\?|\|/g, m => m === '|' ? ' · ' : ''))}</td><td>${v ? esc(v) : '(지움)'}</td></tr>`).join('')}</table>`;
+  const H = LS.get('kts_feedbacksoft_v1', []); $('#hN').textContent = `${H.length}/20건 · 이 기기 저장`;
+  $('#hist').innerHTML = H.slice(0, 5).map(h => `<div class="item"><div class="q">${esc(h.at)} · ${esc(h.who)} · ${esc(h.sit)}</div><div class="a">${esc(h.raw.slice(0, 60))}…</div></div>`).join('');
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+function setEx(i){ $('#raw').value = EXS[i][0]; $('#who').value = EXS[i][1]; $('#sit').value = EXS[i][2]; toast(`예시 ${i + 1}을 넣었습니다`); }
+$('#sampleBtn').onclick = () => setEx(0); $$('#exC [data-e]').forEach(b => b.onclick = () => setEx(+b.dataset.e));
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(CUR.open + '\n\n' + toneText(1), '보통 톤을 복사했습니다');
+$('#csvBtn').onclick = () => saveCSV(`피드백이력_${todayS()}.csv`, [['일시','대상','상황','원문','다듬은 문장(보통)']].concat(LS.get('kts_feedbacksoft_v1', []).map(h => [h.at, h.who, h.sit, h.raw, h.out])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>피드백 면담 메모</h1><p class="note">${CUR.at} · 대상 ${esc(CUR.who)} · ${esc(CUR.sit)}</p><h2>시작 멘트</h2><p>${esc(CUR.open)}</p>${CUR.tones.map(t => `<h2>${t.nm}</h2><table>${t.parts.map(p => `<tr><th style="width:14%">${p[0]}</th><td>${esc(p[1])}</td></tr>`).join('')}</table>`).join('')}<h2>원문 (증거 보존)</h2><p class="pre">${esc(CUR.raw)}</p><p class="note">사실은 원문 그대로 두고 표현만 바꾸었습니다. 원문에 없는 칭찬·결론은 만들지 않았습니다.</p></div>`); };
+</script>
+</body></html>

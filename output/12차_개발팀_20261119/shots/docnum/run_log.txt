@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+issued: T-2026-0001 미사상사, T-2026-0002 하남푸드, Q-2026-0001 강동인테리어, T-2026-0003 미사상사, Q-2026-0002 풍산전자
+dup warning shown: dupBox=true rows still=5
+force issue: 6 rows, last=T-2026-0004
+undo once: after undo=5 second undo blocked rows=5
+gap detect: gaps=T-2026-0002
+csv: {"name":"발행대장_2026-11-19.csv","size":266}
+print print: pages=1 bytes=42678 file=files\docnum_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=1683 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

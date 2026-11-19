@@ -1,0 +1,20 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+spoiler: ⚠ 스포일러 주의 — 결말·반전에 대한 내용이 있습니다 (1줄)
+titles: 5: 『바다가 들리는 편의점』 읽고 — 책 리뷰 | "오늘도 누군가는 불을 켜 두고 기다린다" 『바다가 들리는 편의점』 | 『바다가 들리는 편의점』 후기 · 이런 분께 권합니다 | 독서 기록: 『바다가 들리는 편의점』 | 『바다가 들리는 편의점』 (스포일러 포함) 솔직 후기
+paragraphs: 3/4/2 :: ① 만나게 된 계기퇴근길에 동네 서점에서 표지가 예뻐서 샀습니다. 첫 장부터 너무 따뜻한 느낌이었습니다. 편의점 야간 알바생이 손님들 사연을 듣는 이야기. || ② 인상 깊었던 장면·문장"오늘도 누군가는 불을 켜 두고 기다린다" 이 문장이 제일 좋았습니다. 새벽 세 시에 할머니가 우유를 사러 오는 장면에서 눈물이 났습니다. 후반부는 조금 늘어지는 느낌도 있었습니다. 결말에서 편의점이 문을 닫지만 사람들이 다시 모이는 게 좋았습니다. || ③ 이런 분께 권합니다야근 많은 직장인 친구들한테 추천하고 싶습니다. 잠 안 오는 밤에 읽기 좋은 책입니다.
+tags: 15: #바다가들리는편의점 #바다가들리는편의점후기 #바다가들리는편의점서평 #책추천 #독서기록 #북스타그램 #책리뷰 #독서후기 #읽을만한책 #편의점 #퇴근길 #알바생 #손님들 #이야기 #후반부
+quotes verbatim: "오늘도 누군가는 불을 켜 두고 기다린다"=true
+no invented content (every sentence traces to a memo line): 9 sentences, untraceable=0
+changes: 다듬은 줄 8개 · 중복으로 뺀 줄 1개 · 인용 1개는 원문 그대로
+sample2 (movie): spoil=true titles=5 tags=15 P=3/4/1 :: "늦었다고 생각한 날이 제일 빠른 날이야" 대사가 기억에 남습니다. 기차가 떠나는 장면에서 음악이 정말 좋았습니다. 대사가 적어서 지루할 수도 있습니다. 마지막 반전에서 편지를 쓴 사람이 친구 동생이라는 게 밝혀집니다.
+tone yo: 주말에 넷플릭스에서 우연히 봤어요. 화면 색감이 예뻐요. 오래된 기차역에서 두 친구가 10년 만에 다시 만나는 이야기.
+copy: 425 chars, head: ⚠ 스포일러 주의 — 결말·반전 내용이 있습니다. ⏎  ⏎ 『바다가 들리는 편의점』 읽고 — 책 리뷰 ⏎  ⏎ 퇴근길에 동네 서점에서 표지가 예뻐서 샀습니다.
+print print: pages=1 bytes=59252 file=files\reviewpolish_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2209 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>구독 정리·해지 가이드 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.sv{background:#0B1530;border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px}
+.sv .h{display:flex;align-items:center;gap:7px}
+.sv .h b{flex:1;min-width:0;color:#fff;font-size:13.5px}
+.sv .h .sc{font-size:18px;font-weight:900;color:var(--or)}
+.sv .m{font-size:11.5px;color:var(--sub);margin-top:3px}
+.sv ul{margin:6px 0 0 0;list-style:none}
+.sv li{display:flex;gap:7px;align-items:flex-start;font-size:12px;color:#D3DBE7;padding:3px 0}
+.sv.keep{opacity:.82}
+</style></head>
+<body><div id="app">
+<!--@@TOP 구독 정리 · 해지 가이드@@-->
+<main>
+<section class="hero">
+ <h1>구독 목록을 적으면<br><em>해지 우선순위</em>와 절약액</h1>
+ <p>안 쓰고·비싸고·겹치는 구독부터 점수로 줄 세우고, 결제 경로별 해지 절차 체크리스트와 해지 요청 문구를 만듭니다. 실제 해지는 직접 하셔야 합니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>구독 목록</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 8건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">한 줄에 1개 <i>서비스, 요금, 월/연, 결제일, 자주/가끔/안씀, 분류, 결제경로</i></label>
+ <textarea id="subs" rows="9" maxlength="6000" placeholder="넷플릭스, 17000, 월, 15, 가끔, OTT, 앱스토어"></textarea>
+ <p class="kv">결제경로: 앱스토어 · 구글플레이 · 웹 · 통신사 · 카드자동결제 중 하나. 요금은 적은 값만 씁니다.</p>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">우선순위 · 절약액 계산</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>정리 결과</h2>
+ <div class="stat"><div><b id="sMon">0</b><span>월 합계(원)</span></div><div><b id="sYear">0</b><span>연 합계(원)</span></div><div><b id="sSave">0</b><span>연 절약 예상(원)</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">해지 요청 문구 복사</button><button class="btn sec sm" id="printBtn">인쇄</button><button class="btn sec sm" id="csvBtn">CSV</button></div>
+ <p class="kv" id="rule"></p>
+ <div id="list"></div>
+ <p class="fixnote">화면은 서비스마다 다를 수 있습니다. 해지 경로는 일반 절차이며, 이 화면은 실제 해지·결제 취소를 대신하지 않습니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const SAMPLE = `넷플릭스, 17000, 월, 15, 가끔, OTT, 카드자동결제
+티빙, 13900, 월, 3, 안씀, OTT, 웹
+유튜브 프리미엄, 14900, 월, 21, 자주, OTT, 구글플레이
+멜론, 10900, 월, 8, 가끔, 음악, 앱스토어
+쿠팡 와우, 7890, 월, 12, 자주, 쇼핑멤버십, 웹
+클라우드 200GB, 44000, 연, 30, 안씀, 클라우드, 앱스토어
+신문 구독, 20000, 월, 25, 안씀, 뉴스, 카드자동결제
+운동 앱, 59000, 연, 1, 가끔, 앱, 구글플레이`;
+const PATH = {
+ '앱스토어':['아이폰 [설정] → 맨 위 내 이름 → [구독]','해당 구독 선택 → [구독 취소]','다음 결제일 전까지 이용 가능 여부 확인','취소 완료 화면 캡처 보관'],
+ '구글플레이':['Play 스토어 → 프로필 → [결제 및 정기 결제] → [정기 결제]','해당 구독 선택 → [정기 결제 취소]','취소 사유 선택 후 확인','취소 확인 메일·화면 보관'],
+ '웹':['서비스 홈페이지 로그인 → [마이페이지/계정]','[멤버십·구독 관리] → [해지/자동결제 해지]','해지 예정일·잔여 기간 확인','해지 완료 화면 캡처 보관'],
+ '통신사':['통신사 앱 → [부가서비스/가입 상품]','해당 상품 [해지]','다음 달 요금 청구서에서 빠졌는지 확인','안 되면 고객센터(114)에 해지 요청'],
+ '카드자동결제':['서비스 쪽 해지가 먼저(홈페이지·앱의 구독 관리)','카드사 앱 [자동결제 관리]에서 남은 등록 확인','다음 달 카드 내역에서 결제 중단 확인','안 되면 서비스 고객센터에 해지 요청']
+};
+const USE = {'자주':0, '가끔':25, '안씀':50};
+let CUR = null;
+function run(){
+  const lines = $('#subs').value.split(/\r?\n/).map(s => s.trim()).filter(Boolean); if (!lines.length){ $('#subs').classList.add('miss'); return toast('구독 목록을 적어 주세요'); } $('#subs').classList.remove('miss');
+  const S = lines.map(l => { const f = l.split(/[,，\t]/).map(x => x.trim()); const fee = num(f[1]); const per = /연|년/.test(f[2] || '') ? '연' : '월'; return {name:f[0], fee, per, day:f[3] || '', use:USE[f[4]] != null ? f[4] : '가끔', cat:f[5] || '기타', path:PATH[f[6]] ? f[6] : '웹', monthly:isFinite(fee) ? (per === '연' ? fee / 12 : fee) : NaN, raw:l}; });
+  const valid = S.filter(s => isFinite(s.monthly)); const maxM = Math.max(...valid.map(s => s.monthly), 1);
+  const byCat = {}; S.forEach(s => (byCat[s.cat] = byCat[s.cat] || []).push(s));
+  S.forEach(s => {
+    const why = []; let sc = USE[s.use]; if (sc) why.push(`${s.use} +${sc}`);
+    const ex = isFinite(s.monthly) ? Math.round(s.monthly / maxM * 30) : 0; if (ex) why.push(`요금 +${ex}`); sc += ex;
+    const grp = byCat[s.cat]; if (grp.length > 1){ const best = grp.slice().sort((a, b) => USE[a.use] - USE[b.use] || b.monthly - a.monthly)[0]; if (best !== s){ sc += 20; why.push(`같은 분류(${s.cat}) 중복 +20`); } }
+    s.score = Math.min(100, sc); s.why = why; s.rec = s.score >= 50 ? '해지 권장' : (s.score >= 35 ? '검토' : '유지');
+  });
+  S.sort((a, b) => b.score - a.score);
+  const mon = valid.reduce((a, s) => a + s.monthly, 0), save = valid.filter(s => s.rec === '해지 권장').reduce((a, s) => a + s.monthly, 0) * 12;
+  CUR = {S, mon, save}; render();
+}
+function msg(s){ return `[${s.name}] 구독 해지 요청\n안녕하세요. 이용 중인 ${s.name} 구독(${s.per === '연' ? '연' : '월'} ${won(s.fee)}원)의 해지를 요청드립니다.\n- 계정(이메일/아이디): ________\n- 다음 결제일(${s.day ? s.day + '일' : '____'}) 전에 자동결제가 중단되도록 처리 부탁드립니다.\n- 남은 기간 환불 가능 여부와 해지 완료 확인을 안내해 주세요.\n감사합니다.`; }
+function render(){
+  const R = CUR; $('#sMon').textContent = won(R.mon); $('#sYear').textContent = won(R.mon * 12); $('#sSave').textContent = won(R.save);
+  $('#rule').textContent = '점수(0~100) = 사용 정도(안씀 50 · 가끔 25 · 자주 0) + 요금(가장 비싼 구독 대비 최대 30) + 같은 분류 중복(가장 많이 쓰는 1개 빼고 20). 50점 이상 해지 권장, 35점 이상 검토. 연 요금은 12로 나눠 월로 환산.';
+  const ck = LS.get('kts_subclean_ck_v1', {});
+  $('#list').innerHTML = R.S.map((s, i) => `<div class="sv ${s.rec === '유지' ? 'keep' : ''}"><div class="h"><span class="pill ${s.rec === '해지 권장' ? 'hi' : (s.rec === '검토' ? 'md' : 'ok')}">${s.rec}</span><b>${esc(s.name)}</b><span class="sc">${s.score}</span></div>
+   <div class="m">${s.per} ${isFinite(s.fee) ? won(s.fee) + '원' : '요금 확인'} → 월 ${won(s.monthly)}원 · 결제일 ${esc(s.day || '-')}일 · ${esc(s.use)} · ${esc(s.cat)} · ${esc(s.path)}<br>근거: ${s.why.join(', ') || '자주 사용'}</div>
+   ${s.rec !== '유지' ? `<ul>${PATH[s.path].map((p, j) => `<li><input type="checkbox" data-k="${esc(s.name)}|${j}" ${ck[s.name + '|' + j] ? 'checked' : ''}>${esc(p)}</li>`).join('')}</ul><div class="row"><button class="btn sec sm" data-m="${i}">이 구독 해지 문구 복사</button></div>` : ''}</div>`).join('');
+  $$('#list input').forEach(c => c.onchange = () => { const o = LS.get('kts_subclean_ck_v1', {}); if (c.checked) o[c.dataset.k] = 1; else delete o[c.dataset.k]; LS.set('kts_subclean_ck_v1', o); });
+  $$('#list button[data-m]').forEach(b => b.onclick = () => copyOut(msg(CUR.S[+b.dataset.m]), '해지 요청 문구를 복사했습니다'));
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+$('#sampleBtn').onclick = () => { $('#subs').value = SAMPLE; toast('예시 8건을 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#subs').value = ''; };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => { if (!CUR) return; const L = CUR.S.filter(s => s.rec === '해지 권장'); copyOut(L.length ? L.map(msg).join('\n\n') : '해지 권장 구독이 없습니다.', `해지 권장 ${L.length}건 문구를 복사했습니다`); };
+$('#csvBtn').onclick = () => CUR && saveCSV(`구독정리_${todayS()}.csv`, [['서비스','요금','주기','월 환산','결제일','사용','분류','결제경로','점수','판단','근거']].concat(CUR.S.map(s => [s.name, s.fee, s.per, Math.round(s.monthly), s.day, s.use, s.cat, s.path, s.score, s.rec, s.why.join(' / ')])));
+$('#printBtn').onclick = () => { if (!CUR) return; const R = CUR; printDoc(`<div class="paper"><h1>구독 정리 · 해지 체크리스트</h1><p class="note">${todayS()} · 월 합계 ${won(R.mon)}원 · 연 ${won(R.mon * 12)}원 · 해지 권장 시 연 절약 예상 ${won(R.save)}원 (입력 요금 기준)</p>
+ <table><colgroup><col style="width:20%"><col style="width:13%"><col style="width:8%"><col style="width:11%"><col></colgroup><tr><th>서비스</th><th>월 환산</th><th>점수</th><th>판단</th><th>해지 경로(일반 절차)</th></tr>${R.S.map(s => `<tr><td>${esc(s.name)}</td><td>${won(s.monthly)}원</td><td>${s.score}</td><td>${s.rec}</td><td>${s.rec === '유지' ? '-' : PATH[s.path].map(p => '□ ' + esc(p)).join('<br>')}</td></tr>`).join('')}</table>
+ <p class="note">화면은 서비스마다 다를 수 있습니다. 이 표는 실제 해지·결제 취소를 대신하지 않습니다.</p></div>`); };
+</script>
+</body></html>

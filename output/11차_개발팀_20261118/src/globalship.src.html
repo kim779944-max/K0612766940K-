@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Korea → Overseas Shipping &amp; Customs Checklist · 해외 발송·통관 체크리스트 · KTS OneClick</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;letter-spacing:0}
+.ck{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--line);color:#E3E9F2}
+.ck small{display:block;color:var(--sub);font-size:11px}
+.wn{font-size:12.5px;color:#FFD7D7;background:rgba(255,90,90,.12);border:1px solid rgba(255,90,90,.55);border-radius:9px;padding:8px 10px;margin-top:6px}
+.wn b{color:#fff}
+.est td:last-child{text-align:right;font-weight:800}
+</style></head>
+<body><div id="app">
+<!--@@TOPEN Ship · Customs Check@@-->
+<main>
+<section class="hero">
+ <h1>Ship from Korea:<br><em>documents, restrictions, duty estimate</em></h1>
+ <p>Pick a destination and item type to get a document checklist, restricted-item warnings and a duty/VAT estimate from rates you enter. 한국 → 해외 발송 서류·금지품목·관세 추정(입력 요율 기준).</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>Shipment · 발송 정보</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">Example: US · JP · SG</button></div>
+ <div class="chips" id="exs"></div>
+ <div class="g2"><div><label class="lb">Destination · 목적국</label><select id="dest"><option value="US">United States</option><option value="EU">European Union</option><option value="JP">Japan</option><option value="SG">Singapore</option><option value="MY">Malaysia</option><option value="VN">Vietnam</option></select></div><div><label class="lb">Item type · 품목 유형</label><select id="kind"><option value="general">General goods · 일반 잡화</option><option value="apparel">Apparel · 의류</option><option value="cosmetics">Cosmetics · 화장품</option><option value="food">Food · 식품</option><option value="battery">Electronics w/ battery · 배터리 전자</option><option value="medicine">Supplements / medicine · 건강식품·의약품</option><option value="books">Books / printed · 도서·인쇄물</option></select></div></div>
+ <label class="lb">Item description · 품목 설명</label><input id="desc" maxlength="80">
+ <div class="g2"><div><label class="lb">Declared value (USD) · 신고가액</label><input id="value" inputmode="decimal"></div><div><label class="lb">Quantity · 수량</label><input id="qty" inputmode="numeric"></div></div>
+ <div class="g2"><div><label class="lb">Weight (kg) · 무게</label><input id="kg" inputmode="decimal"></div><div><label class="lb">Shipping cost (USD) · 운송비</label><input id="ship" inputmode="decimal"></div></div>
+ <div class="g2"><div><label class="lb">Duty rate % · 관세율 <i>your lookup</i></label><input id="duty" inputmode="decimal"></div><div><label class="lb">VAT/GST % · 부가세 <i>your lookup</i></label><input id="vat" inputmode="decimal"></div></div>
+ <div class="g2"><div><label class="lb">De minimis (USD) · 면세 기준 <i>optional</i></label><input id="demin" inputmode="decimal"></div><div><label class="lb">Forwarder fee / box (KRW) · 배대지 비용</label><input id="fwd" inputmode="numeric"></div></div>
+ <div class="g2"><div><label class="lb">Boxes · 박스 수</label><input id="boxes" inputmode="numeric" value="1"></div><div><label class="lb">FX: 1 USD = ? KRW</label><input id="fx" inputmode="decimal"></div></div>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">Build checklist · 체크리스트 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">Checklist</span></h2>
+ <div class="stat"><div><b id="sDocs">0</b><span>Documents</span></div><div><b id="sWarn">0</b><span>Warnings</span></div><div><b id="sTax">-</b><span>Duty+VAT est. (USD)</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">Print · 인쇄</button><button class="btn sec sm" id="copyBtn">Copy · 복사</button></div>
+ <h3>Documents · 서류</h3><div id="docs"></div>
+ <h3>Restricted items · 금지·제한 경고</h3><div id="warns"></div>
+ <h3>Duty · VAT estimate · 관세·부가세 추정</h3><table class="t est" id="est"></table>
+ <p class="kv" id="estNote"></p>
+ <h3>Forwarder cost · 배대지 비용 대조</h3><table class="t est" id="fwdT"></table>
+ <p class="kv">HS codes and tax rates are not decided here. Look them up at Korea Customs UNIPASS (unipass.customs.go.kr) and the destination customs authority. HS 코드·세율은 관세청 UNIPASS와 목적국 관세청에서 확인하세요.</p>
+ <p class="fixnote">This is a checklist, not customs advice. · 통관 자문이 아닌 체크리스트입니다. Rates vary by country — 국가별 상이.</p>
+</section>
+<!--@@BOTTOMEN@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const EX = {
+ US:{dest:'US', kind:'cosmetics', desc:'Sheet masks (cosmetics), 10 boxes', value:180, qty:10, kg:2.4, ship:38, duty:0, vat:0, demin:'', fwd:2500, boxes:1, fx:1380},
+ JP:{dest:'JP', kind:'apparel', desc:'Cotton T-shirts', value:240, qty:12, kg:3.1, ship:29, duty:10, vat:10, demin:'', fwd:3000, boxes:1, fx:1380},
+ SG:{dest:'SG', kind:'battery', desc:'Portable fan with built-in lithium battery', value:95, qty:5, kg:1.6, ship:24, duty:0, vat:9, demin:'', fwd:2000, boxes:1, fx:1380}};
+const NAME = {US:'United States', EU:'European Union', JP:'Japan', SG:'Singapore', MY:'Malaysia', VN:'Vietnam'};
+const DOCS = [['Commercial Invoice · 상업송장', 'seller/buyer, item description, quantity, unit value, currency, Incoterms'], ['Packing List · 포장명세서', 'box count, net/gross weight, dimensions per box'], ['HS Code (6-digit+) · HS 코드', '_________ (look up in UNIPASS / destination tariff — not decided here)'], ['Country of origin marking · 원산지 표기', '"Made in Korea" on goods or packaging where required'], ['Export declaration check · 수출신고 여부 확인', 'check whether an export declaration is needed for your value/channel (courier vs. general cargo)'], ['Recipient tax / ID info · 수취인 통관 정보', 'some countries need recipient ID or tax number — confirm with the carrier']];
+const WARN = {
+ cosmetics:{all:['Cosmetics: ingredient list and labeling must meet destination rules · 성분·라벨 기준 확인'], US:['US: cosmetics under MoCRA — facility registration / product listing may apply · 미국 화장품 규정(MoCRA) 확인', 'Do not label as "FDA approved"'], EU:['EU: a Responsible Person and CPNP notification are required before sale · EU 책임자·CPNP 신고'], JP:['JP: import notification by a licensed importer may be needed'], SG:['SG: HSA cosmetic notification may apply'], MY:['MY: NPRA cosmetic notification may apply'], VN:['VN: cosmetic product notification may apply']},
+ food:{all:['Food: many carriers restrict food; labeling in destination language often required · 식품은 운송사 제한 많음'], US:['US: FDA Food Facility Registration and Prior Notice are generally required for food imports · FDA 시설등록·사전통지'], EU:['EU: animal-origin food is heavily restricted'], JP:['JP: food import notification to quarantine station'], SG:['SG: SFA import licence / permit may apply'], MY:['MY: health certificate / permit may apply'], VN:['VN: food safety registration may apply']},
+ battery:{all:['Lithium batteries: UN38.3 test summary and SDS/MSDS usually required; many postal services refuse them · 리튬배터리 UN38.3·MSDS', 'Check carrier dangerous-goods rules (watt-hours, packed with / in equipment)'], US:['US: FCC rules may apply to electronics'], EU:['EU: CE marking required for many electronics · CE 표시'], JP:['JP: PSE marking may apply'], SG:['SG: IMDA registration may apply for some devices'], MY:['MY: SIRIM certification may apply'], VN:['VN: conformity marking may apply']},
+ medicine:{all:['Medicines / supplements are prohibited or tightly restricted for courier shipping in most countries · 의약품·건강식품은 대부분 발송 금지·제한', 'Do not ship before confirming with destination authority and carrier'], US:['US: FDA rules apply to drugs and dietary supplements'], EU:[], JP:['JP: Yakkan Shoumei / import confirmation may be needed'], SG:['SG: HSA control'], MY:['MY: NPRA control'], VN:['VN: registration required']},
+ apparel:{all:['Apparel: fiber content and care labels are often required · 섬유 혼용률·세탁 표시'], US:['US: FTC textile labeling (fiber, origin, manufacturer ID)'], EU:['EU: textile fiber labeling regulation'], JP:['JP: household goods quality labeling'], SG:[], MY:[], VN:[]},
+ general:{all:['General goods: check for KC/CE/FDA marking needs if the item is electrical, a toy, or touches food · 전기·완구·식품접촉 제품은 인증 표시 확인'], US:[], EU:['EU: CE marking for toys/electrical items'], JP:[], SG:[], MY:[], VN:[]},
+ books:{all:['Printed matter: usually low risk; check content restrictions · 인쇄물은 내용 제한만 확인'], US:[], EU:[], JP:[], SG:[], MY:[], VN:[]}
+};
+let CUR = null;
+const f = id => { const n = num($('#' + id).value); return isFinite(n) ? n : NaN; };
+function run(){
+  const dest = $('#dest').value, kind = $('#kind').value, value = f('value'); if (!isFinite(value)){ $('#value').classList.add('miss'); return toast('Enter the declared value · 신고가액을 넣어 주세요'); } $('#value').classList.remove('miss');
+  const ship = f('ship') || 0, duty = f('duty'), vat = f('vat'), demin = f('demin'), fwd = f('fwd'), boxes = f('boxes') || 1, fx = f('fx');
+  const W = WARN[kind]; const warns = W.all.concat(W[dest] || []);
+  const dutyAmt = isFinite(duty) ? value * duty / 100 : NaN; const vatBase = value + ship + (isFinite(dutyAmt) ? dutyAmt : 0); const vatAmt = isFinite(vat) ? vatBase * vat / 100 : NaN;
+  const under = isFinite(demin) && value <= demin;
+  CUR = {dest, kind, desc:$('#desc').value.trim(), value, ship, duty, vat, demin, dutyAmt, vatAmt, vatBase, under, warns, fwd, boxes, fx, qty:f('qty'), kg:f('kg')};
+  render();
+}
+const usd = n => isFinite(n) ? '$' + n.toFixed(2) : 'enter rate';
+function render(){
+  const R = CUR; $('#rTitle').textContent = `Korea → ${NAME[R.dest]} · ${$('#kind').selectedOptions[0].textContent.split(' · ')[0]}`;
+  const ck = LS.get('kts_globalship_ck_v1', {});
+  $('#docs').innerHTML = DOCS.map(([d, s], i) => `<label class="ck"><input type="checkbox" data-k="${i}" ${ck[i] ? 'checked' : ''}><span>${esc(d)}<small>${esc(s)}</small></span></label>`).join('');
+  $$('#docs input').forEach(c => c.onchange = () => { const o = LS.get('kts_globalship_ck_v1', {}); if (c.checked) o[c.dataset.k] = 1; else delete o[c.dataset.k]; LS.set('kts_globalship_ck_v1', o); });
+  $('#warns').innerHTML = R.warns.map(w => `<div class="wn">⚠ ${esc(w)}</div>`).join('');
+  const tax = (isFinite(R.dutyAmt) ? R.dutyAmt : 0) + (isFinite(R.vatAmt) ? R.vatAmt : 0);
+  $('#sDocs').textContent = DOCS.length; $('#sWarn').textContent = R.warns.length; $('#sTax').textContent = isFinite(R.dutyAmt) || isFinite(R.vatAmt) ? (R.under ? '$0*' : '$' + tax.toFixed(2)) : '-';
+  $('#est').innerHTML = `<tr><td>Declared value · 신고가액</td><td>${usd(R.value)}</td></tr><tr><td>Shipping · 운송비</td><td>${usd(R.ship)}</td></tr><tr><td>Duty (${isFinite(R.duty) ? R.duty + '%' : '?'} × value) · 관세</td><td>${usd(R.dutyAmt)}</td></tr><tr><td>VAT/GST (${isFinite(R.vat) ? R.vat + '%' : '?'} × (value + shipping + duty)) · 부가세</td><td>${usd(R.vatAmt)}</td></tr><tr><td><b>Estimated total · 합계 추정</b></td><td><b>${R.under ? '$0 (below your de minimis input)' : '$' + tax.toFixed(2)}</b></td></tr>`;
+  $('#estNote').textContent = `Estimate uses only the rates you entered. The VAT base (value + shipping + duty) differs by country, and de minimis rules change — verify before shipping. 국가별 과세 기준이 다르며 면세 기준은 바뀔 수 있습니다.` + (isFinite(R.demin) ? ` De minimis entered: $${R.demin} → ${R.under ? 'value is at/below it (may be exempt — verify)' : 'value is above it'}.` : '');
+  const fwdTotal = isFinite(R.fwd) ? R.fwd * R.boxes : NaN;
+  $('#fwdT').innerHTML = `<tr><td>Forwarder fee · 배대지 (${isFinite(R.fwd) ? won(R.fwd) + ' KRW' : 'enter'} × ${R.boxes} box)</td><td>${isFinite(fwdTotal) ? won(fwdTotal) + ' KRW' : '-'}</td></tr><tr><td>Shipping · 운송비</td><td>${isFinite(R.fx) ? won(R.ship * R.fx) + ' KRW' : usd(R.ship)}</td></tr><tr><td>Duty+VAT est. · 세금 추정</td><td>${isFinite(R.fx) ? won((R.under ? 0 : tax) * R.fx) + ' KRW' : '$' + tax.toFixed(2)}</td></tr><tr><td><b>Landed extra cost · 부대비용 합계</b></td><td><b>${isFinite(R.fx) && isFinite(fwdTotal) ? won(fwdTotal + (R.ship + (R.under ? 0 : tax)) * R.fx) + ' KRW' : '-'}</b></td></tr>`;
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+const text = () => `[${$('#rTitle').textContent}] ${CUR.desc}\nDocuments:\n` + DOCS.map(([d]) => '□ ' + d).join('\n') + '\nWarnings:\n' + CUR.warns.map(w => '⚠ ' + w).join('\n') + `\nDuty ${usd(CUR.dutyAmt)} + VAT ${usd(CUR.vatAmt)} (your rates)\nThis is a checklist, not customs advice.`;
+function load(k){ const E = EX[k]; Object.keys(E).forEach(x => $('#' + x).value = E[x]); $$('#exs button').forEach(b => b.classList.toggle('on', b.dataset.k === k)); }
+$('#exs').innerHTML = Object.keys(EX).map(k => `<button data-k="${k}">${k} · ${EX[k].kind}</button>`).join('');
+$$('#exs button').forEach(b => b.onclick = () => { load(b.dataset.k); run(); });
+$('#sampleBtn').onclick = () => { load('US'); toast('Example US loaded · tap JP / SG for the others'); };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(text(), 'Copied · 복사했습니다');
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper" style="font-family:Arial,'Malgun Gothic',sans-serif"><h1>${esc($('#rTitle').textContent)}</h1><p class="note">${todayS()} · ${esc(CUR.desc)} · value $${CUR.value} · ${isFinite(CUR.qty) ? CUR.qty + ' pcs' : ''} ${isFinite(CUR.kg) ? CUR.kg + ' kg' : ''}</p>
+ <h2>Documents · 서류</h2><table>${DOCS.map(([d, s]) => `<tr><td style="width:6%">□</td><td style="width:38%">${esc(d)}</td><td>${esc(s)}</td></tr>`).join('')}</table>
+ <h2>Warnings · 경고</h2><p>${CUR.warns.map(w => '⚠ ' + esc(w)).join('<br>')}</p><h2>Estimate · 추정</h2><table>${$('#est').innerHTML}</table><table>${$('#fwdT').innerHTML}</table>
+ <p class="note">This is a checklist, not customs advice. HS codes and rates: UNIPASS / destination customs.</p></div>`); };
+</script>
+</body></html>

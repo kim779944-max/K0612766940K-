@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+ex1: 해지 req 7/7 tones=3 len=465/430/428
+3 examples: 해지 req 7/7 | 연체 독촉 req 7/7 | 갱신 거절 req 6/6
+missing field detect: 빠짐=연락처 shown=1
+tone switch: visible tone=2
+send guide: 3단계=3 fixnotes=2
+copy: 15 lines
+print print: pages=1 bytes=36695 file=files\notice_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2396 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

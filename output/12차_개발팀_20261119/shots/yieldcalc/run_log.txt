@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+ex1: gross 4.80% net 3.76% roe 3.31% cf -76 be 3.3% eq 44900
+hand check NOI: 3752.0 vs 3752.0
+3 methods: eq: it 2267 pr 1561 cf -76 | pr: it 2247 pr 2500 cf -995 | io: it 2300 pr 0 cf 1452
+10y cum: -76,-153,-229,-305,-382,-458,-535,-611,-687,-764
+ex2: gross 4.57% cf 106 be 19.1%
+csv: {"name":"수익률_2026-11-19.csv","size":302}
+print print: pages=1 bytes=76042 file=files\yieldcalc_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2579 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

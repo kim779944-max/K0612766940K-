@@ -1,0 +1,18 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+extracted: 30/30 · 추출 30/30건 · 모두 읽음 · 취소 1건은 마이너스로 반영 · 카드번호는 끝 4자리만 표시
+by category: {"식비":8,"통신":2,"구독":4,"주거":2,"교통":4,"의료":2,"교육":3,"쇼핑":4,"기타":1}
+fixed merchants: SKT통신요금, 넷플릭스, 미사관리비, 미사수학학원, 유튜브프리미엄
+budget over: 쇼핑 · 예산 초과 16,000원 | 교통 · 예산 초과 5,450원
+card number masked: raw 1234-56 left=false / last4 shown=1234,5678,9012,7890
+manual re-class + learn: 꽃집 → 쇼핑 (직접 지정(학습)) learn={"미사동꽃집":"쇼핑"}
+csv: {"name":"카드가계부_2026-11-18.csv","size":1969}
+fixed notice: 정리 보조이며 신고 금액은 장부·증빙으로 확인하세요.
+print print: pages=2 bytes=112140 file=files\cardbook_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=4355 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

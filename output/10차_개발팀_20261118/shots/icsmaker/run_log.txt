@@ -1,0 +1,17 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+events: 5 ev, alarms=7, err=0
+required fields: BEGIN:VCALENDAR=1 VERSION:2.0=1 BEGIN:VEVENT=5 UID:=5 DTSTAMP:=5 DTSTART=6 DTEND=5 SUMMARY:=5 LOCATION:=5 DESCRIPTION:=12 END:VCALENDAR=1 TZID:Asia/Seoul=1 BEGIN:VALARM=7
+CRLF only: CRLF=96 bareLF=0
+line <=75 bytes: maxLineBytes=55
+allday + timed: DTSTART:19700101T000000 | DTSTART;TZID=Asia/Seoul:20261203T100000 | DTSTART;TZID=Asia/Seoul:20261205T140000 | DTSTART;VALUE=DATE:20261210 | DTSTART;TZID=Asia/Seoul:20261212T190000 | DTSTART;TZID=Asia/Seoul:20261219T183000
+bad line rejected: 1줄: 제목·날짜(YYYY-MM-DD)를 읽지 못함 — "잘못된 줄 | 12월 3일 | 10시"
+download: {"name":"KTS_일정.ics","size":2119}
+print print: pages=1 bytes=54563 file=files\icsmaker_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=1937 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

@@ -1,0 +1,15 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+ex1 format: no=KTS-공문-2026-001 att=2 paras=4 근거빈칸=true
+honorific check ex1: 1:ok | 2:"빨리·당장" → "가능한 한 이른 시일 내에"/반말·명령형 → "~하여 주시기 바랍니다" 끝확인 | 3:ok
+ex2: to=(주)다라건설 구매팀장 귀사=true ref=true bad=0
+facts kept: 기한=true 붙임끝=true
+copy: 24 lines
+print print: pages=1 bytes=56382 file=files\official_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2760 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

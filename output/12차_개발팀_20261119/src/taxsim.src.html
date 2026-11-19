@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더세금 — 취득·양도·보유세 모의계산 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.brk input{padding:6px 7px;font-size:12px}
+.brk td{vertical-align:middle}
+.tx{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:8px}
+.tx .h{display:flex;align-items:baseline;gap:6px}.tx .h b{flex:1;font-size:13.5px;color:#fff}.tx .h span{font-size:16px;font-weight:900;color:var(--or2)}
+.tx table{width:100%;border-collapse:collapse;font-size:12px;margin-top:5px}.tx td{padding:3px 0;border-bottom:1px solid #1B2846;color:#D3DBE7}.tx td:last-child{text-align:right;font-weight:800}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더세금@@-->
+<main>
+<section class="hero">
+ <h1>취득세 · 양도세 · 보유세<br><em>모의계산</em> 한 장</h1>
+ <p>모든 세율·공제는 "기본값(수정 가능)"이며 표로 공개합니다. 다주택 중과·감면·비과세는 계산에 넣지 않고 "직접 확인" 항목으로 표시합니다.</p>
+ <p class="fixnote">안내용 계산이며 신고 전 홈택스·세무사 확인이 필요합니다. 세율·공제는 개정됩니다.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>물건 <i style="font-style:normal;font-size:11px;color:var(--sub)">금액 만원</i></h2>
+ <div class="chips"><button id="sampleBtn">예시 1 주택 1채</button><button data-e="1">예시 2 상가</button><button data-e="2">예시 3 토지</button></div>
+ <div class="g2"><div><label class="lb">물건</label><select id="kind"><option value="house">주택</option><option value="shop">상가</option><option value="land">토지</option></select></div><div><label class="lb">보유 주택 수</label><input id="cnt" inputmode="numeric" value="1"></div></div>
+ <div class="g2"><div><label class="lb">취득가</label><input id="buy" inputmode="numeric"></div><div><label class="lb">양도가</label><input id="sell" inputmode="numeric"></div></div>
+ <div class="g2"><div><label class="lb">필요경비</label><input id="cost" inputmode="numeric"></div><div><label class="lb">보유기간 (년)</label><input id="hold" inputmode="decimal"></div></div>
+ <div class="g2"><div><label class="lb">공시가격 (보유세)</label><input id="pub" inputmode="numeric"></div><div><label class="lb">조정대상지역</label><select id="adj"><option value="0">아님</option><option value="1">맞음</option></select></div></div>
+ <details class="rule"><summary>세율 · 공제 표 (기본값 · 수정 가능)</summary>
+  <label class="lb">취득세율 % (취득가 대비)</label><input id="rAcq" inputmode="decimal">
+  <div class="g2"><div><label class="lb">지방교육세 %</label><input id="rEdu" inputmode="decimal"></div><div><label class="lb">농어촌특별세 %</label><input id="rFarm" inputmode="decimal"></div></div>
+  <div class="g2"><div><label class="lb">장기보유특별공제 %</label><input id="rLong" inputmode="decimal"></div><div><label class="lb">기본공제 (만원)</label><input id="basic" inputmode="numeric" value="250"></div></div>
+  <label class="lb">양도세 누진 구간 <i>과세표준 상한(만원) · 세율% · 누진공제(만원)</i></label>
+  <table class="t brk" id="brk"></table>
+  <div class="g2"><div><label class="lb">재산세: 공정시장가액비율 %</label><input id="rFmv" inputmode="decimal"></div><div><label class="lb">재산세 세율 % (단일 가정)</label><input id="rProp" inputmode="decimal"></div></div>
+  <div class="g2"><div><label class="lb">종부세 공제 (만원)</label><input id="cJong" inputmode="numeric"></div><div><label class="lb">종부세 세율 % (단일 가정)</label><input id="rJong" inputmode="decimal"></div></div>
+  <p class="kv">물건을 바꾸면 그 물건의 일반적인 기본값으로 다시 채웁니다. 실제 세율은 취득가·면적·주택 수·지역·보유기간에 따라 달라집니다.</p>
+ </details>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">세금 계산</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">세금</span></h2>
+ <div class="stat"><div><b id="sAll">-</b><span>세금 합계(만원)</span></div><div><b id="sNet">-</b><span>양도 후 남는 돈</span></div><div><b id="sChk" style="color:var(--yel)">0</b><span>직접 확인</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">인쇄 1장</button><button class="btn sec sm" id="csvBtn">CSV</button><button class="btn sec sm" id="copyBtn">복사</button></div>
+ <div id="out"></div>
+ <h3>직접 확인 항목</h3><div id="chk"></div>
+ <p class="fixnote">안내용 계산이며 신고 전 홈택스·세무사 확인이 필요합니다. 세율·공제는 개정됩니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const BRK0 = [[1400, 6, 0], [5000, 15, 126], [8800, 24, 576], [15000, 35, 1544], [30000, 38, 1994], [50000, 40, 2594], [100000, 42, 3594], [Infinity, 45, 6594]];
+const DEF = {house:{rAcq:1, rEdu:0.1, rFarm:0, rFmv:60, rProp:0.25, cJong:120000, rJong:0.5}, shop:{rAcq:4, rEdu:0.4, rFarm:0.2, rFmv:70, rProp:0.25, cJong:800000, rJong:0.5}, land:{rAcq:4, rEdu:0.4, rFarm:0.2, rFmv:70, rProp:0.3, cJong:50000, rJong:1}};
+const EX = [{kind:'house', cnt:1, buy:58000, sell:92000, cost:1800, hold:7, pub:61000, adj:0}, {kind:'shop', cnt:1, buy:65000, sell:95000, cost:4200, hold:6, pub:52000, adj:0}, {kind:'land', cnt:0, buy:28000, sell:41000, cost:900, hold:1.5, pub:19000, adj:0}];
+function setDef(k){ const d = DEF[k]; Object.keys(d).forEach(x => $('#' + x).value = d[x]); }
+function drawBrk(B){ $('#brk').innerHTML = '<tr><th>상한</th><th>세율%</th><th>누진공제</th></tr>' + B.map((b, i) => `<tr><td><input data-b="${i}" data-c="0" value="${isFinite(b[0]) ? b[0] : '초과'}"></td><td><input data-b="${i}" data-c="1" value="${b[1]}"></td><td><input data-b="${i}" data-c="2" value="${b[2]}"></td></tr>`).join(''); }
+function readBrk(){ const B = BRK0.map(b => b.slice()); $$('#brk input').forEach(i => { const v = i.value.trim(); B[+i.dataset.b][+i.dataset.c] = (+i.dataset.c === 0 && !/^\d/.test(v)) ? Infinity : parseFloat(v.replace(/,/g, '')); }); return B; }
+const g = id => parseFloat(String($('#' + id).value).replace(/,/g, '')) || 0;
+let CUR = null;
+function run(){
+  const v = {kind:$('#kind').value, cnt:g('cnt'), buy:g('buy'), sell:g('sell'), cost:g('cost'), hold:g('hold'), pub:g('pub'), adj:$('#adj').value === '1'};
+  if (!v.buy){ $('#buy').classList.add('miss'); return toast('취득가를 넣어 주세요'); } $('#buy').classList.remove('miss');
+  const acq = {base:v.buy * g('rAcq') / 100, edu:v.buy * g('rEdu') / 100, farm:v.buy * g('rFarm') / 100}; acq.sum = acq.base + acq.edu + acq.farm;
+  const B = readBrk(), gain = v.sell - v.buy - v.cost, lt = Math.max(0, gain) * g('rLong') / 100, income = Math.max(0, gain) - lt, taxBase = Math.max(0, income - g('basic'));
+  const br = B.find(b => taxBase <= b[0]) || B[B.length - 1], cg = Math.max(0, taxBase * br[1] / 100 - br[2]), cgLocal = cg * 0.1;
+  const prop = v.pub * g('rFmv') / 100 * g('rProp') / 100, jongBase = Math.max(0, v.pub - g('cJong')), jong = jongBase * g('rFmv') / 100 * g('rJong') / 100;
+  const chk = [];
+  if (v.kind === 'house' && v.cnt <= 1 && v.hold >= 2) chk.push('1세대 1주택 비과세(양도가 기준 금액 이하 등) 해당 여부 — 해당하면 양도세가 크게 줄거나 없음');
+  if (v.kind === 'house' && v.cnt >= 2) chk.push(`주택 ${v.cnt}채 — 다주택 중과·취득세 중과 여부`);
+  if (v.adj) chk.push('조정대상지역 — 취득·양도 중과 및 비과세 요건(거주 기간) 확인');
+  if (v.hold < 2) chk.push(`보유 ${v.hold}년 — 단기 보유 세율(기본 누진보다 높을 수 있음) 적용 여부`);
+  if (v.hold < 3) chk.push('보유 3년 미만 — 장기보유특별공제 대상이 아닐 수 있음 (현재 입력 ' + g('rLong') + '%)');
+  chk.push('감면(자경농지·임대사업자 등)·필요경비 인정 범위', '종부세 합산(같은 사람의 다른 물건)·세부담 상한');
+  CUR = {v, acq, gain, lt, income, taxBase, br, cg, cgLocal, prop, jong, chk, all:acq.sum + cg + cgLocal + prop + jong, net:v.sell - cg - cgLocal - v.cost}; render();
+}
+const m = x => won(x) + '만';
+function render(){
+  const C = CUR, KN = {house:'주택', shop:'상가', land:'토지'};
+  $('#rTitle').textContent = `${KN[C.v.kind]} · 취득 ${won(C.v.buy)} → 양도 ${won(C.v.sell)}`; $('#sAll').textContent = won(C.all); $('#sNet').textContent = won(C.net); $('#sChk').textContent = C.chk.length;
+  $('#out').innerHTML = `<div class="tx"><div class="h"><b>① 취득세</b><span>${m(C.acq.sum)}</span></div><table><tr><td>취득세 ${$('#rAcq').value}%</td><td>${m(C.acq.base)}</td></tr><tr><td>지방교육세 ${$('#rEdu').value}%</td><td>${m(C.acq.edu)}</td></tr><tr><td>농어촌특별세 ${$('#rFarm').value}%</td><td>${m(C.acq.farm)}</td></tr></table></div>
+  <div class="tx"><div class="h"><b>② 양도소득세</b><span>${m(C.cg + C.cgLocal)}</span></div><table><tr><td>양도차익 = 양도가 − 취득가 − 필요경비</td><td>${m(C.gain)}</td></tr><tr><td>장기보유특별공제 ${$('#rLong').value}%</td><td>−${m(C.lt)}</td></tr><tr><td>기본공제</td><td>−${m(g('basic'))}</td></tr><tr><td>과세표준</td><td>${m(C.taxBase)}</td></tr><tr><td>세율 구간 ${C.br[1]}% · 누진공제 ${won(C.br[2])}</td><td>${m(C.cg)}</td></tr><tr><td>지방소득세 (10%)</td><td>${m(C.cgLocal)}</td></tr></table></div>
+  <div class="tx"><div class="h"><b>③ 보유세 (연, 입력 공시가 기준)</b><span>${m(C.prop + C.jong)}</span></div><table><tr><td>재산세 = 공시 × ${$('#rFmv').value}% × ${$('#rProp').value}%</td><td>${m(C.prop)}</td></tr><tr><td>종부세 = (공시 − ${won(g('cJong'))}) × ${$('#rFmv').value}% × ${$('#rJong').value}%</td><td>${m(C.jong)}</td></tr></table><p class="kv">재산세·종부세는 실제로는 누진 구간·세부담 상한·합산이 있어 단일 세율 가정과 다릅니다.</p></div>`;
+  $('#chk').innerHTML = C.chk.map(c => `<div class="item warn"><div class="a">직접 확인 · ${esc(c)}</div></div>`).join('');
+  $('#result').classList.remove('hide');
+}
+function load(i){ const E = EX[i]; Object.keys(E).forEach(k => $('#' + k).value = E[k]); setDef(E.kind); $('#rLong').value = E.kind === 'land' && E.hold < 3 ? 0 : Math.min(30, Math.floor(E.hold) * 2); drawBrk(BRK0); toast(`예시 ${i + 1}을 넣었습니다`); }
+$('#kind').onchange = () => setDef($('#kind').value);
+$('#sampleBtn').onclick = () => load(0); $$('[data-e]').forEach(b => b.onclick = () => load(+b.dataset.e));
+$('#runBtn').onclick = () => { run(); if (CUR){ $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); } };
+const NOTE = '안내용 계산이며 신고 전 홈택스·세무사 확인이 필요합니다. 세율·공제는 개정됩니다.';
+const txt = () => `[세금 모의계산] ${$('#rTitle').textContent}\n취득세 합계 ${m(CUR.acq.sum)} · 양도세+지방 ${m(CUR.cg + CUR.cgLocal)} · 보유세(연) ${m(CUR.prop + CUR.jong)}\n세금 합계 ${m(CUR.all)} · 양도 후 남는 돈 ${m(CUR.net)}\n직접 확인: ${CUR.chk.join(' / ')}\n※ ${NOTE}`;
+$('#copyBtn').onclick = () => CUR && copyOut(txt(), '복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`세금모의_${todayS()}.csv`, [['항목','금액(만원)','기준']].concat([['취득세', Math.round(CUR.acq.base), $('#rAcq').value + '%'], ['지방교육세', Math.round(CUR.acq.edu), $('#rEdu').value + '%'], ['농어촌특별세', Math.round(CUR.acq.farm), $('#rFarm').value + '%'], ['양도차익', Math.round(CUR.gain), ''], ['장기보유특별공제', Math.round(CUR.lt), $('#rLong').value + '%'], ['과세표준', Math.round(CUR.taxBase), ''], ['양도소득세', Math.round(CUR.cg), CUR.br[1] + '%'], ['지방소득세', Math.round(CUR.cgLocal), '10%'], ['재산세', Math.round(CUR.prop), ''], ['종부세', Math.round(CUR.jong), ''], ['합계', Math.round(CUR.all), '']]));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>세금 모의계산 · ${esc($('#rTitle').textContent)}</h1><p class="note">${todayS()} · 단위 만원 · 모든 세율은 화면에 입력한 값</p>${$('#out').innerHTML.replace(/class="tx"/g, 'style="margin-top:4mm"').replace(/<div class="h">/g, '<div style="font-weight:900">')}<h2>직접 확인</h2><ul style="margin-left:18px">${CUR.chk.map(c => `<li>${esc(c)}</li>`).join('')}</ul><p class="note">${NOTE}</p></div>`); };
+setDef('house'); $('#rLong').value = 0; drawBrk(BRK0);
+</script>
+</body></html>

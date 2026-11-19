@@ -1,0 +1,19 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+top5 (원문 인용 여부): 5줄, 모두 원문 포함=true
+numbers: 12건: 금액=48,200,000원, 비율=12.5%, 비율=35.2%, 금액=3,860,000원, 비율=41%, 수량=7건, 수량=4회, 날짜=2026-12-01
+decisions: 5건
+terms: 재방문율, 아르바이트, 올라갔고
+3 examples: meeting: top=5 nums=12 decs=5 | press: top=5 nums=9 decs=3 | contract: top=5 nums=10 decs=5
+copy: 728자, 첫줄=[11월 운영회의 자료 — 핵심 1장]
+csv: {"name":"숫자표_2026-11-19.csv","size":653}
+pdf text reader (uncompressed PDF): Meeting minutes: revenue 48,200,000 won rose 12.5%. / We will hire one more staff from 2026-12-01.
+ai button hidden (no key): true
+print print: pages=1 bytes=84087 file=files\pdf1p_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2965 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

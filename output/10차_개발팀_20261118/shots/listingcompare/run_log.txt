@@ -1,0 +1,17 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+all parsed: 10 rows, bad=0
+평 환산·평당가 (84.5㎡ 9억5000): 25.56평 / 평당가 3717만원 (검산 95000/(84.5/3.3058)=3717)
+sorted by ppy: 1800 < 1943 < 1959 < 1974 < 2400 < 2441 < 2571 < 2709 < 3105 < 3717
+filter 가격≤90000 면적≥20평 상가: 3건: 상가B동 201호 1943, 상가F 204호 2441, 상가D 103호 2571
+gap: 미사동 최저, 망월동 최저, 망월동 +5.3%
+PII removed from table: phone=false 김철수=false 박영희=false
+csv: {"name":"매물비교_2026-11-19.csv","size":762}
+print print: pages=1 bytes=81383 file=files\listingcompare_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2650 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

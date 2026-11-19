@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>채용 공고 조건별 맞춤 정리 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.jb{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:8px}
+.jb .h{display:flex;gap:6px;align-items:baseline}.jb .h b{flex:1;min-width:0;font-size:13.5px;color:#fff}
+.jb .h span{font-size:11.5px;font-weight:900;white-space:nowrap}
+.jb table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:6px;font-size:11.8px}
+.jb td{padding:4px 3px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere;color:#D3DBE7}
+.jb td:first-child{width:62px;color:var(--sub);font-weight:800}
+.fix{font-size:11.8px;color:#FFD7B8;margin-top:5px;line-height:1.5}
+</style></head>
+<body><div id="app">
+<!--@@TOP 채용 공고 맞춤 정리@@-->
+<main>
+<section class="hero">
+ <h1>채용 공고 여러 건을<br><em>내 조건과 대조</em>해 한 표로</h1>
+ <p>공고마다 자격요건·우대·급여·근무지·마감일·전형절차를 뽑고, 내 경력·자격증·가능 시간·지역과 비교해 충족/부족/확인 필요를 표시합니다. 공고에 없는 조건은 만들지 않습니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>공고 붙여넣기</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 5건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">공고 <i>공고 사이에 --- 한 줄 · 첫 줄은 회사·직무</i></label>
+ <textarea id="posts" rows="10" maxlength="60000"></textarea>
+</section>
+<section class="card" id="me">
+ <h2><span class="n">2</span>내 조건</h2>
+ <div class="g2"><div><label class="lb">경력 <i>년</i></label><input id="myY" inputmode="decimal" placeholder="예: 2"></div><div><label class="lb">기준일</label><input id="base" type="date"></div></div>
+ <label class="lb">자격증 <i>쉼표로 구분</i></label><input id="myC" maxlength="200" placeholder="예: 운전면허 1종, 컴활 2급">
+ <label class="lb">가능 시간 <i>평일 · 주말 · 야간 · 교대</i></label><input id="myT" maxlength="60" placeholder="예: 평일, 주말">
+ <label class="lb">다닐 수 있는 지역 <i>쉼표로 구분</i></label><input id="myA" maxlength="200" placeholder="예: 하남, 강동, 송파">
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">내 조건과 대조하기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">3</span><span id="rTitle">대조표</span></h2>
+ <div class="stat"><div><b id="sOk">0</b><span>모두 충족</span></div><div><b id="sLack">0</b><span>부족 있음</span></div><div><b id="sSoon" style="color:var(--yel)">0</b><span>7일 내 마감</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">대조표 복사</button><button class="btn sec sm" id="printBtn">인쇄</button><button class="btn sec sm" id="csvBtn">CSV</button></div>
+ <p class="kv">마감 임박 순으로 정렬했습니다. 급여는 공고 원문 표기 그대로입니다.</p>
+ <div id="list"></div>
+ <h3>지원 체크리스트</h3><div id="ck"></div>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const SAMPLE = `(주)예시물류 · 배송 관리 사무직
+자격요건: 경력 1년 이상, 운전면허 1종 보통
+우대사항: 물류관리사, 엑셀 가능자
+급여: 월급 280만원 (협의)
+근무지: 하남시 풍산동
+근무시간: 평일 09:00~18:00
+마감일: 2026-11-24
+전형절차: 서류 → 면접 → 최종합격
+제출서류: 이력서, 자기소개서
+---
+예시카페 미사점 · 바리스타
+자격요건: 경력 무관, 보건증 필수
+우대사항: 바리스타 2급, 인근 거주
+급여: 시급 11,000원
+근무지: 하남시 미사동
+근무시간: 주말 10:00~19:00
+마감일: 2026-11-21
+전형절차: 서류 → 면접
+---
+예시테크 · 쇼핑몰 운영 담당
+자격요건: 경력 3년 이상, 컴활 2급 이상
+우대사항: 스마트스토어 운영 경험
+급여: 연봉 3,600만원
+근무지: 서울 송파구
+근무시간: 평일 10:00~19:00
+마감일: 2026-12-05
+전형절차: 서류 → 과제 → 면접
+제출서류: 이력서, 포트폴리오
+---
+예시마트 · 야간 진열 사원
+자격요건: 경력 무관, 야간 근무 가능자
+급여: 시급 12,500원 (야간수당 별도)
+근무지: 서울 강동구
+근무시간: 야간 22:00~06:00
+마감일: 채용 시 마감
+전형절차: 면접
+---
+예시부동산중개 · 중개보조원
+자격요건: 경력 2년 이상, 공인중개사 자격증
+우대사항: 상가 중개 경험
+급여: 월급 250만원 + 인센티브
+근무지: 남양주시 다산동
+근무시간: 평일 09:30~18:30, 토요일 격주
+마감일: 2026-11-30
+전형절차: 서류 → 면접`;
+const F = {req:/^(자격요건|지원자격|필수|자격)\s*[:：]/, pref:/^(우대사항|우대)\s*[:：]/, pay:/^(급여|임금|보수|연봉|월급|시급)\s*[:：]/, loc:/^(근무지|근무지역|근무 장소|위치)\s*[:：]/, time:/^(근무시간|근무 시간|근무형태)\s*[:：]/, due:/^(마감일|마감|접수기간|접수 마감)\s*[:：]/, step:/^(전형절차|전형|채용절차)\s*[:：]/, docs:/^(제출서류|서류)\s*[:：]/};
+function parsePost(b){ const L = b.split('\n').map(s => s.trim()).filter(Boolean); const o = {title:L[0] || '(제목 없음)'}; Object.keys(F).forEach(k => { const l = L.find(x => F[k].test(x)); o[k] = l ? l.replace(F[k], '').trim() : ''; });
+  const dm = /(\d{4})[-.\/](\d{1,2})[-.\/](\d{1,2})/.exec(o.due); o.dueD = dm ? new Date(+dm[1], dm[2] - 1, +dm[3]) : null; return o; }
+const CERT = /([가-힣A-Za-z0-9]*\s?(?:자격증|면허\s?\d?종?\s?(?:보통|대형)?|기사|산업기사|기능사|관리사|중개사|보건증|\d급(?:\s이상)?))/g;
+function compare(p, me){
+  const rows = [];
+  const ym = /경력\s*(\d+(?:\.\d+)?)\s*년\s*이상/.exec(p.req);
+  if (/경력\s*무관|신입/.test(p.req)) rows.push(['경력', '충족', '경력 무관']);
+  else if (ym) rows.push(['경력', !isFinite(me.y) ? '확인 필요' : me.y >= +ym[1] ? '충족' : '부족', `요구 ${ym[1]}년 이상 · 내 경력 ${isFinite(me.y) ? me.y + '년' : '미입력'}`, ym[1] + '년 경력']);
+  (p.req.match(CERT) || []).forEach(c => { c = c.trim(); const key = c.replace(/\s?(이상|필수|자격증)$/g, '').replace(/\s/g, ''); if (!key) return; const have = me.c.some(m => m.replace(/\s/g, '').includes(key.replace(/\d급$/, '')) || key.includes(m.replace(/\s/g, '')));
+    rows.push(['자격', have ? '충족' : '부족', c, c]); });
+  const tw = ['평일', '주말', '야간', '교대', '토요일'].filter(w => p.time.includes(w) || p.req.includes(w));
+  if (tw.length){ const lack = tw.filter(w => !me.t.some(m => m.includes(w) || (w === '토요일' && m.includes('주말')))); rows.push(['시간', !me.t.length ? '확인 필요' : lack.length ? '부족' : '충족', p.time || tw.join('·'), lack.join('·') + ' 근무']); }
+  else rows.push(['시간', '확인 필요', p.time || '공고에 근무시간 없음']);
+  if (p.loc) rows.push(['지역', !me.a.length ? '확인 필요' : me.a.some(a => p.loc.includes(a)) ? '충족' : '부족', p.loc, p.loc + ' 출퇴근']); else rows.push(['지역', '확인 필요', '공고에 근무지 없음']);
+  return rows;
+}
+const FIXS = {경력:x => `요구 경력(${x})에는 못 미치지만, [관련 업무 경험·기간]을 통해 실무를 익혀 왔습니다.`, 자격:x => `${x} 요건은 아직 갖추지 못했으나 [취득 계획 또는 응시 일정]을 준비하고 있습니다.`, 시간:x => `${x}은(는) [가능한 요일·시간대]부터 조정해 맞출 수 있습니다.`, 지역:x => `${x}은(는) [교통수단·소요시간]으로 출퇴근할 수 있습니다.`};
+let CUR = null;
+function run(){
+  const raw = $('#posts').value.trim(); if (!raw){ $('#posts').classList.add('miss'); return toast('공고를 붙여 넣어 주세요'); } $('#posts').classList.remove('miss');
+  const me = {y:parseFloat($('#myY').value), c:$('#myC').value.split(',').map(s => s.trim()).filter(Boolean), t:$('#myT').value.split(/[,\s]+/).filter(Boolean), a:$('#myA').value.split(',').map(s => s.trim()).filter(Boolean)};
+  const base = parseD($('#base').value) || new Date(new Date().toDateString());
+  const P = raw.split(/\n\s*-{3,}\s*\n/).map(parsePost).map(p => Object.assign(p, {cmp:compare(p, me), dleft:p.dueD ? daysBetween(base, p.dueD) : null}));
+  P.sort((a, b) => (a.dleft == null ? 1e9 : a.dleft) - (b.dleft == null ? 1e9 : b.dleft));
+  CUR = {P, base}; render();
+}
+const CL = {충족:'ok', 부족:'a', '확인 필요':'b'};
+function render(){
+  const P = CUR.P; $('#rTitle').textContent = `대조표 · 공고 ${P.length}건`;
+  $('#sOk').textContent = P.filter(p => p.cmp.every(r => r[1] === '충족')).length; $('#sLack').textContent = P.filter(p => p.cmp.some(r => r[1] === '부족')).length; $('#sSoon').textContent = P.filter(p => p.dleft != null && p.dleft >= 0 && p.dleft <= 7).length;
+  $('#list').innerHTML = P.map((p, i) => { const lack = p.cmp.filter(r => r[1] === '부족'); const dd = p.dleft == null ? (p.due || '마감일 없음') : p.dleft < 0 ? '마감 지남' : `D-${p.dleft}`;
+    return `<div class="jb"><div class="h"><b>${i + 1}. ${esc(p.title)}</b><span style="color:${p.dleft != null && p.dleft <= 7 ? 'var(--yel)' : 'var(--sub)'}">${esc(dd)}</span></div><table>
+    <tr><td>자격요건</td><td>${esc(p.req || '공고에 없음')}</td></tr><tr><td>우대</td><td>${esc(p.pref || '공고에 없음')}</td></tr><tr><td>급여</td><td>${esc(p.pay || '공고에 없음')}</td></tr>
+    <tr><td>근무지</td><td>${esc(p.loc || '공고에 없음')}</td></tr><tr><td>마감</td><td>${esc(p.due || '공고에 없음')}</td></tr><tr><td>전형</td><td>${esc(p.step || '공고에 없음')}</td></tr>
+    ${p.cmp.map(r => `<tr><td>${r[0]}</td><td><span class="pill ${CL[r[1]]}">${r[1]}</span> ${esc(r[2])}</td></tr>`).join('')}</table>
+    ${lack.map(r => `<div class="fix">보완 문장 · ${esc(FIXS[r[0]](r[3] || r[2]))}</div>`).join('')}</div>`; }).join('');
+  const docs = uniq(['이력서'].concat(P.flatMap(p => (p.docs || '').split(/[,·]/).map(s => s.trim()).filter(Boolean))));
+  const ck = LS.get('kts_jobfit_ck', {});
+  $('#ck').innerHTML = P.map((p, i) => `<div class="item"><div class="q">${esc(p.title)}</div>${uniq(['이력서'].concat((p.docs || '').split(/[,·]/).map(s => s.trim()).filter(Boolean)).concat(p.cmp.filter(r => r[0] === '자격' && r[1] === '충족').map(r => r[2] + ' 사본'))).map(d => { const k = p.title + '|' + d; return `<label class="a" style="display:flex;gap:7px;align-items:center;margin-top:4px"><input type="checkbox" data-k="${esc(k)}" ${ck[k] ? 'checked' : ''}> ${esc(d)}</label>`; }).join('')}</div>`).join('');
+  $$('#ck input').forEach(c => c.onchange = () => { const k = LS.get('kts_jobfit_ck', {}); k[c.dataset.k] = c.checked; LS.set('kts_jobfit_ck', k); });
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+$('#sampleBtn').onclick = () => { $('#posts').value = SAMPLE; $('#myY').value = '2'; $('#myC').value = '운전면허 1종 보통, 보건증'; $('#myT').value = '평일, 주말'; $('#myA').value = '하남, 강동'; $('#base').value = '2026-11-19'; toast('예시 5건과 내 조건을 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#posts').value = ''; };
+$('#runBtn').onclick = run;
+const line = p => `${p.title} | 마감 ${p.due || '-'} | 급여 ${p.pay || '-'} | 근무지 ${p.loc || '-'} | ` + p.cmp.map(r => `${r[0]} ${r[1]}`).join(', ');
+$('#copyBtn').onclick = () => CUR && copyOut(`[채용 공고 대조표 · 기준일 ${ymd(CUR.base)}]\n` + CUR.P.map((p, i) => (i + 1) + '. ' + line(p)).join('\n'), '대조표를 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`채용대조_${todayS()}.csv`, [['순서','공고','자격요건','우대','급여(원문)','근무지','마감','D-day','전형','대조 결과']].concat(CUR.P.map((p, i) => [i + 1, p.title, p.req, p.pref, p.pay, p.loc, p.due, p.dleft == null ? '' : p.dleft, p.step, p.cmp.map(r => r[0] + ':' + r[1]).join(' / ')])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>채용 공고 맞춤 대조표</h1><p class="note">기준일 ${ymd(CUR.base)} · 공고 ${CUR.P.length}건 · 마감 임박 순 · 급여는 원문 표기</p><table style="font-size:8.6pt"><tr><th style="width:18%">공고</th><th>자격요건</th><th>급여</th><th>근무지</th><th>마감</th><th style="width:22%">대조</th></tr>${CUR.P.map(p => `<tr><td>${esc(p.title)}</td><td>${esc(p.req)}</td><td>${esc(p.pay)}</td><td>${esc(p.loc)}</td><td>${esc(p.due)}${p.dleft != null ? ' (D-' + p.dleft + ')' : ''}</td><td>${p.cmp.map(r => r[0] + ' ' + r[1]).join('<br>')}</td></tr>`).join('')}</table></div>`); };
+</script>
+</body></html>

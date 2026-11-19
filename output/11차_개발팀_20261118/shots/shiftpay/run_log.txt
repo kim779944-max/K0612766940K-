@@ -1,0 +1,18 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+5인 이상 pay: 김하늘: 주40h 연장0h 야간0h 주휴8h → 기본412800 연장0 야간0 주휴82560 = 495360 | 이도윤: 주22h 연장6h 야간0h 주휴3.2h → 기본231000 연장31500 야간0 주휴33600 = 296100 | 박서윤: 주22.5h 연장0h 야간11.25h 주휴4.5h → 기본247500 연장0 야간61875 주휴49500 = 358875
+hand-check expected: 김하늘 495360=true 이도윤 296100=true 박서윤 358875=true
+grid: 10 shift cells · month cal days=37
+5인 미만: 김하늘 495360 (otP=0,ntP=0) | 이도윤 264600 (otP=0,ntP=0) | 박서윤 297000 (otP=0,ntP=0)
+min wage flag: below 10500: 김하늘
+formula shown: · 실근무 = 종료 − 시작 − 휴게 (자정 넘김 지원)· 연장 = 하루 8시간 초과분 + (하루 8시간 이내 근무의 주 합계 − 40시간) 초
+note: 2026년 기준 최저임금 확인 필요 — 입력한 기준 10,320원은 고용노동부 고시로 확인하세요. 5인 이상/미만 사업장은 가산수당 적용이 다릅니다. 근로계약·법률 판단이 아닌 계산 보조입니다.
+csv: {"name":"근무급여_2026-11-16.csv","size":337}
+print print: pages=1 bytes=70156 file=files\shiftpay_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2600 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

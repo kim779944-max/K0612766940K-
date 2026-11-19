@@ -1,0 +1,18 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+5 items x 4 styles: 5 items, rows=20
+APA all: 2021다00000 판결, 대법원 (2022). || 예시부 (2026). 소상공인 디지털 전환 지원사업 참여자 모집 [보도자료]. 예시부 보도자료. https://www.example.go.kr/press/1234 || 예시 소상공인 지원 누리집. (2025). 키오스크 도입 안내. https://www.example.org/kiosk || 홍길동, 김영희, 박철수 (2024). 소상공인 디지털 마케팅 입문. 예시출판사. || Smith, J., & Lee, M. (2023). Customer retention in small retail stores. Journal of Example Studies, 12(3), 101-118. https://doi.org/10.0000/example.2023.003
+KCI 3+ authors: 홍길동 외 2인(2024), 『소상공인 디지털 마케팅 입문』, 예시출판사.
+MLA et al / short cite: 홍길동, et al. 소상공인 디지털 마케팅 입문. 예시출판사, 2024. / (홍길동 외, 2024) · (홍길동 외, 2024, p. 45) / (Smith 101)
+missing value shown not guessed: (n.d.). [출판사 미상]. | [저자 미상](연도 미상), 『제목만』, [출판사 미상].
+sort ko: 2021다00000 판결 < 예시부 < 키오스크 도입 안내 < 홍길동 < Smith, John
+copy: 5 lines
+csv: {"name":"참고문헌_2026-11-19.csv","size":2057}
+print print: pages=1 bytes=36529 file=files\refstyle_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=3563 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

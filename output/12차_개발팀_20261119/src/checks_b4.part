@@ -1,0 +1,45 @@
+$CHECKS['ledger'] = @{ input = '#rows'; checks = @(
+  @('rows / io', 'return CUR.R.length+" rows · 매출 "+CUR.R.filter(r=>r.io==="매출").length+" 매입 "+CUR.R.filter(r=>r.io==="매입").length+" 기타(확인) "+CUR.R.filter(r=>r.q).length'),
+  @('vat summary', 'return CUR.V.map(x=>x.v+" s"+x.s+" b"+x.b).join(" | ")'),
+  @('hand check 과세 매출', 'return CUR.R.filter(r=>r.io==="매출"&&r.vat==="과세").reduce((a,r)=>a+r.amt,0)+" = "+[1284000,864000,356000,1098000,412000,1342000,902000,298000,1156000,389000].reduce((a,b)=>a+b,0)'),
+  @('month / quarter', 'return CUR.per.map(p=>p.k+" "+p.s+"/"+p.b).join(" | ")'),
+  @('증빙 없는 지출', 'return CUR.R.filter(r=>r.noev).map(r=>r.who).join(", ")'),
+  @('card masked', 'return "cards="+uniq(CUR.R.map(r=>r.card).filter(Boolean)).join(",")+" fullNumberInDom="+/9410-1234-5678/.test($("#result").innerHTML)'),
+  @('manual reclass learned', 'const s=$$("#tbl select")[2]; s.value="소모품"; s.dispatchEvent(new Event("change")); const r=CUR.R[2]; const out=r.who+" -> "+r.acct+" ("+r.rule+") learned="+Object.keys(LS.get(LKEY,{})).length; LEARN={}; LS.set(LKEY,{}); run(); return out'),
+  @('csv', '$("#csvBtn").click(); return JSON.stringify(window.__lastDownload)')
+)}
+$CHECKS['bundle100'] = @{ input = '#list'; checks = @(
+  @('months', 'return CUR.G.map(g=>g.k+": "+g.n+"건 합계 "+g.sum+" 금액없음 "+g.noAmt).join(" | ")'),
+  @('hand check 9월 합계', 'return (152000+438000+49500+168000+84000+66000)+" vs "+CUR.G[0].sum'),
+  @('reorder', 'const a=F[0].name; $$("[data-dn]")[0].click(); const r="first was "+a.slice(0,8)+" now "+F[0].name.slice(0,8)+" second="+F[1].name.slice(0,8); $$("[data-up]")[1].click(); return r+" restored="+(F[0].name===a)'),
+  @('delete + amount blank', 'const n=F.length; F[11].amt=NaN; run(); const r="noAmt(10월)="+CUR.G[1].noAmt+" sum="+CUR.G[1].sum; $$("[data-rm]")[11].click(); return r+" | delete "+n+"->"+F.length'),
+  @('restore sample', '$("#sampleBtn").click(); run(); return F.length+" files"'),
+  @('book pages', 'const h=book(); return "page divs="+(h.match(/break-after:page/g)||[]).length+" covers="+(h.match(/표지/g)||[]).length'),
+  @('rule names', 'return $("#names").textContent.split("\n").length+" lines, first: "+$("#names").textContent.split("\n")[0]'),
+  @('csv', '$("#csvBtn").click(); return JSON.stringify(window.__lastDownload)')
+)}
+$CHECKS['official'] = @{ input = '#in'; checks = @(
+  @('ex1 format', 'return "no="+CUR.no+" att="+CUR.att.length+" paras="+(CUR.body.match(/^\d\. /gm)||[]).length+" 근거빈칸="+CUR.body.includes("[근거: 직접 입력]")'),
+  @('honorific check ex1', 'return CUR.chk.map(c=>(c.i+1)+":"+(c.bad.length?c.bad.join("/"):"ok")+(c.end?"":" 끝확인")).join(" | ")'),
+  @('ex2', '$$("[data-e]")[0].click(); run(); const r="to="+CUR.v.to+" 귀사="+CUR.body.includes("귀 사")+" ref="+CUR.body.includes("구매-2026-118")+" bad="+CUR.chk.filter(c=>c.bad.length||!c.end).length; $("#sampleBtn").click(); run(); return r'),
+  @('facts kept', 'return "기한="+CUR.body.includes("2026. 12. 4.")+" 붙임끝="+/끝\.$/.test(CUR.body)'),
+  @('copy', '$("#copyBtn").click(); await new Promise(r=>setTimeout(r,200)); return window.__lastCopy.split("\n").length+" lines"')
+)}
+$CHECKS['bilingual'] = @{ input = '#in'; checks = @(
+  @('pairs', 'return "rows="+CUR.R.length+" ko="+CUR.nK+" en="+CUR.nE'),
+  @('missing', 'return CUR.R.filter(r=>r.flags.some(f=>f[0]==="miss")).map(r=>"제"+r.n+"조").join(", ")'),
+  @('number mismatch', 'return CUR.R.filter(r=>r.flags.some(f=>f[0]==="num")).map(r=>"제"+r.n+"조 "+r.flags.find(f=>f[0]==="num")[1]).join(" | ")'),
+  @('term check', 'return CUR.R.filter(r=>r.flags.some(f=>f[0]==="term")).map(r=>"제"+r.n+"조 "+r.flags.filter(f=>f[0]==="term").map(f=>f[1]).join(",")).join(" | ")'),
+  @('highlight', 'return $$("#tbl mark").map(m=>m.textContent).join(" / ")'),
+  @('glossary editable', 'const g=$("#gl").value; $("#gl").value=g.replace("해제, Rescission","해제, terminate"); run(); const n=CUR.R.filter(r=>r.flags.some(f=>f[0]==="term")).length; $("#gl").value=g; run(); return "term flags after edit="+n'),
+  @('csv', '$("#csvBtn").click(); return JSON.stringify(window.__lastDownload)')
+)}
+$CHECKS['weeklog'] = @{ input = '#memo'; checks = @(
+  @('split', 'return CUR.D.map(d=>d.h+":"+d.L.length).join(" ")+" total="+CUR.L.length'),
+  @('4 classes', 'return ["완료","진행","보류","막힘","확인"].map(s=>s+" "+CUR.L.filter(x=>x.s===s).length).join(" · ")'),
+  @('last-word rule', 'return ["호스팅 결제 문제 해결 완료","결제 오류로 막힘","재협상 다음 주로 연기"].map(t=>t+"→"+status(t)).join(" | ")'),
+  @('progress', 'return CUR.pl.map(p=>p.p+" "+p.show+"% ("+(p.explicit!=null&&p.last.pct!=null?"explicit":p.how)+")").join(" | ")'),
+  @('next week', 'return CUR.next.length+": "+CUR.next.map(x=>x.t.slice(0,18)).join(" / ")'),
+  @('no invented', 'return "result lines="+$$("#days .ln").length+" = input lines "+$("#memo").value.split("\n").filter(l=>l.trim()&&!DH.test(l)).length'),
+  @('csv', '$("#csvBtn").click(); return JSON.stringify(window.__lastDownload)')
+)}

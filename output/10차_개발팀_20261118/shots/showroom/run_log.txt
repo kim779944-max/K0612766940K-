@@ -1,0 +1,33 @@
+﻿checked: pdf1p,refstyle,feedbacksoft,sopmaker,compwatch
+index count: 39개 / products total=43
+new tiles: ["pdf1p:tile=true,list=true","refstyle:tile=true,list=true","feedbacksoft:tile=true,list=true","sopmaker:tile=true,list=true","compwatch:tile=true,list=true"]
+broken images: []
+sw=390 errs=[]
+tap pdf1p tile -> pdf1p.html title=두꺼운 PDF → 핵심 1장 리포트 · KTS 원클릭
+detail pdf1p: h1="두꺼운 PDF → 핵심 1장 리포트" open=pdf1p.html brokenImg=[] sw=390 errs=[]
+detail refstyle: h1="참고문헌 1초 포맷터" open=refstyle.html brokenImg=[] sw=390 errs=[]
+detail feedbacksoft: h1="동료 평가 → 부드러운 피드백" open=feedbacksoft.html brokenImg=[] sw=390 errs=[]
+detail sopmaker: h1="구술 메모 → 신입 교육 매뉴얼" open=sopmaker.html brokenImg=[] sw=390 errs=[]
+detail compwatch: h1="경쟁사 가격·상품 변동 비교" open=compwatch.html brokenImg=[] sw=390 errs=[]
+checked: listingcompare,newssentiment,jobfit,hashtagreport,surveyclassify
+index count: 44개 / products total=48
+new tiles: ["listingcompare:tile=true,list=true","newssentiment:tile=true,list=true","jobfit:tile=true,list=true","hashtagreport:tile=true,list=true","surveyclassify:tile=true,list=true"]
+broken images: []
+sw=390 errs=[]
+tap listingcompare tile -> listingcompare.html title=부동산 매물 조건 필터 비교표 · KTS 원클릭
+detail listingcompare: h1="부동산 매물 조건 필터 비교표" open=listingcompare.html brokenImg=[] sw=390 errs=[]
+detail newssentiment: h1="주식·코인 뉴스 감성 요약기" open=newssentiment.html brokenImg=[] sw=390 errs=[]
+detail jobfit: h1="채용 공고 조건별 맞춤 정리" open=jobfit.html brokenImg=[] sw=390 errs=[]
+detail hashtagreport: h1="SNS 해시태그 · 트렌드 보고서" open=hashtagreport.html brokenImg=[] sw=390 errs=[]
+detail surveyclassify: h1="설문 응답 자동 분류·요약" open=surveyclassify.html brokenImg=[] sw=390 errs=[]
+checked: seasontrend,b2blist,ghtrend,icsmaker,memotask
+index count: 49개 / products total=53
+new tiles: ["seasontrend:tile=true,list=true","b2blist:tile=true,list=true","ghtrend:tile=true,list=true","icsmaker:tile=true,list=true","memotask:tile=true,list=true"]
+broken images: []
+sw=390 errs=[]
+tap seasontrend tile -> seasontrend.html title=시즌별 키워드·연관어 추출기 · KTS 원클릭
+detail seasontrend: h1="시즌별 키워드 · 연관어 추출기" open=seasontrend.html brokenImg=[] sw=390 errs=[]
+detail b2blist: h1="B2B 영업 타겟 업종별 리스트업" open=b2blist.html brokenImg=[] sw=390 errs=[]
+detail ghtrend: h1="오픈소스 · GitHub 주간 트렌드 요약" open=ghtrend.html brokenImg=[] sw=390 errs=[]
+detail icsmaker: h1="전시회 · 세미나 일정 → 캘린더 파일" open=icsmaker.html brokenImg=[] sw=390 errs=[]
+detail memotask: h1="카톡 · 음성 메모 → 일정 · 할 일 분리" open=memotask.html brokenImg=[] sw=390 errs=[]

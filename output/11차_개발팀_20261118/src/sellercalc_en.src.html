@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Amazon FBA · Shopee Margin Calculator · KTS OneClick</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;letter-spacing:0}
+.big{font-size:26px;font-weight:900;color:#fff}.big.neg{color:var(--red)}
+.loss{font-size:13px;font-weight:900;color:#fff;background:rgba(255,90,90,.2);border:1px solid var(--red);border-radius:10px;padding:9px 10px;margin-top:8px}
+.brk td:last-child{text-align:right;font-weight:800}
+.pp{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.pp div{background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;font-size:11px;color:var(--sub)}
+.pp div b{display:block;font-size:14px;color:#fff;margin:2px 0}
+.pp div.neg b{color:var(--red)}
+</style></head>
+<body><div id="app">
+<!--@@TOPEN Seller Margin Calculator@@-->
+<main>
+<section class="hero">
+ <h1>Amazon FBA · Shopee<br><em>profit per unit</em> and break-even price</h1>
+ <p>Every fee and rate below is your own input. Defaults are examples only — edit them to match your Seller Central / Shopee Seller Centre. 모든 요율·환율은 입력값 기준입니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>Your numbers</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">Example 1 · Amazon FBA</button><button class="btn sec sm" id="sample2Btn">Example 2 · Shopee</button></div>
+ <label class="lb">Marketplace</label><div class="chips" id="mk"><button data-k="amazon" class="on">Amazon FBA</button><button data-k="shopee">Shopee</button></div>
+ <div class="g2"><div><label class="lb">Selling price (USD)</label><input id="price" inputmode="decimal"></div><div><label class="lb">Units per order</label><input id="units" inputmode="numeric" value="1"></div></div>
+ <div class="g2"><div><label class="lb">Product cost</label><input id="cost" inputmode="decimal"></div><div><label class="lb">Cost currency</label><select id="costCur"><option value="KRW">KRW</option><option value="USD">USD</option></select></div></div>
+ <div class="g2"><div><label class="lb">FX: 1 USD = ? KRW</label><input id="fx" inputmode="decimal"></div><div><label class="lb">Inbound shipping / unit (USD)</label><input id="inbound" inputmode="decimal"></div></div>
+ <label class="lb">Category <i>typical referral ranges · verify yours</i></label>
+ <select id="cat"></select>
+ <div class="g2"><div><label class="lb">Referral / commission %</label><input id="ref" inputmode="decimal"></div><div><label class="lb">Fulfillment fee / unit (USD)<i>see size tier table</i></label><input id="ful" inputmode="decimal"></div></div>
+ <div class="g2"><div><label class="lb">Storage est. / unit (USD)</label><input id="stor" inputmode="decimal"></div><div><label class="lb">Per-item / plan fee (USD)</label><input id="peritem" inputmode="decimal"></div></div>
+ <div class="g2"><div><label class="lb">Return rate %</label><input id="ret" inputmode="decimal"></div><div><label class="lb">Target margin %</label><input id="target" inputmode="decimal"></div></div>
+ <p class="kv" id="mkNote"></p>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">Calculate profit</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span>Result per unit</h2>
+ <div class="stat"><div><b id="sProfit">-</b><span>Profit / unit (USD)</span></div><div><b id="sMargin">-</b><span>Margin</span></div><div><b id="sBe">-</b><span>Break-even price</span></div></div>
+ <div id="lossBox"></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">Copy summary</button><button class="btn sec sm" id="csvBtn">Save CSV</button><button class="btn sec sm" id="printBtn">Print</button></div>
+ <p class="kv" id="krw"></p>
+ <h3>Cost breakdown (per unit)</h3><table class="t brk" id="brk"></table>
+ <h3>Profit at 3 price points</h3><div class="pp" id="pp"></div>
+ <p class="kv" id="tgt"></p>
+ <details class="rule"><summary>Formula</summary><div>Profit = Price − Referral (Price × %) − Fulfillment − Storage − Inbound − Product cost (in USD) − Per-item fee − Return allowance (Price × return %, assumes returned units are not resold).<br>Break-even price = fixed costs ÷ (1 − referral % − return %). Target price = fixed costs ÷ (1 − referral % − return % − target %).</div></details>
+ <p class="fixnote">Estimates only — verify current rates in Seller Central / Shopee Seller Centre.</p>
+</section>
+<!--@@BOTTOMEN@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const CATS = [['', 'Custom (type your own %)', null], ['home', 'Home & Kitchen — typically ~15%', 15], ['beauty', 'Beauty & Personal Care — typically 8–15%', 15], ['toys', 'Toys & Games — typically ~15%', 15], ['apparel', 'Clothing & Accessories — typically 5–17%', 17], ['electronics', 'Consumer Electronics — typically ~8%', 8], ['office', 'Office Products — typically ~15%', 15], ['shopee', 'Shopee — varies by country & category', null]];
+const MKN = {amazon:'Amazon: Individual plan charges a per-item fee (often cited as $0.99/item) while the Professional plan has a monthly fee (often cited as $39.99/month) — enter what applies to you. FBA fulfillment fees depend on size tier and weight; take yours from the size tier table.', shopee:'Shopee: commission, transaction and service fees vary by country and category (e.g. SG/MY/PH differ). Enter the rates shown in your Seller Centre. Leave fulfillment at your own logistics cost.'};
+let MK = 'amazon', CUR = null;
+const EX = {amazon:{price:24.99, units:1, cost:6500, costCur:'KRW', fx:1380, inbound:0.85, cat:'home', ref:15, ful:4.21, stor:0.18, peritem:0, ret:3, target:25},
+ shopee:{price:12.9, units:2, cost:4200, costCur:'KRW', fx:1380, inbound:1.6, cat:'shopee', ref:12, ful:0, stor:0, peritem:0.2, ret:2, target:20}};
+const F = ['price', 'units', 'cost', 'costCur', 'fx', 'inbound', 'cat', 'ref', 'ful', 'stor', 'peritem', 'ret', 'target'];
+function v(id){ const n = num($('#' + id).value); return isFinite(n) ? n : 0; }
+function calc(P){
+  const fx = v('fx'), costUSD = $('#costCur').value === 'KRW' ? (fx ? v('cost') / fx : NaN) : v('cost');
+  const ref = v('ref') / 100, ret = v('ret') / 100, tgt = v('target') / 100;
+  const fixed = v('ful') + v('stor') + v('inbound') + costUSD + v('peritem');
+  const profit = p => p - p * ref - p * ret - fixed;
+  return {fx, costUSD, ref, ret, tgt, fixed, profit, be:fixed / (1 - ref - ret), tp:(1 - ref - ret - tgt) > 0 ? fixed / (1 - ref - ret - tgt) : NaN};
+}
+function run(){
+  const price = v('price'); if (!price){ $('#price').classList.add('miss'); return toast('Enter a selling price'); } $('#price').classList.remove('miss');
+  if ($('#costCur').value === 'KRW' && !v('fx')){ $('#fx').classList.add('miss'); return toast('Enter an FX rate to convert KRW cost'); } $('#fx').classList.remove('miss');
+  const C = calc(); const pr = C.profit(price), units = v('units') || 1;
+  const pts = [Math.round(price * 0.9 * 100) / 100, price, Math.round(price * 1.1 * 100) / 100];
+  CUR = Object.assign(C, {price, pr, margin:pr / price, units, pts, mk:MK,
+    rows:[['Selling price', price], ['Referral / commission (' + v('ref') + '%)', -price * C.ref], ['Fulfillment fee', -v('ful')], ['Storage est.', -v('stor')], ['Inbound shipping', -v('inbound')], ['Product cost (' + ($('#costCur').value === 'KRW' ? won(v('cost')) + ' KRW ÷ ' + v('fx') : 'USD') + ')', -C.costUSD], ['Per-item / plan fee', -v('peritem')], ['Return allowance (' + v('ret') + '%)', -price * C.ret], ['Profit per unit', pr]]});
+  render();
+}
+const usd = n => (n < 0 ? '−$' : '$') + Math.abs(n).toFixed(2);
+function render(){
+  const R = CUR, neg = R.pr <= 0;
+  $('#sProfit').innerHTML = `<span style="color:${neg ? 'var(--red)' : '#fff'}">${usd(R.pr)}</span>`; $('#sMargin').textContent = pct(R.margin); $('#sBe').textContent = usd(R.be);
+  $('#lossBox').innerHTML = neg ? `<div class="loss">⚠ Loss: you lose ${usd(-R.pr)} on every unit at ${usd(R.price)}. Raise the price above ${usd(R.be)} or cut costs.</div>` : '';
+  $('#krw').textContent = `Per unit ≈ ₩${won(R.pr * R.fx)} · Per order (${R.units} units) ${usd(R.pr * R.units)} ≈ ₩${won(R.pr * R.units * R.fx)} · at FX ${R.fx} KRW/USD (your input)`;
+  $('#brk').innerHTML = R.rows.map(([k, n], i) => `<tr${i === R.rows.length - 1 ? ' style="font-weight:900"' : ''}><td>${esc(k)}</td><td style="color:${n < 0 && i === R.rows.length - 1 ? 'var(--red)' : '#E3E9F2'}">${usd(n)}</td></tr>`).join('');
+  $('#pp').innerHTML = R.pts.map((p, i) => { const q = R.profit(p); return `<div class="${q <= 0 ? 'neg' : ''}">${['−10%', 'Current', '+10%'][i]}<b>${usd(p)}</b>${usd(q)} · ${pct(q / p)}</div>`; }).join('');
+  $('#tgt').textContent = isFinite(R.tp) ? `To reach a ${v('target')}% margin, price at about ${usd(R.tp)}.` : 'Target margin is not reachable with these fee rates.';
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+const summary = () => `[${CUR.mk === 'amazon' ? 'Amazon FBA' : 'Shopee'} margin] price ${usd(CUR.price)}\nProfit/unit ${usd(CUR.pr)} (≈ ₩${won(CUR.pr * CUR.fx)}) · margin ${pct(CUR.margin)} · break-even ${usd(CUR.be)}\n` + CUR.pts.map(p => `${usd(p)} → ${usd(CUR.profit(p))}`).join(' / ') + '\nEstimates only — verify current rates in Seller Central / Shopee Seller Centre.';
+function setMK(k){ MK = k; $$('#mk button').forEach(b => b.classList.toggle('on', b.dataset.k === k)); $('#mkNote').textContent = MKN[k]; }
+function load(k){ const E = EX[k]; setMK(k); F.forEach(f => $('#' + f).value = E[f]); toast(k === 'amazon' ? 'Example 1 loaded (edit any value)' : 'Example 2 loaded (edit any value)'); }
+$('#cat').innerHTML = CATS.map(([k, n]) => `<option value="${k}">${esc(n)}</option>`).join('');
+$('#cat').onchange = () => { const c = CATS.find(x => x[0] === $('#cat').value); if (c && c[2] != null) $('#ref').value = c[2]; };
+$$('#mk button').forEach(b => b.onclick = () => setMK(b.dataset.k));
+$('#sampleBtn').onclick = () => load('amazon'); $('#sample2Btn').onclick = () => load('shopee');
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(summary(), 'Summary copied');
+$('#csvBtn').onclick = () => CUR && saveCSV(`margin_${CUR.mk}_${todayS()}.csv`, [['Item', 'USD per unit']].concat(CUR.rows.map(([k, n]) => [k, n.toFixed(2)]), [['Margin', (CUR.margin * 100).toFixed(1) + '%'], ['Break-even price', CUR.be.toFixed(2)], ['FX (KRW per USD, input)', CUR.fx], ['Profit per unit (KRW)', Math.round(CUR.pr * CUR.fx)]], CUR.pts.map(p => ['Profit at ' + p.toFixed(2), CUR.profit(p).toFixed(2)]), [['Note', 'Estimates only — verify current rates in Seller Central / Shopee Seller Centre.']]));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper" style="font-family:Arial,'Malgun Gothic',sans-serif"><h1>${CUR.mk === 'amazon' ? 'Amazon FBA' : 'Shopee'} margin sheet</h1><p class="note">${todayS()} · all rates are user inputs</p><table>${CUR.rows.map(([k, n]) => `<tr><td>${esc(k)}</td><td>${usd(n)}</td></tr>`).join('')}<tr><td>Margin</td><td>${pct(CUR.margin)}</td></tr><tr><td>Break-even price</td><td>${usd(CUR.be)}</td></tr></table><p class="note">Estimates only — verify current rates in Seller Central / Shopee Seller Centre.</p></div>`); };
+setMK('amazon');
+</script>
+</body></html>

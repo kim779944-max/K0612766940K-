@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>참고문헌 1초 포맷터 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.ref{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:9px 10px;margin-top:7px}
+.ref .h{display:flex;gap:6px;align-items:center}.ref .h b{flex:1;min-width:0;font-size:12.5px;color:#fff}
+.ref .h button{flex:0 0 auto;font-size:11px;color:var(--sub);border:1px solid var(--line2);border-radius:8px;padding:4px 8px}
+.fmt{margin-top:6px;font-size:12.3px;line-height:1.55;color:#D3DBE7;display:flex;gap:6px;align-items:flex-start}
+.fmt span.k{flex:0 0 52px;font-size:10.5px;font-weight:900;color:var(--or2);padding-top:2px}
+.fmt span.v{flex:1;min-width:0;overflow-wrap:anywhere}
+.fmt button{flex:0 0 auto;font-size:10.5px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:8px;padding:3px 7px}
+.cite{font-size:11px;color:var(--sub);margin-top:5px}
+</style></head>
+<body><div id="app">
+<!--@@TOP 참고문헌 포맷터@@-->
+<main>
+<section class="hero">
+ <h1>자료 정보만 넣으면<br><em>APA · MLA · 시카고 · KCI</em> 동시에</h1>
+ <p>단행본·논문·웹페이지·보도자료·법령/판례 정보를 넣으면 4가지 서식과 본문 속 짧은 인용을 함께 만듭니다. 빈칸은 추측해 채우지 않고 [미상]으로 표시합니다.</p>
+</section>
+<section class="card" id="form">
+ <h2><span class="n">1</span>자료 1건 넣기</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 5건 넣기</button><button class="btn sec sm" id="clearBtn">목록 비우기</button></div>
+ <label class="lb">유형</label>
+ <select id="ty"><option value="book">단행본</option><option value="article">논문</option><option value="web">웹페이지</option><option value="press">보도자료</option><option value="law">법령 · 판례</option></select>
+ <label class="lb">저자 <i>여러 명은 ; 로 구분 · 영문은 "성, 이름"</i></label><input id="au" maxlength="300" placeholder="홍길동; 김영희  /  Smith, John">
+ <div class="g2"><div><label class="lb">연도</label><input id="yr" maxlength="10" inputmode="numeric"></div><div><label class="lb">쪽 <i>인용 쪽</i></label><input id="pg" maxlength="20" placeholder="12-30"></div></div>
+ <label class="lb">제목</label><input id="ti" maxlength="300">
+ <label class="lb">학술지 · 출판사 · 사이트 · 기관 · 법원</label><input id="co" maxlength="200">
+ <div class="g2"><div><label class="lb">권</label><input id="vo" maxlength="10"></div><div><label class="lb">호</label><input id="is" maxlength="10"></div></div>
+ <label class="lb">URL · DOI</label><input id="url" maxlength="400">
+ <label class="lb">접속일 <i>웹페이지</i></label><input id="ac" type="date">
+ <button class="btn sec" id="addBtn" style="margin-top:10px">목록에 추가 (최대 50건)</button>
+</section>
+<section class="card">
+ <h2><span class="n">2</span>정렬 · 서식</h2>
+ <div class="chips" id="sortC"><button data-s="ko" class="on">저자 가나다·ABC</button><button data-s="yr">연도순</button><button data-s="in">넣은 순서</button></div>
+ <div class="chips" id="styC"><button data-y="apa" class="on">APA 7</button><button data-y="mla">MLA 9</button><button data-y="chi">시카고</button><button data-y="kci">KCI</button></div>
+ <p class="kv">위 서식 칩은 [선택 서식 전체 복사]·인쇄에 쓰입니다. 카드 안에서는 4가지가 모두 보입니다.</p>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">4가지 서식 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">3</span><span id="rTitle">참고문헌</span></h2>
+ <div class="row"><button class="btn pri sm" id="copyBtn">선택 서식 전체 복사</button><button class="btn sec sm" id="printBtn">인쇄</button><button class="btn sec sm" id="csvBtn">CSV</button></div>
+ <div id="list"></div>
+ <details class="rule"><summary>서식 규칙표 (공개)</summary>
+ <table class="t"><tr><th style="width:18%">서식</th><th>저자 표기</th><th>3명 이상</th><th>짧은 인용</th></tr>
+ <tr><td>APA 7</td><td>성, 이니셜. / 한글 이름 그대로</td><td>참고문헌은 전원(20명까지), 본문 인용은 첫 저자 et al. / 외</td><td>(저자, 연도) · (저자, 연도, p. 12)</td></tr>
+ <tr><td>MLA 9</td><td>첫 저자 성, 이름 / 이후 이름 성</td><td>첫 저자, et al.</td><td>(저자 12)</td></tr>
+ <tr><td>시카고</td><td>첫 저자 성, 이름 / 이후 이름 성</td><td>10명까지 전원, 본문 인용 4명 이상 et al.</td><td>(저자 연도, 12)</td></tr>
+ <tr><td>KCI</td><td>이름 그대로, 쉼표 구분</td><td>첫 저자 외 N인</td><td>(저자, 연도: 12)</td></tr></table>
+ <p class="kv">빈 값은 지어내지 않고 [저자 미상]·[연도 미상](APA n.d.)·[출판사 미상]·[학술지 미상]으로 표시합니다. 기울임(이탤릭)은 복사 글자에는 나타나지 않으니 워드에서 지정하세요.</p></details>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const KEY = 'kts_refstyle_v1'; let LIST = LS.get(KEY, []), SORT = 'ko', STY = 'apa', SHOWN = false;
+const TYN = {book:'단행본', article:'논문', web:'웹페이지', press:'보도자료', law:'법령·판례'};
+const SAMPLE = [
+ {ty:'book', au:'홍길동; 김영희; 박철수', yr:'2024', ti:'소상공인 디지털 마케팅 입문', co:'예시출판사', vo:'', is:'', pg:'45-52', url:'', ac:''},
+ {ty:'article', au:'Smith, John; Lee, Mina', yr:'2023', ti:'Customer retention in small retail stores', co:'Journal of Example Studies', vo:'12', is:'3', pg:'101-118', url:'https://doi.org/10.0000/example.2023.003', ac:''},
+ {ty:'web', au:'', yr:'2025', ti:'키오스크 도입 안내', co:'예시 소상공인 지원 누리집', vo:'', is:'', pg:'', url:'https://www.example.org/kiosk', ac:'2026-11-18'},
+ {ty:'press', au:'예시부', yr:'2026', ti:'소상공인 디지털 전환 지원사업 참여자 모집', co:'예시부 보도자료', vo:'', is:'', pg:'', url:'https://www.example.go.kr/press/1234', ac:'2026-11-18'},
+ {ty:'law', au:'', yr:'2022', ti:'2021다00000 판결', co:'대법원', vo:'', is:'', pg:'', url:'', ac:''}];
+const isKo = s => /[가-힣]/.test(s);
+const auList = s => String(s || '').split(';').map(x => x.trim()).filter(Boolean);
+const split = a => { const i = a.indexOf(','); return i < 0 ? {last:a, first:''} : {last:a.slice(0, i).trim(), first:a.slice(i + 1).trim()}; };
+const ini = f => f.split(/[\s-]+/).filter(Boolean).map(x => x[0].toUpperCase() + '.').join(' ');
+const V = (v, miss) => v ? v : miss;
+function apaAu(a){ if (!a.length) return ''; const f = a.map(x => isKo(x) ? x : (s => s.first ? `${s.last}, ${ini(s.first)}` : s.last)(split(x))); const g = f.slice(0, 20);
+  if (g.length === 1) return g[0]; if (isKo(a[0])) return g.join(', '); return g.slice(0, -1).join(', ') + ', & ' + g[g.length - 1]; }
+function mlaAu(a){ if (!a.length) return ''; const n = x => isKo(x) ? x : (s => s.first ? `${s.first} ${s.last}` : s.last)(split(x));
+  if (a.length === 1) return a[0]; if (a.length === 2) return `${a[0]}, and ${n(a[1])}`; return `${a[0]}, et al.`; }
+function chiAu(a){ if (!a.length) return ''; const n = x => isKo(x) ? x : (s => s.first ? `${s.first} ${s.last}` : s.last)(split(x)); const g = a.slice(0, 10);
+  if (g.length === 1) return g[0]; return g[0] + (g.length > 2 ? ', ' + g.slice(1, -1).map(n).join(', ') + ',' : '') + ' and ' + n(g[g.length - 1]); }
+function kciAu(a){ if (!a.length) return ''; return a.length >= 3 ? `${a[0]} 외 ${a.length - 1}인` : a.join(', '); }
+const lastN = x => isKo(x) ? x : split(x).last;
+function fmt(r){
+  const a = auList(r.au), y = r.yr, ko = isKo(r.ti + r.co), T = r.ti || '[제목 미상]';
+  const acc = r.ac ? r.ac : '';
+  const co = r.co || ({book:'[출판사 미상]', article:'[학술지 미상]', web:'[사이트 미상]', press:'[기관 미상]', law:'[법원·기관 미상]'}[r.ty]);
+  const vi = r.vo ? (r.is ? `${r.vo}(${r.is})` : r.vo) : (r.is ? `(${r.is})` : '');
+  const pp = r.pg || '', url = r.url || '';
+  const head = a.length ? apaAu(a) : T, yA = y || 'n.d.';
+  let apa, mla, chi, kci;
+  if (r.ty === 'book'){ apa = `${a.length ? head + ' ' : ''}(${yA}). ${a.length ? T + '. ' : ''}${co}.`; mla = `${a.length ? mlaAu(a).replace(/.$/, '') + '. ' : ''}${T}. ${co}, ${V(y, '[연도 미상]')}.`; chi = `${a.length ? chiAu(a) + '. ' : ''}${T}. ${co}, ${V(y, '[연도 미상]')}.`; kci = `${a.length ? kciAu(a) : '[저자 미상]'}(${V(y, '연도 미상')}), 『${T}』, ${co}.`; }
+  else if (r.ty === 'article'){ apa = `${a.length ? head + ' ' : ''}(${yA}). ${a.length ? T + '. ' : ''}${co}${vi ? ', ' + vi : ''}${pp ? ', ' + pp : ''}.${url ? ' ' + url : ''}`; mla = `${a.length ? mlaAu(a).replace(/.$/, '') + '. ' : ''}"${T}." ${co}${r.vo ? ', vol. ' + r.vo : ''}${r.is ? ', no. ' + r.is : ''}, ${V(y, '[연도 미상]')}${pp ? ', pp. ' + pp : ''}.${url ? ' ' + url.replace(/^https?:\/\//, '') + '.' : ''}`; chi = `${a.length ? chiAu(a) + '. ' : ''}"${T}." ${co}${r.vo ? ' ' + r.vo : ''}${r.is ? ', no. ' + r.is : ''} (${V(y, '[연도 미상]')})${pp ? ': ' + pp : ''}.${url ? ' ' + url + '.' : ''}`; kci = `${a.length ? kciAu(a) : '[저자 미상]'}(${V(y, '연도 미상')}), "${T}", 『${co}』${r.vo ? ', ' + r.vo + '권' : ''}${r.is ? ' ' + r.is + '호' : ''}${pp ? ', ' + pp + '쪽' : ''}.`; }
+  else if (r.ty === 'web' || r.ty === 'press'){ apa = `${a.length ? head + ' ' : co + '. '}(${yA}). ${T}${r.ty === 'press' ? ' [보도자료]' : ''}. ${a.length ? co + '. ' : ''}${url || '[URL 없음]'}`; mla = `${a.length ? mlaAu(a).replace(/.$/, '') + '. ' : ''}"${T}." ${co}, ${V(y, '[연도 미상]')}${url ? ', ' + url.replace(/^https?:\/\//, '') : ''}.${acc ? ' Accessed ' + acc + '.' : ''}`; chi = `${a.length ? chiAu(a) + '. ' : co + '. '}"${T}." ${V(y, '[연도 미상]')}.${acc ? ' Accessed ' + acc + '.' : ''}${url ? ' ' + url + '.' : ''}`; kci = `${a.length ? kciAu(a) : co}(${V(y, '연도 미상')}), "${T}"${r.ty === 'press' ? ', 보도자료' : ''}, ${url || '[URL 없음]'}${acc ? ' (검색일: ' + acc + ')' : ''}.`; }
+  else { apa = `${T}, ${co} (${yA}).`; mla = `${T}. ${co}, ${V(y, '[연도 미상]')}.`; chi = `${T}. ${co}, ${V(y, '[연도 미상]')}.`; kci = `${co} ${V(y, '연도 미상')}. ${T}.`; }
+  const sa = a.length ? lastN(a[0]) + (a.length >= 3 ? (isKo(a[0]) ? ' 외' : ' et al.') : a.length === 2 ? (isKo(a[0]) ? '·' + lastN(a[1]) : ' & ' + lastN(a[1])) : '') : T.slice(0, 20);
+  const p1 = pp ? pp.split('-')[0] : '12';
+  const cite = {apa:`(${sa}, ${yA}) · (${sa}, ${yA}, p. ${p1})`, mla:`(${a.length ? lastN(a[0]) + (a.length >= 3 ? ' et al.' : '') : T.slice(0, 20)} ${p1})`, chi:`(${a.length ? lastN(a[0]) + (a.length >= 4 ? ' et al.' : '') : T.slice(0, 20)} ${V(y, 'n.d.')}, ${p1})`, kci:`(${sa}, ${V(y, '연도 미상')}: ${p1})`};
+  return {apa, mla, chi, kci, cite, key:(a[0] || T)};
+}
+function sorted(){ const L = LIST.map((r, i) => Object.assign({}, r, {_i:i}));
+  if (SORT === 'ko') L.sort((a, b) => fmt(a).key.localeCompare(fmt(b).key, 'ko')); else if (SORT === 'yr') L.sort((a, b) => (a.yr || '9999').localeCompare(b.yr || '9999')); return L; }
+const SN = {apa:'APA 7', mla:'MLA 9', chi:'시카고', kci:'KCI'};
+function render(){
+  SHOWN = true; const L = sorted(); $('#rTitle').textContent = `참고문헌 ${L.length}건 × 4서식 = ${L.length * 4}줄`;
+  $('#list').innerHTML = L.length ? L.map(r => { const f = fmt(r); return `<div class="ref"><div class="h"><span class="pill d">${TYN[r.ty]}</span><b>${esc(r.ti || '[제목 미상]')}</b><button data-del="${r._i}">삭제</button></div>
+   ${['apa', 'mla', 'chi', 'kci'].map(k => `<div class="fmt"><span class="k">${SN[k]}</span><span class="v">${esc(f[k])}</span><button data-cp="${r._i}|${k}">복사</button></div>`).join('')}
+   <div class="cite">짧은 인용 · APA ${esc(f.cite.apa)} · MLA ${esc(f.cite.mla)} · 시카고 ${esc(f.cite.chi)} · KCI ${esc(f.cite.kci)}</div></div>`; }).join('') : '<p class="empty">목록이 비었습니다</p>';
+  $$('[data-del]').forEach(b => b.onclick = () => { LIST.splice(+b.dataset.del, 1); LS.set(KEY, LIST); render(); });
+  $$('[data-cp]').forEach(b => b.onclick = () => { const [i, k] = b.dataset.cp.split('|'); copyOut(fmt(LIST[+i])[k], SN[k] + ' 1줄을 복사했습니다'); });
+  $('#result').classList.remove('hide');
+}
+function read(){ const r = {}; ['ty', 'au', 'yr', 'ti', 'co', 'vo', 'is', 'pg', 'url', 'ac'].forEach(k => r[k] = $('#' + k).value.trim()); return r; }
+$('#addBtn').onclick = () => { const r = read(); if (!r.ti){ $('#ti').classList.add('miss'); return toast('제목은 꼭 넣어 주세요'); } $('#ti').classList.remove('miss'); if (LIST.length >= 50) return toast('최대 50건까지입니다');
+  LIST.push(r); LS.set(KEY, LIST); ['au', 'yr', 'ti', 'co', 'vo', 'is', 'pg', 'url', 'ac'].forEach(k => $('#' + k).value = ''); toast(`추가했습니다 (${LIST.length}건)`); if (SHOWN) render(); };
+$('#sampleBtn').onclick = () => { SAMPLE.forEach(s => { if (!LIST.some(x => x.ti === s.ti) && LIST.length < 50) LIST.push(Object.assign({}, s)); }); LS.set(KEY, LIST); toast(`예시 5건을 목록에 넣었습니다 (${LIST.length}건)`); if (SHOWN) render(); };
+$('#clearBtn').onclick = () => { LIST = []; LS.set(KEY, LIST); if (SHOWN) render(); toast('목록을 비웠습니다'); };
+$('#runBtn').onclick = () => { if (!LIST.length) return toast('먼저 자료를 추가하거나 [예시 5건 넣기]를 눌러 주세요'); render(); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); };
+$$('#sortC button').forEach(b => b.onclick = () => { $$('#sortC button').forEach(x => x.classList.toggle('on', x === b)); SORT = b.dataset.s; if (SHOWN) render(); });
+$$('#styC button').forEach(b => b.onclick = () => { $$('#styC button').forEach(x => x.classList.toggle('on', x === b)); STY = b.dataset.y; });
+$('#copyBtn').onclick = () => copyOut(sorted().map(r => fmt(r)[STY]).join('\n'), SN[STY] + ' 전체를 복사했습니다');
+$('#csvBtn').onclick = () => saveCSV(`참고문헌_${todayS()}.csv`, [['유형','제목','APA 7','MLA 9','시카고','KCI','짧은 인용(APA)']].concat(sorted().map(r => { const f = fmt(r); return [TYN[r.ty], r.ti, f.apa, f.mla, f.chi, f.kci, f.cite.apa]; })));
+$('#printBtn').onclick = () => printDoc(`<div class="paper"><h1>참고문헌 (${SN[STY]})</h1><p class="note">${todayS()} · ${LIST.length}건 · 정렬: ${$('#sortC .on').textContent}</p>${sorted().map(r => `<p style="padding-left:2em;text-indent:-2em;margin:5px 0">${esc(fmt(r)[STY])}</p>`).join('')}</div>`);
+</script>
+</body></html>

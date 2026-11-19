@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더위생 — 매일 1분 위생 점검 일지 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.hi{display:grid;grid-template-columns:1fr;gap:5px;padding:8px 0;border-bottom:1px solid var(--line)}
+.hi .t{font-size:12.5px;color:#fff;font-weight:800}
+.hi .t small{color:var(--sub);font-weight:400;margin-left:4px}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.tri button{font-size:12px;font-weight:800;border:1px solid var(--line2);border-radius:8px;padding:6px 2px;background:var(--card2);color:#DCE6F2}
+.tri button.on[data-v="ok"]{background:var(--green);border-color:var(--green);color:#062014}
+.tri button.on[data-v="warn"]{background:var(--red);border-color:var(--red);color:#fff}
+.tri button.on[data-v="na"]{background:#3A4766;border-color:#3A4766;color:#fff}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+.cal div{aspect-ratio:1;border-radius:7px;background:#0B1530;border:1px solid var(--line);font-size:10.5px;color:var(--sub);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}
+.cal div b{font-size:12px;color:#fff}
+.cal div.g{border-color:var(--green)}.cal div.r{border-color:var(--red);background:rgba(255,90,90,.12)}.cal div.h{visibility:hidden}
+.ph img{max-width:100%;border-radius:8px;margin-top:6px;display:block}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더위생@@-->
+<main>
+<section class="hero">
+ <h1>매일 1분, 15항목 톡톡<br><em>위생 점검 일지</em>가 쌓입니다</h1>
+ <p>항목마다 정상·주의·해당없음을 누르면 날짜별로 이 기기에 저장되고, 월별 점검표와 주의 항목 모아 보기, 월간 인쇄(PDF)가 됩니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>오늘 점검</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시: 이번 달 10일치 기록 넣기</button></div>
+ <div class="g2"><div><label class="lb">업종</label><select id="biz"><option value="food">음식점</option><option value="cafe">카페</option><option value="bakery">제과</option></select></div><div><label class="lb">점검일</label><input id="day" type="date"></div></div>
+ <div class="g2"><div><label class="lb">점검자</label><input id="who" maxlength="12"></div><div><label class="lb">사진(선택)</label><input id="photo" type="file" accept="image/*"></div></div>
+ <div id="items"></div>
+ <div class="ph" id="ph"></div>
+ <label class="lb">메모</label><input id="memo" maxlength="80">
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">오늘 기록 저장 · 월별 표 보기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="mTitle">월별 점검표</span></h2>
+ <div class="stat"><div><b id="sDays">0</b><span>점검한 날</span></div><div><b id="sOk">-</b><span>정상 비율</span></div><div><b id="sWarn">0</b><span>주의 건수</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">월간 인쇄(PDF)</button><button class="btn sec sm" id="copyBtn">주의 항목 복사</button><button class="btn sec sm" id="csvBtn">CSV</button></div>
+ <div class="cal" id="cal"></div>
+ <h3>주의 항목만 모아 보기</h3><div id="warns"></div>
+ <p class="fixnote">매장 자체 기록용이며 관할 위생 점검 서식과 다를 수 있습니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const BASE = ['손 씻기·위생모·앞치마 착용','작업자 건강 상태(설사·발열·상처)','냉장 온도 5℃ 이하','냉동 온도 −18℃ 이하','소비기한 지난 식재료 없음','식재료 바닥에 직접 보관 안 함','도마·칼 용도별 구분(생/익힘)','행주·수세미 삶기·교체','조리대·작업대 소독','바닥·배수구 청소','쓰레기통 뚜껑·비우기','해충(바퀴·쥐) 흔적 없음','화장실 청소·비누·종이타월','개인 소지품 조리 구역 밖 보관','원산지 표시판 게시'];
+const ALT = {cafe:{14:'원두·우유 개봉일 표시', 6:'제빙기·커피머신 세척'}, bakery:{14:'알레르기 유발 성분 표시', 6:'오븐·발효기 청소'}};
+const items = () => BASE.map((t, i) => (ALT[$('#biz').value] || {})[i] || t);
+const VN = {ok:'정상', warn:'주의', na:'해당없음'};
+let DB = LS.get('kts_hygiene_v1', {rec:{}}), DRAFT = {}, PHOTO = '';
+function draw(){
+  const d = $('#day').value, r = DB.rec[d]; DRAFT = r ? Object.assign({}, r.v) : {}; PHOTO = r && r.photo || ''; $('#memo').value = r ? r.memo || '' : ''; if (r && r.who) $('#who').value = r.who;
+  $('#items').innerHTML = items().map((t, i) => `<div class="hi"><div class="t">${i + 1}. ${esc(t)}</div><div class="tri">${['ok', 'warn', 'na'].map(v => `<button data-i="${i}" data-v="${v}" class="${DRAFT[i] === v ? 'on' : ''}">${VN[v]}</button>`).join('')}</div></div>`).join('');
+  $$('#items .tri button').forEach(b => b.onclick = () => { DRAFT[b.dataset.i] = b.dataset.v; b.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); });
+  $('#ph').innerHTML = PHOTO ? `<img src="${PHOTO}" alt="점검 사진">` : '';
+}
+function save(){
+  const d = $('#day').value; if (!d) return toast('점검일을 골라 주세요');
+  const n = Object.keys(DRAFT).length; if (!n) return toast('항목을 하나 이상 눌러 주세요');
+  DB.rec[d] = {v:DRAFT, biz:$('#biz').value, who:$('#who').value.trim(), memo:$('#memo').value.trim(), photo:PHOTO, items:items()}; LS.set('kts_hygiene_v1', DB); toast(`${d} 기록을 저장했습니다 (${n}/15항목)`);
+}
+function month(){
+  const d = parseD($('#day').value) || new Date(); const y = d.getFullYear(), m = d.getMonth(); const last = new Date(y, m + 1, 0).getDate(); const key = `${y}-${pad2(m + 1)}`;
+  const days = Object.keys(DB.rec).filter(k => k.startsWith(key)).sort(); return {y, m, last, key, days};
+}
+function render(){
+  const M = month(); let ok = 0, all = 0, warn = []; M.days.forEach(k => { const r = DB.rec[k]; Object.entries(r.v).forEach(([i, v]) => { if (v === 'na') return; all++; if (v === 'ok') ok++; else warn.push({d:k, i:+i, t:(r.items || items())[+i], memo:r.memo}); }); });
+  $('#mTitle').textContent = `${M.y}년 ${M.m + 1}월 점검표`; $('#sDays').textContent = M.days.length + '일'; $('#sOk').textContent = all ? pct(ok / all, 0) : '-'; $('#sWarn').textContent = warn.length;
+  const first = new Date(M.y, M.m, 1).getDay(); let h = ['일', '월', '화', '수', '목', '금', '토'].map(w => `<div style="background:none;border:0"><b style="color:var(--sub)">${w}</b></div>`).join('');
+  for (let i = 0; i < first; i++) h += '<div class="h"></div>';
+  for (let dd = 1; dd <= M.last; dd++){ const k = `${M.key}-${pad2(dd)}`, r = DB.rec[k]; const w = r ? Object.values(r.v).filter(v => v === 'warn').length : 0; h += `<div class="${r ? (w ? 'r' : 'g') : ''}"><b>${dd}</b>${r ? (w ? '주의 ' + w : '정상') : ''}</div>`; }
+  $('#cal').innerHTML = h;
+  $('#warns').innerHTML = warn.length ? warn.map(w => `<div class="item warn"><div class="q">${w.d.slice(5)} · ${esc(w.t)}</div>${w.memo ? `<div class="a">${esc(w.memo)}</div>` : ''}</div>`).join('') : '<div class="empty">이번 달 주의 항목이 없습니다</div>';
+  CUR = {M, warn}; $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+let CUR = null;
+$('#photo').onchange = e => { const f = e.target.files[0]; if (!f) return; const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1, 480 / Math.max(img.width, img.height)); c.width = img.width * s; c.height = img.height * s; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); PHOTO = c.toDataURL('image/jpeg', 0.6); $('#ph').innerHTML = `<img src="${PHOTO}" alt="점검 사진">`; URL.revokeObjectURL(img.src); }; img.src = URL.createObjectURL(f); };
+$('#biz').onchange = draw; $('#day').onchange = draw;
+$('#sampleBtn').onclick = () => { const t = new Date(); const y = t.getFullYear(), m = t.getMonth(); let s = 3;
+  for (let dd = 1; dd <= Math.min(10, t.getDate()); dd++){ const k = `${y}-${pad2(m + 1)}-${pad2(dd)}`; const v = {}; for (let i = 0; i < 15; i++){ s = (s * 31 + 7) % 97; v[i] = i === 14 && dd % 2 ? 'na' : ((s % 11 === 0 || (dd === 3 && i === 9) || (dd === 7 && i === 2)) ? 'warn' : 'ok'); } DB.rec[k] = {v, biz:'food', who:'점장', memo:Object.values(v).includes('warn') ? '주의 항목 즉시 조치 후 재확인' : '', photo:'', items:BASE.slice()}; }
+  LS.set('kts_hygiene_v1', DB); $('#day').value = todayS(); $('#who').value = '점장'; draw(); ['ok', 'ok', 'ok', 'ok', 'ok', 'ok', 'ok', 'warn', 'ok', 'ok', 'ok', 'ok', 'ok', 'ok', 'ok'].forEach((v, i) => { DRAFT[i] = v; }); $('#memo').value = '행주 교체 시간 놓침 → 오후 2시 교체 완료'; draw2(); toast('이번 달 10일치 기록 + 오늘 점검을 채웠습니다'); };
+function draw2(){ $$('#items .tri button').forEach(b => b.classList.toggle('on', DRAFT[b.dataset.i] === b.dataset.v)); }
+$('#runBtn').onclick = () => { save(); render(); };
+$('#copyBtn').onclick = () => CUR && copyOut(`[${$('#mTitle').textContent} 주의 항목 ${CUR.warn.length}건]\n` + CUR.warn.map(w => `${w.d} ${w.t}${w.memo ? ' — ' + w.memo : ''}`).join('\n'), '주의 항목을 복사했습니다');
+$('#csvBtn').onclick = () => { if (!CUR) return; const M = CUR.M; saveCSV(`위생점검_${M.key}.csv`, [['항목'].concat(M.days.map(d => d.slice(5)))].concat(BASE.map((t, i) => [items()[i]].concat(M.days.map(d => VN[DB.rec[d].v[i]] || '')))).concat([['점검자'].concat(M.days.map(d => DB.rec[d].who || ''))])); };
+$('#printBtn').onclick = () => { if (!CUR) return; const M = CUR.M; const ds = Array.from({length:M.last}, (_, i) => `${M.key}-${pad2(i + 1)}`); const mk = v => v === 'ok' ? '○' : (v === 'warn' ? '△' : (v === 'na' ? '-' : ''));
+  printDoc(`<div class="paper"><h1>위생 점검 일지 · ${M.y}년 ${M.m + 1}월</h1><p class="note">○ 정상 · △ 주의 · - 해당없음 · 빈칸 미점검 · 매장 자체 기록용이며 관할 위생 점검 서식과 다를 수 있습니다.</p>
+  <table style="font-size:6.5pt"><colgroup><col style="width:24%">${ds.map(() => '<col>').join('')}</colgroup><tr><th style="padding:1px 2px">항목＼일</th>${ds.map((d, i) => `<th style="padding:1px 0;text-align:center">${i + 1}</th>`).join('')}</tr>${items().map((t, i) => `<tr><td style="padding:1px 2px;font-size:6.5pt">${i + 1}. ${esc(t)}</td>${ds.map(d => `<td style="padding:1px 0;text-align:center">${DB.rec[d] ? mk(DB.rec[d].v[i]) : ''}</td>`).join('')}</tr>`).join('')}<tr><td style="padding:1px 2px">점검자 확인</td>${ds.map(d => `<td style="padding:1px 0;text-align:center;font-size:5pt">${DB.rec[d] && DB.rec[d].who ? '✓' : ''}</td>`).join('')}</tr></table>
+  <h2>주의 항목 · 조치</h2><table><colgroup><col style="width:14%"><col style="width:40%"><col></colgroup><tr><th>날짜</th><th>항목</th><th>조치 메모</th></tr>${CUR.warn.map(w => `<tr><td>${w.d.slice(5)}</td><td>${esc(w.t)}</td><td>${esc(w.memo || '')}</td></tr>`).join('') || '<tr><td colspan="3">없음</td></tr>'}</table></div>`); };
+$('#day').value = todayS(); draw();
+</script>
+</body></html>

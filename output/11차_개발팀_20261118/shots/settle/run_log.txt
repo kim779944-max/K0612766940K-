@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+channels: 1.카드매출 매출11268000 수수료율1.1% 실수령률98.9% 광고0 손익11144052 | 2.배달앱A 매출7204000 수수료율16.8% 실수령률83.2% 광고450000 손익5543728 | 3.배달앱B 매출4796000 수수료율21.4% 실수령률78.6% 광고380000 손익3389656
+totals: 23,268,000 / 20,907,436 / 89.9%
+missing fee → 확인 (no estimate): 카드매출: | 배달앱A: | 배달앱B:2026-10-19 수수료 없음 · 확인 pill=1
+months: 2026-09,2026-10
+no ads → no P/L: 카드매출 pl=NaN, 배달앱A pl=NaN, 배달앱B pl=NaN
+csv: {"name":"채널정산_2026-11-18.csv","size":241}
+print print: pages=1 bytes=50341 file=files\settle_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2133 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

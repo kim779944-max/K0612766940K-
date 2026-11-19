@@ -1,0 +1,17 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+split: 일정 5 / 할 일 8 / 기타 2
+interpretations: 일:내일 → 2026-11-19(목) · 오후 3시 → 15:00 | 일:이번 주 금요일 → 2026-11-20(금) · 저녁 7시 → 19:00 | 일:11/25 → 2026-11-25(수) · 오전 10시 → 10:00 | 일:다음 주 월요일 → 2026-11-23(월) · 오후 2시 반 → 14:30 | 일:모레 → 2026-11-20(금) · 11시 → 11:00 | 할:오늘 → 2026-11-18(수) | 할:내일 → 2026-11-19(목) | 할:날짜 없음 | 할:12월 3일 → 2026-12-03(목) | 할:이번 주 안에 → 2026-11-22(일) | 할:날짜 없음 | 할:금요일 → 2026-11-20(금) | 할:날짜 없음 | 기:조만간 → 날짜 없음 | 기:오늘 → 2026-11-18(수)
+places / people: 미사역 카페/김대리님, -/박사장님, 세무서/-, 현장/-, -/세무사님
+ambiguous kept undated: 조만간 다음에 밥 한번 먹어요 ㅎㅎ → 날짜 없음
+ics: {"name":"메모일정_2026-11-19.ics","size":4226}
+todo check persist: {"오늘까지 견적서 보내기":true}
+copy: [일정] ... 734자
+print print: pages=1 bytes=65010 file=files\memotask_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2478 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

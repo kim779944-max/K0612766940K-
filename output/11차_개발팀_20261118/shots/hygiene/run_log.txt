@@ -1,0 +1,19 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+items: 15 items · tri buttons=45
+month: 2026년 11월 점검표 days=11일 ok=98% warn=3
+calendar cells: green=8 red=3
+warn list: 11-03 바닥·배수구 청소 | 11-07 냉장 온도 5℃ 이하 | 11-18 행주·수세미 삶기·교체
+tap test (item 3 → 주의): today item3=warn
+cafe set: 7. 제빙기·커피머신 세척 / 15. 원두·우유 개봉일 표시
+fixed note: 매장 자체 기록용이며 관할 위생 점검 서식과 다를 수 있습니다.
+csv: {"name":"위생점검_2026-11.csv","size":845}
+persist after reload: records=11 today item3 button on=true
+print print: pages=1 bytes=136378 file=files\hygiene_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2836 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

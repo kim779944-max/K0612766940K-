@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>주식·코인 뉴스 감성 요약기 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+:root{--bg:#0A1128;--card:#111B36;--card2:#16223F;--line:#24314F;--line2:#2E4370;--ink:#ECEFF4;--sub:#93A0B4;
+ --or:#FF6B00;--or2:#FFA24D;--on:#0A1128;--red:#FF5A5A;--green:#35C48A;--yel:#FFC24D}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",Roboto,sans-serif;
+ background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5;letter-spacing:-.2px;word-break:keep-all;overflow-wrap:break-word}
+#app{max-width:460px;margin:0 auto;overflow-x:hidden;min-height:100vh;
+ background:radial-gradient(120% 40% at 50% -6%,rgba(255,107,0,.10) 0%,rgba(255,107,0,0) 62%),var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;letter-spacing:-.2px}
+input,select,textarea{font:inherit;color:var(--ink);background:#0B1530;border:1px solid var(--line2);border-radius:10px;padding:10px 11px;width:100%;font-size:14px;min-width:0}
+textarea{resize:vertical;line-height:1.5}
+input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;accent-color:#FF6B00;padding:0}
+input[type=file]{font-size:12px;padding:7px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--or2)}
+input.miss,textarea.miss{border-color:var(--red)}
+a{color:var(--or2)}
+header.top{position:sticky;top:0;z-index:40;background:rgba(10,17,40,.97);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:8px;padding:10px 14px 6px}
+.brand{display:flex;align-items:center;gap:7px;font-size:15.5px;font-weight:900;color:#fff;letter-spacing:-.6px;min-width:0}
+.brand .mark{flex:0 0 24px;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,var(--or2),var(--or));color:var(--on);font-size:12px;font-weight:900}
+.brand span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp{flex:1}
+.home{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:999px;padding:5px 10px;text-decoration:none;white-space:nowrap}
+.privacy{font-size:11px;color:var(--sub);padding:0 14px 8px;display:flex;align-items:center;gap:6px}
+.privacy::before{content:"";flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+main{padding:6px 14px 40px}
+.hero h1{font-size:21px;line-height:1.32;font-weight:900;letter-spacing:-.8px;margin-top:10px}
+.hero h1 em{font-style:normal;color:var(--or)}
+.hero p{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 12px;margin-top:12px}
+.card h2{font-size:14.5px;font-weight:900;color:#fff;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.card h2 .n{flex:0 0 20px;width:20px;height:20px;border-radius:6px;background:var(--or);color:var(--on);font-size:11px;font-weight:900;display:grid;place-items:center}
+.card h3{font-size:13px;font-weight:900;color:var(--or2);margin:12px 0 5px}
+.sub{font-size:11.5px;color:var(--sub);margin-top:4px;line-height:1.55}
+label.lb{display:block;font-size:11.5px;font-weight:800;color:#C6D0DF;margin:10px 0 4px}
+label.lb i{font-style:normal;color:var(--sub);font-weight:700;margin-left:4px;font-size:10.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.g2>*{min-width:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border-radius:12px;padding:13px 12px;font-size:14.5px;font-weight:900;text-decoration:none;text-align:center;line-height:1.3}
+.btn.pri{color:var(--on);background:linear-gradient(145deg,var(--or2),var(--or));box-shadow:0 8px 22px rgba(255,107,0,.28)}
+.btn.sec{color:#E6EDF7;background:var(--card2);border:1px solid var(--line2)}
+.btn.sm{padding:9px 6px;font-size:12.5px;border-radius:10px}
+.row{display:flex;gap:7px;margin-top:9px}.row>*{flex:1;min-width:0}
+.chips{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.chips button{font-size:12px;font-weight:800;color:#DCE6F2;border:1px solid var(--line2);border-radius:999px;padding:7px 11px;background:var(--card2)}
+.chips button.on{background:var(--or);border-color:var(--or);color:var(--on)}
+.pill{display:inline-block;font-size:10.5px;font-weight:900;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.pill.a,.pill.hi{background:var(--red);color:#fff}.pill.b,.pill.md{background:var(--yel);color:#1a1200}.pill.c,.pill.lo{background:#3B82F6;color:#fff}.pill.d,.pill.no{background:#3A4766;color:#DCE6F2}.pill.ok{background:var(--green);color:#062014}
+.item{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:7px}
+.item .q{font-size:13px;font-weight:800;color:#fff}
+.item .a{font-size:12.5px;color:#D3DBE7;margin-top:4px;line-height:1.55}
+.item.warn{border-color:rgba(255,90,90,.55)}
+.kv{font-size:11px;color:var(--sub);line-height:1.55;margin-top:6px}
+.out{white-space:pre-wrap;font-size:13px;line-height:1.6;background:#0B1530;border:1px dashed var(--or2);border-radius:10px;padding:10px;margin-top:8px;color:#E3E9F2}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.stat div{background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center;min-width:0}
+.stat b{display:block;font-size:18px;font-weight:900;color:#fff}
+.stat span{font-size:10.5px;color:var(--sub)}
+table.t{width:100%;border-collapse:collapse;margin-top:8px;table-layout:fixed;font-size:12px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+table.t th{color:var(--sub);font-size:11px;font-weight:800}
+.fixnote{font-size:11.5px;line-height:1.55;color:#FFD7B8;background:rgba(255,107,0,.10);border:1px solid rgba(255,107,0,.45);border-radius:10px;padding:8px 10px;margin-top:10px}
+details.rule{margin-top:8px;background:#0B1530;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px}
+details.rule summary{font-weight:800;color:var(--or2);cursor:pointer}
+.hide{display:none!important}
+.empty{font-size:12px;color:var(--sub);text-align:center;padding:12px 6px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:#1E2C4D;border:1px solid var(--or);color:#fff;font-size:13px;font-weight:800;border-radius:12px;padding:10px 14px;z-index:90;width:max-content;max-width:340px;text-align:center;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{font-size:10.5px;color:#6E7F99;text-align:center;margin-top:16px;line-height:1.6}
+#printArea{display:none}
+.paper{background:#fff;color:#111;font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:10.5pt;line-height:1.5;letter-spacing:-.1px}
+.paper h1{font-size:16pt;margin-bottom:4px}.paper h2{font-size:12pt;margin:11px 0 5px;border-left:4px solid #FF6B00;padding-left:7px}
+.paper table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4px 0}
+.paper th,.paper td{border:1px solid #444;padding:4px 6px;text-align:left;vertical-align:top;font-size:9.5pt;overflow-wrap:anywhere;word-break:keep-all}
+.paper th{background:#F1F3F7}
+.paper .note{font-size:9pt;color:#444;margin-top:8px}
+.paper .pre{white-space:pre-wrap}
+@media print{
+ @page{size:A4;margin:12mm}
+ html,body{background:#fff!important;min-height:0!important}
+ body>*:not(#printArea){display:none!important}
+ #printArea{display:block!important}
+}
+.sn{font-size:12.4px;line-height:1.55;padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:7px}
+.sn .pill{flex:0 0 auto;margin-top:2px}.sn span.t{flex:1;min-width:0}
+.bar{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-top:5px;background:#24314F}
+.bar i{display:block;height:100%}
+.tk{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:9px 10px;margin-top:7px}
+.tk b{font-size:13px;color:#fff}.tk .kv{margin-top:3px}
+</style></head>
+<body><div id="app">
+<header class="top">
+ <div class="hd"><div class="brand"><span class="mark">K</span><span class="t">뉴스 감성 요약</span></div><span class="sp"></span><a class="home" href="index.html">원클릭 쇼룸</a></div>
+ <div class="privacy">입력하신 내용은 이 기기 안에서만 처리됩니다</div>
+</header>
+<main>
+<section class="hero">
+ <h1>뉴스를 붙여 넣으면<br><em>문장별 긍정·부정</em>과 종목 집계</h1>
+ <p>공개된 감성 사전으로 문장마다 긍정/부정/중립을 판정하고, 종목별로 모읍니다. 부정 신호 문장만 원문 그대로 따로 봅니다.</p>
+ <p class="fixnote">정보 요약이며 투자 권유가 아닙니다. 투자 판단과 책임은 본인에게 있습니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>뉴스 붙여넣기</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 12건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">종목·코인 이름 <i>쉼표로 구분 · 비우면 전체를 하나로 집계</i></label><input id="tick" maxlength="200">
+ <label class="lb">뉴스 <i>기사 사이에 빈 줄 · 첫 줄은 제목 · "링크:" 줄은 원문 주소</i></label>
+ <textarea id="news" rows="10" maxlength="60000"></textarea>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">감성 요약하기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">감성 요약</span></h2>
+ <div class="stat"><div><b id="sPos" style="color:var(--green)">0</b><span>긍정 문장</span></div><div><b id="sNeg" style="color:var(--red)">0</b><span>부정 문장</span></div><div><b id="sNeu">0</b><span>중립 문장</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">요약 복사</button><button class="btn sec sm" id="printBtn">인쇄</button><button class="btn sec sm" id="csvBtn">판정표 CSV</button></div>
+ <h3>오늘의 요약 3줄</h3><div class="out" id="sum"></div>
+ <h3>종목별 집계</h3><div id="tks"></div>
+ <h3>부정 신호 문장 (원문 그대로)</h3><div id="negs"></div>
+ <h3>기사별 판정표</h3><div id="arts"></div>
+ <details class="rule"><summary>감성 사전 (공개)</summary><div id="dict"></div></details>
+ <p class="fixnote">정보 요약이며 투자 권유가 아닙니다. 투자 판단과 책임은 본인에게 있습니다. 매수·매도 판단이나 목표가를 제시하지 않습니다.</p>
+</section>
+<section class="card qa" id="inq">
+ <h2><span class="n">?</span>60초 문의</h2>
+ <p class="sub">우리 매장에 맞게 고쳐 쓰고 싶으시면 이름·연락처·문의 한 줄만 남겨 주세요. 담당자가 확인한 뒤 연락드립니다.</p>
+ <div class="row"><a class="btn sec" id="inqLink" href="../misa-1116/form.html" target="_blank" rel="noopener">60초 문의 폼 열기 (이름 · 연락처 · 문의)</a></div>
+ <p class="kv">KTS 60초 접수 폼을 그대로 씁니다. 이 화면에서 만든 작업 내용은 폼으로 넘어가지 않습니다.</p>
+</section>
+<p class="foot">KTS 원클릭 · 서버 0 · 외부 발송 0 · 모든 처리는 이 기기 안에서만 합니다<br><a href="index.html">원클릭 쇼룸으로</a></p>
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/* ===== KTS 원클릭 공통 도우미 (9차 재사용 · 11차 확장) (복사·저장·인쇄·기기 저장·개인정보 가림) ===== */
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+let _tt; function toast(m){ const e = $('#toast'); e.textContent = m; e.classList.add('on'); clearTimeout(_tt); _tt = setTimeout(() => e.classList.remove('on'), 2400); }
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(e){}
+  try{ const a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); const ok = document.execCommand('copy'); a.remove(); return ok; }catch(e){ return false; }
+}
+function copyOut(t, msg){ window.__lastCopy = t; copyText(t).then(ok => toast(ok ? (msg || '복사했습니다') : '복사하지 못했습니다. 글자를 길게 눌러 직접 복사해 주세요')); }
+function download(name, text, mime){ window.__lastDownload = {name:name, size:text.length}; const b = new Blob([text], {type:mime || 'text/plain;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+const toCSV = rows => rows.map(r => r.map(c => { c = String(c == null ? '' : c); return /[",\r\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(',')).join('\r\n');
+function saveCSV(name, rows){ download(name, '﻿' + toCSV(rows), 'text/csv;charset=utf-8'); toast('CSV 파일을 저장했습니다 (엑셀에서 열림)'); }
+function printDoc(html){ $('#printArea').innerHTML = html; setTimeout(() => window.print(), 60); }
+const LS = { get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} } };
+const pad2 = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayS = () => ymd(new Date());
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const parseD = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const WK = ['일', '월', '화', '수', '목', '금', '토'];
+const korD = d => d ? `${d.getMonth() + 1}월 ${d.getDate()}일(${WK[d.getDay()]})` : '';
+/* CSV 붙여넣기 읽기 (따옴표·쉼표·탭 지원) */
+function parseCSV(text){
+  text = String(text || '').replace(/^﻿/, '');
+  const sep = (text.split('\n')[0].indexOf('\t') >= 0) ? '\t' : ',';
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++){
+    const c = text[i];
+    if (q){ if (c === '"'){ if (text[i + 1] === '"'){ cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === sep){ row.push(cur.trim()); cur = ''; }
+    else if (c === '\n'){ row.push(cur.trim()); rows.push(row); row = []; cur = ''; }
+    else if (c !== '\r') cur += c;
+  }
+  if (cur !== '' || row.length){ row.push(cur.trim()); rows.push(row); }
+  return rows.filter(r => r.some(x => x !== ''));
+}
+/* 개인정보 가림: 휴대폰·일반전화·이메일 */
+function maskPII(s){
+  return String(s || '')
+    .replace(/([\w.+-]{1,64})@([\w-]+(?:\.[\w-]+)+)/g, (m, u, d) => u.slice(0, 2) + '***@' + d)
+    .replace(/(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/g, (m, a, b, c) => a + '-****-' + c)
+    .replace(/(0[2-6]\d?)[-.\s](\d{3,4})[-.\s](\d{4})/g, (m, a, b, c) => a + '-****-' + c);
+}
+/* 받침에 맞춘 조사: jo('주문','을를') → 주문을 */
+const jo = (w, p) => { w = String(w); const c = w.charCodeAt(w.length - 1); const has = c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 > 0; return w + (has ? p[0] : p[1]); };
+const PHONE_RE = /(01[016789])[-.\s]?(\d{3,4})[-.\s]?(\d{4})/;
+/* ===== 공통 도우미 끝 ===== */
+/* ===== 11차 추가 도우미 ===== */
+const num = s => { if (s == null) return NaN; s = String(s).replace(/[,\s원₩$]/g, ''); if (s === '') return NaN; return Number(s); };
+const won = n => (isFinite(n) ? Math.round(n).toLocaleString('ko-KR') : '-');
+const fx2 = n => (isFinite(n) ? (Math.round(n * 100) / 100).toFixed(2) : '-');
+const pct = (n, d) => (isFinite(n) ? (n * 100).toFixed(d == null ? 1 : d) + '%' : '-');
+const daysBetween = (a, b) => Math.round((b - a) / 86400000);
+function icsFile(name, events){
+  const st = d => `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}`;
+  const stamp = new Date(); const ds = st(stamp) + 'T' + pad2(stamp.getHours()) + pad2(stamp.getMinutes()) + '00';
+  const e = s => String(s).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+  const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//KTS OneClick//KO', 'CALSCALE:GREGORIAN'];
+  events.forEach((v, i) => { L.push('BEGIN:VEVENT', `UID:kts-${st(v.date)}-${i}-${Math.random().toString(36).slice(2, 8)}@oneclick`, `DTSTAMP:${ds}`, `DTSTART;VALUE=DATE:${st(v.date)}`, `DTEND;VALUE=DATE:${st(addDays(v.date, 1))}`, `SUMMARY:${e(v.title)}`, `DESCRIPTION:${e(v.desc || '')}`, 'END:VEVENT'); });
+  L.push('END:VCALENDAR'); download(name, L.join('\r\n'), 'text/calendar;charset=utf-8'); return events.length;
+}
+const utf8Bytes = s => new TextEncoder().encode(String(s)).length;
+const maskTel4 = s => { const d = String(s || '').replace(/\D/g, ''); return d.length >= 4 ? '***-****-' + d.slice(-4) : (s ? '****' : ''); };
+/* ===== 11차 추가 끝 ===== */
+/* ===== 10차 추가 도우미 (문장·숫자·인쇄) ===== */
+function splitSent(text){
+  const out = [];
+  String(text || '').replace(/\r/g, '').split('\n').forEach(line => {
+    line = line.trim(); if (!line) return;
+    const parts = line.match(/[^.!?。]+(?:[.!?。]+|$)/g) || [line];
+    let buf = '';
+    parts.forEach(p => { buf += p; if (/(다|요|함|음|임|됨|니다|까|오)[.!?。]\s*$|[!?]\s*$/.test(buf.trim()) || buf.length > 160){ out.push(buf.trim()); buf = ''; } });
+    if (buf.trim()) out.push(buf.trim());
+  });
+  return out.filter(s => s.replace(/[\s\d.,·\-]/g, '').length >= 2);
+}
+const STOP = new Set('그리고 그러나 하지만 또한 이번 해당 관련 대한 위한 통해 따라 경우 있습니다 합니다 했습니다 됩니다 있는 하는 것을 것은 것이 등을 등의 및 수 있다 한다 이를 이에 우리 저희 그 이 저 것 등 때 중 더 각 약 내 외'.split(' '));
+function words(s){
+  return (String(s).match(/[가-힣A-Za-z][가-힣A-Za-z0-9]+/g) || []).map(w => w.replace(/(으로|에서|에게|까지|부터|에는|과의|와의|이며|이고|하고|했다|한다|합니다|하는|되는|된다|입니다|이다|은|는|이|가|을|를|의|에|와|과|도|로|만)$/, '')).filter(w => w.length >= 2 && !STOP.has(w));
+}
+const uniq = a => [...new Set(a)];
+/* ===== 10차 추가 끝 ===== */
+const POS = ['상승','급등','호조','수주','흑자','흑자전환','최대 실적','개선','증가','신고가','계약 체결','승인','성장','확대','회복','반등','상향','돌파','기대감','호실적','상장','파트너십','협력','순매수'];
+const NEG = ['하락','급락','리콜','조사','적자','손실','감소','부진','소송','제재','하향','우려','악화','지연','철회','해킹','유출','상장폐지','경고','압수수색','순매도','취소','결함','과징금'];
+const SAMPLE_T = '가나전자, 다라바이오, 마바코인';
+const SAMPLE = `가나전자, 3분기 영업이익 흑자전환
+가나전자는 3분기 영업이익이 흑자전환했다고 밝혔다. 반도체 부문 수주가 확대되며 매출이 전년 대비 18% 증가했다.
+링크: https://news.example.com/a1
+
+가나전자 해외 공장 가동 지연
+가나전자의 해외 신공장 가동이 내년 2분기로 지연됐다. 회사는 설비 반입 일정 차질을 이유로 들었다.
+
+가나전자 신제품 공개
+가나전자는 신형 가전 라인업을 공개했다. 출시일은 다음 달 15일이다.
+
+다라바이오 임상 2상 승인
+다라바이오는 신약 후보물질의 임상 2상 승인을 받았다고 공시했다. 회사 측은 기술수출 협력 논의도 이어 가고 있다고 설명했다.
+링크: https://news.example.com/b1
+
+다라바이오 원료 결함으로 일부 제품 리콜
+다라바이오는 원료 결함이 확인된 건강기능식품 2종을 자발적 리콜한다고 밝혔다. 리콜 대상은 약 3만 개다.
+
+다라바이오 3분기 적자 지속
+다라바이오는 3분기에도 연구개발비 부담으로 적자를 이어 갔다. 다만 매출은 소폭 증가했다.
+
+다라바이오 공동연구 계약 체결
+다라바이오는 국내 대학 연구소와 공동연구 계약 체결을 마쳤다.
+
+마바코인 거래량 급증, 가격 반등
+마바코인 가격이 하루 만에 반등했다. 거래소 순매수가 늘며 거래량이 크게 증가했다.
+
+마바코인 발행사 당국 조사 착수
+금융당국이 마바코인 발행사의 공시 내용에 대해 조사에 착수했다. 투자자 보호 우려가 제기됐다.
+
+마바코인 지갑 해킹 의혹
+일부 이용자 지갑에서 해킹 의혹이 제기됐다. 발행사는 유출 정황은 확인되지 않았다고 해명했다.
+
+마바코인 해외 거래소 상장
+마바코인이 해외 거래소 한 곳에 상장됐다. 거래는 다음 주부터 시작된다.
+
+시장 전반 관망세
+코스피는 보합으로 마감했다. 투자자들은 다음 주 금리 결정을 기다리고 있다.`;
+function judge(s){ const p = POS.filter(w => s.includes(w)), n = NEG.filter(w => s.includes(w)); const negated = /(않았|아니|없었|확인되지 않)/.test(s);
+  let k = p.length > n.length ? 'pos' : n.length > p.length ? 'neg' : 'neu'; if (negated && k === 'neg' && /확인되지 않|사실이 아니/.test(s)) k = 'neu'; return {k, p, n}; }
+let CUR = null;
+function run(){
+  const raw = $('#news').value.trim(); if (!raw){ $('#news').classList.add('miss'); return toast('뉴스를 붙여 넣어 주세요'); } $('#news').classList.remove('miss');
+  const ticks = $('#tick').value.split(',').map(s => s.trim()).filter(Boolean);
+  const arts = raw.split(/\n\s*\n|\n-{3,}\n/).map(b => b.trim()).filter(Boolean).map(b => { const L = b.split('\n'); const link = (L.find(l => /^링크\s*:/.test(l)) || '').replace(/^링크\s*:\s*/, ''); const body = L.slice(1).filter(l => !/^링크\s*:/.test(l)).join('\n');
+    const sents = [L[0]].concat(splitSent(body)).map(s => Object.assign({s}, judge(s)));
+    const tk = ticks.find(t => b.includes(t)) || (ticks.length ? '기타' : '전체'); const sc = sents.reduce((a, x) => a + (x.k === 'pos' ? 1 : x.k === 'neg' ? -1 : 0), 0);
+    return {title:L[0], link, sents, tk, k:sc > 0 ? 'pos' : sc < 0 ? 'neg' : 'neu'}; });
+  const T = {}; arts.forEach(a => { const t = T[a.tk] = T[a.tk] || {tk:a.tk, pos:0, neg:0, neu:0, n:0}; t.n++; a.sents.forEach(s => t[s.k]++); });
+  const all = arts.flatMap(a => a.sents.map(s => Object.assign({tk:a.tk, title:a.title}, s)));
+  CUR = {arts, T:Object.values(T), all}; render();
+}
+const KN = {pos:'긍정', neg:'부정', neu:'중립'}, KC = {pos:'ok', neg:'a', neu:'d'};
+function render(){
+  const R = CUR, c = k => R.all.filter(s => s.k === k).length;
+  $('#rTitle').textContent = `감성 요약 · 기사 ${R.arts.length}건 · 문장 ${R.all.length}개`; $('#sPos').textContent = c('pos'); $('#sNeg').textContent = c('neg'); $('#sNeu').textContent = c('neu');
+  const most = R.T.slice().sort((a, b) => b.neg - a.neg)[0], best = R.T.slice().sort((a, b) => (b.pos - b.neg) - (a.pos - a.neg))[0];
+  R.sum = [`기사 ${R.arts.length}건, 문장 ${R.all.length}개 중 긍정 ${c('pos')} · 부정 ${c('neg')} · 중립 ${c('neu')}.`,
+    best ? `긍정 신호가 가장 많은 쪽: ${best.tk} (긍정 ${best.pos} · 부정 ${best.neg}).` : '', most && most.neg ? `부정 신호가 가장 많은 쪽: ${most.tk} (부정 ${most.neg}) — 원문 확인 필요.` : '부정 신호 문장이 없습니다.'].filter(Boolean);
+  $('#sum').textContent = R.sum.join('\n');
+  $('#tks').innerHTML = R.T.map(t => { const n = t.pos + t.neg + t.neu || 1; return `<div class="tk"><b>${esc(t.tk)}</b> <span class="kv">기사 ${t.n}건</span><div class="bar"><i style="width:${t.pos / n * 100}%;background:var(--green)"></i><i style="width:${t.neu / n * 100}%;background:#3A4766"></i><i style="width:${t.neg / n * 100}%;background:var(--red)"></i></div><div class="kv">긍정 ${t.pos} · 중립 ${t.neu} · 부정 ${t.neg}</div></div>`; }).join('');
+  const negs = R.all.filter(s => s.k === 'neg');
+  $('#negs').innerHTML = negs.length ? negs.map(s => `<div class="item warn"><div class="q">${esc(s.tk)} · ${esc(s.title)}</div><div class="a">${esc(s.s)}</div><div class="kv">신호어: ${s.n.map(esc).join(', ')}</div></div>`).join('') : '<p class="empty">부정 신호 문장이 없습니다</p>';
+  $('#arts').innerHTML = R.arts.map((a, i) => `<div class="tk"><b>${i + 1}. ${esc(a.title)}</b> <span class="pill ${KC[a.k]}">${KN[a.k]}</span><div class="kv">${esc(a.tk)} · ${a.link ? `원문 링크: ${esc(a.link)}` : '원문 링크 자리 (입력 없음)'}</div>${a.sents.map(s => `<div class="sn"><span class="pill ${KC[s.k]}">${KN[s.k]}</span><span class="t">${esc(s.s)}</span></div>`).join('')}</div>`).join('');
+  $('#dict').innerHTML = `<p class="kv"><b style="color:var(--green)">긍정</b> ${POS.join(' · ')}</p><p class="kv"><b style="color:var(--red)">부정</b> ${NEG.join(' · ')}</p><p class="kv">한 문장에서 긍정 낱말이 많으면 긍정, 부정 낱말이 많으면 부정, 같거나 없으면 중립. "확인되지 않았다"처럼 부정 낱말을 부인하는 문장은 중립. 기사 판정은 문장 점수 합(긍정 +1, 부정 −1).</p>`;
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+const NOTE = '정보 요약이며 투자 권유가 아닙니다. 투자 판단과 책임은 본인에게 있습니다.';
+$('#sampleBtn').onclick = () => { $('#news').value = SAMPLE; $('#tick').value = SAMPLE_T; toast('예시 12건을 넣었습니다 (가상의 회사·코인)'); };
+$('#clearBtn').onclick = () => { $('#news').value = ''; $('#tick').value = ''; };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(`[뉴스 감성 요약 ${todayS()}]\n` + CUR.sum.join('\n') + '\n\n' + CUR.T.map(t => `- ${t.tk}: 긍정 ${t.pos} · 중립 ${t.neu} · 부정 ${t.neg}`).join('\n') + '\n\n※ ' + NOTE, '요약을 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`뉴스감성_${todayS()}.csv`, [['종목','기사 제목','문장','판정','신호어','링크']].concat(CUR.arts.flatMap(a => a.sents.map(s => [a.tk, a.title, s.s, KN[s.k], s.p.concat(s.n).join(' '), a.link]))));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>뉴스 감성 요약</h1><p class="note">${todayS()} · 기사 ${CUR.arts.length}건</p><p class="pre">${esc(CUR.sum.join('\n'))}</p><h2>종목별 집계</h2><table><tr><th>종목</th><th>기사</th><th>긍정</th><th>중립</th><th>부정</th></tr>${CUR.T.map(t => `<tr><td>${esc(t.tk)}</td><td>${t.n}</td><td>${t.pos}</td><td>${t.neu}</td><td>${t.neg}</td></tr>`).join('')}</table><h2>부정 신호 문장</h2><ul style="margin-left:18px">${CUR.all.filter(s => s.k === 'neg').map(s => `<li>[${esc(s.tk)}] ${esc(s.s)}</li>`).join('')}</ul><p class="note">${NOTE}</p></div>`); };
+</script>
+</body></html>

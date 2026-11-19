@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>B2B 영업 타겟 업종별 리스트업 정리기 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.sg{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:10px;margin-top:8px}
+.sg .h{display:flex;gap:6px;align-items:baseline}.sg .h b{flex:1;min-width:0;font-size:13.3px;color:#fff}
+.sg .h span{font-size:16px;font-weight:900;color:var(--or2)}
+.sg p{font-size:11.8px;color:#C9D3E2;margin-top:4px;line-height:1.55}.sg p em{font-style:normal;color:var(--sub);font-weight:800}
+.say{font-size:12.3px;line-height:1.6;color:#E3E9F2;background:#16223F;border-radius:9px;padding:7px 9px;margin-top:6px}
+</style></head>
+<body><div id="app">
+<!--@@TOP B2B 타겟 리스트@@-->
+<main>
+<section class="hero">
+ <h1>업종·지역·규모를 넣으면<br><em>영업 타겟 세그먼트</em>와 첫 통화 멘트</h1>
+ <p>업종 × 규모로 세그먼트를 나누고 예상 니즈·접근 포인트·우선순위 점수를 매깁니다. 업종별 첫 통화 오프닝 3종, 거절 대응 3종, 방문·전화 순서를 만듭니다.</p>
+ <p class="fixnote">실제 업체 DB를 조회하지 않습니다. 세그먼트를 설계하는 도구이며 상호·연락처를 만들지 않습니다.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>타겟 조건</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시: 3업종 · 키오스크</button></div>
+ <label class="lb">업종 <i>쉼표로 구분 · 최대 6개</i></label><input id="ind" maxlength="100">
+ <div class="g2"><div><label class="lb">지역</label><input id="reg" maxlength="30"></div><div><label class="lb">직원 수 범위</label><select id="size"><option value="s">1~4명 (소형)</option><option value="m" selected>5~29명 (중형)</option><option value="l">30명 이상 (대형)</option><option value="a">전체</option></select></div></div>
+ <label class="lb">우리 상품·서비스 1줄</label><input id="prod" maxlength="80">
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">타겟 리스트 설계</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">세그먼트</span></h2>
+ <div class="row"><button class="btn pri sm" id="csvBtn">CSV 저장</button><button class="btn sec sm" id="printBtn">인쇄</button><button class="btn sec sm" id="copyBtn">멘트 복사</button></div>
+ <h3>세그먼트 표 (점수 높은 순)</h3><div id="segs"></div>
+ <h3>업종별 첫 통화 오프닝</h3><div id="opens"></div>
+ <h3>거절 대응 3종</h3><div id="objs"></div>
+ <h3>방문 · 전화 순서</h3><div id="route"></div>
+ <details class="rule"><summary>점수 규칙 (공개)</summary><p class="kv">우선순위 점수(100점) = 니즈 적합 40 (우리 상품 1줄의 낱말이 업종 니즈 사전과 겹치는 개수 × 10, 최대 40 · 겹침 없으면 10) + 규모 적합 30 (고른 직원 수 범위와 같으면 30, 아니면 10, 전체면 20) + 결정 속도 30 (소형 30 · 중형 20 · 대형 10). 업종 니즈·연락 좋은 시간은 이 화면에 들어 있는 일반 사전에서 가져오며, 사전에 없는 업종은 "공통" 니즈를 씁니다.</p></details>
+ <p class="fixnote">실제 업체 DB를 조회하지 않습니다. 세그먼트 설계 도구입니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const NEED = {
+ 음식점:{k:['주문','결제','키오스크','테이블오더','인건비','배달','회전율','예약','메뉴'], n:'점심 피크 주문·결제 대기, 홀 인력 부족', t:'오전 10~11시 · 오후 3~5시(브레이크)', p:'피크 시간 대기 줄 · 인건비'},
+ 카페:{k:['주문','키오스크','결제','적립','쿠폰','메뉴','배달'], n:'주문 대기, 적립·쿠폰 관리', t:'오후 2~4시', p:'적립 고객 재방문'},
+ 학원:{k:['출결','문자','상담','수납','결제','일정','관리','예약'], n:'출결·수납 관리, 학부모 안내', t:'오전 11시~오후 1시(수업 전)', p:'수납 누락 · 학부모 연락 시간'},
+ '병원·의원':{k:['예약','접수','키오스크','대기','문자','결제','상담'], n:'접수 대기, 예약 부도', t:'오후 1~2시(점심시간 직후 피함) · 오후 5시 이후', p:'접수 대기 시간 · 노쇼'},
+ 미용실:{k:['예약','적립','문자','결제','쿠폰','관리'], n:'예약 노쇼, 재방문 관리', t:'오전 10~11시(오픈 직후)', p:'노쇼 · 재방문 주기'},
+ 부동산:{k:['매물','문자','상담','계약','일정','관리','광고'], n:'매물 정리·고객 연락 관리', t:'오전 10~11시', p:'매물 정리 시간'},
+ 제조:{k:['재고','발주','생산','품질','관리','견적','납품'], n:'재고·발주 관리, 견적 응대', t:'오전 9시 30분~11시', p:'재고 오차 · 견적 속도'},
+ 사무실:{k:['문서','관리','일정','결재','계약','회계','자동화'], n:'문서·일정 관리, 반복 업무', t:'오전 10시~11시 30분', p:'반복 문서 작업 시간'},
+ 공통:{k:['관리','결제','예약','문자','자동화'], n:'반복 업무와 고객 응대 시간', t:'오전 10~11시', p:'하루 반복 업무 시간'}};
+const SZ = {s:['소형', '1~4명', 30], m:['중형', '5~29명', 20], l:['대형', '30명 이상', 10]};
+const needOf = ind => NEED[Object.keys(NEED).find(k => k !== '공통' && (ind.includes(k) || k.split('·').some(x => ind.includes(x))))] || NEED.공통;
+let CUR = null;
+function run(){
+  const inds = $('#ind').value.split(',').map(s => s.trim()).filter(Boolean).slice(0, 6), reg = $('#reg').value.trim() || '[지역]', size = $('#size').value, prod = $('#prod').value.trim();
+  if (!inds.length || !prod){ $('#ind').classList.toggle('miss', !inds.length); $('#prod').classList.toggle('miss', !prod); return toast('업종과 우리 상품 1줄을 넣어 주세요'); } $('#ind').classList.remove('miss'); $('#prod').classList.remove('miss');
+  const segs = [];
+  inds.forEach(ind => { const N = needOf(ind); const hit = N.k.filter(w => prod.includes(w)); const fit = hit.length ? Math.min(40, hit.length * 10) : 10;
+    Object.keys(SZ).forEach(z => { const sz = size === 'a' ? 20 : size === z ? 30 : 10; segs.push({ind, N, hit, z, fit, sz, sp:SZ[z][2], score:fit + sz + SZ[z][2]}); }); });
+  segs.sort((a, b) => b.score - a.score);
+  CUR = {inds, reg, size, prod, segs}; render();
+}
+function opens(ind, N, prod, reg){ return [`안녕하세요, ${reg}에서 ${ind} 사장님들께 ${prod}을(를) 안내드리고 있는 [이름]입니다. ${N.p} 때문에 고민 많으시죠? 1분만 여쭤봐도 될까요?`,
+  `${ind} 운영하시면서 ${N.n} 부분은 지금 어떻게 하고 계세요? 저희 ${prod}이(가) 그 부분을 줄이는 데 쓰이고 있어서 연락드렸습니다.`,
+  `바쁘실 시간 피해서 연락드렸습니다. ${reg} ${ind} 몇 곳에서 ${prod} 써 보신 이야기를 짧게 전해 드리고, 맞지 않으시면 바로 끊겠습니다. 괜찮으실까요?`]; }
+const OBJ = p => [['지금 바빠요', `네, 바쁘실 때 죄송합니다. 브레이크 시간이나 편하신 시간 하나만 알려 주시면 그때 3분만 다시 연락드리겠습니다.`], ['이미 다른 걸 쓰고 있어요', `잘 쓰고 계시다니 다행입니다. 지금 쓰시는 것에서 불편한 점 한 가지만 여쭤봐도 될까요? ${p}이(가) 그 부분에 맞을 때만 다시 말씀드리겠습니다.`], ['비싸요 / 필요 없어요', `그럼요, 비용이 먼저 걱정되시죠. 정확한 금액은 매장 상황을 듣고 견적으로만 드리고 있어서, 부담 없이 비교만 해 보시라고 자료 한 장만 남겨 드려도 될까요?`]];
+function render(){
+  const C = CUR; $('#rTitle').textContent = `세그먼트 ${C.segs.length}개 · ${C.reg}`;
+  $('#segs').innerHTML = C.segs.map((s, i) => `<div class="sg"><div class="h"><b>${i + 1}. ${esc(s.ind)} · ${SZ[s.z][0]} (${SZ[s.z][1]})</b><span>${s.score}점</span></div>
+   <p><em>예상 니즈</em> ${esc(s.N.n)}</p><p><em>접근 포인트</em> ${esc(s.N.p)}${s.hit.length ? ' · 겹친 낱말: ' + s.hit.map(esc).join(', ') : ''}</p><p><em>연락 좋은 시간</em> ${esc(s.N.t)}</p><p class="kv">니즈 ${s.fit} + 규모 ${s.sz} + 결정 속도 ${s.sp}</p></div>`).join('');
+  $('#opens').innerHTML = C.inds.map(ind => `<div class="item"><div class="q">${esc(ind)}</div>${opens(ind, needOf(ind), C.prod, C.reg).map((o, j) => `<div class="say">${j + 1}) ${esc(o)}</div>`).join('')}</div>`).join('');
+  $('#objs').innerHTML = OBJ(C.prod).map(([q, a]) => `<div class="item"><div class="q">"${q}"</div><div class="a">${esc(a)}</div></div>`).join('');
+  const top = C.segs.filter(s => s.score >= 50);
+  $('#route').innerHTML = `<table class="t"><tr><th style="width:12%">순서</th><th>대상</th><th style="width:34%">방법 · 시간</th></tr>${(top.length ? top : C.segs.slice(0, 4)).map((s, i) => `<tr><td>${i + 1}</td><td>${esc(C.reg)} ${esc(s.ind)} ${SZ[s.z][0]}</td><td>${s.z === 's' ? '전화 먼저 → 관심 시 방문' : '방문 · 자료 전달'} · ${esc(s.N.t)}</td></tr>`).join('')}</table><p class="kv">같은 업종끼리 같은 날 묶어 돌고, 소형은 결정이 빨라 전화로 먼저 거릅니다. 실제 업체 목록은 직접 모은 자료로 채우세요.</p>`;
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+$('#sampleBtn').onclick = () => { $('#ind').value = '음식점, 학원, 병원·의원'; $('#reg').value = '하남 미사'; $('#size').value = 'm'; $('#prod').value = '키오스크·테이블오더 설치와 예약 문자 관리'; toast('예시를 넣었습니다'); };
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(CUR.inds.map(ind => `[${ind}]\n` + opens(ind, needOf(ind), CUR.prod, CUR.reg).map((o, j) => `${j + 1}) ${o}`).join('\n')).join('\n\n') + '\n\n[거절 대응]\n' + OBJ(CUR.prod).map(([q, a]) => `"${q}" → ${a}`).join('\n'), '멘트를 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`B2B세그먼트_${todayS()}.csv`, [['순위','지역','업종','규모','직원 수','예상 니즈','접근 포인트','연락 좋은 시간','점수','니즈','규모 적합','결정 속도']].concat(CUR.segs.map((s, i) => [i + 1, CUR.reg, s.ind, SZ[s.z][0], SZ[s.z][1], s.N.n, s.N.p, s.N.t, s.score, s.fit, s.sz, s.sp])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>B2B 영업 타겟 세그먼트 · ${esc(CUR.reg)}</h1><p class="note">${todayS()} · 상품: ${esc(CUR.prod)} · 실제 업체 DB를 조회하지 않는 세그먼트 설계표</p><table><tr><th>순위</th><th>업종 · 규모</th><th>예상 니즈</th><th>접근 포인트</th><th>시간</th><th>점수</th></tr>${CUR.segs.map((s, i) => `<tr><td>${i + 1}</td><td>${esc(s.ind)} ${SZ[s.z][0]}</td><td>${esc(s.N.n)}</td><td>${esc(s.N.p)}</td><td>${esc(s.N.t)}</td><td>${s.score}</td></tr>`).join('')}</table>${CUR.inds.map(ind => `<h2>${esc(ind)} 오프닝</h2><ol style="margin-left:18px">${opens(ind, needOf(ind), CUR.prod, CUR.reg).map(o => `<li>${esc(o)}</li>`).join('')}</ol>`).join('')}</div>`); };
+</script>
+</body></html>

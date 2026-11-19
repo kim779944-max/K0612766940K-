@@ -1,0 +1,43 @@
+﻿checked: mealplan,engquiz,cardbook,tripcourse,subscribeclean
+index count: 24개 / products total=28
+new tiles: ["mealplan:tile=true,list=true","engquiz:tile=true,list=true","cardbook:tile=true,list=true","tripcourse:tile=true,list=true","subscribeclean:tile=true,list=true"]
+broken images: []
+sw=390 errs=[]
+tap mealplan tile -> mealplan.html title=일주일 식단 → 장보기 체크리스트 · KTS 원클릭
+detail mealplan: h1="일주일 식단 → 장보기 체크리스트" open=mealplan.html brokenImg=[] sw=390 errs=[]
+detail engquiz: h1="아침 영어 회화 퀴즈" open=engquiz.html brokenImg=[] sw=390 errs=[]
+detail cardbook: h1="카드 문자 → 가계부" open=cardbook.html brokenImg=[] sw=390 errs=[]
+detail tripcourse: h1="여행 코스 플래너" open=tripcourse.html brokenImg=[] sw=390 errs=[]
+detail subscribeclean: h1="구독 정리 · 해지 가이드" open=subscribeclean.html brokenImg=[] sw=390 errs=[]
+checked: reviewpolish,fitnessweek,ideaboard,petcare
+index count: 28개 / products total=32
+new tiles: ["reviewpolish:tile=true,list=true","fitnessweek:tile=true,list=true","ideaboard:tile=true,list=true","petcare:tile=true,list=true"]
+broken images: []
+sw=390 errs=[]
+tap reviewpolish tile -> reviewpolish.html title=독서·영화 메모 → 블로그 리뷰 윤문기 · KTS 원클릭
+detail reviewpolish: h1="독서·영화 메모 → 리뷰 윤문기" open=reviewpolish.html brokenImg=[] sw=390 errs=[]
+detail fitnessweek: h1="운동 기록 → 주간 성과" open=fitnessweek.html brokenImg=[] sw=390 errs=[]
+detail ideaboard: h1="사업 아이디어 다각도 점검" open=ideaboard.html brokenImg=[] sw=390 errs=[]
+detail petcare: h1="반려동물·식물 케어 주기" open=petcare.html brokenImg=[] sw=390 errs=[]
+checked: dangol,wonka,balju,hygiene,shiftpay,settle
+index count: 34개 / products total=38
+new tiles: ["dangol:tile=true,list=true","wonka:tile=true,list=true","balju:tile=true,list=true","hygiene:tile=true,list=true","shiftpay:tile=true,list=true","settle:tile=true,list=true"]
+broken images: []
+sw=390 errs=[]
+tap dangol tile -> dangol.html title=KTS 더단골 — 방문주기·이탈 위험 · 재방문 안내문 · KTS 원클릭
+detail dangol: h1="KTS 더단골" open=dangol.html brokenImg=[] sw=390 errs=[]
+detail wonka: h1="KTS 더원가" open=wonka.html brokenImg=[] sw=390 errs=[]
+detail balju: h1="KTS 더발주" open=balju.html brokenImg=[] sw=390 errs=[]
+detail hygiene: h1="KTS 더위생" open=hygiene.html brokenImg=[] sw=390 errs=[]
+detail shiftpay: h1="KTS 더알바" open=shiftpay.html brokenImg=[] sw=390 errs=[]
+detail settle: h1="KTS 더배달" open=settle.html brokenImg=[] sw=390 errs=[]
+checked: sellercalc_en,listinggen_en,globalship,digitalstore_en
+index count: 38개 / products total=42
+new tiles: ["sellercalc_en:tile=true,list=true","listinggen_en:tile=true,list=true","globalship:tile=true,list=true","digitalstore_en:tile=true,list=true"]
+broken images: []
+sw=390 errs=[]
+tap sellercalc_en tile -> sellercalc_en.html title=Amazon FBA · Shopee Margin Calculator · KTS OneClick
+detail sellercalc_en: h1="Amazon FBA · Shopee Margin Calculator" open=sellercalc_en.html brokenImg=[] sw=390 errs=[]
+detail listinggen_en: h1="Listing Copy Generator (Amazon · Shopee)" open=listinggen_en.html brokenImg=[] sw=390 errs=[]
+detail globalship: h1="한국 → 해외 발송·통관 체크리스트" open=globalship.html brokenImg=[] sw=390 errs=[]
+detail digitalstore_en: h1="Digital Product Page Copy Generator" open=digitalstore_en.html brokenImg=[] sw=390 errs=[]

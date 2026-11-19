@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더장부 — 카드·은행 거래내역 → 매입매출 장부 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.lg td select{font-size:11px;padding:3px 2px;border-radius:6px}
+.lg tr.noev td{background:rgba(255,90,90,.08)}
+.lg .amt{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-size:10px;font-weight:900;border-radius:6px;padding:1px 5px;background:#24314F;color:#DCE6F2}
+.tag.s{background:#1F6F52;color:#fff}.tag.b{background:#3B4F80;color:#fff}.tag.x{background:var(--red);color:#fff}.tag.q{background:var(--yel);color:#1a1200}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더장부@@-->
+<main>
+<section class="hero">
+ <h1>카드·은행 내역을 붙여 넣으면<br><em>매입매출 장부</em>로 정리</h1>
+ <p>거래를 매입/매출과 계정으로 나누고(규칙표 공개 · 손으로 바꾸면 기억), 부가세 신고용 요약(과세·면세·영세·불공제), 월·분기 합계, 증빙 없는 지출을 보여 줍니다. 카드번호는 끝 4자리만 남깁니다.</p>
+ <p class="fixnote">정리 보조입니다. 신고 금액은 장부·증빙 원본으로 확인하세요. 세무 대리가 아닙니다.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>거래내역</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 40건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">업종</label>
+ <select id="biz"><option value="food">음식점</option><option value="retail">도소매</option><option value="svc">서비스</option></select>
+ <label class="lb">일자, 구분(카드/입금/출금), 거래처, 금액, 카드번호 또는 증빙(세금계산서·계산서·현금영수증)</label>
+ <textarea id="rows" rows="10" maxlength="80000"></textarea>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">장부 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">장부</span></h2>
+ <div class="stat"><div><b id="sIn">0</b><span>매출 합계</span></div><div><b id="sOut">0</b><span>매입 합계</span></div><div><b id="sNo" style="color:var(--red)">0</b><span>증빙 없는 지출</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">장부 인쇄</button><button class="btn sec sm" id="csvBtn">장부 CSV</button><button class="btn sec sm" id="copyBtn">요약 복사</button></div>
+ <h3>부가세 신고용 요약</h3><div id="vat"></div>
+ <h3>월 · 분기 합계</h3><div id="per"></div>
+ <h3>증빙 없는 지출</h3><div id="noev"></div>
+ <h3>거래 장부 <span class="kv" style="font-weight:700">계정을 바꾸면 같은 거래처는 다음부터 그 계정으로</span></h3><div id="tbl"></div>
+ <details class="rule"><summary>분류 규칙표 (공개)</summary><div id="rules"></div></details>
+ <p class="fixnote">정리 보조입니다. 신고 금액은 장부·증빙 원본으로 확인하세요. 세액은 합계 ÷ 11로 나눈 추정이며 세금계산서상 세액과 다를 수 있습니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const SAMPLE = `2026-09-01, 출금, 건물주 임대료, 1650000, 세금계산서
+2026-09-01, 카드, 농협하나로마트, 152000, 9410-1234-5678-4821
+2026-09-02, 카드, 행복청과, 86000, 9410-1234-5678-4821
+2026-09-02, 입금, 신한카드 가맹점 정산, 1284000
+2026-09-03, 카드, 다이소, 23500, 9410-1234-5678-4821
+2026-09-04, 출금, 한국전력공사, 312000, 세금계산서
+2026-09-05, 입금, 배달의민족 정산, 864000
+2026-09-05, 카드, GS칼텍스 미사주유소, 70000, 4518-9876-1111-0392
+2026-09-07, 출금, 김OO 알바 급여, 920000
+2026-09-08, 카드, 한우정육점, 214000, 9410-1234-5678-4821
+2026-09-09, 출금, 가나식자재유통, 438000, 세금계산서
+2026-09-10, 입금, 현금매출 입금, 356000
+2026-09-11, 카드, KT 통신요금, 49500, 9410-1234-5678-4821
+2026-09-12, 카드, 서울한정식 거래처 식사, 168000, 4518-9876-1111-0392
+2026-09-14, 출금, 동네수산, 127000
+2026-09-15, 입금, KB국민카드 가맹점 정산, 1098000
+2026-09-16, 카드, 네이버 플레이스 광고, 110000, 9410-1234-5678-4821
+2026-09-18, 출금, 도시가스, 84000, 세금계산서
+2026-09-20, 출금, 국민연금 건강보험, 196000
+2026-09-22, 카드, 쿠팡, 41800, 9410-1234-5678-4821
+2026-09-25, 출금, 박OO 인테리어 수리, 350000
+2026-09-28, 입금, 쿠팡이츠 정산, 412000
+2026-10-01, 출금, 건물주 임대료, 1650000, 세금계산서
+2026-10-01, 카드, 농협하나로마트, 168000, 9410-1234-5678-4821
+2026-10-02, 입금, 신한카드 가맹점 정산, 1342000
+2026-10-03, 카드, 행복청과, 91000, 9410-1234-5678-4821
+2026-10-05, 입금, 배달의민족 정산, 902000
+2026-10-06, 출금, 한국전력공사, 298000, 세금계산서
+2026-10-07, 출금, 이OO 알바 급여, 880000
+2026-10-08, 카드, 한우정육점, 198000, 9410-1234-5678-4821
+2026-10-09, 출금, 가나식자재유통, 452000, 세금계산서
+2026-10-11, 카드, KT 통신요금, 49500, 9410-1234-5678-4821
+2026-10-12, 입금, 현금매출 입금, 298000
+2026-10-14, 카드, 미사 포장용기 상사, 66000, 9410-1234-5678-4821
+2026-10-15, 입금, KB국민카드 가맹점 정산, 1156000
+2026-10-16, 출금, 최OO 간판 수리, 220000
+2026-10-18, 카드, GS칼텍스 미사주유소, 65000, 4518-9876-1111-0392
+2026-10-20, 출금, 국민연금 건강보험, 196000
+2026-10-24, 카드, 이마트 트레이더스, 133000, 9410-1234-5678-4821
+2026-10-28, 입금, 쿠팡이츠 정산, 389000`;
+/* [규칙 이름, 정규식, 매입/매출, 계정, 부가세 구분] — 위에서부터 처음 맞는 것 */
+const RULES = [
+ ['영세율 매출', /수출|영세/, '매출', '수출 매출', '영세'],
+ ['카드사 정산', /(신한|국민|KB|삼성|현대|하나|롯데|비씨|BC|우리|NH)\s*카드.*정산|가맹점 정산/, '매출', '카드 매출', '과세'],
+ ['배달앱 정산', /배달의민족|쿠팡이츠|요기요|땡겨요/, '매출', '배달앱 매출', '과세'],
+ ['현금 매출', /현금매출|현금 매출/, '매출', '현금 매출', '과세'],
+ ['임차료', /임대료|월세|임차료/, '매입', '임차료', '과세'],
+ ['면세 식재료', /청과|채소|정육|수산|하나로|농협|쌀|양곡/, '매입', '식재료(면세)', '면세'],
+ ['과세 식재료', /식자재|푸드|유통|트레이더스|이마트|코스트코/, '매입', '식재료(과세)', '과세'],
+ ['공과금', /한국전력|전기요금|도시가스/, '매입', '전기·가스', '과세'],
+ ['수도', /수도요금|상수도/, '매입', '수도', '면세'],
+ ['통신비', /KT|SK브로드밴드|LG유플러스|통신/, '매입', '통신비', '과세'],
+ ['인건비', /급여|알바|아르바이트|상여/, '매입', '인건비', '해당없음'],
+ ['보험료', /국민연금|건강보험|고용보험|산재/, '매입', '4대보험', '해당없음'],
+ ['차량 유류', /주유|칼텍스|SK에너지|S-OIL|에쓰오일|현대오일/, '매입', '차량유지', '불공제'],
+ ['접대비', /거래처 식사|한정식|접대|선물/, '매입', '접대비', '불공제'],
+ ['광고', /광고|플레이스|인스타|전단/, '매입', '광고선전', '과세'],
+ ['소모품', /다이소|쿠팡|포장|용기|GS25|CU|세븐일레븐|문구/, '매입', '소모품', '과세'],
+ ['수선', /수리|인테리어|간판/, '매입', '수선비', '과세']];
+const ACCTS = uniq(RULES.map(r => r[3]).concat(['기타 매입', '기타 매출']));
+const VATOF = Object.fromEntries(RULES.map(r => [r[3], r[4]])); VATOF['기타 매입'] = '과세'; VATOF['기타 매출'] = '과세';
+const LKEY = 'kts_ledger_learn_v1'; let LEARN = LS.get(LKEY, {});
+const mask4 = s => { const d = String(s || '').replace(/\D/g, ''); return d.length >= 12 ? '****-' + d.slice(-4) : ''; };
+let CUR = null;
+function classify(r){
+  if (LEARN[r.who]) { const a = LEARN[r.who]; return {io:/매출/.test(a) ? '매출' : '매입', acct:a, vat:VATOF[a] || '과세', rule:'손으로 바꾼 분류(기억)'}; }
+  const hit = RULES.find(x => x[1].test(r.who) && (x[2] === '매출') === (r.kind === '입금'));
+  if (hit) return {io:hit[2], acct:hit[3], vat:hit[4], rule:hit[0]};
+  return r.kind === '입금' ? {io:'매출', acct:'기타 매출', vat:'과세', rule:'기타(확인)', q:1} : {io:'매입', acct:'기타 매입', vat:'과세', rule:'기타(확인)', q:1};
+}
+function run(){
+  const R = parseCSV($('#rows').value).filter(x => x.length >= 4 && /^\d{4}-\d{2}-\d{2}$/.test(x[0])).map((x, i) => {
+    const r = {i, d:x[0], kind:/입금/.test(x[1]) ? '입금' : /출금/.test(x[1]) ? '출금' : '카드', who:x[2], amt:num(x[3]) || 0, ext:x[4] || ''};
+    r.card = r.kind === '카드' ? mask4(r.ext) : ''; r.ev = r.kind === '카드' ? '카드전표' : r.kind === '입금' ? '입금 내역' : (/세금계산서|계산서|현금영수증/.exec(r.ext) || [''])[0];
+    r.noev = r.kind === '출금' && !r.ev && !/급여|알바|국민연금|건강보험|고용보험/.test(r.who);
+    Object.assign(r, classify(r)); return r; });
+  if (!R.length){ $('#rows').classList.add('miss'); return toast('거래를 "일자, 구분, 거래처, 금액" 줄로 넣어 주세요'); } $('#rows').classList.remove('miss');
+  const sum = f => R.filter(f).reduce((a, r) => a + r.amt, 0);
+  const V = ['과세', '면세', '영세', '불공제', '해당없음'].map(v => ({v, s:sum(r => r.io === '매출' && r.vat === v), b:sum(r => r.io === '매입' && r.vat === v)}));
+  const months = uniq(R.map(r => r.d.slice(0, 7))).sort(), qs = uniq(R.map(r => r.d.slice(0, 4) + ' ' + Math.ceil(+r.d.slice(5, 7) / 3) + '분기')).sort();
+  const per = months.map(m => ({k:m, s:sum(r => r.d.startsWith(m) && r.io === '매출'), b:sum(r => r.d.startsWith(m) && r.io === '매입')}))
+    .concat(qs.map(q => ({k:q, q:1, s:sum(r => r.io === '매출' && (r.d.slice(0, 4) + ' ' + Math.ceil(+r.d.slice(5, 7) / 3) + '분기') === q), b:sum(r => r.io === '매입' && (r.d.slice(0, 4) + ' ' + Math.ceil(+r.d.slice(5, 7) / 3) + '분기') === q)})));
+  CUR = {R, V, per, biz:$('#biz').value}; render();
+}
+const vtag = v => `<span class="tag ${v === '과세' ? 's' : v === '불공제' ? 'x' : v === '면세' ? 'b' : ''}">${v}</span>`;
+function render(){
+  const C = CUR, R = C.R;
+  $('#rTitle').textContent = `장부 · ${R.length}건 · ${R[0].d} ~ ${R[R.length - 1].d}`;
+  $('#sIn').textContent = won(R.filter(r => r.io === '매출').reduce((a, r) => a + r.amt, 0)); $('#sOut').textContent = won(R.filter(r => r.io === '매입').reduce((a, r) => a + r.amt, 0)); $('#sNo').textContent = R.filter(r => r.noev).length;
+  const ts = C.V[0].s, tb = C.V[0].b;
+  $('#vat').innerHTML = `<table class="t"><tr><th>구분</th><th style="text-align:right">매출</th><th style="text-align:right">매입</th></tr>${C.V.map(x => `<tr><td>${vtag(x.v)}</td><td style="text-align:right">${won(x.s)}</td><td style="text-align:right">${won(x.b)}</td></tr>`).join('')}
+   <tr><td>과세 공급가액 (÷1.1)</td><td style="text-align:right">${won(ts / 1.1)}</td><td style="text-align:right">${won(tb / 1.1)}</td></tr><tr><td>세액 추정 (÷11)</td><td style="text-align:right">${won(ts / 11)}</td><td style="text-align:right">${won(tb / 11)}</td></tr></table>
+   <p class="kv">매출세액 추정 − 공제 가능한 매입세액 추정 = <b>${won(ts / 11 - tb / 11)}원</b> (불공제·면세·증빙 없는 지출 제외 전 단순 차액). 불공제 = 접대비·비영업용 승용차 유류 등 매입세액을 빼 주지 않는 것.${C.biz === 'food' ? ' 음식점: 면세 농·축·수산물 매입은 의제매입세액공제 대상일 수 있습니다 — 직접 확인.' : ''}</p>`;
+  $('#per').innerHTML = `<table class="t"><tr><th>기간</th><th style="text-align:right">매출</th><th style="text-align:right">매입</th><th style="text-align:right">차액</th></tr>${C.per.map(p => `<tr${p.q ? ' style="font-weight:900"' : ''}><td>${p.k}</td><td style="text-align:right">${won(p.s)}</td><td style="text-align:right">${won(p.b)}</td><td style="text-align:right">${won(p.s - p.b)}</td></tr>`).join('')}</table>`;
+  const NO = R.filter(r => r.noev);
+  $('#noev').innerHTML = NO.length ? NO.map(r => `<div class="item warn"><div class="q">${r.d} · ${esc(r.who)} · ${won(r.amt)}원</div><div class="a">계좌 출금인데 세금계산서·계산서·현금영수증 표시가 없습니다. 증빙을 받아 두거나, 받을 수 없는 거래인지 확인하세요.</div></div>`).join('') : '<p class="empty">없음</p>';
+  $('#tbl').innerHTML = `<table class="t lg" style="font-size:11px"><tr><th style="width:17%">일자</th><th>거래처</th><th style="width:21%;text-align:right">금액</th><th style="width:30%">계정 · 구분</th></tr>${R.map(r => `<tr class="${r.noev ? 'noev' : ''}"><td>${r.d.slice(5)}</td><td>${esc(r.who)}${r.card ? ' <span class="kv">' + r.card + '</span>' : ''}<br><span class="tag">${r.io}</span> ${r.noev ? '<span class="tag x">증빙 없음</span>' : '<span class="kv">' + esc(r.ev) + '</span>'}${r.q ? ' <span class="tag q">확인</span>' : ''}</td><td class="amt">${won(r.amt)}</td><td><select data-i="${r.i}">${ACCTS.map(a => `<option${a === r.acct ? ' selected' : ''}>${a}</option>`).join('')}</select><br>${vtag(r.vat)}</td></tr>`).join('')}</table>`;
+  $$('#tbl select').forEach(s => s.onchange = () => { const r = CUR.R.find(x => x.i === +s.dataset.i); LEARN[r.who] = s.value; LS.set(LKEY, LEARN); run(); toast(`"${r.who}"는 앞으로 ${s.value}(으)로 분류합니다`); });
+  $('#rules').innerHTML = `<table class="t" style="font-size:11px"><tr><th>규칙</th><th>거래처에 이 글자가 있으면</th><th>계정 · 구분</th></tr>${RULES.map(r => `<tr><td>${r[0]}</td><td>${esc(r[1].source.replace(/\\s\*|\\/g, '').replace(/\|/g, ', '))}</td><td>${r[2]} ${r[3]} · ${r[4]}</td></tr>`).join('')}</table><p class="kv">입금은 매출 규칙만, 카드·출금은 매입 규칙만 봅니다. 맞는 규칙이 없으면 "기타(확인)". 손으로 바꾼 분류가 규칙보다 먼저입니다. 기억 ${Object.keys(LEARN).length}곳.</p>`;
+  $('#result').classList.remove('hide');
+}
+const summ = () => `[매입매출 요약 ${CUR.R[0].d} ~ ${CUR.R[CUR.R.length - 1].d}]\n` + CUR.V.filter(x => x.s || x.b).map(x => `${x.v}: 매출 ${won(x.s)} / 매입 ${won(x.b)}`).join('\n') + '\n' + CUR.per.map(p => `${p.k}: 매출 ${won(p.s)} / 매입 ${won(p.b)}`).join('\n') + `\n증빙 없는 지출 ${CUR.R.filter(r => r.noev).length}건\n※ 정리 보조입니다. 신고 금액은 장부·증빙 원본으로 확인하세요.`;
+$('#sampleBtn').onclick = () => { $('#rows').value = SAMPLE; $('#biz').value = 'food'; toast('예시 40건을 넣었습니다 (가상의 음식점)'); };
+$('#clearBtn').onclick = () => { $('#rows').value = ''; };
+$('#runBtn').onclick = () => { run(); if (CUR){ $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); } };
+$('#copyBtn').onclick = () => CUR && copyOut(summ(), '요약을 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`매입매출장부_${todayS()}.csv`, [['일자','구분','거래처','카드 끝4자리','금액','매입/매출','계정','부가세 구분','증빙','분류 근거']].concat(CUR.R.map(r => [r.d, r.kind, r.who, r.card, r.amt, r.io, r.acct, r.vat, r.noev ? '증빙 없음' : r.ev, r.rule])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>매입매출 장부</h1><p class="note">${esc($('#rTitle').textContent)} · 출력 ${todayS()} · 정리 보조(세무 대리 아님)</p><h2>부가세 신고용 요약</h2>${$('#vat').innerHTML.replace(/<span class="tag[^"]*">([^<]*)<\/span>/g, '$1').replace(/class="t"/, '')}<h2>월 · 분기 합계</h2>${$('#per').innerHTML.replace(/class="t"/, '')}<h2>거래 장부</h2><table style="font-size:8.2pt"><tr><th style="width:13%">일자</th><th>거래처</th><th style="width:13%">금액</th><th style="width:9%">구분</th><th style="width:16%">계정</th><th style="width:10%">부가세</th><th style="width:13%">증빙</th></tr>${CUR.R.map(r => `<tr><td>${r.d}</td><td>${esc(r.who)}${r.card ? ' ' + r.card : ''}</td><td style="text-align:right">${won(r.amt)}</td><td>${r.io}</td><td>${r.acct}</td><td>${r.vat}</td><td>${r.noev ? '<b>증빙 없음</b>' : esc(r.ev)}</td></tr>`).join('')}</table><p class="note">정리 보조입니다. 신고 금액은 장부·증빙 원본으로 확인하세요.</p></div>`); };
+</script>
+</body></html>

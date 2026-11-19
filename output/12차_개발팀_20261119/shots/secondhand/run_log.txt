@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+ex1: titles=5 defects in body=true warns=0 | [미사동] 아이패드 에어 5세대 와이파이 64GB 스페이스 그레이 팝니다
+price basis: 2024년 3월에 사서 약 32개월 썼고 구매가는 929,000원이었습니다. 희망가 520,000원은 구매가의 56%입니다 (하자 2건 반영).
+ups / checklist: 3 ups · O하자를 모두 적 O구매 시기를 적 O구성품(박스·충 O박스 유무를 밝 O거래 장소·방식 X흡연·반려동물  O배터리 상태·초
+ex2 soft words: 하자를 줄여 말하는 표현 / 하자를 줄여 말하는 표현 · inBody=true
+empty defects warn: 하자 칸이 비어 있습니다
+region toggle: 아이패드 에어 5세대 와이파이 64GB 스페이스 그레이 팝니다 -> [미사동] 아이패드 에어 5세대 와이파이 64GB 스페이스 그레이 팝니다
+copy: 19 lines
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2876 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 0
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

@@ -1,0 +1,19 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+input flags: Best-selling, Best, 100% guarantee, guarantee, Eco-friendly (5)
+title: 194 chars: Misa Home Insulated Stainless Steel Tumbler 20 oz, Double-Wall Vacuum Insulation Keeps Drinks Cold, Leak-Resistant Slide Lid With Silicone Seal - 18/8 Stainless Steel, 20 oz (590 ml), Matte Navy
+bullets: 129/71/42/56/46 chars :: DOUBLE-WALL VACUUM INSULATION — Double-wall vacuum insulation keeps drinks cold for hours. Made for commuters and office workers. || LEAK-RESISTANT SLIDE LID — Leak-resistant slide lid with silicone seal. || FITS MOST CAR — Fits most car cup holders. || WIDE MOUTH — Wide mouth for ice cubes and easy cleaning. || MATERIAL — 18/8 stainless steel, BPA-free lid.
+backend: 51 bytes (TextEncoder) / js length 51: cup travel mug coffee iced car office gift coworker
+banned words in output: leaked=0 · regex recheck=false
+ex2: hits=Cures,heals title=159 bullets=5 backend=28B leaked=0 b4=MATERIAL — PC resin, stainless steel spring.
+byte limit stress (300B of keywords): 249 bytes, dropped 34
+title limit stress: title len=195
+copy all: 1556 chars
+print print: pages=1 bytes=56702 file=files\listinggen_en_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=3342 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

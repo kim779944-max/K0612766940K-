@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>부동산 매물 조건 필터 비교표 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.lc{background:#0B1530;border:1px solid var(--line);border-radius:11px;padding:9px 10px;margin-top:7px}
+.lc .h{display:flex;gap:6px;align-items:baseline}.lc .h b{flex:1;min-width:0;font-size:13px;color:#fff}
+.lc .h span{font-size:15px;font-weight:900;color:var(--or2);white-space:nowrap}
+.lc .m{font-size:11.6px;color:#C9D3E2;margin-top:3px;line-height:1.55}
+.lc .gap{font-size:11px;font-weight:900}
+</style></head>
+<body><div id="app">
+<!--@@TOP 매물 비교표@@-->
+<main>
+<section class="hero">
+ <h1>매물 여러 건을 붙여 넣으면<br><em>평당가 · 호가 갭</em> 비교표</h1>
+ <p>평↔㎡ 자동 환산, 평당가, 조건 필터(가격·면적·용도), 정렬, 같은 지역 최저 평당가 대비 호가 갭을 계산합니다.</p>
+ <p class="fixnote">실시간 조회가 아니며 입력 자료 기준입니다. 시세·실거래가를 조회하지 않습니다.<br>권리관계는 등기부등본으로 확인하세요.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>매물 목록</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 10건 넣기</button><button class="btn sec sm" id="clearBtn">지우기</button></div>
+ <label class="lb">지역, 주소, 면적, 가격, 용도, 층, 준공연도, 특이사항 <i>면적은 "25평"·"84.5㎡", 가격은 "5억2000"·"52000"(만원)</i></label>
+ <textarea id="rows" rows="9" maxlength="40000"></textarea>
+</section>
+<section class="card">
+ <h2><span class="n">2</span>조건</h2>
+ <div class="g2"><div><label class="lb">가격 상한 <i>만원</i></label><input id="fMax" inputmode="numeric" placeholder="예: 90000"></div><div><label class="lb">면적 하한 <i>평</i></label><input id="fMin" inputmode="decimal" placeholder="예: 20"></div></div>
+ <div class="g2"><div><label class="lb">용도</label><select id="fUse"><option value="">전체</option></select></div><div><label class="lb">정렬</label><select id="fSort"><option value="ppy">평당가 낮은 순</option><option value="price">총액 낮은 순</option><option value="area">면적 큰 순</option><option value="gap">호가 갭 작은 순</option></select></div></div>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">비교표 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">3</span><span id="rTitle">비교표</span></h2>
+ <div class="stat"><div><b id="sN">0</b><span>조건 통과</span></div><div><b id="sAvg">-</b><span>평균 평당가(만원)</span></div><div><b id="sMin">-</b><span>최저 평당가(만원)</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">A4 1장 인쇄</button><button class="btn sec sm" id="csvBtn">CSV</button><button class="btn sec sm" id="copyBtn">표 복사</button></div>
+ <div id="list"></div>
+ <div id="out"></div>
+ <p class="kv">1평 = 3.3058㎡ · 평당가 = 가격 ÷ 평 · 호가 갭 = (이 매물 평당가 ÷ 같은 지역 최저 평당가 − 1). 특이사항 속 전화번호·담당자·소유자 이름은 표에서 뺍니다.</p>
+ <p class="fixnote">실시간 조회가 아니며 입력 자료 기준입니다. 권리관계는 등기부등본으로 확인하세요.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const SAMPLE = `지역, 주소, 면적, 가격, 용도, 층, 준공연도, 특이사항
+미사동, 하남시 미사동 상가A동 102호, 84.5㎡, 9억 5000, 상가, 1, 2018, 코너 · 임차 중(월 380)
+미사동, 하남시 미사동 상가B동 201호, 35평, 6억 8000, 상가, 2, 2017, 공실 · 담당 김철수 010-0000-1111
+미사동, 하남시 미사동 오피스C 905호, 52.3㎡, 3억 1000, 오피스, 9, 2020, 전세 승계 가능
+망월동, 하남시 망월동 상가D 103호, 28평, 7억 2000, 상가, 1, 2019, 학원가 앞
+망월동, 하남시 망월동 오피스텔E 1203호, 23.8㎡, 1억 9500, 오피스텔, 12, 2021, 월세 70 임차
+망월동, 하남시 망월동 상가F 204호, 112.4㎡, 8억 3000, 상가, 2, 2016, 병원 임차 · 소유자 박영희
+풍산동, 하남시 풍산동 지식산업센터 G 712호, 66.1㎡, 3억 6000, 지식산업센터, 7, 2022, 드라이브인 아님
+풍산동, 하남시 풍산동 상가H 101호, 19평, 5억 9000, 상가, 1, 2015, 대로변
+풍산동, 하남시 풍산동 오피스I 501호, 40.2㎡, 2억 4000, 오피스, 5, 2019, 관리비 15만
+덕풍동, 하남시 덕풍동 단독주택 J, 165.3㎡, 12억, 주택, 2, 1998, 대지 52평 · 리모델링 필요`;
+const P = 3.3058;
+function area(s){ s = String(s || ''); const v = parseFloat(s.replace(/[^\d.]/g, '')); if (!isFinite(v)) return null; return /평/.test(s) ? {py:v, m2:v * P} : {py:v / P, m2:v}; }
+function price(s){ s = String(s || '').replace(/[,\s원]/g, ''); if (!s) return NaN; const m = /^(?:(\d+(?:\.\d+)?)억)?(\d+(?:\.\d+)?)?(?:만)?$/.exec(s); if (!m) return NaN; return (m[1] ? parseFloat(m[1]) * 10000 : 0) + (m[2] ? parseFloat(m[2]) : 0); }
+const clean = s => maskPII(String(s || '')).replace(/(담당|소유자|연락처|중개인)\s*[가-힣]{2,4}/g, '').replace(/\d{2,3}-\*{4}-\d{4}/g, '').replace(/\s*·\s*$/, '').replace(/^\s*·\s*/, '').replace(/\s{2,}/g, ' ').trim();
+const man = v => isFinite(v) ? (v >= 10000 ? (Math.floor(v / 10000) + '억' + (v % 10000 ? ' ' + won(v % 10000) : '')) : won(v)) : '-';
+let ALL = [], CUR = null;
+function parse(){
+  const rows = parseCSV($('#rows').value).filter(r => r.length >= 4 && !/^지역$/.test(r[0]));
+  ALL = rows.map(r => { const a = area(r[2]), p = price(r[3]); return {reg:r[0], addr:r[1], a, p, use:r[4] || '미입력', fl:r[5] || '', yr:r[6] || '', note:clean(r.slice(7).join(', ')), ppy:a && isFinite(p) ? p / a.py : NaN, bad:!a || !isFinite(p)}; });
+  const uses = uniq(ALL.map(x => x.use)); const cur = $('#fUse').value;
+  $('#fUse').innerHTML = '<option value="">전체</option>' + uses.map(u => `<option ${u === cur ? 'selected' : ''}>${esc(u)}</option>`).join('');
+}
+function run(){
+  parse(); if (!ALL.length){ $('#rows').classList.add('miss'); return toast('매물을 한 줄에 한 건씩 넣어 주세요'); } $('#rows').classList.remove('miss');
+  const mx = num($('#fMax').value), mn = parseFloat($('#fMin').value), us = $('#fUse').value, so = $('#fSort').value;
+  const ok = ALL.filter(x => !x.bad);
+  const minBy = {}; ok.forEach(x => { if (!(x.reg in minBy) || x.ppy < minBy[x.reg]) minBy[x.reg] = x.ppy; }); ok.forEach(x => x.gap = x.ppy / minBy[x.reg] - 1);
+  let L = ok.filter(x => (!isFinite(mx) || x.p <= mx) && (!isFinite(mn) || x.a.py >= mn) && (!us || x.use === us));
+  L.sort((a, b) => so === 'price' ? a.p - b.p : so === 'area' ? b.a.py - a.a.py : so === 'gap' ? a.gap - b.gap : a.ppy - b.ppy);
+  CUR = {L, bad:ALL.filter(x => x.bad), cond:`가격 ≤ ${isFinite(mx) ? man(mx) : '제한 없음'} · 면적 ≥ ${isFinite(mn) ? mn + '평' : '제한 없음'} · 용도 ${us || '전체'} · ${$('#fSort').selectedOptions[0].textContent}`}; render();
+}
+function render(){
+  const R = CUR, L = R.L; $('#rTitle').textContent = `비교표 · ${L.length}/${ALL.length}건`; $('#sN').textContent = L.length;
+  $('#sAvg').textContent = L.length ? won(L.reduce((a, x) => a + x.ppy, 0) / L.length) : '-'; $('#sMin').textContent = L.length ? won(Math.min(...L.map(x => x.ppy))) : '-';
+  $('#list').innerHTML = `<p class="kv">${esc(R.cond)}</p>` + (L.length ? L.map((x, i) => `<div class="lc"><div class="h"><b>${i + 1}. ${esc(x.addr)}</b><span>${man(x.p)}</span></div>
+   <div class="m">${esc(x.use)} · ${x.fl ? esc(x.fl) + '층' : '층 미입력'} · ${x.yr ? esc(x.yr) + '년' : '연식 미입력'} · ${x.a.m2.toFixed(1)}㎡ (${x.a.py.toFixed(1)}평)</div>
+   <div class="m">평당가 <b style="color:#fff">${won(x.ppy)}만원</b> · <span class="gap" style="color:${x.gap > 0.2 ? 'var(--red)' : x.gap === 0 ? 'var(--green)' : 'var(--yel)'}">${esc(x.reg)} 최저 대비 ${x.gap === 0 ? '최저' : '+' + pct(x.gap)}</span></div>${x.note ? `<div class="m">${esc(x.note)}</div>` : ''}</div>`).join('') : '<p class="empty">조건에 맞는 매물이 없습니다</p>');
+  $('#out').innerHTML = R.bad.length ? `<div class="item warn"><div class="q">면적·가격을 읽지 못한 줄 ${R.bad.length}건 (표에서 제외)</div><div class="a">${R.bad.map(x => esc(x.addr)).join('<br>')}</div></div>` : '';
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+const head = ['순위','지역','주소','용도','층','준공','㎡','평','가격(만원)','평당가(만원)','지역 최저 대비','특이사항'];
+const rowOf = (x, i) => [i + 1, x.reg, x.addr, x.use, x.fl, x.yr, x.a.m2.toFixed(1), x.a.py.toFixed(1), x.p, Math.round(x.ppy), x.gap === 0 ? '최저' : '+' + (x.gap * 100).toFixed(1) + '%', x.note];
+$('#sampleBtn').onclick = () => { $('#rows').value = SAMPLE; parse(); toast('예시 10건을 넣었습니다'); };
+$('#clearBtn').onclick = () => { $('#rows').value = ''; };
+$('#runBtn').onclick = run; ['#fMax', '#fMin', '#fUse', '#fSort'].forEach(s => $(s).onchange = () => CUR && run());
+$('#csvBtn').onclick = () => CUR && saveCSV(`매물비교_${todayS()}.csv`, [head].concat(CUR.L.map(rowOf)));
+$('#copyBtn').onclick = () => CUR && copyOut([head].concat(CUR.L.map(rowOf)).map(r => r.join('\t')).join('\n'), '표를 복사했습니다 (엑셀에 붙여넣기)');
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>매물 조건 비교표</h1><p class="note">${todayS()} · ${esc(CUR.cond)} · ${CUR.L.length}건</p><table style="font-size:8.5pt"><tr>${['순위','주소','용도','층','면적(평)','가격','평당가(만원)','최저 대비','특이사항'].map(h => `<th>${h}</th>`).join('')}</tr>${CUR.L.map((x, i) => `<tr><td>${i + 1}</td><td>${esc(x.addr)}</td><td>${esc(x.use)}</td><td>${esc(x.fl)}</td><td>${x.a.py.toFixed(1)}</td><td>${man(x.p)}</td><td>${won(x.ppy)}</td><td>${x.gap === 0 ? '최저' : '+' + pct(x.gap)}</td><td>${esc(x.note)}</td></tr>`).join('')}</table><p class="note">실시간 조회가 아니며 입력 자료 기준입니다. 권리관계는 등기부등본으로 확인하세요. 1평 = 3.3058㎡.</p></div>`); };
+</script>
+</body></html>

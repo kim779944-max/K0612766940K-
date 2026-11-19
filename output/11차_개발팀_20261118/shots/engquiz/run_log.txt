@@ -1,0 +1,19 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+bank per interest: travel=202(초83/중70/고49, 응답쌍12) realestate=202(초100/중64/고38, 응답쌍12) cafe=202(초85/중65/고52, 응답쌍12) fitness=202(초113/중66/고23, 응답쌍12) shopping=206(초99/중73/고34, 응답쌍12)
+key not found in sentence: 0
+15 combos x 10q: travel/easy:10 travel/mid:10 travel/hard:10 realestate/easy:10 realestate/mid:10 realestate/hard:10 cafe/easy:10 cafe/mid:10 cafe/hard:10 fitness/easy:10 fitness/mid:10 fitness/hard:10 shopping/easy:10 shopping/mid:10 shopping/hard:10
+5q types: blank,meaning,order,response,meaning
+daily different set: 11-18 vs 11-19 different=true / same day same set=true
+answer 10 (7 right, 3 wrong): 7/10 streak=1일 rate=70% wrongSaved=3
+explanation sample: 정답'platform' = 승강장 · 발음 [플랫폼]뜻: 여기가 맞는 승강장인가요?Is this the right platform? || 오답 · 정답: 시내 지도 하나 주세요.핵심 'map' = 지도 · 발음 [맵] || 정답핵심 'slow down' = 속도를 줄이다 · 발음 [슬로우 다운]뜻: 조금만 천천히 가 주세요.Please slow down a little.
+copy 3 sentences: [오늘의 영어 문장 3개] 2026-11-18 ⏎ 1. Is this the right platform? ⏎    여기가 맞는 승강장인가요? · 'platform' = 승강장 [플랫폼] ⏎ 2. I'd like a city map. ⏎    시내 지도 하나 주세요. · 'map' = 지도 [맵] ⏎ 3. Please slow down a little. ⏎    조금만 천천히 가 주세요. · 'slow down' = 속도를 줄이다 [슬로우 다운]
+after reload: streak=1일 rate=70% wrong list=3 days=["2026-11-18"]
+print print: pages=1 bytes=63555 file=files\engquiz_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=3986 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=5 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

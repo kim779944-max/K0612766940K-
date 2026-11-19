@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더수익 — 수익형 부동산 수익률·현금흐름 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.neg{color:var(--red)!important}
+.sc{overflow-x:auto}.sc table{min-width:100%}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더수익@@-->
+<main>
+<section class="hero">
+ <h1>수익형 부동산<br><em>수익률 3가지와 현금흐름</em></h1>
+ <p>총수익률·순수익률·자기자본수익률, 1년차 월별 현금흐름, 상환방식 3가지 비교, 손익분기 공실률, 10년 누적 현금흐름을 계산합니다. 미래 시세 상승은 넣지 않습니다.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>물건 · 대출 <i style="font-style:normal;font-size:11px;color:var(--sub)">금액은 만원</i></h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시 1: 1층 상가</button><button class="btn sec sm" id="s2">예시 2: 오피스텔</button></div>
+ <div class="g2"><div><label class="lb">매매가</label><input id="price" inputmode="numeric"></div><div><label class="lb">취득비용 <i>세금·중개·법무</i></label><input id="acq" inputmode="numeric"></div></div>
+ <div class="g2"><div><label class="lb">보증금</label><input id="dep" inputmode="numeric"></div><div><label class="lb">월세</label><input id="rent" inputmode="decimal"></div></div>
+ <div class="g2"><div><label class="lb">대출 금액</label><input id="loan" inputmode="numeric"></div><div><label class="lb">금리 %</label><input id="rate" inputmode="decimal"></div></div>
+ <div class="g2"><div><label class="lb">대출 기간 (년)</label><input id="yrs" inputmode="numeric"></div><div><label class="lb">상환 방식</label><select id="how"><option value="eq">원리금 균등</option><option value="pr">원금 균등</option><option value="io">이자만(만기 일시)</option></select></div></div>
+ <div class="g2"><div><label class="lb">공실률 %</label><input id="vac" inputmode="decimal"></div><div><label class="lb">월 관리·수선비 <i>소유자 부담</i></label><input id="opex" inputmode="decimal"></div></div>
+ <label class="lb">연 보유세 등 세금 <i>입력값</i></label><input id="tax" inputmode="decimal">
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">수익률 계산</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">수익률</span></h2>
+ <div class="stat"><div><b id="sG">-</b><span>총수익률</span></div><div><b id="sN">-</b><span>순수익률</span></div><div><b id="sE">-</b><span>자기자본수익률</span></div></div>
+ <div class="stat"><div><b id="sCF">-</b><span>연 현금흐름(만원)</span></div><div><b id="sBE">-</b><span>손익분기 공실률</span></div><div><b id="sEq">-</b><span>실투자금(만원)</span></div></div>
+ <div class="row"><button class="btn pri sm" id="printBtn">인쇄</button><button class="btn sec sm" id="csvBtn">CSV</button><button class="btn sec sm" id="copyBtn">요약 복사</button></div>
+ <h3>상환방식 비교 (1년차)</h3><div id="cmp"></div>
+ <h3>1년차 월별 현금흐름</h3><div class="sc" id="mon"></div>
+ <h3>10년 누적 현금흐름 (시세 상승 미반영)</h3><div class="sc" id="ten"></div>
+ <details class="rule" open><summary>계산식 (공개)</summary><p class="kv">총수익률 = 월세×12 ÷ 매매가 · 순영업이익(NOI) = 월세×12×(1−공실률) − 관리비×12 − 세금 · 순수익률 = NOI ÷ (매매가 + 취득비용) · 실투자금 = 매매가 + 취득비용 − 보증금 − 대출 · 자기자본수익률 = (NOI − 1년차 이자) ÷ 실투자금 · 현금흐름 = NOI − 1년차 원리금 · 손익분기 공실률 = 1 − (관리비×12 + 세금 + 1년차 원리금) ÷ (월세×12)</p></details>
+ <p class="fixnote">세금은 입력한 값 기준이며 실제 세액은 세무 확인 필요. 공실률·금리도 입력값 기준이며 미래 시세 상승을 가정하지 않습니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const EX = [{price:95000, acq:4900, dep:5000, rent:380, loan:50000, rate:4.6, yrs:20, how:'eq', vac:5, opex:30, tax:220}, {price:21000, acq:1100, dep:1000, rent:80, loan:12000, rate:4.9, yrs:30, how:'io', vac:8, opex:12, tax:45}];
+const ids = ['price', 'acq', 'dep', 'rent', 'loan', 'rate', 'yrs', 'how', 'vac', 'opex', 'tax'];
+function sched(L, r, n, how){ const m = r / 12, N = n * 12, rows = []; let bal = L; const pmt = m ? L * m / (1 - Math.pow(1 + m, -N)) : L / N;
+  for (let i = 1; i <= Math.min(N, 120); i++){ const it = bal * m; let pr = how === 'eq' ? pmt - it : how === 'pr' ? L / N : (i === N ? bal : 0); pr = Math.min(pr, bal); bal -= pr; rows.push({i, it, pr, bal}); } return rows; }
+let CUR = null;
+function run(){
+  const v = {}; ids.forEach(k => v[k] = k === 'how' ? $('#how').value : parseFloat(String($('#' + k).value).replace(/,/g, '')) || 0);
+  if (!v.price || !v.rent){ $('#price').classList.toggle('miss', !v.price); $('#rent').classList.toggle('miss', !v.rent); return toast('매매가와 월세는 꼭 넣어 주세요'); } $('#price').classList.remove('miss'); $('#rent').classList.remove('miss');
+  const R = v.rent * 12, noi = R * (1 - v.vac / 100) - v.opex * 12 - v.tax, eq = v.price + v.acq - v.dep - v.loan;
+  const S = {}; ['eq', 'pr', 'io'].forEach(h => { const s = sched(v.loan, v.rate / 100, v.yrs || 1, h); const y1 = s.slice(0, 12); S[h] = {s, it:y1.reduce((a, x) => a + x.it, 0), pr:y1.reduce((a, x) => a + x.pr, 0)}; S[h].ds = S[h].it + S[h].pr; S[h].cf = noi - S[h].ds; });
+  const cur = S[v.how];
+  const ten = []; let cum = 0; for (let y = 1; y <= 10; y++){ const ys = cur.s.slice((y - 1) * 12, y * 12); const it = ys.reduce((a, x) => a + x.it, 0), pr = ys.reduce((a, x) => a + x.pr, 0); const cf = noi - it - pr; cum += cf; ten.push({y, it, pr, cf, cum, bal:ys.length ? ys[ys.length - 1].bal : 0}); }
+  CUR = {v, R, noi, eq, S, cur, ten, gross:R / v.price, net:noi / (v.price + v.acq), roe:eq > 0 ? (noi - cur.it) / eq : NaN, be:1 - (v.opex * 12 + v.tax + cur.ds) / R}; render();
+}
+const sg = x => `<span class="${x < 0 ? 'neg' : ''}">${won(x)}</span>`;
+function render(){
+  const C = CUR, HN = {eq:'원리금 균등', pr:'원금 균등', io:'이자만'};
+  $('#rTitle').textContent = `수익률 · 매매가 ${won(C.v.price)}만원 · ${HN[C.v.how]}`; $('#sG').textContent = pct(C.gross, 2); $('#sN').textContent = pct(C.net, 2); $('#sE').textContent = isFinite(C.roe) ? pct(C.roe, 2) : '실투자 0 이하';
+  $('#sCF').innerHTML = sg(C.cur.cf); $('#sBE').textContent = C.be > 0 ? pct(C.be, 1) : '0% (공실 없어도 적자)'; $('#sBE').style.color = C.be < C.v.vac / 100 ? 'var(--red)' : ''; $('#sEq').textContent = won(C.eq);
+  $('#cmp').innerHTML = `<table class="t"><tr><th>방식</th><th style="text-align:right">연 이자</th><th style="text-align:right">연 원금</th><th style="text-align:right">연 현금흐름</th></tr>${['eq', 'pr', 'io'].map(h => `<tr style="${h === C.v.how ? 'color:#fff;font-weight:800' : ''}"><td>${HN[h]}</td><td style="text-align:right">${won(C.S[h].it)}</td><td style="text-align:right">${won(C.S[h].pr)}</td><td style="text-align:right">${sg(C.S[h].cf)}</td></tr>`).join('')}</table>`;
+  const mi = C.R * (1 - C.v.vac / 100) / 12;
+  $('#mon').innerHTML = `<table class="t" style="font-size:11px"><tr><th>월</th><th style="text-align:right">임대수입</th><th style="text-align:right">이자</th><th style="text-align:right">원금</th><th style="text-align:right">관리·세금</th><th style="text-align:right">현금흐름</th></tr>${C.cur.s.slice(0, 12).map(x => { const ex = C.v.opex + C.v.tax / 12, cf = mi - x.it - x.pr - ex; return `<tr><td>${x.i}</td><td style="text-align:right">${won(mi)}</td><td style="text-align:right">${won(x.it)}</td><td style="text-align:right">${won(x.pr)}</td><td style="text-align:right">${won(ex)}</td><td style="text-align:right">${sg(cf)}</td></tr>`; }).join('')}</table><p class="kv">임대수입은 공실률을 달마다 고르게 뺀 값입니다.</p>`;
+  $('#ten').innerHTML = `<table class="t" style="font-size:11px"><tr><th>년</th><th style="text-align:right">이자</th><th style="text-align:right">원금</th><th style="text-align:right">현금흐름</th><th style="text-align:right">누적</th><th style="text-align:right">대출 잔액</th></tr>${C.ten.map(t => `<tr><td>${t.y}</td><td style="text-align:right">${won(t.it)}</td><td style="text-align:right">${won(t.pr)}</td><td style="text-align:right">${sg(t.cf)}</td><td style="text-align:right">${sg(t.cum)}</td><td style="text-align:right">${won(t.bal)}</td></tr>`).join('')}</table>`;
+  $('#result').classList.remove('hide');
+}
+function load(i){ const E = EX[i]; ids.forEach(k => $('#' + k).value = E[k]); toast(`예시 ${i + 1}을 넣었습니다`); }
+$('#sampleBtn').onclick = () => load(0); $('#s2').onclick = () => load(1);
+$('#runBtn').onclick = () => { run(); if (CUR){ $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); } };
+const sumTxt = () => `[수익률 요약] 매매가 ${won(CUR.v.price)}만원 · 보증금 ${won(CUR.v.dep)} · 월세 ${CUR.v.rent} · 대출 ${won(CUR.v.loan)}(${CUR.v.rate}%)\n총수익률 ${pct(CUR.gross, 2)} · 순수익률 ${pct(CUR.net, 2)} · 자기자본수익률 ${isFinite(CUR.roe) ? pct(CUR.roe, 2) : '-'}\n연 현금흐름 ${won(CUR.cur.cf)}만원 · 손익분기 공실률 ${pct(Math.max(0, CUR.be), 1)} · 실투자금 ${won(CUR.eq)}만원\n※ 세금은 입력한 값 기준이며 실제 세액은 세무 확인 필요.`;
+$('#copyBtn').onclick = () => CUR && copyOut(sumTxt(), '요약을 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`수익률_${todayS()}.csv`, [['년','이자','원금','현금흐름','누적','대출 잔액']].concat(CUR.ten.map(t => [t.y, Math.round(t.it), Math.round(t.pr), Math.round(t.cf), Math.round(t.cum), Math.round(t.bal)])));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>수익형 부동산 수익률 · 현금흐름</h1><p class="note">${todayS()} · 단위 만원 · 입력값 기준 · 시세 상승 미반영</p><p class="pre">${esc(sumTxt())}</p><h2>상환방식 비교</h2>${$('#cmp').innerHTML.replace('class="t"', '')}<h2>10년 누적</h2>${$('#ten').innerHTML.replace(/class="t"[^>]*/, '')}</div>`); };
+</script>
+</body></html>

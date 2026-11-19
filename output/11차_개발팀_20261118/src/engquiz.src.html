@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>관심사 맞춤 아침 영어 회화 퀴즈 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.qz{background:#0B1530;border:1px solid var(--line);border-radius:12px;padding:11px;margin-top:9px}
+.qz .ty{font-size:10.5px;font-weight:900;color:var(--or2)}
+.qz .st{font-size:14.5px;font-weight:800;color:#fff;margin-top:4px;line-height:1.5;overflow-wrap:anywhere}
+.qz .st.ko{font-size:13.5px}
+.opts{display:grid;gap:6px;margin-top:8px}
+.opts button{text-align:left;font-size:13px;font-weight:700;color:#E3E9F2;background:var(--card2);border:1px solid var(--line2);border-radius:10px;padding:9px 10px;line-height:1.4}
+.opts button.ok{background:rgba(53,196,138,.18);border-color:var(--green);color:#fff}
+.opts button.ng{background:rgba(255,90,90,.16);border-color:var(--red)}
+.opts button:disabled{cursor:default}
+.wbank,.wans{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;min-height:34px}
+.wans{border:1px dashed var(--line2);border-radius:10px;padding:5px}
+.wbank button,.wans button{font-size:12.5px;font-weight:800;color:#fff;background:var(--card2);border:1px solid var(--line2);border-radius:8px;padding:6px 8px}
+.exp{font-size:12px;color:#D3DBE7;margin-top:8px;line-height:1.55;border-top:1px solid var(--line);padding-top:7px}
+.exp b.o{color:var(--green)}.exp b.x{color:var(--red)}
+.exp .pr{color:var(--or2);font-weight:800}
+</style></head>
+<body><div id="app">
+<!--@@TOP 아침 영어 회화 퀴즈@@-->
+<main>
+<section class="hero">
+ <h1>관심사로 고르는<br><em>매일 아침 10문항</em> 영어 회화</h1>
+ <p>정해진 문장 은행(관심사별 200문장 이상)에서 날짜에 따라 매일 다른 세트를 뽑습니다. 문장과 해설은 고정 데이터이며, 실행 중에 지어내지 않습니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>관심사 · 난이도</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">[예시] 여행 · 초급 · 10문항</button></div>
+ <label class="lb">관심사</label><div class="chips" id="itr"></div>
+ <label class="lb">난이도 <i>초급 5단어 이하 · 중급 6~7단어 · 고급 8단어 이상</i></label><div class="chips" id="lvl"></div>
+ <label class="lb">하루 문항 수</label><div class="chips" id="cnt"><button data-n="5">5문항</button><button data-n="10" class="on">10문항</button></div>
+ <p class="kv" id="bankInfo"></p>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">오늘의 퀴즈 시작</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="qTitle">오늘의 퀴즈</span></h2>
+ <div class="stat"><div><b id="sScore">0/0</b><span>오늘 점수</span></div><div><b id="sStreak">0일</b><span>연속 출석</span></div><div><b id="sRate">-</b><span>누적 정답률</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">오늘의 문장 3개 복사</button><button class="btn sec sm" id="printBtn">인쇄</button></div>
+ <div id="quiz"></div>
+ <div id="done"></div>
+</section>
+<section class="card" id="wrongCard">
+ <h2><span class="n">3</span>틀린 문항 다시 보기</h2>
+ <p class="sub">틀린 문항은 이 기기에 저장됩니다(최근 50개).</p>
+ <div id="wrong"></div>
+ <div class="row"><button class="btn sec sm" id="wrongClear">다 외웠어요 · 목록 비우기</button></div>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const BANK = {}, PAIRS = {};
+/*@@DATA engquiz_bank1.js@@*/
+/*@@DATA engquiz_bank2.js@@*/
+/*@@DATA engquiz_bank3.js@@*/
+/*@@DATA engquiz_bank4.js@@*/
+const ITR = [['travel','여행'],['realestate','부동산'],['cafe','카페'],['fitness','운동'],['shopping','쇼핑']];
+const LVL = [['easy','초급'],['mid','중급'],['hard','고급']];
+const wc = s => s.split(/\s+/).filter(Boolean).length;
+const levelOf = n => n <= 5 ? "easy" : (n <= 7 ? "mid" : "hard");
+const DB = {}; ITR.forEach(([k]) => { DB[k] = BANK[k].trim().split('\n').map(l => { const [en, ko, key, keyko, pron] = l.split('|').map(s => (s || '').trim()); return {en, ko, key, keyko, pron, lv:levelOf(wc(en)), hasKey:en.toLowerCase().indexOf((key || '').toLowerCase()) >= 0}; }).filter(x => x.en && x.ko);
+  DB[k].pairs = PAIRS[k].trim().split('\n').map(l => { const [q, a] = l.split('|'); return {q:q.trim(), a:a.trim()}; }); });
+function hash(s){ let h = 2166136261; for (let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rng(seed){ let a = seed; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const shuffle = (arr, R) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(R() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const TYPES10 = ['blank','meaning','order','response','blank','meaning','order','blank','meaning','response'], TYPES5 = ['blank','meaning','order','response','meaning'];
+const TN = {blank:'빈칸 채우기', meaning:'뜻 고르기', order:'순서 배열', response:'짧은 회화 응답'};
+function build(itr, lv, n, dateS){
+  const R = rng(hash(dateS + '|' + itr + '|' + lv + '|' + n)); const pool = DB[itr].filter(x => x.lv === lv), all = DB[itr];
+  const picked = shuffle(pool, R); let pi = 0; const types = n === 5 ? TYPES5 : TYPES10; const prs = shuffle(DB[itr].pairs, R); let ri = 0;
+  return types.map(t => {
+    if (t === 'response'){ const p = prs[ri++ % prs.length]; const others = shuffle(DB[itr].pairs.filter(x => x.a !== p.a), R).slice(0, 3).map(x => x.a); return {t, q:p.q, ans:p.a, opts:shuffle([p.a].concat(others), R), exp:`"${p.q}"에 대한 자연스러운 대답 — ${p.a}`}; }
+    let s = picked[pi++ % picked.length]; if (t === 'blank'){ let g = 0; while (!s.hasKey && g++ < picked.length) s = picked[pi++ % picked.length]; }
+    const base = {en:s.en, ko:s.ko, key:s.key, keyko:s.keyko, pron:s.pron};
+    if (t === 'blank'){ const re = new RegExp(s.key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'); const m = re.exec(s.en); const keys = [...new Set(all.filter(x => x.key.toLowerCase() !== s.key.toLowerCase()).map(x => x.key))]; const others = shuffle(keys, R).slice(0, 3);
+      return Object.assign(base, {t, q:s.en.replace(re, '_____'), sub:s.ko, ans:m[0], opts:shuffle([m[0]].concat(others), R), exp:`'${s.key}' = ${s.keyko}`}); }
+    if (t === 'meaning'){ const others = shuffle([...new Set(all.filter(x => x.ko !== s.ko).map(x => x.ko))], R).slice(0, 3); return Object.assign(base, {t, q:s.en, ans:s.ko, opts:shuffle([s.ko].concat(others), R), exp:`핵심 '${s.key}' = ${s.keyko}`}); }
+    const words = s.en.split(/\s+/); let sh = shuffle(words, R), g = 0; while (sh.join(' ') === s.en && g++ < 5) sh = shuffle(words, R);
+    return Object.assign(base, {t, q:s.ko, words:sh, ans:s.en, exp:`핵심 '${s.key}' = ${s.keyko}`});
+  });
+}
+let ITRK = 'travel', LVK = 'easy', N = 10, Q = null, ANS = [];
+const st = () => LS.get('kts_engquiz_v1', {days:{}, wrong:[], tot:0, ok:0});
+function streak(S){ let d = new Date(), n = 0; if (!S.days[ymd(d)]) d = addDays(d, -1); while (S.days[ymd(d)]){ n++; d = addDays(d, -1); } return n; }
+function stats(){ const S = st(); $('#sStreak').textContent = streak(S) + '일'; $('#sRate').textContent = S.tot ? Math.round(S.ok / S.tot * 100) + '%' : '-'; renderWrong(); }
+function chips(){
+  $('#itr').innerHTML = ITR.map(([k, n]) => `<button data-k="${k}" class="${k === ITRK ? 'on' : ''}">${n}</button>`).join('');
+  $('#lvl').innerHTML = LVL.map(([k, n]) => `<button data-k="${k}" class="${k === LVK ? 'on' : ''}">${n}</button>`).join('');
+  $$('#cnt button').forEach(b => b.classList.toggle('on', +b.dataset.n === N));
+  const c = {}; LVL.forEach(([k]) => c[k] = DB[ITRK].filter(x => x.lv === k).length);
+  $('#bankInfo').textContent = `문장 은행: ${ITR.find(x => x[0] === ITRK)[1]} ${DB[ITRK].length}문장 (초급 ${c.easy} · 중급 ${c.mid} · 고급 ${c.hard}) + 회화 응답 ${DB[ITRK].pairs.length}쌍`;
+  $$('#itr button').forEach(b => b.onclick = () => { ITRK = b.dataset.k; chips(); });
+  $$('#lvl button').forEach(b => b.onclick = () => { LVK = b.dataset.k; chips(); });
+  $$('#cnt button').forEach(b => b.onclick = () => { N = +b.dataset.n; chips(); });
+}
+function start(dateS){
+  Q = build(ITRK, LVK, N, dateS || todayS()); ANS = Q.map(() => null);
+  $('#qTitle').textContent = `${todayS()} · ${ITR.find(x => x[0] === ITRK)[1]} · ${LVL.find(x => x[0] === LVK)[1]} · ${N}문항`;
+  $('#quiz').innerHTML = Q.map((q, i) => `<div class="qz" id="q${i}"><div class="ty">${i + 1}. ${TN[q.t]}</div>` +
+    (q.t === 'order' ? `<div class="st ko">${esc(q.q)}</div><div class="wans" data-i="${i}"></div><div class="wbank" data-i="${i}">${q.words.map((w, j) => `<button data-j="${j}">${esc(w)}</button>`).join('')}</div><div class="row"><button class="btn sec sm" data-chk="${i}">정답 확인</button><button class="btn sec sm" data-rs="${i}">다시 놓기</button></div>`
+      : `<div class="st">${esc(q.q)}</div>${q.sub ? `<div class="kv">${esc(q.sub)}</div>` : ''}<div class="opts">${q.opts.map((o, j) => `<button data-i="${i}" data-j="${j}">${esc(o)}</button>`).join('')}</div>`) + `<div class="exp hide"></div></div>`).join('');
+  $$('.opts button').forEach(b => b.onclick = () => answer(+b.dataset.i, Q[+b.dataset.i].opts[+b.dataset.j]));
+  $$('.wbank').forEach(bk => bk.onclick = e => { const b = e.target.closest('button'); if (!b) return; bk.previousElementSibling.appendChild(b); });
+  $$('.wans').forEach(an => an.onclick = e => { const b = e.target.closest('button'); if (!b || ANS[+an.dataset.i] != null) return; an.nextElementSibling.appendChild(b); });
+  $$('[data-chk]').forEach(b => b.onclick = () => { const i = +b.dataset.chk; const got = [...$(`.wans[data-i="${i}"]`).children].map(x => x.textContent).join(' '); if (!got) return toast('단어를 순서대로 눌러 주세요'); answer(i, got); });
+  $$('[data-rs]').forEach(b => b.onclick = () => { const i = +b.dataset.rs; if (ANS[i] != null) return; const an = $(`.wans[data-i="${i}"]`), bk = $(`.wbank[data-i="${i}"]`); [...an.children].forEach(x => bk.appendChild(x)); });
+  $('#done').innerHTML = ''; score(); $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+function answer(i, v){
+  if (ANS[i] != null) return; const q = Q[i]; const ok = v === q.ans; ANS[i] = {v, ok};
+  const box = $('#q' + i); box.querySelectorAll('.opts button').forEach(b => { b.disabled = true; const o = q.opts[+b.dataset.j]; if (o === q.ans) b.classList.add('ok'); else if (o === v) b.classList.add('ng'); });
+  const ex = box.querySelector('.exp'); ex.classList.remove('hide');
+  ex.innerHTML = `${ok ? '<b class="o">정답</b>' : '<b class="x">오답</b> · 정답: ' + esc(q.ans)}<br>${esc(q.exp)}${q.pron ? ` · 발음 <span class="pr">[${esc(q.pron)}]</span>` : ''}${q.ko && q.t !== 'meaning' ? `<br>뜻: ${esc(q.ko)}` : ''}${q.t === 'blank' || q.t === 'order' ? `<br>${esc(q.en)}` : ''}`;
+  if (!ok){ const S = st(); S.wrong.unshift({d:todayS(), t:q.t, q:q.q, ans:q.ans, en:q.en || q.q, ko:q.ko || '', exp:q.exp, pron:q.pron || ''}); S.wrong = S.wrong.slice(0, 50); LS.set('kts_engquiz_v1', S); }
+  score();
+  if (ANS.every(x => x)) finish();
+}
+function score(){ const ok = ANS.filter(x => x && x.ok).length, n = ANS.filter(Boolean).length; $('#sScore').textContent = `${ok}/${Q.length}`; return {ok, n}; }
+function finish(){
+  const {ok} = score(); const S = st(); const k = todayS(); const prev = S.days[k];
+  S.days[k] = {itr:ITRK, lv:LVK, ok, n:Q.length, at:Date.now(), sets:((prev && prev.sets) || 0) + 1}; S.tot += Q.length; S.ok += ok; LS.set('kts_engquiz_v1', S); stats();
+  $('#done').innerHTML = `<div class="item"><div class="q">오늘 ${ok}/${Q.length} 정답 · 연속 ${streak(S)}일째</div><div class="a">기록은 이 기기에 저장되어 새로고침해도 남습니다. 틀린 문항은 아래 "다시 보기"에 모았습니다.</div></div>`;
+}
+function renderWrong(){ const W = st().wrong; $('#wrong').innerHTML = W.length ? W.slice(0, 20).map(w => `<div class="item"><div class="q">${esc(w.en)}</div><div class="a">${esc(w.ko)}${w.ko ? ' · ' : ''}정답: ${esc(w.ans)}<br>${esc(w.exp)}${w.pron ? ` [${esc(w.pron)}]` : ''} · ${w.d}</div></div>`).join('') : '<div class="empty">아직 틀린 문항이 없습니다</div>'; }
+const today3 = () => Q.filter(q => q.en).slice(0, 3).map((q, i) => `${i + 1}. ${q.en}\n   ${q.ko} · '${q.key}' = ${q.keyko} [${q.pron}]`).join('\n');
+$('#sampleBtn').onclick = () => { ITRK = 'travel'; LVK = 'easy'; N = 10; chips(); toast('여행 · 초급 · 10문항으로 맞췄습니다'); };
+$('#runBtn').onclick = () => start();
+$('#copyBtn').onclick = () => Q && copyOut(`[오늘의 영어 문장 3개] ${todayS()}\n` + today3(), '오늘의 문장 3개를 복사했습니다');
+$('#wrongClear').onclick = () => { const S = st(); S.wrong = []; LS.set('kts_engquiz_v1', S); renderWrong(); };
+$('#printBtn').onclick = () => { if (!Q) return; printDoc(`<div class="paper"><h1>오늘의 영어 회화 퀴즈</h1><p class="note">${esc($('#qTitle').textContent)}</p><table><colgroup><col style="width:6%"><col style="width:16%"><col><col style="width:34%"></colgroup><tr><th>#</th><th>유형</th><th>문제</th><th>정답 · 해설</th></tr>${Q.map((q, i) => `<tr><td>${i + 1}</td><td>${TN[q.t]}</td><td>${esc(q.q)}${q.t === 'order' ? '<br>' + esc(q.words.join(' / ')) : ''}</td><td>${esc(q.ans)}<br>${esc(q.exp)}${q.pron ? ' [' + esc(q.pron) + ']' : ''}</td></tr>`).join('')}</table></div>`); };
+window.EQ = {DB, build, start, answer, get Q(){ return Q; }, set(i, l, n){ ITRK = i; LVK = l; N = n; chips(); }};
+chips(); stats();
+</script>
+</body></html>

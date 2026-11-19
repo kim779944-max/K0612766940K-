@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+ex1 items: 21 items: 임대차 > 시설 · 집기 > 세무 > 4대보험 · 직원 > 폐업신고 > 해지 > 마무리
+deadlines: 시설·집기 매각 또는 =2026-12-15(D26) | 부가가치세 폐업 확정신=2027-01-25(D67) | 원천세 신고 · 지급명=2027-01-10(D52) | 종합소득세 신고=2027-05-31(D193) | 직원 퇴직금·남은 급여=2027-01-12(D54)
+ex2 items: 21 items (법인 양도)
+check persist: done=1
+fixed line: 2 fixnotes
+copy: 23 lines
+print print: pages=2 bytes=126562 file=files\closeshop_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=4025 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>두꺼운 PDF → 핵심 1장 리포트 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.s5 li{margin:6px 0 0 18px;font-size:13px;line-height:1.6;color:#E3E9F2}
+.s5 li small{color:var(--sub);font-size:10.5px;margin-left:4px}
+.drop{border:1px dashed var(--line2);border-radius:10px;padding:10px;text-align:center;font-size:12px;color:var(--sub);margin-top:8px}
+.term{display:flex;gap:6px;align-items:center;margin-top:6px}.term b{flex:0 0 96px;font-size:12.5px;color:#fff;overflow-wrap:anywhere}
+</style></head>
+<body><div id="app">
+<!--@@TOP 핵심 1장 리포트@@-->
+<main>
+<section class="hero">
+ <h1>두꺼운 PDF·자료를<br><em>핵심 1장</em>으로</h1>
+ <p>원문 문장을 그대로 인용해 핵심 5줄을 뽑고, 숫자·금액·날짜 표와 결정·요청 사항을 모읍니다. 새 문장을 지어내지 않습니다.</p>
+</section>
+<section class="card">
+ <h2><span class="n">1</span>자료 넣기</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시: 회의자료</button><button class="btn sec sm" id="s2">예시: 보도자료</button><button class="btn sec sm" id="s3">예시: 계약 검토</button></div>
+ <label class="lb">제목 <i>선택</i></label><input id="title" maxlength="80" placeholder="예: 11월 운영회의 자료">
+ <label class="lb">PDF 파일 <i>글자가 들어 있는 PDF만 읽힙니다</i></label>
+ <input type="file" id="file" accept=".pdf,.txt,application/pdf,text/plain">
+ <div class="drop" id="pdfInfo">PDF에서 글자를 못 읽으면: PDF 열기 → 전체 선택(Ctrl+A) → 복사 → 아래 칸에 붙여넣기</div>
+ <label class="lb">본문 <i>붙여넣기</i></label>
+ <textarea id="src" rows="9" maxlength="200000" placeholder="자료 본문을 붙여 넣으세요"></textarea>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">핵심 1장 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">핵심 1장</span></h2>
+ <div class="stat"><div><b id="sSent">0</b><span>원문 문장</span></div><div><b id="sNum">0</b><span>숫자·날짜</span></div><div><b id="sDec">0</b><span>결정·요청</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">1장 복사</button><button class="btn sec sm" id="printBtn">A4 인쇄</button><button class="btn sec sm" id="csvBtn">숫자표 CSV</button></div>
+ <button class="btn sec sm hide" id="aiBtn" style="margin-top:7px">더 짧게 3줄 (AI 열쇠)</button>
+ <h3>① 핵심 5줄 <i style="font-style:normal;color:var(--sub);font-size:11px">원문 그대로 · 원래 순서</i></h3><ol class="s5" id="top5"></ol>
+ <h3>② 숫자 · 금액 · 날짜</h3><div id="nums"></div>
+ <h3>③ 결정 · 요청 사항</h3><div id="decs"></div>
+ <h3>④ 모르는 말 3개 <i style="font-style:normal;color:var(--sub);font-size:11px">풀이는 직접 적기</i></h3><div id="terms"></div>
+ <details class="rule"><summary>문장 점수 규칙 (공개)</summary>
+  <p class="kv">① 문서 안에서 자주 나온 낱말이 많을수록 +(낱말 빈도 합 ÷ 낱말 수) ② 숫자·금액·날짜가 있으면 +2 ③ 제목 낱말과 겹치거나 문서 앞 3문장이면 +1.5 ④ "따라서·결론적으로·요약하면·특히·즉·결국"으로 시작하면 +1.5 ⑤ 12자 미만 또는 200자 초과 문장은 −2. 점수 상위 5문장을 원래 순서대로 원문 그대로 보여 줍니다.</p></details>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const EX = {
+ meeting:{t:'11월 운영회의 자료', b:`11월 운영회의 자료
+1. 지난달 실적
+10월 매출은 48,200,000원으로 전월 대비 12.5% 증가했습니다.
+신규 고객은 312명이며, 재방문율은 35.2%로 집계되었습니다.
+배달 매출 비중은 41%까지 올라갔고, 배달 수수료는 3,860,000원이 나갔습니다.
+2. 문제점
+주말 저녁 대기 시간이 평균 23분으로 고객 불만이 7건 접수되었습니다.
+특히 재고 부족으로 인한 품절이 4회 발생해 매출 손실이 생겼습니다.
+3. 결정 사항
+따라서 주말 저녁 아르바이트 1명을 2026-12-01부터 추가 채용하겠습니다.
+식자재 발주는 주 2회에서 주 3회로 늘리기로 결정했습니다.
+신메뉴 2종은 3개월 시범 운영 후 유지 여부를 판단합니다.
+4. 요청 사항
+점장님은 11월 25일까지 채용 공고 초안을 공유해 주시기 바랍니다.
+회계 담당은 2026-11-28까지 배달 수수료 절감안을 요청드립니다.
+다음 회의는 2026년 12월 9일 오후 3시에 진행합니다.`},
+ press:{t:'소상공인 디지털 전환 지원사업 보도자료', b:`소상공인 디지털 전환 지원사업 참여자 모집
+정부는 2026년 소상공인 디지털 전환 지원사업에 총 120억원을 투입한다고 밝혔습니다.
+지원 대상은 상시근로자 5인 미만 소상공인 4,000곳입니다.
+업체당 최대 3,000,000원까지 키오스크·테이블오더·스마트 상점 기술 도입 비용을 지원합니다.
+자부담 비율은 30%이며, 취약계층은 10%로 낮춥니다.
+신청 기간은 2026년 12월 1일부터 12월 31일까지이며, 온라인으로만 접수합니다.
+선정 결과는 2027년 1월 20일 개별 통보할 예정입니다.
+결론적으로 이번 사업은 지난해보다 지원 규모가 25% 늘어난 것이 특징입니다.
+참여 업체는 6개월간 사후관리를 받아야 하며, 중도 포기 시 지원금을 환수할 수 있습니다.
+자세한 공고문은 관련 누리집에서 확인하시기 바랍니다.
+담당 부서는 신청 서류 미비로 인한 탈락이 없도록 사전 점검을 요청드립니다.`},
+ contract:{t:'상가 임대차 계약 검토서', b:`상가 임대차 계약 검토서
+검토 대상은 하남시 미사동 소재 1층 상가 84.5㎡ 임대차 계약입니다.
+보증금은 50,000,000원, 월 차임은 2,800,000원(부가세 별도)입니다.
+계약 기간은 2026-12-15부터 2028-12-14까지 24개월입니다.
+관리비는 월 350,000원이며 공용 전기료가 포함됩니다.
+제7조는 차임 2기 연체 시 계약 해지가 가능하다고 규정합니다.
+제11조 원상복구 범위가 "인테리어 전부"로 넓게 적혀 있어 수정이 필요합니다.
+특히 권리금 회수 기회 보호 조항이 빠져 있어 추가를 요청드립니다.
+임대인은 2026년 12월 5일까지 수정안 회신을 하겠다고 했습니다.
+즉 수정 조항 2건이 반영되지 않으면 계약 체결을 보류하겠습니다.
+차임 인상은 연 5% 이내로 제한하는 문구를 넣기로 합의했습니다.
+등기부등본상 근저당 채권최고액 360,000,000원이 설정되어 있어 확인이 필요합니다.`}
+};
+function setEx(k){ $('#title').value = EX[k].t; $('#src').value = EX[k].b; toast('예시를 넣었습니다: ' + EX[k].t); }
+/* --- PDF 글자 읽기 (외부 라이브러리 없이: 압축 스트림 풀기 → Tj/TJ 글자) --- */
+async function inflate(u8){ try{ const ds = new DecompressionStream('deflate'); const s = new Blob([u8]).stream().pipeThrough(ds); return new Uint8Array(await new Response(s).arrayBuffer()); }catch(e){ return null; } }
+function pdfStr(s){ return s.replace(/\\([nrtbf()\\]|[0-7]{1,3})/g, (m, c) => ({n:'\n', r:'', t:' ', b:'', f:'', '(':'(', ')':')', '\\':'\\'}[c] ?? String.fromCharCode(parseInt(c, 8)))); }
+async function readPdf(buf){
+  const u = new Uint8Array(buf), lat = new TextDecoder('latin1').decode(u); let txt = ''; const re = /stream\r?\n/g; let m;
+  while ((m = re.exec(lat))){
+    const st = m.index + m[0].length, en = lat.indexOf('endstream', st); if (en < 0) break;
+    const head = lat.slice(Math.max(0, m.index - 300), m.index); let data = u.subarray(st, en);
+    if (/FlateDecode/.test(head)){ data = await inflate(data); if (!data) continue; }
+    const s = new TextDecoder('latin1').decode(data);
+    s.replace(/\[((?:[^\]\\]|\\.)*)\]\s*TJ|\(((?:[^()\\]|\\.)*)\)\s*(?:Tj|'|")|(T\*|ET)/g, (mm, arr, one, br) => {
+      if (br){ txt += '\n'; return ''; }
+      if (one != null){ txt += pdfStr(one); return ''; }
+      (arr.match(/\(((?:[^()\\]|\\.)*)\)|-?\d+\.?\d*/g) || []).forEach(p => { if (p[0] === '(') txt += pdfStr(p.slice(1, -1)); else if (+p < -200) txt += ' '; }); return '';
+    });
+    re.lastIndex = en;
+  }
+  return txt.replace(/\n{2,}/g, '\n').trim();
+}
+$('#file').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  if (/\.txt$/i.test(f.name)){ $('#src').value = await f.text(); $('#pdfInfo').textContent = `텍스트 파일을 읽었습니다: ${f.name}`; return; }
+  const t = await readPdf(await f.arrayBuffer()); const good = (t.match(/[가-힣A-Za-z]/g) || []).length;
+  if (good >= 40){ $('#src').value = t; if (!$('#title').value) $('#title').value = f.name.replace(/\.pdf$/i, ''); $('#pdfInfo').textContent = `PDF에서 글자 ${t.length}자를 읽었습니다. 줄바꿈이 어색하면 붙여넣기 방법을 쓰세요.`; }
+  else { $('#pdfInfo').innerHTML = `<b style="color:var(--yel)">이 PDF는 글자를 바로 읽지 못했습니다</b> (스캔본이거나 한글 글꼴이 내장된 PDF).<br>PDF 열기 → 전체 선택(Ctrl+A) → 복사 → 아래 칸에 붙여넣기 해 주세요.`; }
+};
+/* --- 분석 --- */
+const RX = [
+ ['날짜', /\d{4}\s*[-.\/]\s*\d{1,2}\s*[-.\/]\s*\d{1,2}|\d{4}년\s*\d{1,2}월(?:\s*\d{1,2}일)?|\d{1,2}월\s*\d{1,2}일/g],
+ ['금액', /\d[\d,]*(?:\.\d+)?\s*(?:억\s*원|억원|만\s*원|만원|천원|원|달러|억)/g],
+ ['비율', /\d+(?:\.\d+)?\s*%/g],
+ ['기간', /\d+\s*(?:개월|년간|주간|일간|주\s*\d회|시간)/g],
+ ['수량', /\d[\d,]*\s*(?:명|곳|건|회|개|종|㎡|평)(?![가-힣])/g]];
+const CONJ = /^(따라서|결론적으로|요약하면|특히|즉|결국|그러므로)/;
+let CUR = null;
+function run(){
+  const raw = $('#src').value.trim(); if (raw.length < 30){ $('#src').classList.add('miss'); return toast('본문을 30자 이상 넣어 주세요 (또는 예시 단추)'); } $('#src').classList.remove('miss');
+  const title = $('#title').value.trim() || raw.split('\n')[0].slice(0, 40);
+  const S = splitSent(raw).filter(s => !/^\d+\.\s*[^.]{0,14}$/.test(s));
+  const tf = {}; S.forEach(s => words(s).forEach(w => tf[w] = (tf[w] || 0) + 1));
+  const tw = new Set(words(title));
+  const sc = S.map((s, i) => { const ws = words(s); let v = ws.length ? ws.reduce((a, w) => a + (tf[w] > 1 ? tf[w] : 0), 0) / ws.length : 0;
+    if (RX.some(r => s.match(new RegExp(r[1].source)))) v += 2; if (i < 3 || ws.some(w => tw.has(w))) v += 1.5; if (CONJ.test(s)) v += 1.5; if (s.length < 12 || s.length > 200) v -= 2; if (s === title) v -= 5; return {s, i, v}; });
+  const top = sc.slice().sort((a, b) => b.v - a.v).slice(0, 5).sort((a, b) => a.i - b.i);
+  const nums = []; S.forEach(s => { const used = []; RX.forEach(([k, r]) => (s.match(r) || []).forEach(v => { v = v.trim(); if (used.some(u => u.includes(v))) return; used.push(v); nums.push({k, v, s}); })); });
+  const decs = S.filter(s => /(겠습니다|하겠다|요청드립니다|요청합니다|바랍니다|주시기|까지\s|결정했|결정하|합의했|확정|보류)/.test(s));
+  const cand = {}; S.forEach(s => { (s.match(/\b[A-Z]{2,6}\b/g) || []).forEach(w => cand[w] = (cand[w] || 0) + 3);
+    words(s).forEach(w => { if (w.length >= 4 && /(권|율|액|제|조항|비율|관리|환수|최고액|통보|원상복구|부담|전환)$/.test(w)) cand[w] = (cand[w] || 0) + 1; }); });
+  Object.keys(tf).forEach(w => { if (w.length >= 4 && !/\d|(니다|었다|했다|된다|한다|있다|습니다|되었|하였)/.test(w) && !(w in cand)) cand[w] = 0.5; });
+  const terms = Object.keys(cand).sort((a, b) => cand[b] - cand[a] || b.length - a.length).slice(0, 3);
+  CUR = {title, S, top, nums, decs, terms, sc}; render();
+}
+function render(){
+  const R = CUR; $('#rTitle').textContent = '핵심 1장 · ' + R.title;
+  $('#sSent').textContent = R.S.length; $('#sNum').textContent = R.nums.length; $('#sDec').textContent = R.decs.length;
+  $('#top5').innerHTML = R.top.map(x => `<li>${esc(x.s)}<small>${x.i + 1}번째 문장 · ${x.v.toFixed(1)}점</small></li>`).join('');
+  $('#nums').innerHTML = R.nums.length ? `<table class="t"><tr><th style="width:15%">종류</th><th style="width:30%">값(원문)</th><th>나온 문장</th></tr>${R.nums.map(n => `<tr><td>${n.k}</td><td><b>${esc(n.v)}</b></td><td>${esc(n.s.length > 60 ? n.s.slice(0, 60) + '…' : n.s)}</td></tr>`).join('')}</table>` : '<p class="empty">숫자·날짜를 찾지 못했습니다</p>';
+  $('#decs').innerHTML = R.decs.length ? R.decs.map(d => `<div class="item"><div class="a">${esc(d)}</div></div>`).join('') : '<p class="empty">결정·요청 문장을 찾지 못했습니다</p>';
+  const memo = LS.get('kts_pdf1p_terms', {});
+  $('#terms').innerHTML = R.terms.length ? R.terms.map((t, i) => `<div class="term"><b>${esc(t)}</b><input data-t="${esc(t)}" maxlength="80" placeholder="쉬운 풀이를 적어 두세요" value="${esc(memo[t] || '')}"></div>`).join('') : '<p class="empty">어려운 말 후보가 없습니다</p>';
+  $$('#terms input').forEach(i => i.oninput = () => { const m = LS.get('kts_pdf1p_terms', {}); m[i.dataset.t] = i.value; LS.set('kts_pdf1p_terms', m); });
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+function termTxt(t){ const m = LS.get('kts_pdf1p_terms', {}); return m[t] || '(풀이 빈칸)'; }
+function oneText(){ const R = CUR; return `[${R.title} — 핵심 1장]\n\n■ 핵심 5줄 (원문 인용)\n` + R.top.map((x, i) => `${i + 1}. ${x.s}`).join('\n') + `\n\n■ 숫자·금액·날짜\n` + R.nums.map(n => `- ${n.k}: ${n.v}`).join('\n') + `\n\n■ 결정·요청 사항\n` + R.decs.map(d => `- ${d}`).join('\n') + `\n\n■ 모르는 말\n` + R.terms.map(t => `- ${t}: ${termTxt(t)}`).join('\n'); }
+$('#sampleBtn').onclick = () => setEx('meeting'); $('#s2').onclick = () => setEx('press'); $('#s3').onclick = () => setEx('contract');
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(oneText(), '핵심 1장을 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`숫자표_${todayS()}.csv`, [['종류','값','문장']].concat(CUR.nums.map(n => [n.k, n.v, n.s])));
+$('#printBtn').onclick = () => { if (!CUR) return; const R = CUR; printDoc(`<div class="paper"><h1>${esc(R.title)} — 핵심 1장</h1><p class="note">${todayS()} · 원문 ${R.S.length}문장 중 점수 상위 5문장을 원문 그대로 인용</p>
+<h2>핵심 5줄</h2><ol style="margin-left:18px">${R.top.map(x => `<li>${esc(x.s)}</li>`).join('')}</ol>
+<h2>숫자 · 금액 · 날짜</h2><table><tr><th style="width:12%">종류</th><th style="width:22%">값</th><th>문장</th></tr>${R.nums.slice(0, 18).map(n => `<tr><td>${n.k}</td><td>${esc(n.v)}</td><td>${esc(n.s.slice(0, 70))}</td></tr>`).join('')}</table>
+<h2>결정 · 요청 사항</h2><ul style="margin-left:18px">${R.decs.map(d => `<li>${esc(d)}</li>`).join('')}</ul>
+<h2>모르는 말</h2><table>${R.terms.map(t => `<tr><th style="width:28%">${esc(t)}</th><td>${esc(termTxt(t))}</td></tr>`).join('')}</table>
+<p class="note">원문 문장을 그대로 옮겼으며 새 문장을 만들지 않았습니다. 최종 내용은 원문으로 확인하세요.</p></div>`); };
+</script>
+</body></html>

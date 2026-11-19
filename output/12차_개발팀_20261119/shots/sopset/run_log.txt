@@ -1,0 +1,17 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+ex1: 11 steps · groups 매일9/매주2 · 매일 합계 76분 · 실수방지 3
+parse step 1: t=마감 30분 전 디저트 진열대 정리 | prep=랩, 유통기한 스티커 | min=10 | warn=당일 생크림 제품은 폐기 기록
+no invented steps: steps=11 input lines=11
+ex2 monthly: 7 steps · groups 매주1/매월6 · 매월 합계 120분 · 실수방지 2 (주의 2개뿐 안내=true)
+template save: templates=1 options=2
+check persist: checked saved=1
+copy: 12 lines
+print print: pages=2 bytes=86676 file=files\sopset_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2709 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

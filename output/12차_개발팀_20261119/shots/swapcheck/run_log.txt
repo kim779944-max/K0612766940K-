@@ -1,0 +1,14 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+ex1: C 62.7 | net A 54000 B 55000 d -1000 | 가격 균형96 융자 승계60 명도 난이도70 세금60 권리 하자30 상대 급함60
+top3 + fixes: 권리 하자, 융자 승계, 세금 / fixes=3
+ex2: D 47.5 | 융자 승계20, 명도 난이도20, 세금30
+copy: 5 lines
+print print: pages=1 bytes=67508 file=files\swapcheck_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2791 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

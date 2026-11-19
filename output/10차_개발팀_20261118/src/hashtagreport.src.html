@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SNS 해시태그 보고서 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tags span{font-size:11.8px;background:#0B1530;border:1px solid var(--line2);border-radius:999px;padding:3px 9px;color:#DCE6F2;max-width:100%;overflow-wrap:anywhere}
+.tags span.ban{border-color:var(--red);color:#FFB3B3}.tags span.warn{border-color:var(--yel);color:#FFE3A3}
+.tier{display:flex;align-items:center;gap:6px;margin-top:12px}.tier b{flex:1;font-size:13px;color:var(--or2)}
+.tier button{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--or2);border:1px solid rgba(255,107,0,.45);border-radius:8px;padding:4px 9px}
+</style></head>
+<body><div id="app">
+<!--@@TOP 해시태그 보고서@@-->
+<main>
+<section class="hero">
+ <h1>업종·지역·상품만 넣으면<br><em>해시태그 3세트</em>와 게시물별 조합</h1>
+ <p>넓게 30 · 중간 50 · 좁게 100개를 중복 없이 만들고, 릴스·피드·블로그별 추천 조합과 금지·주의 태그를 표시합니다.</p>
+ <p class="fixnote">검색량 조회가 아니라 조합 규칙으로 만든 목록입니다. 실시간 트렌드를 조회하지 않습니다.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>가게 정보</h2>
+ <div class="chips"><button id="sampleBtn">예시 1 식자재 도매</button><button data-e="1">예시 2 강릉 카페</button><button data-e="2">예시 3 반찬가게</button></div>
+ <div class="g2"><div><label class="lb">업종</label><input id="ind" maxlength="30"></div><div><label class="lb">지역 <i>입력값 그대로 사용</i></label><input id="reg" maxlength="30"></div></div>
+ <label class="lb">상품 <i>쉼표로 구분</i></label><input id="prod" maxlength="80">
+ <div class="g2"><div><label class="lb">타겟</label><input id="tgt" maxlength="30"></div><div><label class="lb">시즌</label><select id="sea"><option>봄</option><option>여름</option><option>가을</option><option selected>겨울</option><option>연말</option><option>명절</option><option>개업</option></select></div></div>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">해시태그 만들기</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">해시태그 보고서</span></h2>
+ <div class="stat"><div><b id="sW">0</b><span>넓게</span></div><div><b id="sM">0</b><span>중간</span></div><div><b id="sN">0</b><span>좁게</span></div></div>
+ <div class="row"><button class="btn pri sm" id="copyBtn">피드 30개 복사</button><button class="btn sec sm" id="csvBtn">전체 CSV</button><button class="btn sec sm" id="printBtn">인쇄</button></div>
+ <h3>금지 · 주의 태그</h3><div id="bans"></div>
+ <h3>게시물별 추천 조합</h3><div id="sets"></div>
+ <div id="tiers"></div>
+ <details class="rule"><summary>조합 규칙 · 금지 목록 (공개)</summary><div id="rules"></div></details>
+ <p class="fixnote">검색량 조회가 아니라 조합 규칙으로 만든 목록입니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const EXS = [['식자재 도매', '하남 미사', '식자재, 업소용 식자재, 대용량 소스', '사장님', '겨울'], ['카페', '강릉', '핸드드립, 디저트', '여행객', '겨울'], ['반찬가게', '송파', '반찬, 다이어트 도시락', '직장인', '봄']];
+const GEN = ['추천', '정보', '일상', '데일리', '소통', '후기', '리뷰', '꿀팁', '오늘', '신상', '인기', '이벤트', '할인', '선물', '주말', '스타그램', '무료배송'];
+const ACT = ['추천', '후기', '가격', '구매', '주문', '예약', '배달', '포장', '할인', '이벤트', '신상', '맛집', '오픈', '단골', '정보', '비교', '문의', '택배', '세트', '선물'];
+const SEA = {봄:['봄', '봄나들이', '새학기', '봄맞이'], 여름:['여름', '여름휴가', '시원한', '여름맞이'], 가을:['가을', '가을나들이', '환절기', '가을맞이'], 겨울:['겨울', '연말', '따뜻한', '겨울맞이'], 연말:['연말', '송년회', '크리스마스', '새해'], 명절:['명절', '설날', '추석', '명절선물'], 개업:['오픈', '개업', '신규오픈', '오픈이벤트']};
+const BAN = ['나이키', '샤넬', '스타벅스', '애플', '삼성', '배민', '배달의민족', '쿠팡', '네이버', '카카오', '디올', '구찌', '루이비통', '이케아', '다이소', '당근마켓'];
+const WARN = [['광고 오인', ['최저가', '1위', '최고', '무료', '공짜', '100%', '보장', '역대급', '무조건']], ['민감 · 효능', ['다이어트', '치료', '효능', '효과', '완치', '대출', '투자', '수익', '정치', '도박', '성인']]];
+const sp = s => String(s || '').split(/[,\s]+/).map(x => x.replace(/[#\s]/g, '')).filter(Boolean);
+function flag(t){ if (BAN.some(b => t.includes(b))) return ['ban', '상표']; for (const [k, L] of WARN) if (L.some(w => t.includes(w))) return ['warn', k]; return null; }
+let CUR = null;
+function run(){
+  const ind = $('#ind').value.trim(), reg = $('#reg').value.trim(), prods = $('#prod').value.split(',').map(s => s.trim()).filter(Boolean), tgt = $('#tgt').value.trim(), sea = $('#sea').value;
+  if (!ind || !reg){ $('#ind').classList.toggle('miss', !ind); $('#reg').classList.toggle('miss', !reg); return toast('업종과 지역은 꼭 넣어 주세요'); } $('#ind').classList.remove('miss'); $('#reg').classList.remove('miss');
+  const R = uniq(sp(reg).concat(sp(reg).length > 1 ? [sp(reg).join('')] : [])), I = uniq([ind.replace(/\s/g, '')].concat(sp(ind))), PR = uniq(prods.map(p => p.replace(/\s/g, '')).concat(prods.flatMap(sp))), T = sp(tgt), S = SEA[sea];
+  const used = new Set(); const take = (cands, n) => { const o = []; for (const c of cands){ const t = c.replace(/\s/g, ''); if (t.length < 2 || t.length > 24 || used.has(t)) continue; used.add(t); o.push(t); if (o.length >= n) break; } return o; };
+  const X = (A, B) => A.flatMap(a => B.map(b => a + b));
+  const wide = take([].concat(I, PR.slice(0, 4), S, GEN, X(I, GEN.slice(0, 6)), X(S, GEN.slice(0, 5)), X(PR, ['추천', '정보', '스타그램'])), 30);
+  const mid = take([].concat(X(R, I), X(R, PR), X(R, ['맛집', '추천', '일상', '소식', '핫플', '가볼만한곳']), X(PR, S), X(S, I), X(I, T), X(PR, T), X(I, ACT), X(PR, ACT.slice(0, 10)), X(R, S)), 50);
+  const narrow = take([].concat(X(X(R, I), ACT), X(X(R, PR), ACT), X(X(R, T), ['추천', '필수', '모임', '일상']), X(X(PR, T), ['추천', '선물', '세트']), X(X(R, S), I), X(X(S, PR), ['추천', '세트', '할인']), X(X(R, PR), S)), 100);
+  const all = [['넓게', wide], ['중간', mid], ['좁게', narrow]];
+  const flagged = all.flatMap(([k, L]) => L.map(t => [k, t, flag(t)]).filter(x => x[2]));
+  const clean = L => L.filter(t => !flag(t) || flag(t)[0] !== 'ban');
+  const sets = [['릴스 (해시태그 25개)', clean(wide).slice(0, 5).concat(clean(mid).slice(0, 10), clean(narrow).slice(0, 10))], ['피드 (해시태그 30개)', clean(wide).slice(0, 5).concat(clean(mid).slice(0, 10), clean(narrow).slice(0, 15))], ['블로그 (태그 10개 · # 없이)', clean(mid).slice(0, 5).concat(clean(narrow).slice(0, 5))]];
+  CUR = {ind, reg, prods, tgt, sea, all, flagged, sets}; render();
+}
+const chip = t => { const f = flag(t); return `<span class="${f ? f[0] : ''}">#${esc(t)}</span>`; };
+function render(){
+  const C = CUR; $('#rTitle').textContent = `해시태그 보고서 · ${C.reg} ${C.ind}`; $('#sW').textContent = C.all[0][1].length; $('#sM').textContent = C.all[1][1].length; $('#sN').textContent = C.all[2][1].length;
+  $('#bans').innerHTML = C.flagged.length ? `<div class="item warn"><div class="a">${C.flagged.map(([k, t, f]) => `<span class="pill ${f[0] === 'ban' ? 'a' : 'b'}">${f[0] === 'ban' ? '금지' : '주의'} · ${f[1]}</span> #${esc(t)} (${k})`).join('<br>')}</div><div class="kv">금지(상표) 태그는 추천 조합에서 뺐습니다. 주의 태그는 근거가 있을 때만 쓰세요.</div></div>` : '<p class="empty">금지·주의 태그가 없습니다</p>';
+  $('#sets').innerHTML = C.sets.map(([n, L], i) => `<div class="tier"><b>${n}</b><button data-s="${i}">복사</button></div><div class="tags">${L.map(chip).join('')}</div>`).join('');
+  $('#tiers').innerHTML = C.all.map(([n, L], i) => `<div class="tier"><b>${n} ${L.length}개</b><button data-t="${i}">복사</button></div><div class="tags">${L.map(chip).join('')}</div>`).join('');
+  $$('[data-s]').forEach(b => b.onclick = () => { const [n, L] = C.sets[+b.dataset.s]; copyOut(/블로그/.test(n) ? L.join(', ') : L.map(t => '#' + t).join(' '), n + ' 복사했습니다'); });
+  $$('[data-t]').forEach(b => b.onclick = () => { const [n, L] = C.all[+b.dataset.t]; copyOut(L.map(t => '#' + t).join(' '), n + ' 태그를 복사했습니다'); });
+  $('#rules').innerHTML = `<p class="kv">넓게: 업종·상품·시즌·일반어 단독 및 2단 조합 / 중간: 지역×업종·상품, 상품×시즌, 업종×타겟·행동어 / 좁게: 지역×업종·상품×행동어, 지역×타겟, 상품×타겟 3단 조합. 공백 제거·2~24자·중복 제거, 앞 단계에 나온 태그는 뒤 단계에서 뺍니다.</p><p class="kv"><b>금지(상표)</b> ${BAN.join(' · ')}</p>${WARN.map(([k, L]) => `<p class="kv"><b>주의(${k})</b> ${L.join(' · ')}</p>`).join('')}`;
+  $('#result').classList.remove('hide'); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60);
+}
+function setEx(i){ const e = EXS[i]; ['ind', 'reg', 'prod', 'tgt'].forEach((k, j) => $('#' + k).value = e[j]); $('#sea').value = e[4]; toast(`예시 ${i + 1}을 넣었습니다`); }
+$('#sampleBtn').onclick = () => setEx(0); $$('[data-e]').forEach(b => b.onclick = () => setEx(+b.dataset.e));
+$('#runBtn').onclick = run;
+$('#copyBtn').onclick = () => CUR && copyOut(CUR.sets[1][1].map(t => '#' + t).join(' '), '피드용 30개를 복사했습니다');
+$('#csvBtn').onclick = () => CUR && saveCSV(`해시태그_${todayS()}.csv`, [['단계','태그','표시']].concat(CUR.all.flatMap(([k, L]) => L.map(t => [k, '#' + t, flag(t) ? (flag(t)[0] === 'ban' ? '금지·' : '주의·') + flag(t)[1] : '']))));
+$('#printBtn').onclick = () => { if (!CUR) return; printDoc(`<div class="paper"><h1>해시태그 보고서 · ${esc(CUR.reg)} ${esc(CUR.ind)}</h1><p class="note">${todayS()} · 상품 ${esc(CUR.prods.join(', '))} · 타겟 ${esc(CUR.tgt)} · 시즌 ${CUR.sea} · 검색량 조회가 아니라 조합 규칙으로 만든 목록</p>${CUR.sets.map(([n, L]) => `<h2>${n}</h2><p>${L.map(t => '#' + esc(t)).join(' ')}</p>`).join('')}${CUR.all.map(([n, L]) => `<h2>${n} ${L.length}개</h2><p style="font-size:9pt">${L.map(t => '#' + esc(t)).join(' ')}</p>`).join('')}</div>`); };
+</script>
+</body></html>

@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+menu / langs / QR: 12 items, langs=2, QR v33 L 1974B
+page has 2 langs: ko=true en=true zh(not selected)=false
+price edit -> QR rebuilt: changed=true price0=9500 pageHas 9,500원=true
+no guessed price: price=NaN page shows - =true
+preview iframe: 1323 chars
+csv: {"name":"메뉴_2026-11-19.csv","size":377}
+print print: pages=1 bytes=254928 file=files\themenu_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=3034 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

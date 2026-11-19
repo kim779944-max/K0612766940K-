@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+articles / sentences: 12 arts / 35 sents
+ticker table: 가나전자 +3/-2/=4 | 다라바이오 +6/-5/=0 | 마바코인 +5/-5/=2 | 기타 +0/-0/=3
+negative sentences: 12: 가나전자 해외 공장 가동 지연 / 가나전자의 해외 신공장 가동이 내년 2분기로 지연됐다. / 다라바이오 원료 결함으로 일부 제품 리콜
+denial -> neutral: neu
+no buy/sell advice: 매수/매도/목표가 in result text: false
+copy: [뉴스 감성 요약 2026-11-19] / 기사 12건, 문장 35개 중 긍정 14 · 부정 12 · 중립 9. / 긍정 신호가 가장 많은 쪽: 가나전자 (긍정 3 · 부정 2).
+print print: pages=1 bytes=63144 file=files\newssentiment_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=5419 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

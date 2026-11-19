@@ -1,0 +1,17 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+split: 11/16(월):8 11/17(화):8 11/18(수):8 11/19(목):8 11/20(금):8 total=40
+4 classes: 완료 15 · 진행 11 · 보류 4 · 막힘 4 · 확인 6
+last-word rule: 호스팅 결제 문제 해결 완료→완료 | 결제 오류로 막힘→막힘 | 재협상 다음 주로 연기→보류
+progress: 미사상가 40% (완료 4 ÷ 분류된 10줄) | 홈페이지 44% (완료 4 ÷ 분류된 9줄) | 세무 60% (완료 3 ÷ 분류된 5줄) | 교환매물 40% (완료 4 ÷ 분류된 10줄)
+next week: 7: [미사상가] 임대인과 권리금 재협 / [홈페이지] 오픈 일정 다음 주  / [세무] 증빙 없는 지출 3건 확 / [미사상가] 임대인 회신 대기 / [교환매물] 세무사 상담 대기 / [교환매물] 상대 측 회신 없음 / [교환매물] 융자 승계 은행 문의
+no invented: result lines=40 = input lines 40
+csv: {"name":"주간업무일지_2026-11-19.csv","size":1355}
+print print: pages=1 bytes=62902 file=files\weeklog_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=3675 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

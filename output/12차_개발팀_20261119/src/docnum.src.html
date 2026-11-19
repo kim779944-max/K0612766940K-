@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KTS 더번호 — 견적서·거래명세서 연번 발행 대장 · KTS 원클릭</title>
+<meta name="theme-color" content="#0A1128">
+<style>
+/*@@CSS@@*/
+.big{font-size:22px;font-weight:900;color:var(--or2);text-align:center;margin-top:8px;letter-spacing:.5px}
+.dup{border:1px solid var(--red);background:rgba(255,90,90,.1);border-radius:11px;padding:10px;margin-top:8px;font-size:12.5px}
+</style></head>
+<body><div id="app">
+<!--@@TOP KTS 더번호@@-->
+<main>
+<section class="hero">
+ <h1>견적서·거래명세서 번호,<br><em>겹치지 않게 자동 발행</em></h1>
+ <p>문서 종류별 연번 규칙(접두어·연도·자릿수)대로 번호를 발행하고 대장에 남깁니다. 같은 거래처·같은 금액·같은 날 재발행은 경고하고, 빠진 번호도 찾아 줍니다.</p>
+ <p class="fixnote">세금계산서를 실제로 발행하지 않습니다. 전자세금계산서는 국세청 홈택스에서 발행하세요.</p>
+</section>
+<section class="card" id="in">
+ <h2><span class="n">1</span>번호 규칙 · 발행</h2>
+ <div class="row"><button class="btn sec sm" id="sampleBtn">예시: 거래처 5건 발행</button><button class="btn sec sm" id="resetBtn">대장 비우기</button></div>
+ <div class="g2"><div><label class="lb">문서 종류</label><select id="ty"><option value="Q">견적서</option><option value="T">거래명세서</option><option value="I">계산서</option></select></div><div><label class="lb">접두어</label><input id="pre" maxlength="8"></div></div>
+ <div class="g2"><div><label class="lb">자릿수</label><select id="dig"><option>3</option><option selected>4</option><option>5</option></select></div><div><label class="lb">시작 번호 <i>올해 첫 발행 때</i></label><input id="start" inputmode="numeric" value="1"></div></div>
+ <p class="kv" id="rule"></p>
+ <div class="g2"><div><label class="lb">거래처</label><input id="cli" maxlength="40"></div><div><label class="lb">금액 (원)</label><input id="amt" inputmode="numeric"></div></div>
+ <div class="g2"><div><label class="lb">일자</label><input id="dt" type="date"></div><div><label class="lb">비고</label><input id="memo" maxlength="40"></div></div>
+</section>
+<button class="btn pri" id="runBtn" style="margin-top:14px">번호 발행</button>
+<section class="card hide" id="result">
+ <h2><span class="n">2</span><span id="rTitle">발행 대장</span></h2>
+ <div class="big" id="last"></div><div id="dupBox"></div>
+ <div class="stat"><div><b id="sN">0</b><span>발행</span></div><div><b id="sGap" style="color:var(--red)">0</b><span>빠진 번호</span></div><div><b id="sDup" style="color:var(--yel)">0</b><span>중복 경고</span></div></div>
+ <div class="row"><button class="btn pri sm" id="csvBtn">대장 CSV</button><button class="btn sec sm" id="printBtn">대장 인쇄</button><button class="btn sec sm" id="labelBtn">번호 라벨 인쇄</button></div>
+ <div class="row"><button class="btn sec sm" id="copyBtn">대장 복사</button><button class="btn sec sm" id="undoBtn">마지막 번호 되돌리기</button></div>
+ <div id="gaps"></div><div id="tbl"></div>
+ <p class="kv">되돌리기는 가장 마지막에 발행한 번호 1개만, 그 번호를 그대로 입력해 확인한 뒤 1회 할 수 있습니다(다음 발행 전까지 다시 못 함). 되돌린 기록은 대장 아래에 남습니다.</p>
+</section>
+<!--@@BOTTOM@@-->
+</main></div>
+<div id="toast"></div><div id="printArea"></div>
+<script>
+/*@@JS@@*/
+const KEY = 'kts_docnum_v1', TN = {Q:'견적서', T:'거래명세서', I:'계산서'};
+let D = LS.get(KEY, {rows:[], undo:[], canUndo:false, cfg:{Q:{pre:'Q', dig:4, start:1}, T:{pre:'T', dig:4, start:1}, I:{pre:'I', dig:4, start:1}}}), PENDING = null;
+const save = () => LS.set(KEY, D);
+function cfgFromForm(){ const t = $('#ty').value; D.cfg[t] = {pre:($('#pre').value.trim() || t).replace(/[^\w가-힣-]/g, ''), dig:+$('#dig').value, start:Math.max(1, parseInt($('#start').value) || 1)}; save(); }
+function showCfg(){ const c = D.cfg[$('#ty').value]; $('#pre').value = c.pre; $('#dig').value = c.dig; $('#start').value = c.start; const y = ($('#dt').value || todayS()).slice(0, 4); $('#rule').textContent = `규칙: ${c.pre}-${y}-${'0'.repeat(c.dig - 1)}${c.start} 형식 · ${TN[$('#ty').value]} · 연도가 바뀌면 시작 번호부터 다시`; }
+const fmt = (c, y, n) => `${c.pre}-${y}-${String(n).padStart(c.dig, '0')}`;
+function nextNo(t, y){ const used = D.rows.filter(r => r.t === t && r.y === y).map(r => r.n); return used.length ? Math.max(...used) + 1 : D.cfg[t].start; }
+function issue(force){
+  cfgFromForm(); const t = $('#ty').value, cli = $('#cli').value.trim(), amt = num($('#amt').value), dt = $('#dt').value || todayS();
+  if (!cli || !isFinite(amt)){ $('#cli').classList.toggle('miss', !cli); $('#amt').classList.toggle('miss', !isFinite(amt)); return toast('거래처와 금액을 넣어 주세요'); } $('#cli').classList.remove('miss'); $('#amt').classList.remove('miss');
+  const dup = D.rows.find(r => r.t === t && r.cli === cli && r.amt === amt && r.dt === dt && !r.void);
+  if (dup && !force){ PENDING = true; $('#dupBox').innerHTML = `<div class="dup"><b>중복 발행 경고</b><br>${esc(dup.no)} 와(과) 거래처·금액·날짜가 같습니다(${esc(cli)} · ${won(amt)}원 · ${dt}). 정말 새 번호가 필요하면 아래를 누르세요.<div class="row"><button class="btn sec sm" id="forceBtn">그래도 새 번호 발행</button></div></div>`; $('#forceBtn').onclick = () => issue(true); D.dupWarn = (D.dupWarn || 0) + 1; save(); render(); return; }
+  const y = dt.slice(0, 4), n = nextNo(t, y), no = fmt(D.cfg[t], y, n);
+  if (D.rows.some(r => r.no === no)) return toast('번호 충돌 — 대장을 확인하세요');
+  D.rows.push({no, t, y, n, cli, amt, dt, memo:$('#memo').value.trim(), at:new Date().toISOString().slice(0, 16).replace('T', ' ')}); D.canUndo = true; save();
+  $('#dupBox').innerHTML = ''; $('#cli').value = ''; $('#amt').value = ''; $('#memo').value = ''; render(no); toast(`${no} 발행`);
+}
+function gaps(){ const G = []; ['Q', 'T', 'I'].forEach(t => uniq(D.rows.filter(r => r.t === t).map(r => r.y)).forEach(y => { const ns = D.rows.filter(r => r.t === t && r.y === y).map(r => r.n).sort((a, b) => a - b); for (let n = D.cfg[t].start; n < ns[ns.length - 1]; n++) if (!ns.includes(n)) G.push(fmt(D.cfg[t], y, n)); })); return G; }
+function render(no){
+  const G = gaps(); $('#rTitle').textContent = `발행 대장 · ${D.rows.length}건`; $('#sN').textContent = D.rows.length; $('#sGap').textContent = G.length; $('#sDup').textContent = D.dupWarn || 0;
+  if (no) $('#last').textContent = no; else if (!D.rows.length) $('#last').textContent = '';
+  $('#gaps').innerHTML = G.length ? `<div class="item warn"><div class="q">빠진 번호 ${G.length}개</div><div class="a">${G.map(esc).join(', ')} — 취소·폐기했다면 사유를 대장 비고에 남기세요.</div></div>` : '';
+  $('#tbl').innerHTML = D.rows.length ? `<table class="t"><tr><th style="width:30%">번호</th><th>일자</th><th>거래처</th><th style="text-align:right">금액</th></tr>${D.rows.slice().reverse().map(r => `<tr><td>${esc(r.no)}</td><td>${r.dt.slice(5)}</td><td>${esc(r.cli)}${r.memo ? '<br><span class="kv">' + esc(r.memo) + '</span>' : ''}</td><td style="text-align:right">${won(r.amt)}</td></tr>`).join('')}</table>` + (D.undo.length ? `<p class="kv">되돌린 번호: ${D.undo.map(u => esc(u.no) + '(' + u.at + ')').join(', ')}</p>` : '') : '<p class="empty">아직 발행한 번호가 없습니다</p>';
+  $('#result').classList.remove('hide');
+}
+$('#undoBtn').onclick = () => { if (!D.rows.length) return toast('되돌릴 번호가 없습니다'); if (!D.canUndo) return toast('되돌리기는 다음 발행 전까지 1회만 됩니다');
+  const last = D.rows[D.rows.length - 1]; const ok = (window.__undoAnswer != null ? window.__undoAnswer : prompt(`되돌리려면 번호 ${last.no} 를 그대로 입력하세요`)); if (ok !== last.no) return toast('번호가 달라 되돌리지 않았습니다');
+  D.rows.pop(); D.undo.push({no:last.no, at:new Date().toISOString().slice(0, 16).replace('T', ' ')}); D.canUndo = false; save(); render(); toast(`${last.no} 를 되돌렸습니다 (다음 발행 때 같은 번호가 다시 나옵니다)`); };
+$('#ty').onchange = showCfg; $('#dt').onchange = showCfg; ['#pre', '#dig', '#start'].forEach(s => $(s).onchange = () => { cfgFromForm(); showCfg(); });
+$('#runBtn').onclick = () => { issue(false); $('#result').scrollIntoView({block:'start'}); window.scrollBy(0, -60); };
+$('#sampleBtn').onclick = () => { const E = [['T', '미사상사', 1250000], ['T', '하남푸드', 384000], ['Q', '강동인테리어', 5800000], ['T', '미사상사', 920000], ['Q', '풍산전자', 2310000]]; const d = todayS();
+  E.forEach(([t, c, a]) => { $('#ty').value = t; showCfg(); $('#cli').value = c; $('#amt').value = a; $('#dt').value = d; issue(false); });
+  $('#ty').value = 'T'; showCfg(); $('#cli').value = '미사상사'; $('#amt').value = '920000'; $('#dt').value = d; toast('예시 5건을 발행했습니다 · 같은 건을 한 번 더 누르면 중복 경고'); };
+$('#resetBtn').onclick = () => { D.rows = []; D.undo = []; D.canUndo = false; D.dupWarn = 0; save(); render(); toast('대장을 비웠습니다'); };
+const head = ['번호','문서','일자','거래처','금액','비고','발행 시각'];
+$('#csvBtn').onclick = () => saveCSV(`발행대장_${todayS()}.csv`, [head].concat(D.rows.map(r => [r.no, TN[r.t], r.dt, r.cli, r.amt, r.memo, r.at])));
+$('#copyBtn').onclick = () => copyOut(D.rows.map(r => [r.no, TN[r.t], r.dt, r.cli, won(r.amt)].join('\t')).join('\n'), '대장을 복사했습니다');
+$('#printBtn').onclick = () => printDoc(`<div class="paper"><h1>견적서 · 거래명세서 발행 대장</h1><p class="note">${todayS()} · ${D.rows.length}건 · 빠진 번호 ${gaps().length}개</p><table><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr>${D.rows.map(r => `<tr><td>${esc(r.no)}</td><td>${TN[r.t]}</td><td>${r.dt}</td><td>${esc(r.cli)}</td><td style="text-align:right">${won(r.amt)}</td><td>${esc(r.memo)}</td><td>${r.at}</td></tr>`).join('')}</table><p class="note">세금계산서는 국세청 홈택스에서 발행하세요.</p></div>`);
+$('#labelBtn').onclick = () => printDoc(`<div class="paper"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3mm">${D.rows.map(r => `<div style="border:1px solid #333;border-radius:2mm;height:30mm;display:flex;flex-direction:column;justify-content:center;align-items:center"><b style="font-size:13pt">${esc(r.no)}</b><span style="font-size:8.5pt">${TN[r.t]} · ${esc(r.cli)} · ${r.dt}</span></div>`).join('')}</div></div>`);
+$('#dt').value = todayS(); showCfg(); if (D.rows.length) render();
+</script>
+</body></html>

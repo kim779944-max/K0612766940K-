@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+counts: 넓게=30(uniq 30) 중간=50(uniq 50) 좁게=100(uniq 100) crossDup=0
+sets: 릴스 (해시태그 25개):25 | 피드 (해시태그 30개):30 | 블로그 (태그 10개 · # 없이):10
+flagged: 무료배송(광고 오인)
+narrow sample: 하남식자재도매추천 하남식자재도매후기 하남식자재도매가격 하남식자재도매구매 하남식자재도매주문 하남식자재도매예약 하남식자재도매배달 하남식자재도매포장
+3 examples: 1:30/50/100 flag=1 | 2:30/50/100 flag=1 | 3:30/50/100 flag=55
+csv: {"name":"해시태그_2026-11-19.csv","size":2440}
+print print: pages=2 bytes=50388 file=files\hashtagreport_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=4483 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

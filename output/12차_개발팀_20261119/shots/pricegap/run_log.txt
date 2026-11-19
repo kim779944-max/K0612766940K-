@@ -1,0 +1,15 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+stats: n=24 sample=22 med=3565 avg=3569 askPpy=3972 gap=11.4% pubX=1.77
+outliers: 예시아파트 102동 10층 41000 dev -55% | 예시아파트 104동 3층 151000 dev 65%
+hand check ppy row0: 92000/(84.9/3.3058)=3582.3 vs 3582.3
+표본 부족 경고: 표본 부족 — 참고만이상치를 뺀 거래
+csv: {"name":"시세비교_2026-11-19.csv","size":1336}
+print print: pages=2 bytes=78953 file=files\pricegap_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=3500 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

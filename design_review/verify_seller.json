@@ -1,0 +1,118 @@
+{
+    "app":  "seller",
+    "when":  "2026-11-19 08:10:36",
+    "viewport":  "390x844@2x",
+    "static":  {
+                   "scripts_in":  2,
+                   "scripts_out":  2,
+                   "script_sha256_in":  "ea23cc79a637112cc9f17ae04f1122c856e74705804b5d2de6430f31421592bc",
+                   "script_sha256_out":  "ea23cc79a637112cc9f17ae04f1122c856e74705804b5d2de6430f31421592bc",
+                   "script_identical":  true,
+                   "ids":  49,
+                   "ids_missing":  [
+
+                                   ],
+                   "class_tokens":  56,
+                   "class_missing":  [
+
+                                     ],
+                   "text_identical":  true,
+                   "text_len":  [
+                                    1444,
+                                    1444
+                                ],
+                   "new_external_refs":  [
+
+                                         ]
+               },
+    "function_ok":  "3/3",
+    "function_same_as_before":  "3/3",
+    "annotated_marks":  3,
+    "before":  {
+                   "side":  "before",
+                   "file":  "design_review\\in\\seller.html",
+                   "over_start":  {
+                                      "sw":  390,
+                                      "cw":  390,
+                                      "n":  0,
+                                      "bad":  [
+
+                                              ]
+                                  },
+                   "actions":  [
+                                   {
+                                       "name":  "① 세팅 저장 → 본 화면",
+                                       "result":  "main hidden=false sum=쿠팡도매매 → 쿠팡바꾸기32%목표 마진0개담은 상품0원순익 합계"
+                                   },
+                                   {
+                                       "name":  "② 세부설정 검색(마진)",
+                                       "result":  "results=2 first=마진32%›"
+                                   },
+                                   {
+                                       "name":  "③ 결과 열기 → 마진 설명",
+                                       "result":  "sheet on=true explain=1 text= 세부 설정 · 마진 닫기 ✕ 이걸 바꾸면지금 32%. 원가 10,000원 상품이면 권장 판매가 22,800원, 내게 남는 돈 7,338원입니다"
+                                   }
+                               ],
+                   "scrollY":  0,
+                   "over_end":  {
+                                    "sw":  390,
+                                    "cw":  390,
+                                    "n":  0,
+                                    "bad":  [
+
+                                            ]
+                                },
+                   "touch_under44":  [
+                                         "a.back 72x30 \"← 원클릭\"",
+                                         "button#sumEd.ed 50x26 \"바꾸기\"",
+                                         "input#cfgQ 336x41 \"배송비 · 마진 · 수수료\"",
+                                         "button 336x36 \"마진32%›\"",
+                                         "button 336x36 \"안전 하한8%›\"",
+                                         "a 338x32 \"010-2002-2899\""
+                                     ],
+                   "errors":  [
+                                  "LOAD file:///C:/Users/A/OneDrive/%EB%B0%94%ED%83%95%20%ED%99%94%EB%A9%B4/KTS_%EC%9E%91%EC%97%85%EC%8B%A4/K0612766940K-/design_review/master.js"
+                              ]
+               },
+    "after":  {
+                  "side":  "after",
+                  "file":  "design_review\\out\\seller_design.html",
+                  "over_start":  {
+                                     "sw":  390,
+                                     "cw":  390,
+                                     "n":  0,
+                                     "bad":  [
+
+                                             ]
+                                 },
+                  "actions":  [
+                                  {
+                                      "name":  "① 세팅 저장 → 본 화면",
+                                      "result":  "main hidden=false sum=쿠팡도매매 → 쿠팡바꾸기32%목표 마진0개담은 상품0원순익 합계"
+                                  },
+                                  {
+                                      "name":  "② 세부설정 검색(마진)",
+                                      "result":  "results=2 first=마진32%›"
+                                  },
+                                  {
+                                      "name":  "③ 결과 열기 → 마진 설명",
+                                      "result":  "sheet on=true explain=1 text= 세부 설정 · 마진 닫기 ✕ 이걸 바꾸면지금 32%. 원가 10,000원 상품이면 권장 판매가 22,800원, 내게 남는 돈 7,338원입니다"
+                                  }
+                              ],
+                  "scrollY":  0,
+                  "over_end":  {
+                                   "sw":  390,
+                                   "cw":  390,
+                                   "n":  0,
+                                   "bad":  [
+
+                                           ]
+                               },
+                  "touch_under44":  [
+
+                                    ],
+                  "errors":  [
+                                 "LOAD file:///C:/Users/A/OneDrive/%EB%B0%94%ED%83%95%20%ED%99%94%EB%A9%B4/KTS_%EC%9E%91%EC%97%85%EC%8B%A4/K0612766940K-/design_review/master.js"
+                             ]
+              }
+}

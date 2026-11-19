@@ -1,0 +1,2 @@
+vectors: ["L v1 m3 OK","L v2 m6 OK","L v3 m3 OK","L v11 m3 OK","L v25 m0 OK","M v1 m4 OK","M v3 m6 OK","M v3 m2 OK","M v13 m3 OK","M v29 m0 OK","Q v1 m4 OK","Q v3 m7 OK","Q v4 m4 OK","Q v16 m0 OK","Q v34 m0 OK","H v1 m4 OK","H v4 m2 OK","H v5 m6 OK","H v18 m1 OK","H v39 m3 OK"]
+menu QR v33 L bytes=1974 decoded==url true | page has 김치찌개=true Kimchi Stew=true 9,000원=true

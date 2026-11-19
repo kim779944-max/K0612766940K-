@@ -1,0 +1,16 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+repos: example-org/pdf-kit(MIT,2d), example-org/ocr-lite(Apache-2.0,4d), sample-dev/sheet-sync(AGPL-3.0,7d), sample-dev/chat-widget(GPL-3.0,109d), open-lab/calendar-ics(MIT OR Apache-2.0,1d), open-lab/img-resize(없음,9d), tiny-tools/qr-encode(BSD-3-Clause,5d), tiny-tools/form-guard(상용 라이선스(문의),334d)
+this week changes: example-org/pdf-kit:2, example-org/ocr-lite:2, sample-dev/sheet-sync:2, open-lab/calendar-ics:1, tiny-tools/qr-encode:1
+warnings: 1,2,2,2,1,1,2,3 | 라이선스 GPL-3.0 — 수정·배포 시 공개 의무 조건이 있을 수 있어 확인 필요 / 최근 변경 109일 전 — 유지보수 상태 확인 필요
+license never asserted ok: 8 확인 필요 pills
+use 3: open-lab/calendar-ics (캘린더·ics·일정) — 우리 업무 낱말과 겹침, 시험 도입 후보. 도입 전: 라이선스 MIT OR Apache-2.0 — 고지·표기 조건 확인 필요 || example-org/pdf-kit (pdf·변환·브라우저) — 우리 업무 낱말과 겹침, 시험 도입 후보. 도입 전: 라이선스 MIT — 고지·표기 조건 확인 필요 || example-org/ocr-lite (ocr·이미지·한국어) — 우리 업무 낱말과 겹침, 시험 도입 후보. 도입 전: 라이선스 Apache-2.0 — 고지·표기 조건 확인 필요
+copy: 1437자
+print print: pages=1 bytes=88876 file=files\ghtrend_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=3652 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

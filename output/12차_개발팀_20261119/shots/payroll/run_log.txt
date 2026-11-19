@@ -1,0 +1,17 @@
+﻿layout[start]: {"sw":390,"n":0,"bad":[]}
+taps to result: sample(1) + run(1) = 2
+pay: 김하늘: base 1793616 주휴 358723 ot 0 gross 2152339 ded 244630 net 1907709 | 이도윤: base 955900 주휴 191180 ot 66000 gross 1213080 ded 137870 net 1075210 | 박서윤: base 2600000 주휴 0 ot 0 gross 2600000 ded 172050 net 2427950
+hand check 김하늘: base=true ju=true np=true
+60+ pension excluded: 박서윤 np=0
+rates editable: np@4.5=96850 np@4.75=102230
+5인 미만 ot: 5dn=44000 5up=66000
+employer: 512,810
+csv: {"name":"급여명세_2026-11.csv","size":515}
+print print: pages=1 bytes=68503 file=files\payroll_print.pdf
+layout[end]: {"sw":390,"n":0,"bad":[]}
+full page height=2814 inquiry link=../misa-1116/form.html privacy line=true
+external refs: []
+send code present: false
+errors(now): [] / before-nav: []
+print calls: 1
+shots=4 overflow(scrollWidth!=390)=0 layoutIssues(start/end)=0/0

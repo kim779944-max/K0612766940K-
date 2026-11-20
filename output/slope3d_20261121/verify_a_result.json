@@ -1,0 +1,219 @@
+﻿{
+    "A1":  [
+               {
+                   "fn":  "render",
+                   "len":  178,
+                   "same":  true
+               },
+               {
+                   "fn":  "scene",
+                   "len":  601,
+                   "same":  true
+               },
+               {
+                   "fn":  "drawBase",
+                   "len":  722,
+                   "same":  true
+               },
+               {
+                   "fn":  "drawSlopeImg",
+                   "len":  361,
+                   "same":  true
+               },
+               {
+                   "fn":  "drawContours",
+                   "len":  1334,
+                   "same":  true
+               },
+               {
+                   "fn":  "drawGridLines",
+                   "len":  787,
+                   "same":  true
+               },
+               {
+                   "fn":  "drawVWImg",
+                   "len":  1251,
+                   "same":  true
+               },
+               {
+                   "fn":  "drawParcelHL",
+                   "len":  1918,
+                   "same":  true
+               },
+               {
+                   "fn":  "drawMarker",
+                   "len":  1454,
+                   "same":  true
+               },
+               {
+                   "fn":  "drawProfile",
+                   "len":  2609,
+                   "same":  true
+               },
+               {
+                   "fn":  "analyze",
+                   "len":  1193,
+                   "same":  true
+               },
+               {
+                   "fn":  "paintResult",
+                   "len":  1079,
+                   "same":  true
+               },
+               {
+                   "fn":  "verdictOf",
+                   "len":  667,
+                   "same":  true
+               }
+           ],
+    "A1consts":  [
+                     {
+                         "text":  "var ZMIN=13, ZMAX=20, TZMAX=19;",
+                         "inOld":  true,
+                         "inNew":  true
+                     },
+                     {
+                         "text":  "\u003cinput type=\"range\" id=\"op\" min=\"0\" max=\"100\" value=\"38\"",
+                         "inOld":  true,
+                         "inNew":  true
+                     },
+                     {
+                         "text":  "g.strokeStyle=\u0027rgba(255,255,255,.95)\u0027; g.lineWidth=7.5;",
+                         "inOld":  true,
+                         "inNew":  true
+                     },
+                     {
+                         "text":  "g.strokeStyle=\u0027#FF6B00\u0027; g.lineWidth=4.5;",
+                         "inOld":  true,
+                         "inNew":  true
+                     },
+                     {
+                         "text":  "g.lineWidth=1.4; g.stroke(p);",
+                         "inOld":  true,
+                         "inNew":  true
+                     }
+                 ],
+    "A2_base":  {
+                    "ready":  true,
+                    "op":  "38|38%",
+                    "layers":  "slope:1,cont:1,grid:0,parcel:1,zone:0,sat:0",
+                    "free":  "무료 3건 남음|3곳|체험 3건",
+                    "st":  "{\"zoom\":16.2,\"tileZ\":16,\"maxZoom\":20,\"jibun\":\"산 102임\",\"pnu\":\"4182034525201020000\",\"pcLoaded\":true,\"bb\":{\"bx\":106,\"by\":91,\"bX\":284,\"bY\":254,\"w\":334,\"h\":392}}",
+                    "sw":  390,
+                    "zoomAfter":  20,
+                    "err":  "[]",
+                    "evts":  {
+                                 "log.network":  1
+                             }
+                },
+    "A2_new":  {
+                   "ready":  true,
+                   "op":  "38|38%",
+                   "layers":  "slope:1,cont:1,grid:0,parcel:1,zone:0,sat:0",
+                   "free":  "무료 3건 남음|3곳|체험 3건",
+                   "st":  "{\"zoom\":16.2,\"tileZ\":16,\"maxZoom\":20,\"jibun\":\"산 102임\",\"pnu\":\"4182034525201020000\",\"pcLoaded\":true,\"bb\":{\"bx\":106,\"by\":91,\"bX\":284,\"bY\":254,\"w\":334,\"h\":392}}",
+                   "sw":  390,
+                   "zoomAfter":  20,
+                   "err":  "[]",
+                   "evts":  {
+
+                            }
+               },
+    "A2_diff":  [
+                    {
+                        "shot":  "1_op38_parcel_contour",
+                        "diffRatio":  0.0245
+                    },
+                    {
+                        "shot":  "2_quota_free3",
+                        "diffRatio":  0
+                    },
+                    {
+                        "shot":  "3_z20",
+                        "diffRatio":  0
+                    },
+                    {
+                        "shot":  "4_z20_contour_off",
+                        "diffRatio":  0
+                    },
+                    {
+                        "shot":  "5_z20_parcel_off",
+                        "diffRatio":  0
+                    }
+                ],
+    "A2D_jibun":  "산 102임",
+    "A3":  {
+               "clickToFirstFrameMs":  68,
+               "st":  "{\"on\":true,\"yaw\":0,\"pitch\":38,\"dist\":671.2681915283204,\"ex\":1,\"frameMedianMs\":0,\"frames\":0,\"raf\":true,\"st\":{\"ctx\":1,\"live\":1,\"verts\":16384,\"tris\":32258,\"texW\":512,\"texH\":512,\"tz\":16,\"tilesOk\":3,\"tilesFail\":0,\"tilesTotal\":4,\"firstMs\":68,\"drawMs\":0.3000001907348633,\"draws\":4,\"lineSegs\":320,\"parcel\":\"산 102임\",\"center\":\"parcel\",\"firstAt\":6714.900000572205},\"grid\":[128,128],\"extM\":639,\"reliefM\":103,\"S\":{\"lat\":37.8319,\"lon\":127.3668,\"zoom\":16.2}}"
+           },
+    "A7_ok":  "{\"st\":{\"ctx\":1,\"live\":1,\"verts\":16384,\"tris\":32258,\"texW\":512,\"texH\":512,\"tz\":16,\"tilesOk\":4,\"tilesFail\":0,\"tilesTotal\":4,\"firstMs\":68,\"drawMs\":0.40000057220458984,\"draws\":5,\"lineSegs\":320,\"parcel\":\"산 102임\",\"center\":\"parcel\",\"firstAt\":6714.900000572205},\"inf\":\"위성 · 고도 과장 1x\"}",
+    "A6":  "{\"parcel3d\":\"산 102임\",\"lineSegs\":320,\"center\":\"parcel\",\"label\":\"산 102임\",\"labelShown\":true,\"jibun2d\":\"산 102임\"}",
+    "A4":  [
+               {
+                   "yaw":  0,
+                   "pix":  "{\"w\":668,\"h\":784,\"sky\":0.2532,\"hash\":\"77e9426d\"}",
+                   "png":  "8E81C5440EE1"
+               },
+               {
+                   "yaw":  90,
+                   "pix":  "{\"w\":668,\"h\":784,\"sky\":0.3379,\"hash\":\"ae5372b8\"}",
+                   "png":  "9B88A4085EDB"
+               },
+               {
+                   "yaw":  180,
+                   "pix":  "{\"w\":668,\"h\":784,\"sky\":0.2689,\"hash\":\"5205ee19\"}",
+                   "png":  "1013271F55D6"
+               },
+               {
+                   "yaw":  270,
+                   "pix":  "{\"w\":668,\"h\":784,\"sky\":0.2685,\"hash\":\"8e225e\"}",
+                   "png":  "2BDDF1861171"
+               }
+           ],
+    "A5":  [
+               {
+                   "pitch":  15,
+                   "pix":  "{\"w\":668,\"h\":784,\"sky\":0.384,\"hash\":\"ef0f6632\"}"
+               },
+               {
+                   "pitch":  45,
+                   "pix":  "{\"w\":668,\"h\":784,\"sky\":0.212,\"hash\":\"49412d\"}"
+               },
+               {
+                   "pitch":  75,
+                   "pix":  "{\"w\":668,\"h\":784,\"sky\":0.0406,\"hash\":\"54b2e9e7\"}"
+               }
+           ],
+    "Gest":  {
+                 "start":  "yaw=0 pitch=38 dist=671",
+                 "oneFingerDrag":  "yaw=36 pitch=47.6",
+                 "twoFingerSpread":  "dist=214",
+                 "doubleTap":  "yaw=0 pitch=38 dist=671"
+             },
+    "Exag":  "위성 · 고도 과장 2x",
+    "A8":  "{\"frameMedianMs\":9.299999999999272,\"frames\":240,\"verts\":16384,\"tris\":32258,\"tex\":\"512x512\",\"tz\":16,\"drawMsLast\":0.19999980926513672}",
+    "A9":  {
+               "before":  "{\"zoom\":16.2,\"tileZ\":16,\"maxZoom\":20,\"jibun\":\"산 102임\",\"pnu\":\"4182034525201020000\",\"pcLoaded\":true,\"bb\":{\"bx\":106,\"by\":91,\"bX\":284,\"bY\":254,\"w\":334,\"h\":392}}",
+               "after":  "{\"zoom\":16.2,\"tileZ\":16,\"maxZoom\":20,\"jibun\":\"산 102임\",\"pnu\":\"4182034525201020000\",\"pcLoaded\":true,\"bb\":{\"bx\":106,\"by\":91,\"bX\":284,\"bY\":254,\"w\":334,\"h\":392}}",
+               "rafStopped":  true,
+               "pixDiff":  0.0226
+           },
+    "Dup":  "{\"ctxCreated\":8,\"live\":1,\"canvases\":1,\"on\":true}",
+    "A7_failToasts":  [
+
+                      ],
+    "A7_fail":  "{\"st\":{\"ctx\":9,\"live\":1,\"verts\":14080,\"tris\":27686,\"texW\":768,\"texH\":768,\"tz\":17,\"tilesOk\":0,\"tilesFail\":9,\"tilesTotal\":9,\"firstMs\":31,\"drawMs\":2.09999942779541,\"draws\":382,\"lineSegs\":41,\"parcel\":\"300-1 전\",\"center\":\"parcel\",\"firstAt\":27489.5},\"inf\":\"회색 지형 · 고도 과장 1x\",\"toasts\":[\"Vworld 필지 경계 층을 불러오지 못했습니다\",\"위성사진을 받지 못했습니다 · 회색 지형으로 보여 드립니다\"]}",
+    "sw":  390,
+    "err":  "[]",
+    "evts":  {
+
+             },
+    "evtList":  [
+
+                ],
+    "A10_webgl":  false,
+    "A10":  "{\"toasts\":[\"이 기기에서는 3D를 켤 수 없습니다 — 2D로 계속 봅니다\"],\"mode2dOn\":true,\"m3d\":false,\"mapVisible\":\"visible\",\"cv3dHidden\":true,\"err\":[]}",
+    "A10_evts":  {
+
+                 }
+}

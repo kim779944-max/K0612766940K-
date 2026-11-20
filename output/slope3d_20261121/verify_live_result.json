@@ -1,0 +1,29 @@
+﻿{
+    "slope_firstFrameMs":  81,
+    "slope_3d":  "{\"on\":true,\"yaw\":35,\"pitch\":32,\"dist\":671.2681915283204,\"ex\":1,\"frameMedianMs\":0,\"frames\":0,\"raf\":true,\"st\":{\"ctx\":1,\"live\":1,\"verts\":16384,\"tris\":32258,\"texW\":512,\"texH\":512,\"tz\":16,\"tilesOk\":4,\"tilesFail\":0,\"tilesTotal\":4,\"firstMs\":80,\"drawMs\":0.40000057220458984,\"draws\":7,\"lineSegs\":320,\"parcel\":\"산 102임\",\"center\":\"parcel\",\"firstAt\":6599.699999809265},\"grid\":[128,128],\"extM\":639,\"reliefM\":103,\"S\":{\"lat\":37.8319,\"lon\":127.3668,\"zoom\":16.2}}",
+    "slope_inf":  "위성 · 고도 과장 1x",
+    "slope_frameMedianMs":  9.699999999998909,
+    "slope_back2d":  "{\"zoom\":16.2,\"tileZ\":16,\"maxZoom\":20,\"jibun\":\"산 102임\",\"pnu\":\"4182034525201020000\",\"pcLoaded\":true,\"bb\":{\"bx\":106,\"by\":91,\"bX\":284,\"bY\":254,\"w\":334,\"h\":392}}",
+    "slope_sw":  390,
+    "slope_err":  "[]",
+    "slope_evts":  {
+
+                   },
+    "slope_evtList":  [
+
+                      ],
+    "sign":  "{\"sw\":390,\"slots\":true,\"box\":true,\"fix\":true}",
+    "sign_evts":  {
+
+                  },
+    "sign_evtList":  [
+
+                     ],
+    "index":  "{\"sw\":390,\"ref\":\"초대 링크로 들어오셨습니다 · 친구 확인은 대표님 확인 후 해금\",\"items\":1,\"cap\":4,\"unpinToast\":\"이번 달 고정 칸입니다 · 바꾸려면 이번 달 무료 초기화 1회로 비울 수 있습니다\"}",
+    "index_evts":  {
+
+                   },
+    "index_evtList":  [
+
+                      ]
+}

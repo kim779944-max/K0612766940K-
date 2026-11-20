@@ -1,0 +1,85 @@
+﻿{
+    "boxAskShown":  true,
+    "boxConfirmText":  "도장함에 담기\n\n확정하면 이번 달에는 바꿀 수 없습니다.\n무료 4칸 중 1번째 칸에 담습니다. 다음 무료 초기화는 이번 달에 1회 쓸 수 있습니다.\n\n취소\n확정하고 담기",
+    "C3_box":  "{\"n\":1,\"cap\":4,\"deleteButtons\":0,\"useButtons\":1}",
+    "B1_stamps":  "[{\"i\":0,\"sid\":\"s1\",\"x\":0.4,\"y\":0.86,\"w\":0.1,\"mm\":21,\"png\":\"344x344\"},{\"i\":1,\"sid\":\"s2\",\"x\":0.82,\"y\":0.86,\"w\":0.0714,\"mm\":15,\"png\":\"344x344\"},{\"i\":2,\"sid\":\"s3\",\"x\":0.62,\"y\":0.9131,\"w\":0.12,\"mm\":25.2,\"png\":\"344x452\"}]",
+    "B1_dom":  3,
+    "B3_before":  "[{\"i\":0,\"sid\":\"s1\",\"x\":0.4,\"y\":0.86,\"w\":0.1,\"mm\":21,\"png\":\"344x344\"},{\"i\":1,\"sid\":\"s2\",\"x\":0.82,\"y\":0.86,\"w\":0.0714,\"mm\":15,\"png\":\"344x344\"},{\"i\":2,\"sid\":\"s3\",\"x\":0.62,\"y\":0.9131,\"w\":0.12,\"mm\":25.2,\"png\":\"344x452\"}]",
+    "B3_after":  "[{\"i\":0,\"sid\":\"s1\",\"x\":0.4,\"y\":0.86,\"w\":0.1,\"mm\":21,\"png\":\"344x344\"},{\"i\":1,\"sid\":\"s2\",\"x\":0.6404,\"y\":0.7542,\"w\":0.0857,\"mm\":18,\"png\":\"344x344\"},{\"i\":2,\"sid\":\"s3\",\"x\":0.62,\"y\":0.9131,\"w\":0.12,\"mm\":25.2,\"png\":\"344x452\"}]",
+    "B3_sel":  "{\"sel\":1,\"dashed\":[\"0:no\",\"1:yes\",\"2:no\"]}",
+    "B2_saved":  "[{\"n\":\"KTS더싸인_날인본.pdf\",\"size\":401669,\"type\":\"application/pdf\"}]",
+    "B2_redPixels":  "[2587,2310,4460]",
+    "C3_use":  "{\"sig\":true,\"sigSize\":\"344x344\",\"prevImg\":true}",
+    "B3_delete":  "[{\"i\":0,\"sid\":\"s1\",\"x\":0.4,\"y\":0.86,\"w\":0.1,\"mm\":21,\"png\":\"344x344\"},{\"i\":1,\"sid\":\"s2\",\"x\":0.6404,\"y\":0.7542,\"w\":0.0857,\"mm\":18,\"png\":\"344x344\"}]",
+    "B_sw":  390,
+    "B_err":  {
+
+              },
+    "B_errList":  [
+
+                  ],
+    "B4_base":  {
+                    "saved":  "[{\"n\":\"KTS더싸인_날인본.jpg\",\"size\":420627,\"type\":\"image/jpeg\"}]",
+                    "place":  "{\"x\":0.4000000182739989,\"y\":0.8600000310060855,\"w\":0.1}",
+                    "evts":  {
+                                 "log.network":  1
+                             }
+                },
+    "B4_new":  {
+                   "saved":  "[{\"n\":\"KTS더싸인_날인본.jpg\",\"size\":420627,\"type\":\"image/jpeg\"}]",
+                   "place":  "{\"x\":0.4000000182739989,\"y\":0.8600000310060855,\"w\":0.1}",
+                   "evts":  {
+
+                            }
+               },
+    "B4_pixDiff":  0,
+    "B4_sha":  [
+                   "A9DF6C73B8CF",
+                   "A9DF6C73B8CF"
+               ],
+    "B5_free":  "{\"plan\":\"free\",\"pages\":1,\"multiple\":false}",
+    "B5_pro":  "{\"plan\":\"pro\",\"unlocked\":false,\"pages\":2,\"ganin\":true,\"seams0\":1,\"seams1\":1,\"seamEls\":1,\"watermarkPx\":24137,\"stamps\":1,\"place\":true}",
+    "B5_sw":  390,
+    "B5_err":  {
+
+               },
+    "C_ids":  {
+                  "value":  [
+                                "sale",
+                                "photo2doc",
+                                "theform",
+                                "contract",
+                                "viewer",
+                                "loan"
+                            ],
+                  "Count":  6
+              },
+    "C1_confirmText":  "내 단축바에 담기\n\n확정하면 이번 달에는 바꿀 수 없습니다.\n무료 4칸 중 1번째 칸에 담습니다. 다음 무료 초기화는 이번 달에 1회 쓸 수 있습니다.\n\n취소\n확정하고 담기",
+    "C1_after4":  "{\"v\":1,\"month\":\"2026-11\",\"items\":[{\"id\":\"sale\",\"kind\":\"tool\",\"data\":null,\"at\":\"2026-11-21\"},{\"id\":\"photo2doc\",\"kind\":\"tool\",\"data\":null,\"at\":\"2026-11-21\"},{\"id\":\"theform\",\"kind\":\"tool\",\"data\":null,\"at\":\"2026-11-21\"},{\"id\":\"contract\",\"kind\":\"tool\",\"data\":null,\"at\":\"2026-11-21\"}],\"added\":{\"ym\":\"\",\"n\":0},\"lastReset\":\"\"}",
+    "C1_fifth":  "{\"sheet\":true,\"text\":\"+ 칸 추가 · 내 단축바\\n\\n무료 4칸이 다 찼습니다(지금 4칸). 5칸째부터는 칸 추가로 엽니다.\\n\\n① 이용권 코드 넣기\\n문자로 받은 코드(KS+연월-4자리)를 넣으면 이번 달 4칸이 더 열립니다. 지난달 코드는 열리지 않습니다.\\n확인\\n② 문자로 신청\\n칸 추가 (문자 신청)\\n③ 카톡 친구 초대\\n1칸 추가 = 친구 3명 · 2칸 추가 = 친구 5명 (확인 후 해금)\\n내 초대 링크 https://autooneclick.com/?ref=Y7ZTV9KA\\n초대 링크 보내기\\n친구가 들어온 숫자는 자동으로 세지 않습니다. 대표님이 확인한 뒤 코드로 열어 드립니다.\\n\\n모든 금액은 부가세 별도 · 금액은 문자로 안내드립니다. 이 사이트에서는 결제하지 않습니다.\\n\\n닫기\",\"items\":4}",
+    "C1_unpin":  "{\"items\":4,\"toast\":\"이번 달 고정 칸입니다 · 다음 무료 초기화: 2026-11-21\"}",
+    "C1_panelButtons":  "[\"초기화\",\"+ 칸 추가\"]",
+    "C1_favTab":  "{\"count\":\"4개 담김\",\"cards\":4}",
+    "C2_after":  "{\"st\":{\"v\":1,\"month\":\"2026-11\",\"items\":[],\"added\":{\"ym\":\"\",\"n\":0},\"lastReset\":\"2026-11-21\"},\"canReset\":false,\"next\":\"2026-12-01\",\"panel\":\"내 단축바\\n무료 4칸\\n0/4칸\\n초기화\\n담기 전에 확인하고, 담은 칸은 이번 달 고정입니다 · 다음 무료 초기화: 2026-12-01\",\"resetDisabled\":true}",
+    "C2_second":  false,
+    "C2_toast":  "이번 달 무료 초기화를 이미 쓰셨습니다 · 다음 무료 초기화: 2026-12-01",
+    "C2_resetBtnAfter":  "{\"disabled\":true,\"sub\":\"담기 전에 확인하고, 담은 칸은 이번 달 고정입니다 · 다음 무료 초기화: 2026-12-01\"}",
+    "C3_codes":  "{\"cur\":\"KS2611-4C8D\",\"prev\":\"KS2610-4D8D\",\"okCur\":true,\"okPrev\":false,\"okJunk\":false,\"unlockPrev\":false,\"capAfterPrev\":4,\"unlockCur\":true,\"capAfterCur\":8}",
+    "C3_master":  "{\"master\":true,\"capInfinite\":true,\"full\":false,\"canReset\":true}",
+    "C5_link":  "https://autooneclick.com/?ref=Y7ZTV9KA",
+    "C5_share":  "shown",
+    "C5_incoming":  "{\"note\":\"초대 링크로 들어오셨습니다 · 친구 확인은 대표님 확인 후 해금\",\"from\":\"{\\\"ref\\\":\\\"ABCD2345\\\",\\\"at\\\":\\\"2026-11-21\\\"}\",\"cap\":8,\"added\":{\"ym\":\"2611\",\"n\":4,\"code\":\"KS2611-4C8D\"}}",
+    "C_sw":  390,
+    "C_err":  {
+
+              },
+    "C_errList":  [
+
+                  ],
+    "C4_load":  "{\"old\":[\"sale\",\"photo2doc\",\"theform\",\"contract\",\"viewer\"],\"st\":{\"v\":1,\"month\":\"2026-11\",\"items\":[{\"id\":\"sale\",\"kind\":\"tool\",\"data\":null,\"at\":\"2026-11-21\",\"legacy\":1},{\"id\":\"photo2doc\",\"kind\":\"tool\",\"data\":null,\"at\":\"2026-11-21\",\"legacy\":1},{\"id\":\"theform\",\"kind\":\"tool\",\"data\":null,\"at\":\"2026-11-21\",\"legacy\":1},{\"id\":\"contract\",\"kind\":\"tool\",\"data\":null,\"at\":\"2026-11-21\",\"legacy\":1},{\"id\":\"viewer\",\"kind\":\"tool\",\"data\":null,\"at\":\"2026-11-21\",\"legacy\":1}],\"added\":{\"ym\":\"\",\"n\":0},\"lastReset\":\"\",\"migratedFrom\":\"kts_favs\"},\"grace\":1,\"full\":true}",
+    "C4_add6":  "{\"sheet\":true,\"items\":5,\"oldKey\":\"[\\\"sale\\\",\\\"photo2doc\\\",\\\"theform\\\",\\\"contract\\\",\\\"viewer\\\"]\"}",
+    "C4_favTab":  "{\"cards\":5,\"panel\":\"내 단축바\\n무료 4칸\\n5/4칸\\n초기화\\n+ 칸 추가\\n담기 전에 확인하고, 담은 칸은 이번 달 고정입니다 · 이번 달 무료 초기화 1회 남음 · 유예 1칸(전에 담아 두신 것은 그대로, 새로 담기는 4칸 기준)\"}",
+    "C4_err":  {
+
+               }
+}

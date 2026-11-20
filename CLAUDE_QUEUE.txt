@@ -16,3 +16,5 @@ CLAUDE_TASK_20261120_CONSULT.md
 CLAUDE_TASK_20261120_COMMERCE.md
 # 추가 등록 2026-11-20 12:2x · 4트랙 WATCHFIX — ① auto_watch.ps1 한도(rate limit) 재시도·재개 보강 ② 100선 완료 62종 → 핵심 10종 oneclick 이관 패키지 (앞 지시서는 모두 결과 파일 있음)
 CLAUDE_TASK_20261120_WATCHFIX.md
+# 추가 등록 2026-11-20 23:4x · 113번 구형 .hwp PC 변환 서버 + 무료 터널 연결 (더뷰)
+CLAUDE_TASK_20261120_HWP.md

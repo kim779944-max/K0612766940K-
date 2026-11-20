@@ -18,3 +18,5 @@ CLAUDE_TASK_20261120_COMMERCE.md
 CLAUDE_TASK_20261120_WATCHFIX.md
 # 추가 등록 2026-11-20 23:4x · 113번 구형 .hwp PC 변환 서버 + 무료 터널 연결 (더뷰)
 CLAUDE_TASK_20261120_HWP.md
+# 추가 등록 2026-11-21 06:1x · 121번 경사도 3D 위성 지형 입체뷰 → 119번 더싸인 한 화면 다중 날인 → 120번 무료 4칸 고정·월 1회 초기화·칸 추가 (앞 지시서는 모두 결과 파일 있음)
+CLAUDE_TASK_20261121_SLOPE3D_SIGN.md

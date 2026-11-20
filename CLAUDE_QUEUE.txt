@@ -14,3 +14,5 @@ CLAUDE_TASK_20261120.md
 CLAUDE_TASK_20261120_CONSULT.md
 # 추가 등록 2026-11-20 07:5x · 이커머스·블로그·인스타 원클릭 5종 신규 제작 (적립 104·105·108번 — 앞 지시서는 결과 파일 있음)
 CLAUDE_TASK_20261120_COMMERCE.md
+# 추가 등록 2026-11-20 12:2x · 4트랙 WATCHFIX — ① auto_watch.ps1 한도(rate limit) 재시도·재개 보강 ② 100선 완료 62종 → 핵심 10종 oneclick 이관 패키지 (앞 지시서는 모두 결과 파일 있음)
+CLAUDE_TASK_20261120_WATCHFIX.md

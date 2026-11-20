@@ -145,8 +145,8 @@ R1 뮤텍스 PASS · R2 보관 커밋 PASS · R3 원격 맞추기 3가지(원격
 |---|---|
 | 손대기 전 HEAD (과업 1 · 과업 2 공통, 0단계 `git rev-parse HEAD`) | `e20e2e299d92ded1b23e4f28bc5641ac11a4f8c2` |
 | 작업 중 `auto_watch.ps1`의 커밋 흔적 | 없음(작업 동안 `git log`·`origin/main` 새 커밋 0) |
-| 이번 커밋 | `git log` 첫 줄 `feat(WATCHFIX): …` (아래 푸시 결과는 같은 커밋 직후 덧붙임) |
-| 푸시 결과 | (아래 덧붙임) |
+| 이번 커밋 | `da20bf95a5c83f63241e9151599397daace987b6` — `feat(WATCHFIX): auto_watch 한도 안전장치(S1~S5) + 핵심 10종 이관 패키지` (51개 파일) · 이 표의 해시·푸시 결과는 다음 커밋 `docs(WATCHFIX): 결과 보고서 커밋 해시 기입`으로 덧붙임 |
+| 푸시 결과 | `git pull --rebase origin main` → `Current branch main is up to date.` · `git push origin main` → `e20e2e2..da20bf9  main -> main` 성공 |
 | 실서비스 `oneclick` | 변경 0 · HEAD `b664d30` |
 
 ## 6. 다음 회차 인수인계

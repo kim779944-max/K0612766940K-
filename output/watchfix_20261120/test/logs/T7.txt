@@ -1,0 +1,5 @@
+﻿== T7 2026-11-20 12:30:27
+  scriptblock OK
+  [PASS] [scriptblock]::Create 오류 0 
+  [PASS] 파서 오류 0개 
+  [PASS] UTF-8 BOM 있음 

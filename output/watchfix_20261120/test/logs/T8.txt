@@ -1,0 +1,86 @@
+﻿== T8 2026-11-20 12:31:48
+-- R1 뮤텍스: 1번 실행이 도는 중(가짜 claude 대기)에 2번 실행
+powershell : warning: in the working copy of 'auto_watch.ps1', LF will be replaced by CRLF the next time Git touches it
+At line:5 char:8
++ $out = powershell -NoProfile -ExecutionPolicy Bypass -File $f 2>&1 |  ...
++        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  [실행] shim=ok 상한=90분 → 종료코드 0 · 0초
+    log| 2026-11-20 12:31:50  CLAUDE_TASK_20991231_TEST.md 실행 시작 (시도 1/3 · 권한 자동 승인 · 처음(--session-id c4cbe79d-c741-4bea-91b3-d62f5e3aca4b))
+    log| 2026-11-20 12:31:58  이전 실행이 아직 진행 중 → 건너뜀
+    log| 2026-11-20 12:32:21  CLAUDE_TASK_20991231_TEST.md 실행 상한 초과로 종료(0.5 분) · 시도 횟수 안 셈 · 다음 회차에 이어서
+    log| 2026-11-20 12:32:21  CLAUDE_TASK_20991231_TEST.md : 결과 파일 CLAUDE_RESULT_20991231_TEST.md 이 아직 없음 (다음 회차 재시도)
+  [PASS] R1 두 번째 실행 건너뜀 
+-- R2 미커밋 변경(추적 파일 수정) → 보관 커밋 후 계속
+warning: in the working copy of 'auto_watch.ps1', LF will be replaced by CRLF the next time Git touches it
+  [실행] shim=r429 상한=90분 → 종료코드 0 · 2초
+    log| 2026-11-20 12:32:24  CLAUDE_TASK_20991231_TEST.md 클로드 종료 (코드 1)
+    log| 2026-11-20 12:32:24  CLAUDE_TASK_20991231_TEST.md 한도 걸림 → 시도 횟수 안 셈 · 리셋 예상 못 읽음(10분 뒤 재시도)
+    log| 2026-11-20 12:32:24  git push 완료 (1 커밋)
+    log| 2026-11-20 12:32:24  CLAUDE_TASK_20991231_TEST.md : 결과 파일 CLAUDE_RESULT_20991231_TEST.md 이 아직 없음 (다음 회차 재시도)
+  94cde98 auto: 이전 실행 잔여 변경 보관 11-20 12:32 / c52f10a seed
+  [PASS] R2 보관 커밋 생성 
+  [PASS] R2 로그 1줄 
+-- R3-a 원격만 앞섬 → reset --hard
+warning: in the working copy of 'auto_watch.ps1', LF will be replaced by CRLF the next time Git touches it
+  [실행] shim=r429 상한=90분 → 종료코드 0 · 2초
+  [PASS] R3-a 원격 최신으로 맞춤 
+-- R3-b 로컬·원격 둘 다 앞섬 → pull --rebase
+  [실행] shim=r429 상한=90분 → 종료코드 0 · 2초
+  [PASS] R3-b rebase 완료 
+  [PASS] R3-b 로컬 커밋이 원격에 올라감 
+-- R3-c 로컬만 앞섬 → 맞추기 없이 진행, 4) 에서 푸시
+  [실행] shim=r429 상한=90분 → 종료코드 0 · 2초
+    log| 2026-11-20 12:32:33  CLAUDE_TASK_20991231_TEST.md 클로드 종료 (코드 1)
+    log| 2026-11-20 12:32:33  CLAUDE_TASK_20991231_TEST.md 한도 걸림 → 시도 횟수 안 셈 · 리셋 예상 못 읽음(10분 뒤 재시도)
+    log| 2026-11-20 12:32:33  git push 완료 (1 커밋)
+    log| 2026-11-20 12:32:33  CLAUDE_TASK_20991231_TEST.md : 결과 파일 CLAUDE_RESULT_20991231_TEST.md 이 아직 없음 (다음 회차 재시도)
+  [PASS] R3-c 로컬 커밋 푸시 
+-- R4 큐 순서: 큐 첫 줄(TEST) 1개만 → 끝나면 다음(OLD)
+warning: in the working copy of 'auto_watch.ps1', LF will be replaced by CRLF the next time Git touches it
+  [실행] shim=ok 상한=90분 → 종료코드 0 · 2초
+  [실행] shim=ok 상한=90분 → 종료코드 0 · 2초
+  1회차 argv 줄 수 1 · 2회차 누적 2
+  [PASS] R4 1회차는 TEST 하나만 
+  [PASS] R4 2회차는 OLD 
+-- R5 --dangerously-skip-permissions 거부 → --permission-mode bypassPermissions 재시도
+warning: in the working copy of 'auto_watch.ps1', LF will be replaced by CRLF the next time Git touches it
+  [실행] shim=badflag 상한=90분 → 종료코드 0 · 2초
+    argv| 12:32:41 [badflag] argc=5 :: --dangerously-skip-permissions | --session-id | 45890866-f2b7-4676-a41e-013351f45
+    argv| 12:32:41 [badflag] argc=6 :: --permission-mode | bypassPermissions | --session-id | 45890866-f2b7-4676-a41e-01
+  [PASS] R5 1번째 --dangerously-skip-permissions 
+  [PASS] R5 2번째 --permission-mode | bypassPermissions 
+  [PASS] R5 로그 
+-- R6 결과 파일 생기면 try 삭제
+  [PASS] R6 try 삭제(R5 회차 완료 후) 
+-- R7 로그 5MB 접기 · LAST_RUN.txt 갱신
+  [실행] shim=ok 상한=90분 → 종료코드 0 · 2초
+  [PASS] R7 autowatch.log.1 생김(6MB) 
+  [PASS] R7 새 autowatch.log 작음 
+  [PASS] R7 LAST_RUN.txt 갱신 
+-- R8 실행 도중 다른 PC 가 먼저 푸시 → push 실패 → rebase 1회 → 재푸시
+warning: in the working copy of 'auto_watch.ps1', LF will be replaced by CRLF the next time Git touches it
+  [실행] shim=ok 상한=90분 → 종료코드 0 · 3초
+    log| 2026-11-20 12:32:47  CLAUDE_TASK_20991231_TEST.md 실행 시작 (시도 1/3 · 권한 자동 승인 · 처음(--session-id ffc7cf73-f3c3-4ea2-8a36-a29d8295c440))
+    log| 2026-11-20 12:32:48  CLAUDE_TASK_20991231_TEST.md 클로드 종료 (코드 0)
+    log| 2026-11-20 12:32:49  git push 재시도 성공 (1 커밋)
+    log| 2026-11-20 12:32:49  CLAUDE_TASK_20991231_TEST.md 완료 → CLAUDE_RESULT_20991231_TEST.md 생성됨
+  [PASS] R8 git push 재시도 성공 
+  [PASS] R8 원격에 결과 커밋·다른 PC 커밋 둘 다 
+-- 추가: S4-4 재개 실패(--resume 세션 없음) → 같은 회차 -p 단독 1회
+warning: in the working copy of 'auto_watch.ps1', LF will be replaced by CRLF the next time Git touches it
+  [실행] shim=resumefail 상한=90분 → 종료코드 0 · 2초
+    log| 2026-11-20 12:32:52  재개 실패(이어서(--resume e92f29f2-c2b6-46a7-b31b-493b851c9e61)) → 같은 회차에 -p 단독으로 1회 재시도: No conversation found with session ID: x
+    log| 2026-11-20 12:32:52  CLAUDE_TASK_20991231_TEST.md 클로드 종료 (코드 0)
+    log| 2026-11-20 12:32:53  git push 완료 (1 커밋)
+    log| 2026-11-20 12:32:53  CLAUDE_TASK_20991231_TEST.md 완료 → CLAUDE_RESULT_20991231_TEST.md 생성됨
+  [PASS] S4-4 1번째 --resume · 2번째 -p 단독 
+  [PASS] S4-4 로그 
+-- 추가: --session-id·--resume·--continue 미지원 claude → .resume 표시 파일 · 다음 시도는 이어서 문구
+warning: in the working copy of 'auto_watch.ps1', LF will be replaced by CRLF the next time Git touches it
+  [실행] shim=r429 상한=90분 → 종료코드 0 · 1초
+  [실행] shim=ok 상한=90분 → 종료코드 0 · 2초
+  [PASS] session-id 미지원 → .resume 표시 
+  [PASS] 다음 시도 이어서 문구만(--resume/--continue 미지원 shim) 

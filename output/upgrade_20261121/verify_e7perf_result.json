@@ -1,0 +1,17 @@
+﻿{
+    "base_dragArrow_r100":  "{\"frames\":85,\"median\":89.2,\"p90\":89.8}",
+    "base_dragArrow_r300":  "{\"frames\":85,\"median\":89.2,\"p90\":89.8}",
+    "base_evts":  {
+
+                  },
+    "new_dragArrow_r100":  "{\"frames\":85,\"median\":89.2,\"p90\":89.8}",
+    "new_dragArrow_r300":  "{\"frames\":83,\"median\":89.2,\"p90\":89.9}",
+    "new_firstPaint_px3_r300":  "{\"ms\":172.2,\"buildMs\":16.6,\"cells\":220900,\"inside\":101776,\"zoom\":16.2}",
+    "new_dragPx3_r300":  "{\"frames\":89,\"median\":79.8,\"p90\":89.6}",
+    "new_firstPaint_px6_r300":  "{\"ms\":205.1,\"buildMs\":44.4,\"cells\":881721,\"inside\":407145}",
+    "new_dragPx6_r300":  "{\"frames\":89,\"median\":59.8,\"p90\":69.8}",
+    "new_evts":  {
+
+                 },
+    "defaultPixDiffPct_noWMS":  0
+}

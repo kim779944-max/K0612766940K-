@@ -35,3 +35,5 @@ CLAUDE_TASK_20261122_HOGANG_MONTHLY.md
 CLAUDE_TASK_20261122_ORGANIZER_APK.md
 # 추가 등록 2026-11-22 07:2x · 대기열 말미 · #51 오늘의 특가 — 편의점 1+1·2+1 60품목(음료 30~43종) 실제 11월 행사 확인 · 카드 좌측 56×56 썸네일(깨짐 0) · 「오늘 끝」 필터 기준일 파생 (수정 범위 oneclick/sale/ 만 · K- 저장소의 sale/ 옛 사본은 손대지 않음)
 CLAUDE_TASK_20261122_SALE_DRINKS.md
+# 추가 등록 2026-11-22 07:2x · 명칭 변경 1건 — '원클릭 변환기' → '문서변환기' (표시 명칭 4곳 + 캐시 태그 2곳만 · 파일명·URL·photo2doc 키·기능 무변경 · 수정 범위 oneclick/products.js·catalog.json·converter.html·index.html·detail.html)
+CLAUDE_TASK_20261122_RENAME_CONVERTER.md

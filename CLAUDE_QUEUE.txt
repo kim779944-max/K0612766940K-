@@ -7,6 +7,7 @@
 # 추가 등록 2026-11-20 05:5x · 수리 3건(교환계약서·위험문구·더뷰 v1.4) + 100선 실매출 5종 이관 패키지 + 상황판 정정
 # 추가 등록 2026-11-22 00:5x · 경사도(토지정보) 단독 완결 — 픽셀 기본·10단계 원색·필지 전역 격자·번호·화살표 z22·통계표 (최우선 1순위 · refs/slope_pro_20261122 기준사진 3장)
 CLAUDE_TASK_20261122_SLOPE_PRO.md
+CLAUDE_TASK_20261122_SNS_AUTO.md
 CLAUDE_TASK_20261121_UPGRADE.md
 CLAUDE_TASK_20261118_NIGHT2.md
 CLAUDE_TASK_20261118_NIGHT3.md

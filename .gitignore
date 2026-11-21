@@ -1,2 +1,8 @@
 # signing artifacts
 *.idsig
+
+# SNS 자동화 — 비밀값·산출물 (커밋 금지)
+.env.local
+tools/sns_auto/.env.local
+tools/sns_auto/logs/
+tools/sns_auto/images/

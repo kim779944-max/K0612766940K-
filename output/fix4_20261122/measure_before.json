@@ -1,0 +1,490 @@
+{
+ "tag": "before",
+ "base": "http://127.0.0.1:8765",
+ "ts": "2026-11-22 06:55:59",
+ "show_390": {
+  "innerW": 525,
+  "docW": 525,
+  "maxGoRight": 514,
+  "goCount": 33,
+  "rowsW": [
+   360,
+   360,
+   360,
+   360,
+   360,
+   360,
+   360,
+   360,
+   360
+  ],
+  "rowCounts": [
+   3,
+   5,
+   5,
+   4,
+   2,
+   2,
+   3,
+   6,
+   3
+  ],
+  "sec04": {
+   "y": 1480.4375,
+   "h": 288,
+   "t": "04땅과 매물을 본다매물 정리 · 경사도 · 재개발 ·"
+  },
+  "bottom": {
+   "lastGoBottom": 666,
+   "lastGoRight": 364,
+   "toTopTop": 1085,
+   "toTopLeft": 446,
+   "toTopOn": true,
+   "lastName": "여행 패스준비"
+  },
+  "adRow": {
+   "h": 75,
+   "txt": "✦ 광고유입기 NEW 광고·댓글 문구 1분 하루 3건 무료 · 더 쓰기는 [그 이상 쓰기] 열기"
+  }
+ },
+ "show_full_390": "shots/C0_showFull_390_before.jpg",
+ "navi_gal_390": {
+  "cols": 4,
+  "gap": "6px",
+  "tileW": 85,
+  "capFont": "8.5px",
+  "capH": "32px",
+  "lineH": "10.625px",
+  "clipped": [],
+  "docW": 390,
+  "innerW": 390
+ },
+ "navi_quiz_390": [
+  {
+   "q": "처음 보는 사람과 마주 앉았을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    303,
+    303
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 1
+  },
+  {
+   "q": "처음 보는 사람과 마주 앉았을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    303,
+    303
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 2
+  },
+  {
+   "q": "마음에 드는 게 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 3
+  },
+  {
+   "q": "마음에 드는 게 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 4
+  },
+  {
+   "q": "부탁이 내 일정과 겹칠 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 5
+  },
+  {
+   "q": "부탁이 내 일정과 겹칠 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 6
+  },
+  {
+   "q": "정해야 할 일이 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 7
+  },
+  {
+   "q": "정해야 할 일이 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 8
+  },
+  {
+   "q": "이번 달 돈이 빠듯할 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 9
+  },
+  {
+   "q": "이번 달 돈이 빠듯할 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 10
+  }
+ ],
+ "navi_res_390": {
+  "err": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"#sResult.on\") to be visible\n"
+ },
+ "navi_pool": {
+  "total": 100,
+  "unique": 0,
+  "bad": [
+   "undefined",
+   "undefined",
+   "undefined",
+   "…100"
+  ]
+ },
+ "navi_poolStats": {
+  "pics": 16,
+  "sets": 25,
+  "options": 100,
+  "pool": 116,
+  "axes": {
+   "SPEED": 20,
+   "EYE": 8,
+   "LOYAL": 14,
+   "FREE": 14,
+   "FACE": 11,
+   "PUTOFF": 13,
+   "PERFECT": 7,
+   "CALC": 13
+  },
+  "levels": 10,
+  "lvSets": {
+   "1": [
+    "*",
+    "A",
+    "B",
+    "C",
+    "D"
+   ],
+   "2": [
+    "*",
+    "A",
+    "B"
+   ],
+   "3": [
+    "*",
+    "C"
+   ],
+   "4": [
+    "*",
+    "B"
+   ],
+   "5": [
+    "*",
+    "C",
+    "D"
+   ],
+   "6": [
+    "*",
+    "A"
+   ],
+   "7": [
+    "*",
+    "C"
+   ],
+   "8": [
+    "*",
+    "B"
+   ],
+   "9": [
+    "*",
+    "D"
+   ],
+   "10": [
+    "*",
+    "A"
+   ]
+  },
+  "bad": []
+ },
+ "show_360": {
+  "innerW": 525,
+  "docW": 525,
+  "maxGoRight": 514,
+  "goCount": 33,
+  "rowsW": [
+   330,
+   330,
+   330,
+   330,
+   330,
+   330,
+   330,
+   330,
+   330
+  ],
+  "rowCounts": [
+   3,
+   5,
+   5,
+   4,
+   2,
+   2,
+   3,
+   6,
+   3
+  ],
+  "sec04": {
+   "y": 1480.4375,
+   "h": 288,
+   "t": "04땅과 매물을 본다매물 정리 · 경사도 · 재개발 ·"
+  },
+  "bottom": {
+   "lastGoBottom": 696,
+   "lastGoRight": 334,
+   "toTopTop": 1115,
+   "toTopLeft": 446,
+   "toTopOn": true,
+   "lastName": "여행 패스준비"
+  },
+  "adRow": {
+   "h": 75,
+   "txt": "✦ 광고유입기 NEW 광고·댓글 문구 1분 하루 3건 무료 · 더 쓰기는 [그 이상 쓰기] 열기"
+  }
+ },
+ "show_full_360": "shots/C0_showFull_360_before.jpg",
+ "navi_gal_360": {
+  "cols": 4,
+  "gap": "6px",
+  "tileW": 77.5,
+  "capFont": "8.5px",
+  "capH": "32px",
+  "lineH": "10.625px",
+  "clipped": [],
+  "docW": 360,
+  "innerW": 360
+ },
+ "navi_quiz_360": [
+  {
+   "q": "처음 보는 사람과 마주 앉았을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    303,
+    303
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 1
+  },
+  {
+   "q": "처음 보는 사람과 마주 앉았을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    303,
+    303
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 2
+  },
+  {
+   "q": "마음에 드는 게 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 3
+  },
+  {
+   "q": "마음에 드는 게 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 4
+  },
+  {
+   "q": "부탁이 내 일정과 겹칠 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 5
+  },
+  {
+   "q": "부탁이 내 일정과 겹칠 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 6
+  },
+  {
+   "q": "정해야 할 일이 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 7
+  },
+  {
+   "q": "정해야 할 일이 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 8
+  },
+  {
+   "q": "이번 달 돈이 빠듯할 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 9
+  },
+  {
+   "q": "이번 달 돈이 빠듯할 때, 당신은?",
+   "cards": 4,
+   "imgs": 0,
+   "broken": 0,
+   "srcs": [],
+   "firstRowVisible": [
+    274,
+    274
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 10
+  }
+ ],
+ "navi_res_360": {
+  "err": "Page.wait_for_selector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"#sResult.on\") to be visible\n"
+ },
+ "pageerrors": {
+  "show_390": [],
+  "navi_390": [],
+  "show_360": [],
+  "navi_360": []
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "ids": [
+  "sc_1795300282238_kc0y2",
+  "sc_1795300282232_eku8u"
+ ],
+ "opened": "sc_1795300282238_kc0y2",
+ "nogeo": {
+  "locDisplay": "none",
+  "locOpacity": "1",
+  "locPE": "auto",
+  "locRect": [
+   0,
+   0,
+   0,
+   0
+  ],
+  "locVisible": false,
+  "locText": "위치",
+  "topOpacity": "1",
+  "chipText": "2026.11.20 · 장소 미지정",
+  "chipPlaceShown": true,
+  "count": "1 / 2",
+  "geo": false
+ },
+ "geo_ui_on": {
+  "locDisplay": "flex",
+  "locOpacity": "1",
+  "locPE": "auto",
+  "locRect": [
+   16,
+   44,
+   119,
+   30
+  ],
+  "locVisible": true,
+  "locText": "촬영 위치 보기",
+  "topOpacity": "1",
+  "chipText": "2026.11.20 · 장소 미지정",
+  "chipPlaceShown": true,
+  "count": "2 / 2",
+  "geo": true
+ },
+ "geo_ui_off": {
+  "locDisplay": "flex",
+  "locOpacity": "1",
+  "locPE": "auto",
+  "locRect": [
+   16,
+   44,
+   119,
+   30
+  ],
+  "locVisible": true,
+  "locText": "촬영 위치 보기",
+  "topOpacity": "0",
+  "chipText": "2026.11.20 · 장소 미지정",
+  "chipPlaceShown": true
+ },
+ "geo_ui_back": {
+  "locDisplay": "flex",
+  "locOpacity": "1",
+  "locPE": "auto",
+  "locRect": [
+   16,
+   44,
+   119,
+   30
+  ],
+  "locVisible": true,
+  "locText": "촬영 위치 보기",
+  "topOpacity": "1",
+  "chipText": "2026.11.20 · 장소 미지정",
+  "chipPlaceShown": true
+ },
+ "map": {
+  "open": true,
+  "addr": "촬영 위치 / 위도 37.501000 · 경도 127.027800",
+  "kakao": "https://map.kakao.com/link/map/%EC%B4%AC%EC%98%81%20%EC%9C%8",
+  "naver": "https://map.naver.com/p?c=127.0278,37.501,17,0,0,0,dh"
+ },
+ "visited": [
+  "1 / 2",
+  "2 / 2"
+ ],
+ "errs": []
+}

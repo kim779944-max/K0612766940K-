@@ -1,0 +1,592 @@
+{
+ "tag": "after",
+ "base": "http://127.0.0.1:8765",
+ "ts": "2026-11-22 07:35:40",
+ "show_390": {
+  "innerW": 390,
+  "docW": 390,
+  "maxGoRight": 364,
+  "goCount": 33,
+  "rowsW": [
+   360,
+   360,
+   360,
+   360,
+   360,
+   360,
+   360,
+   360,
+   360
+  ],
+  "rowCounts": [
+   3,
+   5,
+   5,
+   4,
+   2,
+   2,
+   3,
+   6,
+   3
+  ],
+  "sec04": {
+   "y": 1480.4375,
+   "h": 288,
+   "t": "04땅과 매물을 본다매물 정리 · 경사도 · 재개발 ·"
+  },
+  "bottom": {
+   "lastGoBottom": 373,
+   "lastGoRight": 364,
+   "toTopTop": 792,
+   "toTopLeft": 311,
+   "toTopOn": true,
+   "lastName": "여행 패스준비"
+  },
+  "adRow": {
+   "h": 75,
+   "txt": "✦ 답글생성기(광고용) NEW 광고·댓글 답글 1분 하루 3건 무료 · 더 쓰기는 [그 이상 쓰기] 열기"
+  }
+ },
+ "show_full_390": "shots/C0_showFull_390_after.jpg",
+ "navi_gal_390": {
+  "cols": 3,
+  "gap": "7px",
+  "tileW": 114.7,
+  "capFont": "12px",
+  "capH": "40px",
+  "lineH": "15.6px",
+  "clipped": [],
+  "docW": 390,
+  "innerW": 390
+ },
+ "navi_quiz_390": [
+  {
+   "q": "처음 보는 사람과 마주 앉았을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d1-4.jpg",
+    "img/opts/l3-2.jpg",
+    "img/opts/s4b-1.jpg",
+    "img/opts/d3d-2.jpg"
+   ],
+   "firstRowVisible": [
+    403,
+    403
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 1
+  },
+  {
+   "q": "마음에 드는 게 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/s4b-2.jpg",
+    "img/opts/d3a-3.jpg",
+    "img/opts/s3c-2.jpg",
+    "img/opts/d4b-3.jpg"
+   ],
+   "firstRowVisible": [
+    354,
+    354
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 2
+  },
+  {
+   "q": "부탁이 내 일정과 겹칠 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/v1-4.jpg",
+    "img/opts/d2c-4.jpg",
+    "img/opts/d2c-3.jpg",
+    "img/opts/j4-3.jpg"
+   ],
+   "firstRowVisible": [
+    374,
+    374
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 3
+  },
+  {
+   "q": "정해야 할 일이 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/s2d-2.jpg",
+    "img/opts/v1-2.jpg",
+    "img/opts/s1-2.jpg",
+    "img/opts/s2b-3.jpg"
+   ],
+   "firstRowVisible": [
+    374,
+    374
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 4
+  },
+  {
+   "q": "이번 달 돈이 빠듯할 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d3c-1.jpg",
+    "img/opts/d3b-3.jpg",
+    "img/opts/s2b-1.jpg",
+    "img/opts/d4b-4.jpg"
+   ],
+   "firstRowVisible": [
+    354,
+    354
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 5
+  },
+  {
+   "q": "일이 틀어졌을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/s3a-1.jpg",
+    "img/opts/j3-1.jpg",
+    "img/opts/s2a-1.jpg",
+    "img/opts/s3d-1.jpg"
+   ],
+   "firstRowVisible": [
+    374,
+    374
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 6
+  },
+  {
+   "q": "약속이 갑자기 미뤄졌을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d2b-4.jpg",
+    "img/opts/s4c-4.jpg",
+    "img/opts/l4-4.jpg",
+    "img/opts/l2-2.jpg"
+   ],
+   "firstRowVisible": [
+    374,
+    374
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 7
+  },
+  {
+   "q": "누가 나를 무시했다고 느낄 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d3c-2.jpg",
+    "img/opts/d4d-1.jpg",
+    "img/opts/s3d-4.jpg",
+    "img/opts/s4c-2.jpg"
+   ],
+   "firstRowVisible": [
+    374,
+    374
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 8
+  },
+  {
+   "q": "고를 게 여러 개일 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d2d-1.jpg",
+    "img/opts/d4c-1.jpg",
+    "img/opts/d4b-1.jpg",
+    "img/opts/j3-4.jpg"
+   ],
+   "firstRowVisible": [
+    374,
+    374
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 9
+  },
+  {
+   "q": "한 해를 돌아볼 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/v4-2.jpg",
+    "img/opts/s4d-2.jpg",
+    "img/opts/j3-2.jpg",
+    "img/opts/l2-1.jpg"
+   ],
+   "firstRowVisible": [
+    354,
+    354
+   ],
+   "overlap": 0,
+   "docW": 390,
+   "lv": 10
+  }
+ ],
+ "navi_res_390": {
+  "secs": "1>2>3>4",
+  "startImgs": 0,
+  "optImgs": 0,
+  "seongkyeok": 0
+ },
+ "navi_pool": {
+  "total": 100,
+  "unique": 100,
+  "bad": []
+ },
+ "navi_poolStats": {
+  "pics": 16,
+  "sets": 25,
+  "options": 100,
+  "pool": 116,
+  "axes": {
+   "SPEED": 20,
+   "EYE": 8,
+   "LOYAL": 14,
+   "FREE": 14,
+   "FACE": 11,
+   "PUTOFF": 13,
+   "PERFECT": 7,
+   "CALC": 13
+  },
+  "levels": 10,
+  "lvSets": {
+   "1": [
+    "*",
+    "A",
+    "B",
+    "C",
+    "D"
+   ],
+   "2": [
+    "*",
+    "A",
+    "B"
+   ],
+   "3": [
+    "*",
+    "C"
+   ],
+   "4": [
+    "*",
+    "B"
+   ],
+   "5": [
+    "*",
+    "C",
+    "D"
+   ],
+   "6": [
+    "*",
+    "A"
+   ],
+   "7": [
+    "*",
+    "C"
+   ],
+   "8": [
+    "*",
+    "B"
+   ],
+   "9": [
+    "*",
+    "D"
+   ],
+   "10": [
+    "*",
+    "A"
+   ]
+  },
+  "imgMissing": 0,
+  "bad": []
+ },
+ "show_360": {
+  "innerW": 360,
+  "docW": 360,
+  "maxGoRight": 334,
+  "goCount": 33,
+  "rowsW": [
+   330,
+   330,
+   330,
+   330,
+   330,
+   330,
+   330,
+   330,
+   330
+  ],
+  "rowCounts": [
+   3,
+   5,
+   5,
+   4,
+   2,
+   2,
+   3,
+   6,
+   3
+  ],
+  "sec04": {
+   "y": 1480.4375,
+   "h": 288,
+   "t": "04땅과 매물을 본다매물 정리 · 경사도 · 재개발 ·"
+  },
+  "bottom": {
+   "lastGoBottom": 329,
+   "lastGoRight": 334,
+   "toTopTop": 748,
+   "toTopLeft": 281,
+   "toTopOn": true,
+   "lastName": "여행 패스준비"
+  },
+  "adRow": {
+   "h": 75,
+   "txt": "✦ 답글생성기(광고용) NEW 광고·댓글 답글 1분 하루 3건 무료 · 더 쓰기는 [그 이상 쓰기] 열기"
+  }
+ },
+ "show_full_360": "shots/C0_showFull_360_after.jpg",
+ "navi_gal_360": {
+  "cols": 3,
+  "gap": "7px",
+  "tileW": 104.7,
+  "capFont": "12px",
+  "capH": "40px",
+  "lineH": "15.6px",
+  "clipped": [],
+  "docW": 360,
+  "innerW": 360
+ },
+ "navi_quiz_360": [
+  {
+   "q": "처음 보는 사람과 마주 앉았을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d1-4.jpg",
+    "img/opts/l3-2.jpg",
+    "img/opts/s4b-1.jpg",
+    "img/opts/d3d-2.jpg"
+   ],
+   "firstRowVisible": [
+    392,
+    392
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 1
+  },
+  {
+   "q": "마음에 드는 게 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/s4b-2.jpg",
+    "img/opts/d3a-3.jpg",
+    "img/opts/s3c-2.jpg",
+    "img/opts/d4b-3.jpg"
+   ],
+   "firstRowVisible": [
+    342,
+    342
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 2
+  },
+  {
+   "q": "부탁이 내 일정과 겹칠 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/v1-4.jpg",
+    "img/opts/d2c-4.jpg",
+    "img/opts/d2c-3.jpg",
+    "img/opts/j4-3.jpg"
+   ],
+   "firstRowVisible": [
+    363,
+    363
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 3
+  },
+  {
+   "q": "정해야 할 일이 생겼을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/s2d-2.jpg",
+    "img/opts/v1-2.jpg",
+    "img/opts/s1-2.jpg",
+    "img/opts/s2b-3.jpg"
+   ],
+   "firstRowVisible": [
+    363,
+    363
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 4
+  },
+  {
+   "q": "이번 달 돈이 빠듯할 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d3c-1.jpg",
+    "img/opts/d3b-3.jpg",
+    "img/opts/s2b-1.jpg",
+    "img/opts/d4b-4.jpg"
+   ],
+   "firstRowVisible": [
+    342,
+    342
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 5
+  },
+  {
+   "q": "일이 틀어졌을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/s3a-1.jpg",
+    "img/opts/j3-1.jpg",
+    "img/opts/s2a-1.jpg",
+    "img/opts/s3d-1.jpg"
+   ],
+   "firstRowVisible": [
+    363,
+    363
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 6
+  },
+  {
+   "q": "약속이 갑자기 미뤄졌을 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d2b-4.jpg",
+    "img/opts/s4c-4.jpg",
+    "img/opts/l4-4.jpg",
+    "img/opts/l2-2.jpg"
+   ],
+   "firstRowVisible": [
+    363,
+    363
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 7
+  },
+  {
+   "q": "누가 나를 무시했다고 느낄 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d3c-2.jpg",
+    "img/opts/d4d-1.jpg",
+    "img/opts/s3d-4.jpg",
+    "img/opts/s4c-2.jpg"
+   ],
+   "firstRowVisible": [
+    392,
+    392
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 8
+  },
+  {
+   "q": "고를 게 여러 개일 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/d2d-1.jpg",
+    "img/opts/d4c-1.jpg",
+    "img/opts/d4b-1.jpg",
+    "img/opts/j3-4.jpg"
+   ],
+   "firstRowVisible": [
+    363,
+    363
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 9
+  },
+  {
+   "q": "한 해를 돌아볼 때, 당신은?",
+   "cards": 4,
+   "imgs": 4,
+   "broken": 0,
+   "srcs": [
+    "img/opts/v4-2.jpg",
+    "img/opts/s4d-2.jpg",
+    "img/opts/j3-2.jpg",
+    "img/opts/l2-1.jpg"
+   ],
+   "firstRowVisible": [
+    342,
+    342
+   ],
+   "overlap": 0,
+   "docW": 360,
+   "lv": 10
+  }
+ ],
+ "navi_res_360": {
+  "secs": "1>2>3>4",
+  "startImgs": 0,
+  "optImgs": 0,
+  "seongkyeok": 0
+ },
+ "pageerrors": {
+  "show_390": [],
+  "navi_390": [],
+  "show_360": [],
+  "navi_360": []
+ }
+}

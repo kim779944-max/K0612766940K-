@@ -1,0 +1,28 @@
+{
+ "tag": "before",
+ "touchAction": "pan-x pan-y",
+ "start": 100,
+ "pinchOut": 250,
+ "pinchIn": 102,
+ "plus": 125,
+ "minus": 100,
+ "scrollY": {
+  "before": 0,
+  "after": 468,
+  "page": "‹"
+ },
+ "scrollX": {
+  "zoom": 195,
+  "before": 600,
+  "after": 745,
+  "scrollW": 1553,
+  "clientW": 390
+ },
+ "afterClose": {
+  "btn": "← 뒤로가기",
+  "docopen": false,
+  "touchAction": "auto"
+ },
+ "reopenPinch": 250,
+ "pageerrors": []
+}

@@ -6,3 +6,6 @@
 tools/sns_auto/.env.local
 tools/sns_auto/logs/
 tools/sns_auto/images/
+tools/sns_auto/data/
+tools/sns_auto/*.tmp
+tools/sns_auto/__pycache__/

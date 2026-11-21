@@ -74,11 +74,13 @@ Select-String -Path products.js,catalog.json,converter.html -Pattern "원클릭 
 Select-String -Path products.js,catalog.json,converter.html -Pattern "원클릭 변환기" | Measure-Object | % Count   # 기대 0
 Select-String -Path products.js,catalog.json,converter.html -Pattern "문서변환기"   | Measure-Object | % Count   # 기대 4
 Select-String -Path index.html,detail.html -Pattern "products\.js\?v=20261122a"      | Measure-Object | % Count   # 기대 2
-git --no-pager diff --stat    # 기대: 5개 파일, 이름 1~2줄씩
-node -e "JSON.parse(require('fs').readFileSync('catalog.json','utf8')); console.log('catalog ok')"
-node -e "new Function(require('fs').readFileSync('products.js','utf8')); console.log('products ok')"
+git --no-pager diff --stat    # 기대: 5 files changed, 6 insertions(+), 6 deletions(-)
+Get-Content catalog.json -Raw | ConvertFrom-Json | Out-Null; "catalog ok"        # 기대: catalog ok
+Get-ChildItem products.js,catalog.json,converter.html,index.html,detail.html | % { "$($_.Name) $($_.Length)" }
+# 기대: products.js 23654→23652 · catalog.json 22846→22844 · converter.html 121605→121601 · index.html 27618 그대로 · detail.html 18162 그대로
 ```
-`git --no-pager diff`에 **이름 6곳 말고 다른 줄이 보이면 되돌리고 다시 한다.**
+
+`git --no-pager diff --unified=0`로 **바뀐 6줄만** 보이는지 눈으로 확인한다. 6줄 밖에 다른 줄이 있으면 `git checkout -- .`로 되돌리고 처음부터 다시 한다.
 
 **D. 커밋·푸시 (oneclick)**
 ```powershell
@@ -131,7 +133,7 @@ curl.exe -s "https://autooneclick.com/converter.html?t=$(Get-Date -Format HHmmss
 - 수정 후 `문서변환기` 매치: 4
 - `products.js?v=20261122a` 매치: 2
 - `git diff --stat`: 파일 5 · +6 −6
-- JSON/JS 문법 검사: catalog ok / products ok
+- JSON/길이 검사: catalog ok / 파일 길이 기대값 일치
 
 ## 화면 (390×844 · PC 크롬)
 - 쇼룸 카드 이름: (캡처 경로)

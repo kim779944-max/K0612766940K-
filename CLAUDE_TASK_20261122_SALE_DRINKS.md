@@ -172,16 +172,21 @@ git pull --rebase; git rev-parse HEAD          # 기대: 8715d80 이상
         var im = document.createElement('img');
         im.src = g.img; im.alt = g.item; im.width = 56; im.height = 56;
         im.loading = 'lazy'; im.decoding = 'async';
-        im.addEventListener('error', function(){ th.classList.add('ph'); th.textContent = ''; });
+        im.addEventListener('error', function(){          // 실패해도 빈 칸 + 첫 글자 (가짜 사진 금지)
+          th.className = 'th ph';
+          th.innerHTML = '<span>' + String(g.item || '?').slice(0,1) + '</span>';
+        });
         th.appendChild(im);
-      } else { th.classList.add('ph'); }
-      if (!g.img) th.innerHTML = '<span>' + String(g.item || '?').slice(0,1) + '</span>';
-      head.appendChild(th);                       // ← .t 보다 먼저 (좌측)
+      } else {
+        th.className = 'th ph';
+        th.innerHTML = '<span>' + String(g.item || '?').slice(0,1) + '</span>';
+      }
+      head.appendChild(th);                               // ← .t 보다 먼저 (좌측)
 
       var t = document.createElement('div'); t.className = 't';
 ```
 - **`.gh` 의 `display:flex` 그대로** 쓰고 `th` 를 첫 자식으로 넣는다. 새 래퍼 div·grid 로 바꾸지 않는다.
-- `error` 로 사진이 실패하면 타일이 아니라 **빈 회색 칸**으로 두고(가짜 사진 금지), **실패 건수는 0이어야 한다**(§6-3). 실패가 있으면 그 품목의 사진을 다시 구하는 것이지, 다른 상품 사진으로 바꾸는 것이 아니다.
+- `error` 로 사진이 실패하면 빈 칸(첫 글자 타일)이 된다. **실패 건수는 0이어야 한다**(§6-3). 실패가 있으면 **그 품목의 사진을 다시 구하는 것**이지, 다른 상품 사진으로 바꾸는 것이 아니다.
 - 56px 때문에 품목명이 두 줄로 늘어나는 것은 **허용**한다(글자 크기·줄간격은 그대로). 390px 폭에서 `.gh` 가 넘치면 안 된다(§6-2).
 
 ### 3-5. 사진 없는 품목의 타일

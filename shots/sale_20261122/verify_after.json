@@ -1,0 +1,70 @@
+{
+ "mode": "after",
+ "url": "http://127.0.0.1:8791/sale/index.html",
+ "console_errors": [],
+ "page_errors": [],
+ "failed_requests": [],
+ "broken": 0,
+ "broken_list": [],
+ "counts_cvs_tab": {
+  "img": 72,
+  "tile": 5,
+  "cards": 77
+ },
+ "cvs_drinks": {
+  "cvs": 77,
+  "drinks": 49
+ },
+ "hygiene": {
+  "dup": 0,
+  "emptyOffers": 0,
+  "noSrc": 0,
+  "badPrice": 0,
+  "cvsNoImg": 5
+ },
+ "scrollWidth": 390,
+ "thumb_sizes": [
+  "56x56"
+ ],
+ "gh_overflow": 0,
+ "dup_img_src": [],
+ "other_tabs": {
+  "food": {
+   "img": 0,
+   "tile": 16,
+   "cards": 16,
+   "broken": 0
+  },
+  "cafe": {
+   "img": 0,
+   "tile": 10,
+   "cards": 10,
+   "broken": 0
+  },
+  "mart": {
+   "img": 0,
+   "tile": 18,
+   "cards": 18,
+   "broken": 0
+  }
+ },
+ "filters_cvs": {
+  "bogo": 77,
+  "half": 0,
+  "today": 0,
+  "all": 77
+ },
+ "filters_food": {
+  "bogo": 3,
+  "half": 3,
+  "today": 7,
+  "all": 16
+ },
+ "bar_after_check": "오늘의 특가 · 기준 2026년 11월 22일 (일) 12:20\n값은 마트 전단과 각 사 공개 행사 페이지에서 확인한 대표값입니다. 매장·지점마다 값·재고·행사 조건이 다르고, 조기 품절·조기 종료될 수 있습니다. 결제 전 매장에서 확인하세요.\n이 사이트는 결제를 받지 않습니다. 카드·계좌 입력 화면이 없습니다.\nKTS 원클릭 · 독심술 32유형 · 번개알바",
+ "first_offer": [
+  "동원샘물 500ml",
+  1000
+ ],
+ "sheet_text": "[장보기 발주서] 2026년 11월 22일 (일) 12:26\n오늘의 특가 기준 · 매장 확인 후 결제\n────────────────────\n■ 세븐일레븐\n · 동원샘물 500ml × 2 — 2,000원\n   (1+1 (2개에 이 값), 11/30까지, 2개)\n   소계 2,000원\n\n────────────────────\n총 2개 · 예상 2,000원\n※ 1+1·2+1은 묶음 수량으로 계산했습니다.\n※ 값·재고는 매장마다 다릅니다. 결제 전 확인하세요.\n— 오늘의 특가 (KTS) https://autooneclick.com/sale/",
+ "shop_href": "https://autooneclick.com/?from=sale"
+}

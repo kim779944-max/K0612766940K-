@@ -277,17 +277,22 @@ localStorage.clear(); caches.keys().then(k=>k.forEach(x=>caches.delete(x)));
 - **본문 글자를 바꾸지 않는다** — 도우미는 **덧붙이기만** 한다.
 - 쇼룸(`index.html`)에서도 동작: 탭 ①은 `01~09 쓰는 순서` 안내, ②는 열쇠·내 박스 FAQ.
 
-### 4-7. 스크립트 한 줄 추가 — 대상 페이지(39개)
+### 4-7. 스크립트 한 줄 추가 — 대상 페이지 **45개**(루트 13 + 폴더 32)
 
 각 파일 **`</body>` 바로 앞**에 한 줄. 하위 폴더는 `../helper.js`, 루트는 `helper.js`.
 `<script src="../helper.js?v=20261122a"></script>` / `<script src="helper.js?v=20261122a"></script>`
 
 | 폴더(→ `../`) | 루트(→ `helper.js`) |
 |---|---|
-| `ad_magnet/` `bungee/` `contract/` `ecommerce/`(7개 html) `exchange/` `gagebu/` `golf/` `hogang/` `navi2/` `organizer/` `petmind/` `realty/` `redev/` `sale/` `saycap/` `seller/` `sign/` `slope/` `thedetail/` `theeraser/` `theform/` `thescan/`(+`thescan/theeraser.html`) `thetongyeok/` `ytsummary/` | `index.html` `detail.html` `converter.html` `contract.html` `loan.html` `longtail.html` `sign.html` `tax.html` `thedetail.html` `theeraser.html` `theform.html` `thescan.html` `viewer.html` |
+| `ad_magnet/` `bungee/` `contract/` `ecommerce/`(8개 html) `exchange/` `gagebu/` `golf/` `hogang/` `navi2/` `organizer/` `petmind/` `realty/` `redev/` `sale/` `saycap/` `seller/` `sign/` `slope/` `thedetail/` `theeraser/` `theform/` `thescan/`(+`thescan/theeraser.html`) `thetongyeok/` `ytsummary/` | `index.html` `detail.html` `converter.html` `contract.html` `loan.html` `longtail.html` `sign.html` `tax.html` `thedetail.html` `theeraser.html` `theform.html` `thescan.html` `viewer.html` |
 
-- **제외**: `ops/`(대표님 상황판) · `seo/`(검색용 정적 문서) · `naver…html`(소유확인) · `saycap/test.html`.
-- 새 폴더 `interior/`(B 지시서)에는 **처음부터** `../helper.js` 를 넣는다.
+- **제외 4개**: `ops/index.html`(대표님 상황판) · `seo/*`(검색용 정적 문서 11개) · `naver080f…html`(소유확인) · `saycap/test.html`.
+- 새 폴더 `interior/`(B 지시서)에는 **처음부터** `../helper.js` 를 넣는다(넣으면 **46개**).
+- **개수 검산**(작업 뒤 `Select-String` 으로 확인할 것):
+```powershell
+(Get-ChildItem -Recurse -Filter *.html | Where-Object { $_.FullName -notmatch '\\seo\\|\\ops\\|naver080f|saycap\\test' } |
+  Select-String -Pattern 'helper\.js\?v=20261122a' | Select-Object -ExpandProperty Path -Unique).Count   # 기대 45
+```
 
 ### 4-8. 검증(⑤)
 
@@ -307,7 +312,7 @@ localStorage.clear(); caches.keys().then(k=>k.forEach(x=>caches.delete(x)));
 | 1 | `fix(redev): 모아타운 캐시 수리 · 버튼 분리 · 통합검색 (125번)` — `redev/index.html` |
 | 2 | `fix(sign): 쓰는 순서 재배치 — 만들기→찍기→간인, 요금은 아래로 (126번)` — `sign/index.html` |
 | 3 | `fix(gagebu): 결제문자 붙여넣기 중심 · 카톡 표현 제거 (130번)` — `gagebu/index.html`, `index.html` |
-| 4 | `feat(helper): 전 상품 [? 도우미] 사용설명서·챗봇 (127·129번)` — `helper.js` 신규 + 39개 html script 한 줄 |
+| 4 | `feat(helper): 전 상품 [? 도우미] 사용설명서·챗봇 (127·129번)` — `helper.js` 신규 + 45개 html script 한 줄 |
 
 - 4번 커밋은 파일이 많다. **`git add -A` 로 다른 트랙 파일을 쓸어 담지 말고**, `git status --short` 를 눈으로 보고 **이 지시서에 적힌 파일만** stage 한다.
 - 푸시는 **일반 `git push`**(force 금지). 푸시 뒤 `git status --short` 가 비어 있는지 확인.
@@ -321,7 +326,7 @@ localStorage.clear(); caches.keys().then(k=>k.forEach(x=>caches.delete(x)));
 - [ ] 125: `#tabs` 버튼 3개(서울·경기·전국) + `#moaBtn` 별도 줄 · 390 가로 넘침 0
 - [ ] 126: 카드 순서 ①만들기 ②찍기 ③간인 ④이용권 · `#ganin` 프로 미리보기 동작 · 콘솔 0
 - [ ] 130: 결제문자 3줄 → `오늘 3품목 · 63,700원` · 잔액 미기록 · 쇼룸 의뢰명 `결제문자 가계부`
-- [ ] 127·129: 39개 페이지 로드 · 12개 도구 3단계 캡처 · 버튼/패널 겹침 0 · 네트워크 0 · 인쇄 미노출
+- [ ] 127·129: helper.js 로드 **45개**(위 검산 명령 결과 숫자) · 12개 도구 3단계 캡처 · 버튼/패널 겹침 0 · 네트워크 0 · 인쇄 미노출
 - [ ] 라이브 반영(푸시 1~2분 뒤 캐시 우회):
 ```powershell
 curl.exe -s "https://autooneclick.com/redev/?t=$(Get-Date -Format HHmmss)" | Select-String "moaBtn"

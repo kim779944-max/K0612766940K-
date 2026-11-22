@@ -37,7 +37,7 @@ CLAUDE_TASK_20261122_ORGANIZER_APK.md
 CLAUDE_TASK_20261122_SALE_DRINKS.md
 # 추가 등록 2026-11-22 07:2x · 명칭 변경 1건 — '원클릭 변환기' → '문서변환기' (표시 명칭 4곳 + 캐시 태그 2곳만 · 파일명·URL·photo2doc 키·기능 무변경 · 수정 범위 oneclick/products.js·catalog.json·converter.html·index.html·detail.html)
 CLAUDE_TASK_20261122_RENAME_CONVERTER.md
-# 추가 등록 2026-11-22 14:2x · 적립 125·126·130·127·129번 — ① 재개발 모아타운 캐시('모아타운 0')·버튼 분리·통합검색 ② 더싸인 쓰는 순서(만들기→찍기→간인, 요금은 아래) ③ 가계부 결제문자 붙여넣기 중심·카톡 표현 제거 ④ 전 상품 [? 도우미] 사용설명서+챗봇(API 0원·helper.js) — 수정 범위 oneclick/redev·sign·gagebu·index.html + helper.js 신규 + 39개 html script 1줄
+# 추가 등록 2026-11-22 14:2x · 적립 125·126·130·127·129번 — ① 재개발 모아타운 캐시('모아타운 0')·버튼 분리·통합검색 ② 더싸인 쓰는 순서(만들기→찍기→간인, 요금은 아래) ③ 가계부 결제문자 붙여넣기 중심·카톡 표현 제거 ④ 전 상품 [? 도우미] 사용설명서+챗봇(API 0원·helper.js) — 수정 범위 oneclick/redev·sign·gagebu·index.html + helper.js 신규 + 45개 html script 1줄
 CLAUDE_TASK_20261122_FIX_AND_CHATBOT.md
 # 추가 등록 2026-11-22 14:2x · 적립 128번 — 인테리어 비포/애프터 + 하·중·상 원가 견적기 신규 (oneclick/interior/ 신규 + products.js·catalog.json·index.html GROUPS·sitemap.xml 등록 · bungee/#interior 무변경 · 벽키트 가격 미표기 · 외부 API 0)
 CLAUDE_TASK_20261122_INTERIOR_BA.md

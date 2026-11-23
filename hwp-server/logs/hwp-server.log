@@ -1,0 +1,37 @@
+﻿2026-11-20 23:38:46 hwp-server 1.0 listening http://127.0.0.1:8799/ (pid 11324)
+2026-11-20 23:38:58 convert 200 name#8f0d48b43d00 in=32768B out=77630B pages=1 3729ms
+2026-11-20 23:38:58 convert 422 name#0f844bd4c15c in=15872B 102ms ERR:80010108 호출된 개체가 해당 클라이언트로부터 연결이 끊겼습니다. 예외가 발생한 HRESULT: 0x80010108 RPC_E_DI
+2026-11-20 23:39:22 hwp-server 1.0 listening http://127.0.0.1:8799/ (pid 21916)
+2026-11-20 23:39:26 convert 200 name#8f0d48b43d00 in=32768B out=77630B pages=1 3712ms
+2026-11-20 23:39:29 convert 200 name#0f844bd4c15c in=15872B out=26393B pages=30 2842ms
+2026-11-20 23:39:33 convert 200 name#8f0d48b43d00 in=32768B out=77631B pages=1 3508ms
+2026-11-20 23:39:36 convert 200 name#0f844bd4c15c in=15872B out=26393B pages=30 2740ms
+2026-11-20 23:39:39 convert 200 name#8f0d48b43d00 in=32768B out=77630B pages=1 3389ms
+2026-11-20 23:39:42 convert 200 name#0f844bd4c15c in=15872B out=26396B pages=30 2759ms
+2026-11-20 23:40:02 convert 415 name#95449eb36a7f ext=.exe 200704B
+2026-11-20 23:40:02 convert 415 name#77b62b222380 ext=.hwp 200704B
+2026-11-20 23:40:02 convert 415 name#9453e3ae2510 ext=.txt 32768B
+2026-11-20 23:40:02 convert 413 len=22053075
+2026-11-20 23:40:02 convert 415 name#95449eb36a7f ext=.exe 200704B
+2026-11-20 23:40:02 convert 429 rate
+2026-11-20 23:40:11 convert 429 busy
+2026-11-20 23:40:16 convert 200 name#1103ba7d9ad9 in=15872B out=26393B pages=30 4678ms
+2026-11-20 23:40:17  /convert 503 off
+2026-11-20 23:40:17  /health 503 off
+2026-11-20 23:46:32 convert 200 name#002683e1124e in=32768B out=77631B pages=1 3601ms
+2026-11-20 23:46:55 convert 200 name#c3dcf859b576 in=15872B out=26395B pages=30 2950ms
+2026-11-20 23:48:42 hwp-server 1.0 listening http://127.0.0.1:8798/ (pid 11700)
+2026-11-20 23:49:17 convert 504 name#8f0d48b43d00 in=32768B 1001ms killed=1
+2026-11-20 23:49:39 hwp-server 1.0 listening http://127.0.0.1:8798/ (pid 32804)
+2026-11-20 23:49:44 convert 504 name#8f0d48b43d00 in=32768B 1107ms killed=1
+2026-11-20 23:49:49 convert 504 name#8f0d48b43d00 in=32768B 1095ms killed=0
+2026-11-20 23:50:11 hwp-server 1.0 listening http://127.0.0.1:8799/ (pid 27316)
+2026-11-20 23:50:19 convert 200 name#8f0d48b43d00 in=32768B out=77630B pages=1 8152ms
+2026-11-20 23:50:22 convert 200 name#bfa1c3878404 in=15872B out=26394B pages=30 2740ms
+2026-11-20 23:50:22 convert 415 name#95449eb36a7f ext=.exe 200704B
+2026-11-20 23:50:22 convert 415 name#77b62b222380 ext=.hwp 200704B
+2026-11-20 23:50:22 convert 413 len=22053075
+2026-11-20 23:50:22 convert 429 rate
+2026-11-20 23:50:23 convert 429 busy
+2026-11-20 23:50:25 convert 200 name#1103ba7d9ad9 in=15872B out=26394B pages=30 2735ms
+2026-11-20 23:50:25  /convert 503 off

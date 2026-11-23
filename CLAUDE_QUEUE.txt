@@ -56,3 +56,9 @@ CLAUDE_TASK_20261123_SNS_UPGRADE.md
 # 추가 등록 2026-11-23 18:4x · 적립 146·147번 — ① 더양식 1클릭 자동 빈칸(캔버스 픽셀·외부 API 0 · 오탐 칸 ✕ 즉시 삭제) + 다음 칸 연속 입력([다음 칸]·Enter·한글 조합 방어) + 내 양식 프리셋(localStorage, 배치만) ② 더스캔 하단 셔터 버튼 고정(100dvh + flex, 프리뷰만 줄고 셔터 영역 flex-shrink:0 — 주소창·인앱 툴바에서도 스크롤 없이 화면 안) — 수정 범위 oneclick/theform/index.html · oneclick/thescan/index.html (제0원칙: 기존 기능·파이프라인 무변경)
 CLAUDE_TASK_20261123_THEFORM_AUTO.md
 CLAUDE_TASK_20261123_THESCAN_SHUTTER.md
+# ★ 148~166 묶음 1순위 · 추가 등록 2026-11-23 21:5x · 서비스 마인드맵(148·151·152·156·158·161·162·163·165·166) 먼저 확정 → 그대로 쇼룸 버튼 구조 전개 (실질 우선·커밍순은 보이기만 클릭 0·한 상품 한 곳·문서변환기→더양식 통합·더상세→설명서 제작기·기업+창업 대출 통합·세이캡+갤러리 통합·번개알바·답글생성기 쇼룸 제외 · 수정 범위 oneclick/products.js·catalog.json·index.html·detail.html·helper.js·converter.html·theform/index.html·loan.html·tax.html·sitemap.xml · 제0원칙: 도구 엔진·가격 숫자·bungee/ 무변경 · 산출물 output/서비스_마인드맵_20261123/)
+CLAUDE_TASK_20261123_MINDMAP_SHOWROOM.md
+# ★ 148~166 묶음 2순위 · 추가 등록 2026-11-23 21:5x · 인테리어 = 실사 사진 비포/애프터 (적립 150·154번 · 도면/SVG 폐기·거실 1순위·고른 자재 영역만 교체·가구 배치 전/후 사진·묶음 변경 표시 · 수정 범위 oneclick/interior/index.html + interior/img/(K- repo refs/interior_photo_20261123 실사 10장)·interior/regions.json · 제0원칙: bungee/ 무변경·견적 계산·단가·이용권 불변)
+CLAUDE_TASK_20261123_INTERIOR_REAL_PHOTO.md
+# ★ 148~166 묶음 3순위 · 추가 등록 2026-11-23 21:5x · 4종 수리 (적립 153·159·160·164번 · 독심술 6문항 압축+복수 체크+단정형 결과문 / 도우미 38px+손가락 드래그 이동+위치 저장 / 오늘의 특가 정가 취소선+할인율·물건 기준 4분류·도매 땡처리 최상단 / 재개발 지번 입력 3단 판정 · 수정 범위 oneclick/helper.js·sale/·navi2/·redev/ · 제0원칙: 채점 축·다른 도구 로직 불변)
+CLAUDE_TASK_20261123_UX_FIX_4PACK.md

@@ -1,0 +1,56 @@
+{
+ "shopguardState": "shopguard",
+ "shopGuardOn": true,
+ "hwpNotice": {
+  "card": true,
+  "noticeMode": true,
+  "pbar": "none",
+  "retryBtn": true
+ },
+ "hwpInBundle": {
+  "kinds": [
+   "img",
+   "notice",
+   "pdf"
+  ],
+  "total": 4,
+  "pgNo": "1 / 4"
+ },
+ "brokenInBundle": {
+  "kinds": [
+   "img",
+   "err",
+   "img"
+  ],
+  "total": 3,
+  "card": true
+ },
+ "idbEntry": {
+  "name": "idb_test.png",
+  "pgNo": "1 / 1",
+  "multi": false,
+  "items": 1
+ },
+ "convLink": "converter.html",
+ "menuOnTopOfHelper": {
+  "z": "270",
+  "hitIsZip": true
+ },
+ "printPrep": {
+  "canvases": 12,
+  "pdfPages": 12
+ },
+ "printPdf": {
+  "pages": 34,
+  "blank": []
+ },
+ "afterPrintCanvases": 0,
+ "errors": [
+  "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+  "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+ ],
+ "failedRequests": [
+  "https://pursue-griffin-massage-kentucky.trycloudflare.com/health net::ERR_NAME_NOT_RESOLVED",
+  "https://pursue-griffin-massage-kentucky.trycloudflare.com/health net::ERR_NAME_NOT_RESOLVED"
+ ]
+}

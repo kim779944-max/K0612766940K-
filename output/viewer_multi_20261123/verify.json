@@ -1,0 +1,341 @@
+{
+ "files": 28,
+ "inputMultiple": true,
+ "attach": {
+  "items": 28,
+  "total": 34,
+  "multi": true,
+  "cur": 0,
+  "pgNo": "1 / 34",
+  "vtName": "파일 1/28 · 01_사진.png",
+  "canvas": 0,
+  "sw": 390,
+  "names": [
+   "01_사진.png",
+   "02_사진.png",
+   "03_사진.png",
+   "04_사진.png",
+   "05_사진.png",
+   "06_사진.png",
+   "07_사진.png",
+   "08_사진.png",
+   "09_사진.png",
+   "10_사진.png",
+   "11_사진.png",
+   "12_사진.png",
+   "13_사진.png",
+   "14_사진.png",
+   "15_사진.png",
+   "16_사진.png",
+   "17_사진.png",
+   "18_사진.png",
+   "19_사진.png",
+   "20_사진.png",
+   "21_PDF.pdf",
+   "22_PDF.pdf",
+   "23_PDF.pdf",
+   "24_PDF.pdf",
+   "25_PDF.pdf",
+   "26_PDF_가로.pdf",
+   "27_엑셀.xlsx",
+   "28_한글.hwpx"
+  ],
+  "zoom": 0.32,
+  "pbarH": 106,
+  "mName": "묶음 28개 · 34장",
+  "sec": 2.4,
+  "topsStable": true
+ },
+ "orderOk": true,
+ "next33": {
+  "last": "34 / 34",
+  "nextDisabled": true,
+  "vtName": "파일 28/28 · 28_한글.hwpx",
+  "seqOk": true
+ },
+ "scrollDetect": {
+  "checked": 12,
+  "maxErr": 0
+ },
+ "mid": {
+  "items": 28,
+  "total": 34,
+  "multi": true,
+  "cur": 19,
+  "pgNo": "20 / 34",
+  "vtName": "파일 20/28 · 20_사진.png",
+  "canvas": 3,
+  "sw": 390,
+  "names": [
+   "01_사진.png",
+   "02_사진.png",
+   "03_사진.png",
+   "04_사진.png",
+   "05_사진.png",
+   "06_사진.png",
+   "07_사진.png",
+   "08_사진.png",
+   "09_사진.png",
+   "10_사진.png",
+   "11_사진.png",
+   "12_사진.png",
+   "13_사진.png",
+   "14_사진.png",
+   "15_사진.png",
+   "16_사진.png",
+   "17_사진.png",
+   "18_사진.png",
+   "19_사진.png",
+   "20_사진.png",
+   "21_PDF.pdf",
+   "22_PDF.pdf",
+   "23_PDF.pdf",
+   "24_PDF.pdf",
+   "25_PDF.pdf",
+   "26_PDF_가로.pdf",
+   "27_엑셀.xlsx",
+   "28_한글.hwpx"
+  ],
+  "zoom": 0.32,
+  "pbarH": 106,
+  "mName": "묶음 28개 · 34장"
+ },
+ "memory": {
+  "max": 3,
+  "after": 0
+ },
+ "pdfNear": {
+  "kind": "pdf",
+  "hasCanvas": true,
+  "canvas": 5
+ },
+ "at12": "12 / 34",
+ "png12": {
+  "name": "더뷰_12_사진_12p.png",
+  "size": [
+   1200,
+   1600
+  ],
+  "bytes": 31297
+ },
+ "png23pdf": {
+  "name": "더뷰_22_PDF_23p.png",
+  "size": [
+   2540,
+   3592
+  ]
+ },
+ "png34hwpx": {
+  "name": "더뷰_28_한글_34p.png",
+  "size": [
+   1588,
+   2246
+  ]
+ },
+ "zip": {
+  "name": "더뷰_전체_34장_2026-11-23.zip",
+  "count": 34,
+  "first": [
+   "01_01_사진_1p.png",
+   "02_02_사진_1p.png",
+   "03_03_사진_1p.png"
+  ],
+  "last": [
+   "32_26_PDF_가로_2p.png",
+   "33_27_엑셀_1p.png",
+   "34_28_한글_1p.png"
+  ],
+  "MB": 7.72,
+  "sec": 2.8,
+  "canvasBefore": 2,
+  "canvasAfter": 2
+ },
+ "lastPageVisible": true,
+ "pdf": {
+  "name": "더뷰_01_사진_34장_2026-11-23.pdf",
+  "MB": 2.92,
+  "sec": 2.3,
+  "last": {
+   "type": "pdf",
+   "name": "더뷰_01_사진_34장_2026-11-23.pdf",
+   "count": 34,
+   "bytes": 3062838,
+   "orient": [
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "p",
+    "l",
+    "l",
+    "p",
+    "p"
+   ]
+  },
+  "canvasAfter": 2,
+  "pages": 34,
+  "sizes": {
+   "595x842": 32,
+   "842x595": 2
+  },
+  "landscapePages": [
+   31,
+   32
+  ],
+  "blankPages": []
+ },
+ "append": {
+  "items": 31,
+  "total": 37,
+  "tail": [
+   "28_한글.hwpx",
+   "29_추가사진1.png",
+   "29_추가사진2.png",
+   "31_추가PDF.pdf"
+  ],
+  "orderOk": true,
+  "scrollKept": true,
+  "pgNo": "6 / 37",
+  "topsStable": true,
+  "plusOpensChooser": true
+ },
+ "list": {
+  "rows": 31,
+  "sum": "31개 · 37장",
+  "goto3": {
+   "pgNo": "3 / 37",
+   "vtName": "파일 3/31 · 03_사진.png"
+  }
+ },
+ "delete": {
+  "items": [
+   31,
+   30
+  ],
+  "total": [
+   37,
+   36
+  ],
+  "orderOk": true,
+  "revokeCalls": 1,
+  "pgNo": "3 / 36",
+  "listRows": 30
+ },
+ "deleteHeaderX": {
+  "items": [
+   30,
+   29
+  ],
+  "total": [
+   36,
+   35
+  ]
+ },
+ "sw": 390,
+ "closeAll": {
+  "docopen": false,
+  "pbarVisible": "none",
+  "items": 0,
+  "revokeCalls": 21,
+  "outChildren": 0
+ },
+ "oneFile": {
+  "items": 1,
+  "total": 0,
+  "multi": false,
+  "cur": 0,
+  "pgNo": "1 / 1",
+  "vtName": "01_사진.png",
+  "canvas": 0,
+  "sw": 390,
+  "names": [
+   "01_사진.png"
+  ],
+  "zoom": 0.32,
+  "pbarH": 106,
+  "mName": "01_사진.png",
+  "mfblk": 0,
+  "kind": "img",
+  "pinchZoom": [
+   0.32,
+   1.003
+  ],
+  "saveName": "01_사진.png",
+  "editOn": true,
+  "editOff": true,
+  "printCalls": 1,
+  "listRows": 1
+ },
+ "oneToMulti": {
+  "items": 2,
+  "total": 3,
+  "names": [
+   "01_사진.png",
+   "21_PDF.pdf"
+  ],
+  "pgNo": "1 / 3"
+ },
+ "multiToOne": {
+  "multi": false,
+  "pgNo": "1 / 1",
+  "mfblk": 0
+ },
+ "multiPrint": {
+  "printCalls": 1,
+  "canvasAtPrint": 6,
+  "pdfPages": 6
+ },
+ "dropBody": {
+  "items": [
+   3,
+   5
+  ],
+  "tail": [
+   "dropA.png",
+   "dropB.png"
+  ]
+ },
+ "dropFirst": {
+  "items": 3,
+  "pgNo": "1 / 3"
+ },
+ "limit60": {
+  "items": 60,
+  "toast": "한 번에 60개까지 열 수 있습니다 · 60개 · 60장을 열었습니다"
+ },
+ "swEnd": 390,
+ "errors": [
+  "console Failed to load resource: the server responded with a status of 404 (File not found)"
+ ],
+ "hosts": [
+  "127.0.0.1",
+  "cdnjs.cloudflare.com"
+ ],
+ "nonGet": [],
+ "http4xx": []
+}

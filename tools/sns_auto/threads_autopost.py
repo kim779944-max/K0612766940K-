@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""KTS 쓰레드 자동 포스팅 — 하루 1건 (Meta Threads API v1.0)
-   python threads_autopost.py [--list|--dry-run|--live|--refresh|--resolve]
+"""KTS 쓰레드 자동 포스팅 — 하루 1건 (Meta Threads API v1.0 또는 전용 크롬)
+   python threads_autopost.py [--list|--dry-run|--live|--refresh|--resolve] [--chrome|--api]
+   python threads_autopost.py --reply <post_id|permalink> "<문장>"   # 대표님이 대상·문장을 지정할 때만(수동 1회)
    인자 없음 = --live 와 같음(단, SNS_DAILY_ENABLED=0 이면 아무것도 하지 않음)
+
+모드(.env.local THREADS_MODE=auto|api|chrome, 기본 auto): auto 는 토큰·사용자ID가 둘 다 있고 API 가
+401/403 을 내지 않으면 api, 아니면 chrome(전용 크롬 CDP 9222). 한 실행에서 두 경로를 섞지 않는다.
+링크(THREADS_LINK_MODE=first_comment|reply_on_request, 기본 first_comment): 본문에는 어느 쪽이든 URL 금지.
+외부인 댓글 자동 답글 기능은 없다.
 
 종료 코드: 0 정상/할 일 없음 · 1 오류 · 2 확인 필요(중복 위험) · 3 설정 없음 · 4 한도 초과
 """
@@ -227,6 +233,151 @@ def maybe_refresh(cfg: dict) -> None:
         log(f"[주의] 토큰 갱신 실패(기존 토큰으로 계속): {e}")
 
 
+def resolve_mode(cfg: dict, override: str, probe_api: bool) -> str:
+    """api | chrome. probe_api=False(드라이런)면 네트워크 없이 설정만으로 판단."""
+    mode = (override or cfg.get("THREADS_MODE", "auto") or "auto").lower()
+    if mode in ("api", "chrome"):
+        return mode
+    if not (cfg.get("THREADS_ACCESS_TOKEN") and cfg.get("THREADS_USER_ID")):
+        return "chrome"
+    if not probe_api:
+        return "api(실행 때 401/403 이면 chrome)"
+    try:
+        api_get("me", {"fields": "id", "access_token": cfg["THREADS_ACCESS_TOKEN"]})
+        return "api"
+    except RuntimeError as e:
+        if "HTTP 401" in str(e) or "HTTP 403" in str(e):
+            log(f"  API 거절({str(e)[:40]}) → chrome 모드")
+            return "chrome"
+        return "api"
+
+
+def run_chrome(cfg: dict, q: dict, item: dict, link_mode: str) -> int:
+    """전용 크롬으로 본문 1건(+first_comment 모드면 본인 글에 첫 댓글). 종료 코드는 지시서 §B-6 표."""
+    import threads_chrome as tc
+    from playwright.sync_api import sync_playwright
+    text = item["threads"]["text"]
+    try:
+        tc.ensure_chrome(log)
+    except tc.ChromeSetupError as e:
+        log(f"[SKIP] {e}")
+        return 3
+    with sync_playwright() as p:
+        ctx = p.chromium.connect_over_cdp(tc.CDP).contexts[0]
+        page = ctx.new_page()
+        page.set_default_timeout(20000)
+        try:
+            page.goto(tc.HOME, wait_until="domcontentloaded")
+            time.sleep(6)
+            try:
+                tc.check_login(page)
+            except tc.ChromeSetupError as e:
+                log(f"[SKIP] {e} — 그 창에서 다시 로그인하세요(자동 로그인 시도 안 함) · {tc.shot(page, 'threads_LOGIN')}")
+                return 3
+            handle = tc.read_handle(page, cfg.get("THREADS_HANDLE", ""))
+            if not handle:
+                log("[SKIP] 계정 핸들을 못 읽음 — .env.local 에 THREADS_HANDLE=@계정 을 넣어 주세요")
+                return 3
+            log(f"  chrome 모드 · 계정 @{handle}")
+            # 중복 방지 ②: 게시 전에 프로필 최상단이 오늘 본문이면 이미 올라간 것
+            top = tc.top_post(page, handle)
+            if tc.same_post(top, text):
+                item.update({"status": "posted", "posted_at": f"{datetime.datetime.now():%Y-%m-%dT%H:%M:%S}",
+                             "permalink": top["permalink"], "mode": "chrome", "note": "게시 전 확인: 이미 올라가 있음"})
+                save_queue(q)
+                log(f"[OK] 이미 올라가 있음 → posted 기록만 {top['permalink']}")
+                return 0
+            page.goto(tc.HOME, wait_until="domcontentloaded")
+            time.sleep(5)
+            item["status"] = "publishing"
+            item["attempt_at"] = f"{datetime.datetime.now():%Y-%m-%dT%H:%M:%S}"
+            item["mode"] = "chrome"
+            save_queue(q)
+            try:
+                tc.post(page, text, check_text, log)
+            except ValueError as e:              # 입력 확인 단계 실패 — 게시 버튼은 안 눌렀다
+                item["status"] = "pending"
+                save_queue(q)
+                log(f"[실패] {e}")
+                return 1
+            except RuntimeError as e:            # 게시 버튼까지 못 감
+                item["status"] = "pending"
+                save_queue(q)
+                log(f"[실패] {scrub(str(e))} · {tc.shot(page, 'threads_ERR')}")
+                return 1
+            permalink = tc.confirm(page, handle, text)
+            if not permalink:                    # 다시 누르지 않는다 → publishing 잠금, 사람 확인
+                item["error"] = f"게시 클릭 후 확인 실패 · url={page.url}"
+                save_queue(q)
+                log(f"[확인필요] 게시 클릭 후 프로필 최상단에서 본문을 못 찾음 — 다시 누르지 않음 · "
+                    f"{tc.shot(page, 'threads_UNSURE')} · {page.url}")
+                return 2
+            item.update({"status": "posted", "posted_at": f"{datetime.datetime.now():%Y-%m-%dT%H:%M:%S}",
+                         "permalink": permalink, "mode": "chrome"})
+            item.pop("error", None)
+            save_queue(q)
+            log(f"[OK] 게시 완료(chrome) {permalink}")
+            fc = item["threads"].get("first_comment", "")
+            if link_mode == "first_comment" and fc:
+                time.sleep(10)
+                try:
+                    tc.reply(page, permalink, fc, log)
+                    item["reply_mode"] = "first_comment"
+                    log("[OK] 첫 댓글")
+                except Exception as e:           # 본문 성공은 되돌리지 않는다
+                    item["reply_error"] = str(e)[:200]
+                    log(f"[주의] 첫 댓글 실패(본문은 게시됨 — 댓글은 손으로 다세요): {scrub(str(e))}")
+                save_queue(q)
+            elif link_mode == "reply_on_request":
+                log("  링크 정책 reply_on_request — 첫 댓글 링크 없음(요청자에게는 --reply 로 수동)")
+            return 0
+        finally:
+            page.close()
+
+
+def run_reply(cfg: dict, target: str, text: str) -> int:
+    """대표님이 대상·문장을 지정해 부르는 수동 답글 1회(자동 스캔·자동 응답 없음)."""
+    errs = [e for e in check_text(text) if "링크" not in e]
+    if errs:
+        log(f"[실패] 답글 문장 규칙 위반: {errs}")
+        return 1
+    if target.startswith("http"):
+        import threads_chrome as tc
+        from playwright.sync_api import sync_playwright
+        try:
+            tc.ensure_chrome(log)
+        except tc.ChromeSetupError as e:
+            log(f"[SKIP] {e}")
+            return 3
+        with sync_playwright() as p:
+            page = p.chromium.connect_over_cdp(tc.CDP).contexts[0].new_page()
+            try:
+                page.goto(tc.HOME, wait_until="domcontentloaded")
+                time.sleep(5)
+                tc.check_login(page)
+                log(f"[OK] 답글 1회 · {tc.reply(page, target, text, log)}")
+                return 0
+            except tc.ChromeSetupError as e:
+                log(f"[SKIP] {e}")
+                return 3
+            except Exception as e:
+                log(f"[실패] {scrub(str(e))}")
+                return 1
+            finally:
+                page.close()
+    if not cfg.get("THREADS_ACCESS_TOKEN") or not cfg.get("THREADS_USER_ID"):
+        log("[SKIP] post_id 답글은 API 토큰이 필요합니다(크롬은 permalink 로 지정)")
+        return 3
+    try:
+        rcid = create_container(cfg["THREADS_USER_ID"], cfg["THREADS_ACCESS_TOKEN"], "TEXT", text, reply_to=target)
+        time.sleep(5)
+        log(f"[OK] 답글 reply_id={publish(cfg['THREADS_USER_ID'], cfg['THREADS_ACCESS_TOKEN'], rcid)}")
+        return 0
+    except RuntimeError as e:
+        log(f"[실패] {e}")
+        return 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="KTS 쓰레드 하루 1건 자동 게시")
     g = ap.add_mutually_exclusive_group()
@@ -235,10 +386,19 @@ def main() -> int:
     g.add_argument("--live", action="store_true", help="실제 게시")
     g.add_argument("--refresh", action="store_true", help="토큰 갱신만")
     g.add_argument("--resolve", action="store_true", help="publishing/error 항목을 사람 확인 후 pending 으로")
+    g.add_argument("--reply", nargs=2, metavar=("TARGET", "TEXT"), help="지정한 글에 답글 1회(수동 전용)")
+    m = ap.add_mutually_exclusive_group()
+    m.add_argument("--chrome", action="store_true", help="이번 실행만 chrome 모드")
+    m.add_argument("--api", action="store_true", help="이번 실행만 api 모드")
     a = ap.parse_args()
-    scheduled = not (a.list or a.dry_run or a.live or a.refresh or a.resolve)
+    scheduled = not (a.list or a.dry_run or a.live or a.refresh or a.resolve or a.reply)
+    override = "chrome" if a.chrome else ("api" if a.api else "")
 
     cfg = load_env()
+    link_mode = (cfg.get("THREADS_LINK_MODE", "first_comment") or "first_comment").lower()
+
+    if a.reply:
+        return run_reply(cfg, a.reply[0], a.reply[1])
 
     if a.list:
         q = load_queue()
@@ -286,7 +446,12 @@ def main() -> int:
         log(f"[DRY] 항목 {item['id']} · 주제 {item.get('topic', '')}")
         log(f"[DRY] 본문 {len(text)}자 / 한도 {MAX_TEXT}자 · {len(text.splitlines())}줄")
         log(f"[DRY] 이미지 {t.get('image_url') or '(없음)'}  (드라이런: URL 확인 생략)")
-        log(f"[DRY] 첫 댓글 {t.get('first_comment') or '(없음)'}")
+        mode_txt = resolve_mode(cfg, override, probe_api=False)
+        log(f"[DRY] 모드 {mode_txt} (THREADS_MODE={cfg.get('THREADS_MODE', 'auto')} {override}) · 링크 정책 {link_mode}")
+        if link_mode == "first_comment":
+            log(f"[DRY] 첫 댓글 {t.get('first_comment') or '(없음)'}")
+        else:
+            log("[DRY] 첫 댓글 없음(reply_on_request — 요청자에게만 --reply 수동)")
         for e in check_text(text):
             log(f"[DRY] 규칙 위반: {e}")
         print("[DRY] ---- 본문 ----")
@@ -298,10 +463,6 @@ def main() -> int:
     if cfg.get("SNS_DAILY_ENABLED", "1") == "0":
         log("[SKIP] SNS_DAILY_ENABLED=0 (비상 정지)")
         return 0
-    if not cfg.get("THREADS_ACCESS_TOKEN") or not cfg.get("THREADS_USER_ID"):
-        log("[SKIP] 토큰/사용자ID 없음 — threads_token.py 를 먼저 실행하세요")
-        return 3
-
     blk = blocking_item(q)
     if blk:
         log(f"[확인필요] {blk['id']} 가 {blk.get('status')} 상태입니다. 쓰레드에서 실제로 올라갔는지 확인하고 "
@@ -327,6 +488,14 @@ def main() -> int:
         for e in errs:
             log(f"[실패] {item['id']}: {e}")
         return 1
+
+    mode = resolve_mode(cfg, override, probe_api=True)
+    log(f"  모드 {mode} · 링크 정책 {link_mode}")
+    if mode == "chrome":
+        return run_chrome(cfg, q, item, link_mode)
+    if not cfg.get("THREADS_ACCESS_TOKEN") or not cfg.get("THREADS_USER_ID"):
+        log("[SKIP] 토큰/사용자ID 없음 — threads_token.py 를 먼저 실행하세요")
+        return 3
 
     maybe_refresh(cfg)
     token, uid = cfg["THREADS_ACCESS_TOKEN"], cfg["THREADS_USER_ID"]
@@ -374,7 +543,7 @@ def main() -> int:
         return 1
 
     reply_id = ""
-    if first_comment:
+    if first_comment and link_mode == "first_comment":
         time.sleep(10)
         try:
             rcid = create_container(uid, token, "TEXT", first_comment, reply_to=post_id)

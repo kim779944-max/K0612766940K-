@@ -27,6 +27,9 @@ SEL = {
 QUOTE_DOM = "blockquote, [class*='quotation']"
 HR_DOM = "hr, [class*='horizontal']"
 HR_TEXT = "──────────"
+# 빈 문단은 공백 한 칸으로 넣는다: 완전히 빈 문단만 든 텍스트 덩어리는 바로 뒤에 소제목을 만들면
+# 에디터가 지워 버린다(2026-11-23 실측). 공백 한 칸은 화면에 보이지 않고 문구 비교에서도 빈 줄로 친다.
+BLANK = " "
 MAX_HR = 2
 MAX_PHOTOS = 3
 HEAD_MIN_PX = 20
@@ -143,6 +146,35 @@ def anchor_end(page, fr):
         last = fr.locator(".se-component").last
     last.locator(".se-text-paragraph").last.click()
     page.keyboard.press("End")
+
+
+CARET_JS = r"""() => {
+  const comps = [...document.querySelectorAll('.se-component')];
+  const last = comps[comps.length - 1];
+  const ps = last ? [...last.querySelectorAll('.se-text-paragraph')] : [];
+  const lp = ps[ps.length - 1];
+  const s = getSelection(); const n = s && s.anchorNode;
+  const el = n ? (n.nodeType === 1 ? n : n.parentElement) : null;
+  const cur = el ? el.closest('.se-text-paragraph') : null;
+  return {lastIsText: !!last && last.classList.contains('se-text'), inLast: !!lp && cur === lp,
+          lastText: lp ? lp.textContent : null};
+}"""
+
+
+def ensure_caret_end(page, fr):
+    """블록을 넣기 전 확인: 커서가 글 맨 끝의 '빈' 텍스트 문단에 있어야 한다(아니면 고친다)."""
+    for _ in range(3):
+        st = fr.evaluate(CARET_JS)
+        if st["lastIsText"] and st["inLast"] and st["lastText"] == "":
+            return True
+        if not st["lastIsText"] or not st["inLast"]:
+            anchor_end(page, fr)
+            time.sleep(0.2)
+            continue
+        page.keyboard.press("End")            # 끝 문단에 글자가 남아 있음(Enter 가 씹힘) → 새 문단
+        page.keyboard.press("Enter")
+        time.sleep(0.2)
+    return False
 
 
 def insert_paragraph(page, line):
@@ -268,6 +300,14 @@ def insert_photo(page, fr, path, uploader, stats):
             break
         time.sleep(1.5)
     ok = fr.locator(".se-component.se-image").count() > c0
+    # 업로드가 끝나 실제 이미지가 붙을 때까지(늦게 붙으면서 커서를 가져가는 것 방지)
+    for _ in range(20):
+        done = fr.evaluate("""() => { const i = [...document.querySelectorAll('.se-component.se-image img')].pop();
+                                     return !!i && i.complete && i.naturalWidth > 0 && /^https?:/.test(i.src); }""")
+        if done:
+            break
+        time.sleep(1)
+    time.sleep(2)
     anchor_end(page, fr)
     if ok:
         stats["photos"] += 1
@@ -286,14 +326,23 @@ def render(page, fr, blocks, photo_path, uploader, log, budget=150):
     t0 = time.time()
     apply_line_height(fr, stats)
     for kind, val in blocks:
+        try:
+            if not ensure_caret_end(page, fr):
+                stats["log"].append(f"caret-fix-fail before {kind}")
+        except Exception as e:
+            stats["log"].append(f"caret check 오류: {str(e)[:80]}")
         plain = time.time() - t0 > budget
         if plain and not stats["format_timeout"]:
             stats["format_timeout"] = True
             log(f"  [주의] 조판 {budget}초 초과 → 남은 블록은 문구만 입력(format_timeout)")
-        if kind in ("para", "list", "tags"):
+        if kind == "tags":                    # 구분선 직후 늦게 처리되는 입력에 태그 줄이 쪼개지지 않게 잠깐 쉼
+            time.sleep(1.5)
+            ensure_caret_end(page, fr)
+            insert_paragraph(page, val)
+        elif kind in ("para", "list"):
             insert_paragraph(page, val)
         elif kind == "blank":
-            insert_paragraph(page, "")
+            insert_paragraph(page, BLANK)
         elif kind == "link":
             insert_paragraph(page, val)
             time.sleep(2.5)              # 자동 링크 처리 중 커서가 튀는 것 방지

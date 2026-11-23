@@ -65,7 +65,10 @@
           "https://autooneclick.com/shots/slope_full.png"
         ],
         "draft_logno": "224488223103",
-        "drafted_at": "2026-11-23T12:30:59"
+        "drafted_at": "2026-11-23T18:30:46",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:30:46"
       },
       "notes": "대표님이 이미 한 번 올린 소재. 검색 유입용이라 각도를 바꿔 반복 가능."
     },
@@ -121,7 +124,10 @@
           "https://autooneclick.com/shots/navi_result.png"
         ],
         "draft_logno": "224488224665",
-        "drafted_at": "2026-11-23T12:32:15"
+        "drafted_at": "2026-11-23T18:32:34",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:32:34"
       },
       "notes": "원리·알고리즘 설명 금지. '그림 16장·10문항'은 화면에 공개된 사실만."
     },
@@ -177,7 +183,10 @@
           "https://autooneclick.com/shots/viewer_home.png"
         ],
         "draft_logno": "224488226089",
-        "drafted_at": "2026-11-23T12:33:27"
+        "drafted_at": "2026-11-23T18:34:32",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:34:32"
       },
       "notes": ""
     },
@@ -230,7 +239,10 @@
           ]
         },
         "draft_logno": "224488227703",
-        "drafted_at": "2026-11-23T12:34:46"
+        "drafted_at": "2026-11-23T18:36:37",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:36:37"
       },
       "notes": "sign_home.png 는 저장소에 없다 → PC가 화면 캡처로 생성(§6-5)."
     },
@@ -283,7 +295,10 @@
           ]
         },
         "draft_logno": "224488229317",
-        "drafted_at": "2026-11-23T12:36:03"
+        "drafted_at": "2026-11-23T18:38:49",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:38:49"
       },
       "notes": ""
     },
@@ -340,7 +355,10 @@
           "https://autooneclick.com/shots/realty_home.png"
         ],
         "draft_logno": "224488231146",
-        "drafted_at": "2026-11-23T12:37:28"
+        "drafted_at": "2026-11-23T18:41:00",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:41:00"
       },
       "notes": ""
     },
@@ -394,7 +412,10 @@
           ]
         },
         "draft_logno": "224488232802",
-        "drafted_at": "2026-11-23T12:38:47"
+        "drafted_at": "2026-11-23T18:43:04",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:43:04"
       },
       "notes": ""
     },
@@ -451,7 +472,10 @@
           "https://autooneclick.com/shots/redev_home.png"
         ],
         "draft_logno": "224488234565",
-        "drafted_at": "2026-11-23T12:40:15"
+        "drafted_at": "2026-11-23T18:45:07",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:45:07"
       },
       "notes": ""
     },
@@ -505,7 +529,10 @@
           ]
         },
         "draft_logno": "224488236037",
-        "drafted_at": "2026-11-23T12:41:26"
+        "drafted_at": "2026-11-23T18:50:17",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:50:17"
       },
       "notes": ""
     },
@@ -562,7 +589,10 @@
           "https://autooneclick.com/shots/photo2doc_home.png"
         ],
         "draft_logno": "224488237721",
-        "drafted_at": "2026-11-23T13:02:40"
+        "drafted_at": "2026-11-23T18:52:34",
+        "format_version": 2,
+        "format_ok": true,
+        "reworked_at": "2026-11-23T18:52:34"
       },
       "notes": ""
     }

@@ -1,0 +1,74 @@
+{
+ "label": "after",
+ "top": "45%",
+ "first_screen_total": 963,
+ "all_scroll_total": 2906,
+ "pages": {
+  "/index.html": {
+   "scroll0": {
+    "btn": [
+     344,
+     380,
+     38,
+     38
+    ],
+    "hit": [
+     {
+      "a": 490,
+      "tag": "BUTTON",
+      "t": "03서류·계약6개 →스캔 "
+     },
+     {
+      "a": 471,
+      "tag": "BUTTON",
+      "t": "04생활·기록6개 →정리·"
+     }
+    ],
+    "sum": 961
+   },
+   "scrollSum": 961,
+   "steps": 1
+  },
+  "/listing/index.html": {
+   "scroll0": {
+    "none": 1
+   },
+   "scrollSum": 0,
+   "steps": 6
+  },
+  "/theform/index.html": {
+   "scroll0": {
+    "btn": [
+     344,
+     380,
+     38,
+     38
+    ],
+    "hit": [],
+    "sum": 0
+   },
+   "scrollSum": 1943,
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "scroll0": {
+    "btn": [
+     344,
+     380,
+     38,
+     38
+    ],
+    "hit": [
+     {
+      "a": 2,
+      "tag": "BUTTON",
+      "t": "부동산 교환계약서(당사자용"
+     }
+    ],
+    "sum": 2
+   },
+   "scrollSum": 2,
+   "steps": 3
+  }
+ }
+}

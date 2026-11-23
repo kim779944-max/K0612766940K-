@@ -1,0 +1,63 @@
+{
+ "label": "after",
+ "top": "30%",
+ "first_screen_total": 1178,
+ "all_scroll_total": 2802,
+ "pages": {
+  "/index.html": {
+   "scroll0": {
+    "btn": [
+     344,
+     253,
+     38,
+     38
+    ],
+    "hit": [
+     {
+      "a": 1178,
+      "tag": "BUTTON",
+      "t": "02사업자·매장9개 →상품"
+     }
+    ],
+    "sum": 1178
+   },
+   "scrollSum": 1178,
+   "steps": 1
+  },
+  "/listing/index.html": {
+   "scroll0": {
+    "none": 1
+   },
+   "scrollSum": 0,
+   "steps": 6
+  },
+  "/theform/index.html": {
+   "scroll0": {
+    "btn": [
+     344,
+     253,
+     38,
+     38
+    ],
+    "hit": [],
+    "sum": 0
+   },
+   "scrollSum": 1016,
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "scroll0": {
+    "btn": [
+     344,
+     253,
+     38,
+     38
+    ],
+    "hit": [],
+    "sum": 0
+   },
+   "scrollSum": 608,
+   "steps": 3
+  }
+ }
+}

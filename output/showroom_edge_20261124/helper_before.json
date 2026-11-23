@@ -1,0 +1,69 @@
+{
+ "label": "before",
+ "top": null,
+ "first_screen_total": 1621,
+ "all_scroll_total": 2420,
+ "pages": {
+  "/index.html": {
+   "scroll0": {
+    "btn": [
+     10,
+     796,
+     38,
+     38
+    ],
+    "hit": [
+     {
+      "a": 915,
+      "tag": "BUTTON",
+      "t": "전체"
+     }
+    ],
+    "sum": 915
+   },
+   "scrollSum": 915,
+   "steps": 8
+  },
+  "/listing/index.html": {
+   "scroll0": {
+    "none": 1
+   },
+   "scrollSum": 0,
+   "steps": 6
+  },
+  "/theform/index.html": {
+   "scroll0": {
+    "btn": [
+     10,
+     724,
+     38,
+     38
+    ],
+    "hit": [
+     {
+      "a": 706,
+      "tag": "BUTTON",
+      "t": "📄 교환계약서(당사자용)"
+     }
+    ],
+    "sum": 706
+   },
+   "scrollSum": 1321,
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "scroll0": {
+    "btn": [
+     10,
+     724,
+     38,
+     38
+    ],
+    "hit": [],
+    "sum": 0
+   },
+   "scrollSum": 184,
+   "steps": 3
+  }
+ }
+}

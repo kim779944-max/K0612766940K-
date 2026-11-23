@@ -1,0 +1,57 @@
+{
+ "label": "after_auto",
+ "top": null,
+ "first_screen_total": 0,
+ "all_scroll_total": 1931,
+ "pages": {
+  "/index.html": {
+   "scroll0": {
+    "btn": [
+     344,
+     633,
+     38,
+     38
+    ],
+    "hit": [],
+    "sum": 0
+   },
+   "scrollSum": 0,
+   "steps": 1
+  },
+  "/listing/index.html": {
+   "scroll0": {
+    "none": 1
+   },
+   "scrollSum": 0,
+   "steps": 6
+  },
+  "/theform/index.html": {
+   "scroll0": {
+    "btn": [
+     344,
+     380,
+     38,
+     38
+    ],
+    "hit": [],
+    "sum": 0
+   },
+   "scrollSum": 1931,
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "scroll0": {
+    "btn": [
+     344,
+     321,
+     38,
+     38
+    ],
+    "hit": [],
+    "sum": 0
+   },
+   "scrollSum": 0,
+   "steps": 3
+  }
+ }
+}

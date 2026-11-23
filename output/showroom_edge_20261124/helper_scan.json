@@ -1,0 +1,323 @@
+{
+ "oldLB 0%": {
+  "/index.html": {
+   "first": 0,
+   "scroll": 0,
+   "hit0": [],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 1292,
+   "scroll": 6827,
+   "hit0": [
+    "빈칸 지정으로"
+   ],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 1292,
+   "scroll": 4051,
+   "hit0": [
+    "이 양식으로 작성하"
+   ],
+   "steps": 3
+  }
+ },
+ "right 12%": {
+  "/index.html": {
+   "first": 0,
+   "scroll": 0,
+   "hit0": [],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 743,
+   "scroll": 2176,
+   "hit0": [
+    "내보내기"
+   ],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 638,
+   "scroll": 1246,
+   "hit0": [
+    "4 서명"
+   ],
+   "steps": 3
+  }
+ },
+ "right 20%": {
+  "/index.html": {
+   "first": 1178,
+   "scroll": 1178,
+   "hit0": [
+    "01부동산·중개5개"
+   ],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 0,
+   "scroll": 1959,
+   "hit0": [],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 0,
+   "scroll": 624,
+   "hit0": [],
+   "steps": 3
+  }
+ },
+ "right 30%": {
+  "/index.html": {
+   "first": 1178,
+   "scroll": 1178,
+   "hit0": [
+    "02사업자·매장9개"
+   ],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 0,
+   "scroll": 1016,
+   "hit0": [],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 0,
+   "scroll": 608,
+   "hit0": [],
+   "steps": 3
+  }
+ },
+ "right 38%": {
+  "/index.html": {
+   "first": 1178,
+   "scroll": 1178,
+   "hit0": [
+    "03서류·계약6개 "
+   ],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 528,
+   "scroll": 1959,
+   "hit0": [
+    "?"
+   ],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 0,
+   "scroll": 0,
+   "hit0": [],
+   "steps": 3
+  }
+ },
+ "right 45%": {
+  "/index.html": {
+   "first": 961,
+   "scroll": 961,
+   "hit0": [
+    "03서류·계약6개 ",
+    "04생활·기록6개 "
+   ],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 0,
+   "scroll": 1943,
+   "hit0": [],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 2,
+   "scroll": 2,
+   "hit0": [
+    "부동산 교환계약서("
+   ],
+   "steps": 3
+  }
+ },
+ "right 55%": {
+  "/index.html": {
+   "first": 961,
+   "scroll": 961,
+   "hit0": [
+    "04생활·기록6개 ",
+    "05준비 중3개나오"
+   ],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 560,
+   "scroll": 1445,
+   "hit0": [
+    "📄 매매계약서"
+   ],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 608,
+   "scroll": 869,
+   "hit0": [
+    "부동산 교환계약서(",
+    "주택 임대차계약서"
+   ],
+   "steps": 3
+  }
+ },
+ "right 65%": {
+  "/index.html": {
+   "first": 403,
+   "scroll": 403,
+   "hit0": [
+    "05준비 중3개나오"
+   ],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 570,
+   "scroll": 2013,
+   "hit0": [
+    "📄 등기위임장",
+    "📄 교환계약서(당"
+   ],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 608,
+   "scroll": 608,
+   "hit0": [
+    "표준 근로계약서",
+    "업무위탁(용역)계약"
+   ],
+   "steps": 3
+  }
+ },
+ "right 75%": {
+  "/index.html": {
+   "first": 0,
+   "scroll": 0,
+   "hit0": [],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 631,
+   "scroll": 1344,
+   "hit0": [
+    "📄 교환계약서(중"
+   ],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 608,
+   "scroll": 608,
+   "hit0": [
+    "부동산 교환계약서(",
+    "부동산 컨설팅 전속"
+   ],
+   "steps": 3
+  }
+ },
+ "right 82%": {
+  "/index.html": {
+   "first": 0,
+   "scroll": 0,
+   "hit0": [],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 709,
+   "scroll": 1194,
+   "hit0": [
+    "📄 부동산 임대차"
+   ],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 531,
+   "scroll": 1162,
+   "hit0": [
+    "부동산 컨설팅 전속"
+   ],
+   "steps": 3
+  }
+ },
+ "left 38%": {
+  "/index.html": {
+   "first": 1178,
+   "scroll": 1178,
+   "hit0": [
+    "03서류·계약6개 "
+   ],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 0,
+   "scroll": 570,
+   "hit0": [],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 0,
+   "scroll": 0,
+   "hit0": [],
+   "steps": 3
+  }
+ },
+ "left 55%": {
+  "/index.html": {
+   "first": 961,
+   "scroll": 961,
+   "hit0": [
+    "04생활·기록6개 ",
+    "05준비 중3개나오"
+   ],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 560,
+   "scroll": 964,
+   "hit0": [
+    "📄 매매계약서"
+   ],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 608,
+   "scroll": 869,
+   "hit0": [
+    "부동산 매매계약서",
+    "등기 위임장"
+   ],
+   "steps": 3
+  }
+ },
+ "left 75%": {
+  "/index.html": {
+   "first": 0,
+   "scroll": 0,
+   "hit0": [],
+   "steps": 1
+  },
+  "/theform/index.html": {
+   "first": 631,
+   "scroll": 952,
+   "hit0": [
+    "📄 교환계약서(중"
+   ],
+   "steps": 5
+  },
+  "/contract/index.html": {
+   "first": 608,
+   "scroll": 608,
+   "hit0": [
+    "동업계약서",
+    "부동산 임대차계약서"
+   ],
+   "steps": 3
+  }
+ }
+}

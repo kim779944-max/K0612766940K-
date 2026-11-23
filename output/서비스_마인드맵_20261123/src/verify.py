@@ -37,8 +37,8 @@ MEAS = r"""(()=>{
   opsVisible:[...document.querySelectorAll('a[href^="ops"]')].filter(a=>a.offsetParent!==null).length,
   photo2docCards:document.querySelectorAll('#sections [data-k="photo2doc"],#sections [data-open="photo2doc"],#sections a[href*="k=photo2doc"]').length,
   taxCards:document.querySelectorAll('#sections [data-k="tax"],#sections [data-open="tax"],#sections a[href*="k=tax"]').length,
-  loanCards:document.querySelectorAll('#sections [data-k="loan"],#sections [data-open="loan"]').length,
-  saycapCards:document.querySelectorAll('#sections [data-k="saycap"],#sections [data-open="saycap"]').length,
+  loanCards:document.querySelectorAll('#sections .row[data-k="loan"]').length,
+  saycapCards:document.querySelectorAll('#sections .row[data-k="saycap"]').length,
   name_더상세:(txt.match(/더상세/g)||[]).length,
   name_문서변환기:(txt.match(/문서변환기/g)||[]).length,
   name_설명서제작기:(txt.match(/설명서 제작기/g)||[]).length,
@@ -120,7 +120,7 @@ with sync_playwright() as p:
         res["footerText"] = pg.evaluate("(document.querySelector('.foot')||{}).innerText")
     # 커밍순 상세 직접 진입
     pg.goto(f"{BASE}/detail.html?k=append&t={t}", wait_until="load"); pg.wait_for_timeout(1200)
-    res["detailAppend"] = pg.evaluate("""(()=>{const o=document.getElementById('open')||document.querySelector('a.open,#openBtn');
+    res["detailAppend"] = pg.evaluate("""(()=>{const o=document.getElementById('btnOpen');
       return {url:location.href.replace(/^https?:\\/\\/[^/]+/,''), openHref:o?o.getAttribute('href'):null, openText:o?o.textContent.trim():null,
       hasSoonText:/출시 준비 중/.test(document.body.innerText)};})()""")
     if PREFIX == "after":

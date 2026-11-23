@@ -1,0 +1,23 @@
+{
+ "촬영하기": {
+  "visibleBefore": [
+   "home"
+  ],
+  "visibleAfter": [
+   "camera"
+  ],
+  "changed": true,
+  "galleryText": true
+ },
+ "갤러리보기": {
+  "visibleBefore": [
+   "home"
+  ],
+  "visibleAfter": [
+   "gallery"
+  ],
+  "changed": true,
+  "galleryText": true
+ },
+ "errors": []
+}

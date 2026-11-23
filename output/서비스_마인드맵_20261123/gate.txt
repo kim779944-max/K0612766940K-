@@ -1,0 +1,87 @@
+== index.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 6                             후: FAIL 6
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+== products.js
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: PASS 0                             후: PASS 0
+  개인경로·PC이름      전: PASS                               후: PASS
+== catalog.json
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: PASS 0                             후: PASS 0
+  개인경로·PC이름      전: PASS                               후: PASS
+== detail.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 4                             후: FAIL 4
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+== helper.js
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 2                             후: FAIL 2
+  개인경로·PC이름      전: PASS                               후: PASS
+== converter.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 2                             후: PASS 0
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+== theform/index.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 3                             후: FAIL 3
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+== theform/convert.html (새 파일)
+  G1-2 태그 짝      전: (없음)                               후: PASS
+  G1-3 Base64    전: (없음)                               후: PASS max=0 sum=0
+  G1-5 API키      전: (없음)                               후: PASS 0
+  G1-6 연락처·주민번호  전: (없음)                               후: FAIL 1   ← 새 FAIL
+  G1-8 내부 링크     전: (없음)                               후: PASS
+  G1-9 viewport  전: (없음)                               후: PASS
+  개인경로·PC이름      전: (없음)                               후: PASS
+== theform/js/converter.js (새 파일)
+  G1-3 Base64    전: (없음)                               후: PASS max=0 sum=0
+  G1-5 API키      전: (없음)                               후: PASS 0
+  G1-6 연락처·주민번호  전: (없음)                               후: FAIL 1   ← 새 FAIL
+  개인경로·PC이름      전: (없음)                               후: PASS
+== loan.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 1                             후: FAIL 1
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+== tax.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 1                             후: FAIL 1
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+== thedetail/index.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 3                             후: FAIL 3
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+FAIL 합계 전 8 → 후 9 · 새로 생긴 FAIL: 2
+exit=2
+G1-6 적중 문자열 전 22 ['010-0000-0000', '010-1234-5678', '010-2002-2899', '01020022899', 'sample@example.com'] → 후 22 ['010-0000-0000', '010-1234-5678', '010-2002-2899', '01020022899', 'sample@example.com']

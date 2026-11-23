@@ -53,3 +53,6 @@ CLAUDE_TASK_20261122_FIX_AND_CHATBOT.md
 CLAUDE_TASK_20261122_INTERIOR_BA.md
 # 추가 등록 2026-11-23 13:2x · 적립 143·131번 — ① 네이버 블로그 임시저장 서식·사진 엔진(제목2·인용구 박스·가로선·여백·사진 2~3장 자동 + prepare_images·audit·reconcile·rework) ② 전용 크롬(CDP 9222) 스레드 자동화 — API 토큰 없이 본문(링크 없음)+첫 댓글, 하루 1건·중복 방지·발행 금지 유지. 수정 범위 tools/sns_auto/ + post_queue.json(형식 필드만) + README_설정가이드.md
 CLAUDE_TASK_20261123_SNS_UPGRADE.md
+# 추가 등록 2026-11-23 18:4x · 적립 146·147번 — ① 더양식 1클릭 자동 빈칸(캔버스 픽셀·외부 API 0 · 오탐 칸 ✕ 즉시 삭제) + 다음 칸 연속 입력([다음 칸]·Enter·한글 조합 방어) + 내 양식 프리셋(localStorage, 배치만) ② 더스캔 하단 셔터 버튼 고정(100dvh + flex, 프리뷰만 줄고 셔터 영역 flex-shrink:0 — 주소창·인앱 툴바에서도 스크롤 없이 화면 안) — 수정 범위 oneclick/theform/index.html · oneclick/thescan/index.html (제0원칙: 기존 기능·파이프라인 무변경)
+CLAUDE_TASK_20261123_THEFORM_AUTO.md
+CLAUDE_TASK_20261123_THESCAN_SHUTTER.md

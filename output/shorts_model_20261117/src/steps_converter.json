@@ -1,8 +1,0 @@
-{"page":"oneclick/converter.html","steps":[
- {"name":"c1_home","js":"","wait":300,"marks":[{"kind":"hl","sel":"#home h1"}]},
- {"name":"c2_paste","js":"const d=document.querySelectorAll('details.paste')[1]; d.open=true; const T=String.fromCharCode(9); document.getElementById('pasteArea').value=[['품목','수량','단가','금액'],['A4 복사용지','5','24,000','120,000'],['볼펜(검정)','20','500','10,000'],['스테이플러','2','8,500','17,000'],['합계','','','147,000']].map(r=>r.join(T)).join(String.fromCharCode(10)); d.scrollIntoView({block:'center'}); await sleep(400)","wait":200,"marks":[{"kind":"hl","sel":"#pasteArea"},{"kind":"tap","sel":"#btnPaste"}]},
- {"name":"c3_work","js":"document.getElementById('btnPaste').click(); await sleep(700)","wait":200,"marks":[{"kind":"hl","sel":"#pvTable"},{"kind":"tap","sel":"#btnHwpx"}]},
- {"name":"c4_busy","js":"busy(true, CUR_NAME, '한글 문서를 만드는 중…', 62); await sleep(500)","wait":100,"marks":[{"kind":"hl","sel":"#busy .busybox"}]},
- {"name":"c5_res","js":"busy(false); document.getElementById('btnHwpx').click(); await sleep(3200)","wait":100,"marks":[{"kind":"hl","sel":"#res .pvbox"}]},
- {"name":"c6_outro","js":"const sb=document.querySelector('.sharebar .x'); if(sb) sb.click(); document.getElementById('res').style.display='none'; document.getElementById('work').style.display='none'; document.getElementById('home').style.display='block'; document.querySelectorAll('details.paste').forEach(d=>d.open=false); window.scrollTo(0,0); await sleep(500)","wait":100,"marks":[{"kind":"tap","sel":"#dockFree"}]}
-]}

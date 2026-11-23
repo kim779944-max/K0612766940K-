@@ -1,8 +1,0 @@
-﻿screen mono errs=[] res=[]
-screen sky errs=[] res=[]
-screen green errs=[] res=[]
-screen gray errs=[] res=[]
-m390 mono theme=mono zoom=0.4761 scrollW=390 clientW=390 errs=[] res=[]
-m390 sky theme=sky zoom=0.4761 scrollW=390 clientW=390 errs=[] res=[]
-m390 green theme=green zoom=0.4761 scrollW=390 clientW=390 errs=[] res=[]
-m390 gray theme=gray zoom=0.4761 scrollW=390 clientW=390 errs=[] res=[]

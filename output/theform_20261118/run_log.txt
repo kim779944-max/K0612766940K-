@@ -1,9 +1,0 @@
-﻿regInfo: 종이 네 귀퉁이를 찾아 반듯하게 폈습니다 (종이 면적 58%). 아래 [다음]을 누르면 빈칸 지정으로 갑니다.
-fixed size: 876x1203
-fields after taps: ["성명/text@32.5,18.2,57.2,5.2","연락처/text@32.5,28.2,57.2,5.2","방문일/date@32.5,38.2,57.2,5.2","방문 인원/number@32.5,48.2,57.2,5.2","방문 목적/text@32.5,58.2,57.2,5.2","서명/sign@32.5,68.2,57.2,5.2"]
-undo test: {"before":6,"afterAdd":18,"undoDepth":33,"afterUndo":6,"ok":true}
-delete+undo: {"n":6,"afterDel":5,"afterUndo":6}
-saved forms: ["방문 신청서:6"]
-dup/delete: {"n":1,"afterDup":2,"afterDel":1}
-errors: []
-print calls: 3

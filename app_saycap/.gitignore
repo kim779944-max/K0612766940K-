@@ -1,9 +1,0 @@
-# build output
-/build/
-*.apk
-*.aab
-*.idsig
-
-# never commit signing material
-*.keystore
-*.jks

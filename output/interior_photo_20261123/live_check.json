@@ -1,1 +1,0 @@
-{"scene": "living", "tab": "거실", "mat": {"wall": "denbar", "floor": ""}, "regions": "ok", "sampleOk": true, "layoutOk": true, "mats": "벽 자재\n고른 자재가 들어갈 벽만 바뀌고, 나머지는 원본 그대로\n덴바보드\n+걸레받이 함께 변경\n대리석\n도배\n+몰딩 함께 변경\n타일\n+줄눈 함께 ", "sw": 390, "errs": [], "hosts": ["autooneclick.com"]}

@@ -1,8 +1,0 @@
-{
- "mode": "before",
- "url": "http://127.0.0.1:8791/sale/index.html",
- "console_errors": [],
- "page_errors": [],
- "failed_requests": [],
- "count_cvs": 21
-}

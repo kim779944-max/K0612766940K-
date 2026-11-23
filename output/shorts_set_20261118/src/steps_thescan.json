@@ -1,9 +1,0 @@
-{"page":"https://autooneclick.com/thescan/","steps":[
- {"name":"t_home","js":"","wait":300,"marks":[{"kind":"hl","sel":".capbox"},{"kind":"tap","sel":"#btnShoot"}]},
- {"name":"t_prog","file":{"sel":"#fFile","path":["scan_docs/doc1.jpg","scan_docs/doc2.jpg","scan_docs/doc3.jpg"]},"js":"for(let i=0;i<200&&!document.getElementById('prog').classList.contains('on');i++) await sleep(10)","wait":0,"marks":[{"kind":"hl","sel":"#prog"}]},
- {"name":"t_grid","js":"for(let i=0;i<300&&gallery.length<3;i++) await sleep(50); await sleep(2600); document.querySelector('.gal').scrollIntoView({block:'start'}); await sleep(400)","wait":100,"marks":[{"kind":"hl","sel":"#grid"},{"kind":"tap","sel":"#btnSplit"}]},
- {"name":"t_split","js":"document.getElementById('btnSplit').click(); await sleep(500); document.querySelectorAll('#pl .pick')[1].click(); await sleep(300)","wait":100,"marks":[{"kind":"hl","sel":"#pl"},{"kind":"tap","sel":"#goSplit"}]},
- {"name":"t_grid2","js":"closeSheet(); await sleep(500)","wait":100,"marks":[{"kind":"tap","sel":"#btnJoin"}]},
- {"name":"t_join","js":"document.getElementById('btnJoin').click(); await sleep(400); document.querySelector('#sheet .opt[data-f=pdf]').click(); await sleep(300)","wait":100,"marks":[{"kind":"hl","sel":"#sheet .opt[data-f=pdf]"},{"kind":"tap","sel":"#goJoin"}]},
- {"name":"t_pdf","js":"document.getElementById('goJoin').click(); for(let i=0;i<200&&!document.getElementById('dlAgain');i++) await sleep(50); await sleep(700)","wait":100,"marks":[{"kind":"hl","sel":"#sheet .pvbox"},{"kind":"tap","sel":"#dlAgain"}]}
-]}

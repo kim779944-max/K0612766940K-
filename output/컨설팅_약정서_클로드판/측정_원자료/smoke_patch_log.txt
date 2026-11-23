@@ -1,2 +1,0 @@
-﻿smoke: {"forms":["sale","exchange","power","house","shop","labor","loan","service","partner","consult"],"consultFields":41,"pv":[1200,3408],"p1":[1200,1696],"p2":[1200,1696],"printImgs":2,"printed":1,"salePv":[1200,1696],"errs":[]}
-oneclick status: []

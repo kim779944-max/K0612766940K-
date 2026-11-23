@@ -62,3 +62,12 @@ CLAUDE_TASK_20261123_MINDMAP_SHOWROOM.md
 CLAUDE_TASK_20261123_INTERIOR_REAL_PHOTO.md
 # ★ 148~166 묶음 3순위 · 추가 등록 2026-11-23 21:5x · 4종 수리 (적립 153·159·160·164번 · 독심술 6문항 압축+복수 체크+단정형 결과문 / 도우미 38px+손가락 드래그 이동+위치 저장 / 오늘의 특가 정가 취소선+할인율·물건 기준 4분류·도매 땡처리 최상단 / 재개발 지번 입력 3단 판정 · 수정 범위 oneclick/helper.js·sale/·navi2/·redev/ · 제0원칙: 채점 축·다른 도구 로직 불변)
 CLAUDE_TASK_20261123_UX_FIX_4PACK.md
+# ═══ 2026-11-24 배치 (적립 167~180) · 4건 · 이 순서대로. 앞 지시서는 모두 결과 파일 있음 ═══
+# ★ 1순위 · 추가 등록 2026-11-24 07:0x · 쇼룸 5대 대문(누르면 그 구역만) + 내 메뉴 편집(엣지 패널식 켜고 끄기·순서·[+ 추가하기]) + 색깔 1·2 토글 + 도우미 버튼 오른쪽 중단 비가림 -60% (적립 171·173·178·179·159보완 · 수정 범위 oneclick/index.html·shared/kts-ui.css·kts-ui.js·kts-edge.js(신규)·helper.js + 6화면 헤더 1줄 · 제0원칙: products.js·catalog.json·도구 엔진·가격·요금 불변 · bungee/ 무변경)
+CLAUDE_TASK_20261124_01_SHOWROOM_5CAT_EDGE.md
+# ★ 2순위 · 추가 등록 2026-11-24 07:0x · 부동산 최우선 — 물건 포스터(A4 210×297 1장·단위 1만배 오류 근절·PNG/PDF) + 임대내역 사진 읽기·붙여넣기·요약/원본 분리 + 재개발 조합·기사 출처 + 더양식/계약서 [서식 선택 ▾] + shared 도장·간인 모듈 (적립 170·174·175·176·177·167·168·169 · 수정 범위 oneclick/listing·thedetail·redev·theform·contract·sign·shared + localocr.js 재사용 · refs/ocr_samples_20261124/ 2장 실물 통과 필수 · 새 도메인 0)
+CLAUDE_TASK_20261124_02_REALESTATE_POSTER_OCR.md
+# ★ 3순위 · 추가 등록 2026-11-24 07:0x · 인테리어 4단 고정(선택줄 한 줄에서 원룸·거실·매장 → 벽·바닥·조명·가구 → 세부 3종 갈아 끼우기) + 가구 배치 별도 화면 분리 + 독심술 32조합 '단정 한 줄 + 생활 예시 한 줄' 전면 재작성(①·② 딱지 제거) + 네이버 블로그 서체 변주·본문 사진 4~6장 (적립 172·153보강·143보강 · 수정 범위 oneclick/interior·navi2 + K- tools/sns_auto · 제0원칙: 견적 계산·채점 축·6문항·발행 금지 불변)
+CLAUDE_TASK_20261124_03_INTERIOR_NAVI2_BLOG.md
+# ★ 4순위 · 추가 등록 2026-11-24 07:0x · 번개알바 올인원 4단 패키지 샘플 1호 「산수고원」 — 사진 80% 홈(실사 5장) + 능동형 AI 예약 비서(규칙 엔진·가용시간·.ics) + 지도·노선·리뷰 + 영업용 포스터 1080×1350 + 네이버 플레이스 [홈페이지] 연동 안내 (적립 180 · 수정 범위 oneclick/bungee_sample/sansugowon/ 신규만 · 제0원칙: bungee/ 무변경·쇼룸 등록 금지·실제 예약/결제 0 · refs/sansugowon_20261124/ 사진 5장)
+CLAUDE_TASK_20261124_04_SANSUGOWON_AI_PAGE.md

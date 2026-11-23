@@ -1,0 +1,524 @@
+{
+ "console": [],
+ "external": [],
+ "sw": 390,
+ "order": [
+  "hero.noprint",
+  "thumb",
+  "titleblk",
+  "stats.block",
+  "warn.block",
+  "calc.noprint",
+  "panel.overview",
+  "panel.leases",
+  "panel.highlights",
+  "panel.chat",
+  "card.broker",
+  "toolbtns",
+  "sharerow.noprint",
+  "panel.noprint",
+  "footnote"
+ ],
+ "firstScreen": [
+  "hero",
+  "thumb",
+  "titleblk",
+  "stats",
+  "warn",
+  "calc"
+ ],
+ "stats": [
+  "매매가 | 45억 | 감정가 52억 · 13.5%↓",
+  "실투자금 | 13.7억 | 표기값 (계산 16억)",
+  "수익률(연) | 9.2% | 월세×12÷실투자금 = 9.20%"
+ ],
+ "warn": "숫자 확인 필요 · 표기 수익률 8.6% ↔ 계산 9.20% (차이 0.60%p)",
+ "calcDetails": "계산식·숫자 검증 보기\n수익률(연) = 월세합계 × 12 ÷ 실투자금 × 100 = 1,050 × 12 ÷ 137,000 × 100 = 9.20%\n실투자금 = 매매가 − 승계대출 − 보증금합계 = 450,000 − 275,000 − 15,000 = 160,000만 · 표기값 137,000만 사용\n감정가 대비 = (감정가 − 매매가) ÷ 감정가 × 100 = 13.5%\n월 이자 = 승계대출 × 금리 ÷ 12 = 275,000 × 4.2% ÷ 12 = 962.5만\n✓ 층별 표 보증금 합계 = 표기 보증금\n✓ 층별 표 월세 합계 = 표기 월세\n⚠ 계산 수익률 ↔ 표기 수익률 차이 0.3%p 이하\n✓ 감정가 ≥ 매매가\n✓ 금리·대출액 모두 있음(월 이자 계산 가능)\n\n단위 만원 · 값이 없으면 0으로 채우지 않고 미확인으로 둡니다.",
+ "minBtn": {
+  "count": 30,
+  "min": {
+   "h": 44,
+   "t": "AI"
+  },
+  "low": []
+ },
+ "bodyPadBottom": "92px",
+ "fab": {
+  "pos": "fixed",
+  "h": 65,
+  "top": 779
+ },
+ "slots4": [
+  {
+   "tag": "BUTTON",
+   "top": 331,
+   "left": 16,
+   "h": 56
+  },
+  {
+   "tag": "BUTTON",
+   "top": 331,
+   "left": 107,
+   "h": 56
+  },
+  {
+   "tag": "BUTTON",
+   "top": 331,
+   "left": 198,
+   "h": 56
+  },
+  {
+   "tag": "BUTTON",
+   "top": 331,
+   "left": 289,
+   "h": 56
+  }
+ ],
+ "bottomCover": {
+  "footnoteBottom": 752,
+  "fabTop": 779,
+  "covered": false
+ },
+ "vcf": {
+  "file": "홍길동.vcf",
+  "firstLine": "BEGIN:VCARD",
+  "crlf": true,
+  "fields": [
+   "VERSION",
+   "N",
+   "FN",
+   "ORG",
+   "TITLE",
+   "TEL",
+   "EMAIL",
+   "ADR",
+   "NOTE"
+  ],
+  "text": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:홍;길동;;;\r\nFN:홍길동\r\nORG:세아 공인중개사사무소\r\nTITLE:공인중개사\r\nTEL;TYPE=CELL:010-0000-0000\r\nEMAIL:example@example.com\r\nADR:;;서울 성동구 성수동2가;;;;\r\nNOTE:등록번호 제00000-0000호\r\nEND:VCARD\r\n"
+ },
+ "copyToast": "복사했습니다 · http://127.0.0.1:8793/listing/?m=BN-2048",
+ "clipLink": "http://127.0.0.1:8793/listing/?m=BN-2048",
+ "slope": {
+  "newTab": "http://127.0.0.1:8793/slope/",
+  "toast": "주소를 복사했습니다 · 경사도 화면에 붙여넣으세요",
+  "clip": "서울 성동구 성수동2가 148-86 (2필지)",
+  "attrs": [
+   "더뷰 ../viewer.html _blank noopener",
+   "더싸인 ../sign/ _blank noopener",
+   "더양식 ../theform/ _blank noopener",
+   "더계약서 ../contract/ _blank noopener",
+   "경사도 ../slope/ _blank noopener"
+  ]
+ },
+ "homeSheetOpen": true,
+ "homeSheetClosed": true,
+ "chips": [
+  "가격이 얼마예요?",
+  "주차 몇 대 돼요?",
+  "수익률 얼마예요?",
+  "층별 임대 현황은요?"
+ ],
+ "chat": [
+  {
+   "q": "주차 몇 대 돼요?",
+   "a": "주차는 2대입니다(매물 정보 기준).",
+   "smscards": 0
+  },
+  {
+   "q": "수익률 얼마예요?",
+   "a": "계산 수익률은 연 9.20%입니다.\n월세 합계 1,050만 × 12 ÷ 실투자금 13.7억 × 100\n매물장 표기값은 8.6%로 차이가 있어 중개사 확인이 필요합니다.",
+   "smscards": 0
+  },
+  {
+   "q": "층별 임대 현황은요?",
+   "a": "층별 임대 현황입니다(단위 만원).\n101 편의점 — 보증금 5,000 / 월세 350\n201 뷰티 — 보증금 3,000 / 월세 200\n301 오피스 — 보증금 3,000 / 월세 200\n401 스튜디오 — 보증금 2,000 / 월세 150\n501 오피스 — 보증금 2,000 / 월세 150\n옥상 공용 테라스 — 보증금 — / 월세 —\n합계 보증금 15,000 / 월세 1,050",
+   "smscards": 0
+  },
+  {
+   "q": "가격이 얼마예요?",
+   "a": "매매가는 45억 원입니다.\n감정가는 52억 원으로 매매가가 13.5% 낮습니다.",
+   "smscards": 0
+  },
+  {
+   "q": "재개발 되나요?",
+   "a": "그 부분은 매물 정보에 없습니다. 중개사에게 전달하겠습니다.",
+   "smscards": 1
+  },
+  {
+   "q": "층고는요?",
+   "a": "그 부분은 매물 정보에 없습니다. 중개사에게 전달하겠습니다.",
+   "smscards": 2
+  },
+  {
+   "q": "주차장 지하 있나요?",
+   "a": "그 부분은 매물 정보에 없습니다. 중개사에게 전달하겠습니다.",
+   "smscards": 3
+  }
+ ],
+ "smsHref": {
+  "href": "sms:01000000000?body=%5BKTS%20%EB%A7%A4%EB%AC%BC%EB%AC%B8%EC%9D%98%5D%20%EC%84%B8%EC%95%84%EB%B9%8C%EB%94%A9(BN-2048)%20%C2%B7%20%EC%A7%88%EB%AC%B8%3A%20%EC%A3%BC%EC%B0%A8%EC%9E%A5%20%EC%A7%80%ED%95%98%20%EC%9E%88%EB%82%98%EC%9A%94%3F%20%C2%B7%20%ED%9A%8C%EC%8B%A0%20010-1234-5678",
+  "body": "보낼 내용: [KTS 매물문의] 세아빌딩(BN-2048) · 질문: 주차장 지하 있나요? · 회신 010-1234-5678",
+  "fields": [
+   "받는 사람",
+   "매물",
+   "질문",
+   "회신 연락처"
+  ],
+  "mock": "목업 · 실제 알림은 문자로",
+  "len": 280
+ },
+ "slots2": [
+  {
+   "tag": "BUTTON",
+   "top": 331,
+   "left": 16,
+   "h": 56
+  },
+  {
+   "tag": "BUTTON",
+   "top": 331,
+   "left": 107,
+   "h": 56
+  },
+  {
+   "tag": "SPAN",
+   "top": 331,
+   "left": 198,
+   "h": 56
+  },
+  {
+   "tag": "SPAN",
+   "top": 331,
+   "left": 289,
+   "h": 56
+  }
+ ],
+ "warn2051": "숫자 확인 필요 · 감정가(30억)가 매매가(32억)보다 낮음 — 감정가보다 비쌈",
+ "points2051": [
+  "감정가보다 비쌈 — 가격 확인 필요",
+  "대로변 코너 자리",
+  "5개 호실 임대 중"
+ ],
+ "unk2051": 4,
+ "private": {
+  "title": "을지로 사무빌딩",
+  "badge": true,
+  "chip": "비공개 매물",
+  "others": [
+   "세아빌딩",
+   "성수 코너상가"
+  ]
+ },
+ "notFound": {
+  "title": "세아빌딩",
+  "toast": "매물번호 NOPE 를 찾지 못해 첫 매물을 보여 드립니다"
+ },
+ "home": {
+  "sw": 390,
+  "start": {
+   "count": "2건 중 2건",
+   "cards": [
+    "BN-2048 세아빌딩 [수익률 9.2% / 실투자금 13.7억 / 월세 1,050만 / 매매가 45억]",
+    "BN-2051 성수 코너상가 [수익률 5.7% / 실투자금 18.6억 / 월세 890만 / 매매가 32억]"
+   ]
+  },
+  "privateInList": false,
+  "user": {
+   "count": "2건 중 2건",
+   "cards": [
+    "BN-2051 성수 코너상가 [층 지상 4층 / 면적 2,140㎡ / 주차 6대 / 입주 즉시]",
+    "BN-2048 세아빌딩 [층 지상 5층 · 옥상 / 면적 1,775㎡ / 주차 2대 / 입주 협의]"
+   ]
+  },
+  "p40": {
+   "count": "2건 중 1건",
+   "cards": [
+    "BN-2051 성수 코너상가 [수익률 5.7% / 실투자금 18.6억 / 월세 890만 / 매매가 32억]"
+   ]
+  },
+  "y6": {
+   "count": "2건 중 1건",
+   "cards": [
+    "BN-2048 세아빌딩 [수익률 9.2% / 실투자금 13.7억 / 월세 1,050만 / 매매가 45억]"
+   ]
+  },
+  "now": {
+   "count": "2건 중 1건",
+   "cards": [
+    "BN-2051 성수 코너상가 [수익률 5.7% / 실투자금 18.6억 / 월세 890만 / 매매가 32억]"
+   ]
+  },
+  "p40+y6": {
+   "count": "2건 중 0건",
+   "empty": "조건에 맞는 매물이 없습니다\n\n필터 지우기"
+  },
+  "cleared": "2건 중 2건",
+  "maxP30": "2건 중 0건",
+  "minY9": {
+   "count": "2건 중 1건",
+   "cards": [
+    "BN-2048 세아빌딩 [수익률 9.2% / 실투자금 13.7억 / 월세 1,050만 / 매매가 45억]"
+   ]
+  },
+  "minBtn": {
+   "count": 13,
+   "min": {
+    "h": 44,
+    "t": "☾"
+   },
+   "low": []
+  },
+  "vcf": "홍길동.vcf",
+  "cardClick": "http://127.0.0.1:8793/listing/?m=BN-2048"
+ },
+ "build": {
+  "checklist0": [
+   "✓ 층별 표 보증금 합계 = 표기 보증금\n15,000만",
+   "✓ 층별 표 월세 합계 = 표기 월세\n1,050만",
+   "⚠ 계산 수익률 ↔ 표기 차이 0.3%p 이하\n9.20%",
+   "✓ 감정가 ≥ 매매가(저평가 문구 조건)\n13.5%",
+   "✓ 금리·대출액 모두 있음 → 월 이자\n962.5만"
+  ],
+  "previewTitle": "세아빌딩 리모델링",
+  "checklist1": [
+   "✓ 층별 표 보증금 합계 = 표기 보증금\n15,000만",
+   "✓ 층별 표 월세 합계 = 표기 월세\n1,050만",
+   "⚠ 계산 수익률 ↔ 표기 차이 0.3%p 이하\n9.20%",
+   "✓ 감정가 ≥ 매매가(저평가 문구 조건)\n17.3%",
+   "✓ 금리·대출액 모두 있음 → 월 이자\n962.5만"
+  ],
+  "file": "매물장_BN-2048.html",
+  "size": 809105,
+  "reopen": {
+   "title": "세아빌딩 리모델링",
+   "sale": "43억",
+   "parking": "승강기 1대 · 주차 3대",
+   "photos": 4,
+   "imgOk": true,
+   "theme": true
+  },
+  "reopenExternal": [],
+  "reopenConsole": []
+ },
+ "print": {
+  "BN-2048": {
+   "pages": 1,
+   "size_pt": [
+    595.0,
+    841.9
+   ],
+   "measure_mm": {
+    "sheet": {
+     "top": 0,
+     "h": 277,
+     "bottom": 277
+    },
+    "top": {
+     "top": 0,
+     "h": 102.6,
+     "bottom": 102.6
+    },
+    "strip": {
+     "top": 26,
+     "h": 46,
+     "bottom": 72
+    },
+    "stats": {
+     "top": 74,
+     "h": 22,
+     "bottom": 96
+    },
+    "overview": {
+     "top": 106.3,
+     "h": 49.2,
+     "bottom": 155.5
+    },
+    "leases": {
+     "top": 159.7,
+     "h": 44.4,
+     "bottom": 204.1
+    },
+    "points": {
+     "top": 208.3,
+     "h": 34.7,
+     "bottom": 243
+    },
+    "mid": {
+     "top": 102.6,
+     "h": 144.1,
+     "bottom": 246.7
+    },
+    "broker": {
+     "top": 246.7,
+     "h": 19.8,
+     "bottom": 266.5
+    },
+    "foot": {
+     "top": 268,
+     "h": 9,
+     "bottom": 277
+    },
+    "rows": 6,
+    "photos": 4,
+    "multi": false
+   },
+   "png": [
+    "print_a4_1.png"
+   ],
+   "theadOnEachPage": [
+    true
+   ],
+   "brokerOnLastPage": true,
+   "rowsPerPage": [
+    6
+   ]
+  },
+  "BN-2051": {
+   "pages": 1,
+   "size_pt": [
+    595.0,
+    841.9
+   ],
+   "measure_mm": {
+    "sheet": {
+     "top": 0,
+     "h": 277,
+     "bottom": 277
+    },
+    "top": {
+     "top": 0,
+     "h": 102.6,
+     "bottom": 102.6
+    },
+    "strip": {
+     "top": 26,
+     "h": 46,
+     "bottom": 72
+    },
+    "stats": {
+     "top": 74,
+     "h": 22,
+     "bottom": 96
+    },
+    "overview": {
+     "top": 107.5,
+     "h": 49.2,
+     "bottom": 156.7
+    },
+    "leases": {
+     "top": 162.1,
+     "h": 39.7,
+     "bottom": 201.7
+    },
+    "points": {
+     "top": 207.1,
+     "h": 34.7,
+     "bottom": 241.8
+    },
+    "mid": {
+     "top": 102.6,
+     "h": 144.1,
+     "bottom": 246.7
+    },
+    "broker": {
+     "top": 246.7,
+     "h": 19.8,
+     "bottom": 266.5
+    },
+    "foot": {
+     "top": 268,
+     "h": 9,
+     "bottom": 277
+    },
+    "rows": 5,
+    "photos": 2,
+    "multi": false
+   },
+   "png": [
+    "print_2photo_5rows_p1.png"
+   ],
+   "theadOnEachPage": [
+    true
+   ],
+   "brokerOnLastPage": true,
+   "rowsPerPage": [
+    5
+   ]
+  },
+  "BN-2055": {
+   "pages": 2,
+   "size_pt": [
+    595.0,
+    841.9
+   ],
+   "measure_mm": {
+    "sheet": {
+     "top": 0,
+     "h": 281.9,
+     "bottom": 281.9
+    },
+    "top": {
+     "top": 0,
+     "h": 96,
+     "bottom": 96
+    },
+    "strip": {
+     "top": 26,
+     "h": 46,
+     "bottom": 72
+    },
+    "stats": {
+     "top": 74,
+     "h": 22,
+     "bottom": 96
+    },
+    "overview": {
+     "top": 98,
+     "h": 49.2,
+     "bottom": 147.2
+    },
+    "leases": {
+     "top": 150.2,
+     "h": 58.7,
+     "bottom": 208.9
+    },
+    "points": {
+     "top": 211.9,
+     "h": 34.7,
+     "bottom": 246.6
+    },
+    "mid": {
+     "top": 96,
+     "h": 155.6,
+     "bottom": 251.6
+    },
+    "broker": {
+     "top": 251.6,
+     "h": 19.8,
+     "bottom": 271.4
+    },
+    "foot": {
+     "top": 272.9,
+     "h": 9,
+     "bottom": 281.9
+    },
+    "rows": 9,
+    "photos": 3,
+    "multi": true
+   },
+   "png": [
+    "print_9floors_p1.png",
+    "print_9floors_p2.png"
+   ],
+   "theadOnEachPage": [
+    true,
+    true
+   ],
+   "brokerOnLastPage": true,
+   "rowsPerPage": [
+    7,
+    2
+   ]
+  }
+ }
+}

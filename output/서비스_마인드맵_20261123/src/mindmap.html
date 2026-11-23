@@ -1,0 +1,59 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+body{margin:0;background:#0B1730;color:#EAF0F8;font-family:'Malgun Gothic','맑은 고딕',sans-serif;width:3400px}
+#wrap{position:relative;padding:70px 80px 60px}
+h1{margin:0 0 6px;font-size:44px;color:#fff;letter-spacing:-1px}
+.cap{font-size:22px;color:#9FB0C8;margin:0 0 40px}
+.cap b{color:#FF8A33}
+.lg{display:inline-flex;gap:22px;margin-left:24px;font-size:21px;color:#C9D4E3}
+#tree{display:flex;align-items:center;gap:150px;position:relative}
+.center{flex:0 0 auto;background:#FF6B00;color:#fff;border-radius:28px;padding:34px 40px;text-align:center;box-shadow:0 0 0 6px rgba(255,107,0,.25)}
+.center b{display:block;font-size:52px;letter-spacing:-1px}.center span{font-size:22px;opacity:.92}
+.branches{display:flex;flex-direction:column;gap:46px}
+.br{display:flex;align-items:center;gap:120px}
+.bnode{flex:0 0 360px;border:3px solid #FF6B00;background:#13254A;border-radius:22px;padding:22px 24px}
+.bnode b{display:block;font-size:34px;color:#FFB070}.bnode span{display:block;font-size:20px;color:#BFCBDD;margin-top:6px;line-height:1.35}
+.br.soon .bnode{border-color:#5B6B86;background:#18233A}.br.soon .bnode b{color:#AEBACB}
+.leaves{display:flex;flex-direction:column;gap:12px}
+.item{display:flex;align-items:center;gap:90px}
+.leaf{display:flex;align-items:center;gap:14px;background:#142A52;border:2px solid #2C4675;border-radius:14px;padding:12px 18px;width:1520px;font-size:23px}
+.leaf.sub{width:1000px;border-style:dashed;border-color:#FF8A33;background:#1A2B4C}
+.leaf.link{border-style:dashed;border-color:#6B83AE;background:#101F3D}
+.br.soon .leaf{opacity:.7;background:#17213A;border-color:#3A4964}
+.leaf .n{flex:0 0 46px;color:#FF8A33;font-weight:900}
+.leaf b{flex:0 0 280px;font-size:26px;color:#fff}
+.leaf .p{flex:0 0 270px;font-family:Consolas,monospace;font-size:19px;color:#8FB4E8}
+.leaf .l{flex:1;color:#D3DCEA;line-height:1.3}
+.bd{flex:0 0 40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900}
+.bd.o{background:#3A4A66;color:#C9D4E3}.bd.t{background:#FFE2C7;color:#B34A00}.bd.f{background:#FF6B00;color:#fff}
+svg{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.foot{margin-top:44px;font-size:20px;color:#8D9DB6;line-height:1.6}
+</style></head><body><div id="wrap">
+<h1>원클릭 서비스 마인드맵 — 「쓰는 순서」 축 (2026-11-23 확정)</h1>
+<p class="cap">중심 1 → 대분류 4 + 준비 중 → 상품 → (하위 단계) · <b>한 상품은 한 곳에만</b>, 다른 가지에서는 →연결로만 가리킴
+<span class="lg"><span class="bd f" style="display:inline-flex">●</span>거의 없음 <span class="bd t" style="display:inline-flex">△</span>있지만 우리 것이 다름 <span class="bd o" style="display:inline-flex">○</span>시중에 흔함(실험 가치 낮음)</span></p>
+<div id="tree"><div class="center"><b>원클릭</b><span>autooneclick.com</span></div>
+<div class="branches"><div class="br"><div class="bnode"><b>① 부동산·중개</b><span>물건 하나가 계약까지 가는 순서</span></div><div class="leaves"><div class="item"><div class="leaf "><span class="n">1</span><b>경사도</b><span class="p">slope/</span><span class="bd t">△</span><span class="l">필지·임야 경사·단면 → A4·PNG</span></div></div><div class="item"><div class="leaf "><span class="n">2</span><b>매물수집기</b><span class="p">realty/</span><span class="bd f">●</span><span class="l">문자·카톡으로 온 매물 접수·정리</span></div></div><div class="item"><div class="leaf "><span class="n">3</span><b>매물장</b><span class="p">listing/</span><span class="bd t">△</span><span class="l">사진 2~4장 → A4 한 장 + 명함 + 챗봇</span></div><div class="subwrap"><div class="leaf sub"><span class="n">3-1</span><b>물건 포스터</b><span class="p">준비 중 · 설계도</span><span class="bd t">△</span><span class="l">매물장에서 클릭 → 사진만 넣으면 A4 포스터(개요+권리분석)</span></div></div></div><div class="item"><div class="leaf "><span class="n">4</span><b>재개발 진행조회기</b><span class="p">redev/</span><span class="bd t">△</span><span class="l">지번 → 구역·단계·인가일</span></div></div><div class="item"><div class="leaf "><span class="n">5</span><b>교환급매물 포털</b><span class="p">exchange</span><span class="bd f">●</span><span class="l">급매·교환 물건 전문관</span></div></div><div class="item"><div class="leaf link"><span class="n">6</span><b>계약</b><span class="p">→연결</span><span class="bd"></span><span class="l">③의 더양식(부동산 표준양식) → 더싸인 → 계약서 생성기</span></div></div></div></div><div class="br"><div class="bnode"><b>② 사업자·매장</b><span>상품을 만들고 팔고, 돈을 관리하는 순서</span></div><div class="leaves"><div class="item"><div class="leaf "><span class="n">1</span><b>설명서 제작기</b><span class="p">thedetail/</span><span class="bd o">○</span><span class="l">상품·매물 상세설명서 1초 (구 &#x27;더상세&#x27;)</span></div></div><div class="item"><div class="leaf "><span class="n">2</span><b>원클릭 셀러</b><span class="p">seller/</span><span class="bd t">△</span><span class="l">담기 → 올리기 → 발주</span></div></div><div class="item"><div class="leaf "><span class="n">3</span><b>이커머스 5종</b><span class="p">commerce/</span><span class="bd o">○</span><span class="l">상품·블로그·인스타 자동</span></div></div><div class="item"><div class="leaf "><span class="n">4</span><b>롱테일 키워드</b><span class="p">keyword</span><span class="bd o">○</span><span class="l">검색어 발굴</span></div></div><div class="item"><div class="leaf "><span class="n">5</span><b>오늘의 특가</b><span class="p">sale/</span><span class="bd t">△</span><span class="l">도매 대용량·땡처리 → 발주서 1초</span></div></div><div class="item"><div class="leaf "><span class="n">6</span><b>결제문자 가계부</b><span class="p">gagebu/</span><span class="bd o">○</span><span class="l">카드 문자 → 장부</span></div></div><div class="item"><div class="leaf "><span class="n">7</span><b>더통역</b><span class="p">tongyeok/</span><span class="bd o">○</span><span class="l">외국 손님 응대</span></div></div><div class="item"><div class="leaf "><span class="n">8</span><b>사업자 대출</b><span class="p">loan.html + tax.html</span><span class="bd t">△</span><span class="l">한 화면 두 탭: 기업 대출 | 창업·세무</span></div></div><div class="item"><div class="leaf "><span class="n">9</span><b>인테리어 견적</b><span class="p">interior/</span><span class="bd t">△</span><span class="l">집·매장 자재 바꿔 보기 + 하·중·상 원가</span></div></div></div></div><div class="br"><div class="bnode"><b>③ 서류·계약</b><span>서류를 받아서 처리하고 서명해 끝내는 순서</span></div><div class="leaves"><div class="item"><div class="leaf "><span class="n">1</span><b>더스캔</b><span class="p">thescan/</span><span class="bd o">○</span><span class="l">종이 → 스캔</span></div></div><div class="item"><div class="leaf "><span class="n">2</span><b>더뷰</b><span class="p">viewer.html</span><span class="bd t">△</span><span class="l">받은 파일 그대로 열람·저장(30~50장)</span></div></div><div class="item"><div class="leaf "><span class="n">3</span><b>더양식</b><span class="p">theform/</span><span class="bd t">△</span><span class="l">종이 양식 빈칸 채우기 + 표 사진→한글·엑셀 탭(구 문서변환기)</span></div></div><div class="item"><div class="leaf "><span class="n">4</span><b>더지우개</b><span class="p">theeraser</span><span class="bd o">○</span><span class="l">사진 글씨·얼룩 지우기</span></div></div><div class="item"><div class="leaf "><span class="n">5</span><b>더싸인</b><span class="p">sign/</span><span class="bd t">△</span><span class="l">사인·도장 → 투명 PNG → 날인·간인</span></div></div><div class="item"><div class="leaf "><span class="n">6</span><b>계약서 생성기</b><span class="p">contract/</span><span class="bd o">○</span><span class="l">매매·임대차 3부 인쇄</span></div></div></div></div><div class="br"><div class="bnode"><b>④ 생활·기록</b><span>개인이 매일 쓰는 순서</span></div><div class="leaves"><div class="item"><div class="leaf "><span class="n">1</span><b>폰정리</b><span class="p">organizer/</span><span class="bd o">○</span><span class="l">중복·안 쓰는 앱 정리</span></div></div><div class="item"><div class="leaf "><span class="n">2</span><b>세이캡</b><span class="p">saycap/</span><span class="bd t">△</span><span class="l">말로 남기는 사진 기록 + 갤러리(통합)</span></div></div><div class="item"><div class="leaf "><span class="n">3</span><b>독심술</b><span class="p">navi2/</span><span class="bd o">○</span><span class="l">그림·질문 → 마음 읽기</span></div></div><div class="item"><div class="leaf "><span class="n">4</span><b>호갱 탈출 내비</b><span class="p">hogang/</span><span class="bd o">○</span><span class="l">휴대폰 월 납부액 최저</span></div></div><div class="item"><div class="leaf "><span class="n">5</span><b>골프 스윙 교정</b><span class="p">golf/</span><span class="bd o">○</span><span class="l">스윙 사진 비교</span></div></div><div class="item"><div class="leaf "><span class="n">6</span><b>동물 번역기</b><span class="p">petmind/</span><span class="bd o">○</span><span class="l">반려동물 소리·표정 (실험 가치 낮음)</span></div></div></div></div><div class="br soon"><div class="bnode"><b>준비 중</b><span>보이기만 · 클릭 0</span></div><div class="leaves"><div class="item"><div class="leaf "><span class="n">·</span><b>혼합 장부 취합기</b><span class="p">append</span><span class="bd t">△</span><span class="l">여러 장부 합치기</span></div></div><div class="item"><div class="leaf "><span class="n">·</span><b>유튜브 1초 최적화</b><span class="p">youtube</span><span class="bd o">○</span><span class="l">제목·썸네일 문구·해시태그</span></div></div><div class="item"><div class="leaf "><span class="n">·</span><b>여행 패스</b><span class="p">travel</span><span class="bd t">△</span><span class="l">전국 펜션 10박</span></div></div></div></div></div></div>
+<p class="foot">쇼룸 제외(트리 밖 · 폴더는 유지): 답글생성기 ad_magnet/ (내부용 · 165) · 번개알바 bungee/ (별도 플랫폼 · 156) · 군단 상황판 ops/ (마스터 전용)<br>
+통합: 문서변환기(photo2doc) → 더양식 ② 탭 (158) · 창업·대출 세무구조 내비(tax) → 사업자 대출 탭 (162) · 갤러리 → 세이캡 (166) · 더상세 → 설명서 제작기 (161)<br>
+148 배지는 지니 1차 판정(대표님 최종 판정 대기) · 유튜브 1초 최적화·여행 패스는 PC 추가 판정</p>
+<svg id="lines"></svg></div>
+<script>
+(function(){
+ var W=document.getElementById('wrap'), S=document.getElementById('lines'), wr=W.getBoundingClientRect();
+ S.setAttribute('width',W.scrollWidth); S.setAttribute('height',W.scrollHeight);
+ function R(el){var r=el.getBoundingClientRect();return {l:r.left-wr.left,r:r.right-wr.left,y:(r.top+r.bottom)/2-wr.top};}
+ function line(a,b,c,dash){var p=document.createElementNS('http://www.w3.org/2000/svg','path');var mx=(a.r+b.l)/2;
+  p.setAttribute('d','M'+a.r+' '+a.y+' C'+mx+' '+a.y+' '+mx+' '+b.y+' '+b.l+' '+b.y);p.setAttribute('fill','none');
+  p.setAttribute('stroke',c);p.setAttribute('stroke-width',dash?3:4);if(dash)p.setAttribute('stroke-dasharray','10 8');S.appendChild(p);}
+ var C=R(document.querySelector('.center'));
+ document.querySelectorAll('.br').forEach(function(br){
+  var bn=R(br.querySelector('.bnode')), soon=br.classList.contains('soon');
+  line(C,bn,soon?'#5B6B86':'#FF6B00',soon);
+  br.querySelectorAll(':scope > .leaves > .item').forEach(function(it){
+   var lf=it.querySelector(':scope > .leaf'); line(bn,R(lf),soon?'#4A5A75':'#4E78C0',soon||lf.classList.contains('link'));
+   it.querySelectorAll('.subwrap .leaf').forEach(function(s){line(R(lf),R(s),'#FF8A33',true);});
+  });
+ });
+})();
+</script></body></html>

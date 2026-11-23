@@ -1,0 +1,75 @@
+{
+ "measure": {
+  "sections": 5,
+  "secInfo": [
+   [
+    "부동산·중개사",
+    10
+   ],
+   [
+    "쇼핑몰·셀러",
+    7
+   ],
+   [
+    "자영업·매장",
+    8
+   ],
+   [
+    "개인·생활",
+    7
+   ],
+   [
+    "준비 중",
+    3
+   ]
+  ],
+  "catalogItems": 28,
+  "catalogVer": "20261123b",
+  "catalogSrc": "catalog.json",
+  "products": 28,
+  "dupKeys": [],
+  "soonRows": 3,
+  "soonAnchors": 3,
+  "soonAllAnchors": 3,
+  "soonPE": [
+   "auto",
+   "auto",
+   "auto"
+  ],
+  "soonOpacity": [
+   "0.62",
+   "0.62",
+   "0.62"
+  ],
+  "soonInFirstViewport": 0,
+  "adMagnetCards": 2,
+  "bungeeCards": 6,
+  "footBungee": 1,
+  "footAdMagnet": 0,
+  "opsVisible": 0,
+  "photo2docCards": 2,
+  "taxCards": 2,
+  "loanCards": 1,
+  "saycapCards": 1,
+  "name_더상세": 1,
+  "name_문서변환기": 1,
+  "name_설명서제작기": 0,
+  "name_답글생성기": 1,
+  "name_번개알바": 1,
+  "name_갤러리카드": 0,
+  "chips": [],
+  "scrollWidth": 390
+ },
+ "soonClickUrlChanges": 10,
+ "detailAppend": {
+  "url": "/detail.html?k=append&t=1795445060",
+  "openHref": null,
+  "openText": null,
+  "hasSoonText": true
+ },
+ "consoleErrors": [],
+ "http4xx": [],
+ "hosts": [
+  "127.0.0.1:8811"
+ ]
+}

@@ -5,15 +5,24 @@
    py -3 naver_blog_draft.py --dry-run
    py -3 naver_blog_draft.py --live --count 10    # 임시저장함에 10건 채우기(기본 10)
    py -3 naver_blog_draft.py --live --count 1
-   py -3 naver_blog_draft.py --probe              # 에디터 구조 덤프
+   py -3 naver_blog_draft.py --probe              # 에디터 구조 덤프(툴바 data-name·aria-label·title·글자 포함)
+   py -3 naver_blog_draft.py --audit              # 브라우저 없이 조판 계획·사진 확보·문구 무결성 검사
+   py -3 naver_blog_draft.py --list-drafts        # 임시저장함 실측(제목·logno·저장시각) + 큐 대조 3분류
+   py -3 naver_blog_draft.py --reconcile          # 위 결과를 큐에 반영(draft_logno·drafted) + post_queue.json 커밋
+   py -3 naver_blog_draft.py --rework --count 1   # 기존 임시저장 글을 새 양식으로 덮어쓰기(1편 게이트)
    py -3 naver_blog_draft.py                      # 스케줄러용: 1건, 오늘 이미 했으면 건너뜀, SNS_DAILY_ENABLED=0 이면 정지
+
+조판(소제목·인용구·구분선·사진·태그 블록)은 naver_format.py. 사진은 prepare_images.py 가 채운다 —
+유효 사진 2장 미만(blog.photo_missing)이면 그 글은 저장하지 않는다(글만 있는 포스트 금지).
 
 설계 원칙: 이 코드에는 '발행' 버튼을 누르는 경로가 없다. 저장 버튼만 글자로 찾아 누르고,
 글자에 '발행'이 들어간 요소는 어떤 경우에도 누르지 않는다.
 종료 코드: 0 정상/할 일 없음 · 1 오류 · 2 확인 필요(발행 의심) · 3 설정 없음/크롬 없음/로그인 만료
 """
-import argparse, datetime, json, os, random, re, sys, time, urllib.request
+import argparse, datetime, json, os, random, re, subprocess, sys, time, urllib.request
 from pathlib import Path
+
+import naver_format as nf
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -31,6 +40,10 @@ ALLOW_SAVE = ["임시저장", "저장"]
 FORBID = ["발행", "공개발행", "예약발행", "publish"]
 MAX_PHOTOS = 3
 RETRY_WAIT = 180          # 자동 재시도는 1회만, 3분 뒤
+MIN_PHOTOS = 2            # 사진이 이보다 적게 들어가면 저장하지 않는다
+FORMAT_BUDGET = 150       # 글당 조판 상한(초)
+REWORK_LIMIT = 60 * 60    # 재작성 일괄 실행 상한(초)
+NO_CLICK = ["삭제", "삭제하기", "delete", "로그아웃", "log out"]   # 임시저장 목록 등에서 절대 누르지 않을 글자
 
 
 class AlertError(RuntimeError):
@@ -39,6 +52,10 @@ class AlertError(RuntimeError):
 
 class SetupError(RuntimeError):
     """로그인 만료 등(종료 3)."""
+
+
+class HoldError(RuntimeError):
+    """사진 부족 등 — 저장하지 않고 보류(다음 건으로 넘어가지 않음)."""
 
 
 def log(msg):

@@ -1,0 +1,56 @@
+== helper.js
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 2                             후: FAIL 2
+  개인경로·PC이름      전: PASS                               후: PASS
+== sale/index.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: PASS 0                             후: PASS 0
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+== sale/data.js
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: PASS 0                             후: PASS 0
+  개인경로·PC이름      전: PASS                               후: PASS
+== navi2/index.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: PASS 0                             후: PASS 0
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+== navi2/js/engine.js
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: PASS 0                             후: PASS 0
+  개인경로·PC이름      전: PASS                               후: PASS
+== navi2/js/data.subs.js
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: PASS 0                             후: PASS 0
+  개인경로·PC이름      전: PASS                               후: PASS
+== navi2/js/data.pool.v3.js (새 파일)
+  G1-3 Base64    전: (없음)                               후: PASS max=0 sum=0
+  G1-5 API키      전: (없음)                               후: PASS 0
+  G1-6 연락처·주민번호  전: (없음)                               후: PASS 0
+  개인경로·PC이름      전: (없음)                               후: PASS
+== navi2/js/data.voice.js (새 파일)
+  G1-3 Base64    전: (없음)                               후: PASS max=0 sum=0
+  G1-5 API키      전: (없음)                               후: PASS 0
+  G1-6 연락처·주민번호  전: (없음)                               후: PASS 0
+  개인경로·PC이름      전: (없음)                               후: PASS
+== redev/index.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 7                             후: FAIL 7
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+FAIL 합계 전 2 → 후 2 · 새로 생긴 FAIL: 0
+exit=0

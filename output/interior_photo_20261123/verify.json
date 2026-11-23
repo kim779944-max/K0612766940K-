@@ -1,0 +1,278 @@
+{
+ "first": {
+  "scene": "living",
+  "tabs": [
+   "거실",
+   "원룸",
+   "매장"
+  ],
+  "tabOn": "거실",
+  "sampleBadge": false,
+  "domyeon": 0,
+  "svgImgs": 0,
+  "svgShellRef": false,
+  "photoReady": true,
+  "regions": "ok",
+  "sampleOk": true,
+  "layoutOk": true,
+  "exLine": "예시 사진으로 보는 시공 전/후입니다. 실제 시공 결과와 다를 수 있습니다.",
+  "sw": 390
+ },
+ "slider": {
+  "drag_to_0": [
+   0,
+   "inset(0px 0px 0px 0%)"
+  ],
+  "drag_to_100": [
+   100,
+   "inset(0px 0px 0px 100%)"
+  ],
+  "drag_to_50": [
+   50,
+   "inset(0px 0px 0px 50%)"
+  ],
+  "key_End_Right": 100,
+  "key_Home_Left": 0,
+  "rng_-20": 0,
+  "rng_101": 100,
+  "knob_at_0": {
+   "w": 48,
+   "h": 44,
+   "left": 30,
+   "right": 78,
+   "boxL": 29,
+   "boxR": 361,
+   "inScreen": true,
+   "hitIsKnob": true
+  },
+  "knob_at_100": {
+   "w": 48,
+   "h": 44,
+   "left": 312,
+   "right": 360,
+   "boxL": 29,
+   "boxR": 361,
+   "inScreen": true,
+   "hitIsKnob": true
+  },
+  "knob_at_50": {
+   "w": 48,
+   "h": 44,
+   "left": 171,
+   "right": 219,
+   "boxL": 29,
+   "boxR": 361,
+   "inScreen": true,
+   "hitIsKnob": true
+  },
+  "touchAction": [
+   "pan-y",
+   "none"
+  ]
+ },
+ "room_outlet_kept": {
+  "changedPx": 0,
+  "totalPx": 875
+ },
+ "diff": [
+  {
+   "scene": "living",
+   "zone": "wall",
+   "mat": "denbar",
+   "inRate": 97.47,
+   "outRate": 1.03,
+   "outRateExclBundle": 0,
+   "bundle": [
+    "걸레받이"
+   ],
+   "inPx": 351366,
+   "outPx": 728634
+  },
+  {
+   "scene": "living",
+   "zone": "wall",
+   "mat": "marble",
+   "inRate": 98.86,
+   "outRate": 0,
+   "outRateExclBundle": 0,
+   "bundle": [],
+   "inPx": 351366,
+   "outPx": 728634
+  },
+  {
+   "scene": "living",
+   "zone": "wall",
+   "mat": "wallpaper",
+   "inRate": 99.41,
+   "outRate": 0,
+   "outRateExclBundle": 0,
+   "bundle": [
+    "몰딩"
+   ],
+   "inPx": 351366,
+   "outPx": 728634
+  },
+  {
+   "scene": "living",
+   "zone": "wall",
+   "mat": "tile",
+   "inRate": 97.33,
+   "outRate": 0,
+   "outRateExclBundle": 0,
+   "bundle": [
+    "줄눈"
+   ],
+   "inPx": 351366,
+   "outPx": 728634
+  },
+  {
+   "scene": "living",
+   "zone": "floor",
+   "mat": "floor",
+   "inRate": 71.97,
+   "outRate": 1.39,
+   "outRateExclBundle": 0.016,
+   "bundle": [
+    "걸레받이"
+   ],
+   "inPx": 264241,
+   "outPx": 815759
+  },
+  {
+   "scene": "room",
+   "zone": "wall",
+   "mat": "denbar",
+   "inRate": 97.79,
+   "outRate": 1.67,
+   "outRateExclBundle": 0.026,
+   "bundle": [
+    "걸레받이"
+   ],
+   "inPx": 341380,
+   "outPx": 738620
+  },
+  {
+   "scene": "shop",
+   "zone": "wall",
+   "mat": "marble",
+   "inRate": 98.57,
+   "outRate": 0,
+   "outRateExclBundle": 0,
+   "bundle": [],
+   "inPx": 277276,
+   "outPx": 802724
+  },
+  {
+   "scene": "room",
+   "zone": "floor",
+   "mat": "floor",
+   "inRate": 95.9,
+   "outRate": 1.54,
+   "outRateExclBundle": 0.011,
+   "bundle": [
+    "걸레받이"
+   ],
+   "inPx": 195381,
+   "outPx": 884619
+  },
+  {
+   "scene": "shop",
+   "zone": "floor",
+   "mat": "floor",
+   "inRate": 99.98,
+   "outRate": 1.34,
+   "outRateExclBundle": 0.015,
+   "bundle": [
+    "걸레받이"
+   ],
+   "inPx": 248877,
+   "outPx": 831123
+  }
+ ],
+ "bundle": {
+  "badges": [
+   [
+    "denbar",
+    "+걸레받이 함께 변경"
+   ],
+   [
+    "marble",
+    ""
+   ],
+   [
+    "wallpaper",
+    "+몰딩 함께 변경"
+   ],
+   [
+    "tile",
+    "+줄눈 함께 변경"
+   ],
+   [
+    "floor",
+    "+걸레받이 함께 변경"
+   ]
+  ],
+  "line": "고른 자재와 함께 바뀌는 항목: 덴바보드 + 강마루 + 걸레받이"
+ },
+ "save": "interior_sample_living.jpg",
+ "layout": {
+  "0": [
+   0,
+   "inset(0px 0px 0px 0%)"
+  ],
+  "100": [
+   100,
+   "inset(0px 0px 0px 100%)"
+  ],
+  "50": [
+   50,
+   "inset(0px 0px 0px 50%)"
+  ],
+  "labels": [
+   "배치 전 · 소파 왼쪽",
+   "배치 후 · 소파 오른쪽 + 식탁"
+  ],
+  "note": "가구 위치만 바꾼 예시입니다. 구조(벽·창·문)는 바뀌지 않습니다.",
+  "sizes": {
+   "img/living_setA.jpg": [
+    1200,
+    900
+   ],
+   "img/living_setB.jpg": [
+    1200,
+    900
+   ]
+  },
+  "independentOfMaterial": true
+ },
+ "print": {
+  "printed": 2,
+  "img": true,
+  "imgLen": 132691,
+  "text": "[KTS 인테리어 견적 · 참고 계산]\n배치: 현재 배치 그대로 · 벽 하(템바보드) · 조명 안 함 · 가",
+  "pdfPages": 1
+ },
+ "final": {
+  "sw": 390,
+  "domyeon": 0
+ },
+ "console_errors": [],
+ "hosts": [
+  "127.0.0.1:8765"
+ ],
+ "posts": [],
+ "http": {
+  "regions.json": 200,
+  "img/ba_living.jpg": 200,
+  "img/living_setA.jpg": 200,
+  "img/living_setB.jpg": 200,
+  "img/mat_denbar.jpg": 200,
+  "img/mat_marble.jpg": 200,
+  "img/mat_wallpaper.jpg": 200,
+  "img/mat_tile.jpg": 200,
+  "img/mat_floor.jpg": 200,
+  "img/ba_room.jpg": 200,
+  "img/ba_shop.jpg": 200
+ },
+ "http_not_200": {}
+}

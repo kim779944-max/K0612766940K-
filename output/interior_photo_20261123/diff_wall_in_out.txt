@@ -1,0 +1,11 @@
+# 시공 후 캔버스 vs 원본 사진 — 픽셀 변화(어느 채널이든 차이 > 10) 비율 %
+# inRate = 자재 다각형 안 / outRate = 다각형 밖 전체 / outRateExclBundle = 다각형 밖에서 묶음 띠(걸레받이·몰딩) 제외
+living  wall  denbar     in  97.47%  out  1.03%  out(묶음 제외)  0.000%  bundle=걸레받이  (in 351366px / out 728634px)
+living  wall  marble     in  98.86%  out  0.00%  out(묶음 제외)  0.000%  bundle=-  (in 351366px / out 728634px)
+living  wall  wallpaper  in  99.41%  out  0.00%  out(묶음 제외)  0.000%  bundle=몰딩  (in 351366px / out 728634px)
+living  wall  tile       in  97.33%  out  0.00%  out(묶음 제외)  0.000%  bundle=줄눈  (in 351366px / out 728634px)
+living  floor floor      in  71.97%  out  1.39%  out(묶음 제외)  0.016%  bundle=걸레받이  (in 264241px / out 815759px)
+room    wall  denbar     in  97.79%  out  1.67%  out(묶음 제외)  0.026%  bundle=걸레받이  (in 341380px / out 738620px)
+shop    wall  marble     in  98.57%  out  0.00%  out(묶음 제외)  0.000%  bundle=-  (in 277276px / out 802724px)
+room    floor floor      in  95.90%  out  1.54%  out(묶음 제외)  0.011%  bundle=걸레받이  (in 195381px / out 884619px)
+shop    floor floor      in  99.98%  out  1.34%  out(묶음 제외)  0.015%  bundle=걸레받이  (in 248877px / out 831123px)

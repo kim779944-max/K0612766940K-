@@ -1,9 +1,9 @@
 == interior/index.html
-  G1-2 ÅÂ±× Â¦      Àü: PASS                               ÈÄ: PASS
-  G1-3 Base64    Àü: PASS max=0 sum=0                   ÈÄ: PASS max=0 sum=0
-  G1-5 APIÅ°      Àü: PASS 0                             ÈÄ: PASS 0
-  G1-6 ¿¬¶ôÃ³¡¤ÁÖ¹Î¹øÈ£  Àü: FAIL 3                             ÈÄ: FAIL 3
-  G1-8 ³»ºÎ ¸µÅ©     Àü: PASS                               ÈÄ: PASS
-  G1-9 viewport  Àü: PASS                               ÈÄ: PASS
-  °³ÀÎ°æ·Î¡¤PCÀÌ¸§      Àü: PASS                               ÈÄ: PASS
-FAIL ÇÕ°è Àü 1 ¡æ ÈÄ 1 ¡¤ »õ·Î »ý±ä FAIL: 0
+  G1-2 íƒœê·¸ ì§      ì „: PASS                               í›„: PASS
+  G1-3 Base64    ì „: PASS max=0 sum=0                   í›„: PASS max=0 sum=0
+  G1-5 APIí‚¤      ì „: PASS 0                             í›„: PASS 0
+  G1-6 ì—°ë½ì²˜Â·ì£¼ë¯¼ë²ˆí˜¸  ì „: FAIL 3                             í›„: FAIL 3
+  G1-8 ë‚´ë¶€ ë§í¬     ì „: PASS                               í›„: PASS
+  G1-9 viewport  ì „: PASS                               í›„: PASS
+  ê°œì¸ê²½ë¡œÂ·PCì´ë¦„      ì „: PASS                               í›„: PASS
+FAIL í•©ê³„ ì „ 1 â†’ í›„ 1 Â· ìƒˆë¡œ ìƒê¸´ FAIL: 0

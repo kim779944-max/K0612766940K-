@@ -1,0 +1,14 @@
+== interior/index.html
+  G1-2 태그 짝      전: PASS                               후: PASS
+  G1-3 Base64    전: PASS max=0 sum=0                   후: PASS max=0 sum=0
+  G1-5 API키      전: PASS 0                             후: PASS 0
+  G1-6 연락처·주민번호  전: FAIL 3                             후: FAIL 3
+  G1-8 내부 링크     전: PASS                               후: PASS
+  G1-9 viewport  전: PASS                               후: PASS
+  개인경로·PC이름      전: PASS                               후: PASS
+== interior/regions.json (새 파일)
+  G1-3 Base64    전: (없음)                               후: PASS max=0 sum=0
+  G1-5 API키      전: (없음)                               후: PASS 0
+  G1-6 연락처·주민번호  전: (없음)                               후: PASS 0
+  개인경로·PC이름      전: (없음)                               후: PASS
+FAIL 합계 전 1 → 후 1 · 새로 생긴 FAIL: 0

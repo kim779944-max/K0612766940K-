@@ -71,3 +71,5 @@ CLAUDE_TASK_20261124_02_REALESTATE_POSTER_OCR.md
 CLAUDE_TASK_20261124_03_INTERIOR_NAVI2_BLOG.md
 # ★ 4순위 · 추가 등록 2026-11-24 07:0x · 번개알바 올인원 4단 패키지 샘플 1호 「산수고원」 — 사진 80% 홈(실사 5장) + 능동형 AI 예약 비서(규칙 엔진·가용시간·.ics) + 지도·노선·리뷰 + 영업용 포스터 1080×1350 + 네이버 플레이스 [홈페이지] 연동 안내 (적립 180 · 수정 범위 oneclick/bungee_sample/sansugowon/ 신규만 · 제0원칙: bungee/ 무변경·쇼룸 등록 금지·실제 예약/결제 0 · refs/sansugowon_20261124/ 사진 5장)
 CLAUDE_TASK_20261124_04_SANSUGOWON_AI_PAGE.md
+# ★ 5순위 · 추가 등록 2026-11-24 10:1x · ① 쇼룸(182) 마스터 박스 기본 접힘 — PIN 저장된 대표님 폰에서도 첫 화면은 손님 화면 그대로, 위 [마스터](#mKey) 버튼 한 번에 펼침/접힘(펼침 상태 저장 안 함·손님은 기존 PIN 시트·마스터 권한 유지) ② 번개알바 사장님 구글 캘린더 1클릭 연결 마법사(181) — 코드 1클릭 복사 → script.new → 웹 앱 주소 붙여넣고 연결 테스트(빈 시간 JSONP·예약 등록 POST·LockService) · 산수고원 샘플은 kts_gcal_webapp_url 로 자동 연결(없으면 기존 규칙 엔진 폴백) · 수정 범위 oneclick/index.html(마스터 블록만)·bungee_sample/gcal_connect/ 신규 4·bungee_sample/sansugowon/ 연결 3곳 · 제0원칙: products.js·catalog.json·5대 대문·kts-edge.js·색깔 토글·bungee/ 무변경·쇼룸 등록 금지·실제 결제/문자 0
+CLAUDE_TASK_20261124_05_MASTER_GCAL.md
